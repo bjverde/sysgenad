@@ -23,42 +23,6 @@
     <link href="app/templates/{template}/css/fonts/MaterialIcons/material-icons.css" rel="stylesheet">
 
     <link href="app/templates/{template}/css/formdin5.css" rel="stylesheet">
-
-    <script>
-        function update_messages_menu() {
-            $.get('engine.php?class=MessageList&theme=theme3', function(data) {
-                $('#envelope_messages').html(data);
-            });
-        }
-        
-        function update_notifications_menu() {
-            $.get('engine.php?class=NotificationList&theme=theme3', function(data) {
-                $('#envelope_notifications').html(data);
-            });
-        }
-        
-        $(function() {
-            $.get('engine.php?class=SearchBox', function(data)
-            {
-              $('.navbar-custom-menu-searchBox').append(data).show();
-              var search_box = $('.navbar-nav').nextAll('div');
-              search_box.css('padding-top', '10px');
-              search_box.css('padding-left', '25px');
-              search_box.css('display', 'table');
-              search_box.css('float', 'left');
-              search_box.attr('id', 'search-box');
-            });
-            
-            update_messages_menu();
-            update_notifications_menu();
-            
-            // setInterval( update_messages_menu, 5000);
-            // setInterval( update_notifications_menu, 5000);
-            
-            __adianti_set_language('{lang}');
-            __adianti_set_debug({debug});
-        });
-    </script>
   </head>
   
 <body class="hold-transition skin-blue layout-top-nav">
@@ -166,14 +130,7 @@
         
         <div id="adianti_right_panel" class="right-panel"></div>
       </div><!-- /.content-wrapper -->
-      
-      <div id="adianti_debug_panel" class="debug-panel">
-          <i onclick="Adianti.hideDebugPanel()" class="fa fa-times" aria-hidden="true" title="_t{Close}"></i>
-          <span > Request URL </span>
-          <span > Request Data </span>
-          <div id="request_url_panel"> </div>
-          <div id="request_data_panel"> </div>
-      </div>
+    
       
       <!-- Add the sidebar's background. This div must be placed
            immediately after the control sidebar -->
@@ -183,11 +140,7 @@
     <footer>
       <div id="app_footer_message"><b>Version</b> {system_version}</div>
       <div id="app_footer_company"><strong>{userunitid} - {userunitname}</strong></div>
-      <div id="app_footer_module">
-        <!--[IFADMIN]-->
-        <a style="cursor:pointer; color: teal" generator="adianti" href="index.php?class=SystemModulesCheckView"> <i class="fa fa-code" aria-hidden="true"></i> PHP Modules </a> &nbsp;&nbsp;
-        <span style="cursor:pointer; color: teal" onclick="Adianti.showDebugPanel()"> <i class="fa fa-window-maximize" aria-hidden="true"></i> Debug Console </span>
-        <!--[/IFADMIN]-->          
+      <div id="app_footer_module">        
       </div>
     </footer>
 
