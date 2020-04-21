@@ -5,7 +5,7 @@ class AdiantiMenuBuilder
     {
         switch ($theme)
         {
-            case 'theme3':
+            case 'theme3_v5':
                 ob_start();
                 $xml = new SimpleXMLElement(file_get_contents($file));
                 $menu = new TMenu($xml, null, 1, 'treeview-menu', 'treeview', '');
@@ -14,7 +14,7 @@ class AdiantiMenuBuilder
                 $menu->show();
                 $menu_string = ob_get_clean();
                 return $menu_string;
-                break;
+            break;
             default:
                 ob_start();
                 $xml = new SimpleXMLElement(file_get_contents($file));
