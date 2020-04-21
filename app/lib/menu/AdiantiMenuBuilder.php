@@ -5,6 +5,7 @@ class AdiantiMenuBuilder
     {
         switch ($theme)
         {
+            case 'theme3':
             case 'theme3_v5':
                 ob_start();
                 $xml = new SimpleXMLElement(file_get_contents($file));
@@ -15,6 +16,18 @@ class AdiantiMenuBuilder
                 $menu_string = ob_get_clean();
                 return $menu_string;
             break;
+            case 'theme_formdin':
+                ob_start();
+                $xml = new SimpleXMLElement(file_get_contents($file));
+                $menu = new TMenu($xml,null, 1,'dropdown-menu','nav-item dropdown','nav-link dropdown-toggle');
+                $menu->id    = 'main-menu-top';
+                $menu->show();
+                $menu_string = ob_get_clean();
+                
+                $menu_string = str_replace('class="dropdown-menu level-1" id="main-menu-top"', 'class="nav navbar-nav" id="main-menu-top"', $menu_string);
+                //$menu_string = str_replace('<a href="', '<a class="dropdown-item" href="', $menu_string);
+                return $menu_string;
+            break;            
             default:
                 ob_start();
                 $xml = new SimpleXMLElement(file_get_contents($file));

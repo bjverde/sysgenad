@@ -59,58 +59,8 @@
             <ul class="navbar-nav mr-auto">
               {MENU}
             </ul>
-            <div class="navbar-custom-menu-searchBox"></div>
           </div><!-- /.navbar-collapse -->
-
           
-          <!-- Navbar Right Menu -->
-          <div class="navbar-custom-menu pull-right">
-            <ul class="nav navbar-nav">
-              <!--{BUILDER-MENU}-->
-              <li class="dropdown messages-menu" id="envelope_messages">
-                  <!-- /.dropdown-messages -->
-              </li>
-              <li class="dropdown notifications-menu" id="envelope_notifications">
-                  <!-- /.dropdown-messages -->
-              </li>
-              <li class="dropdown notifications-menu" id="support">
-                <a generator="adianti" href="index.php?class=SystemSupportForm">
-                    <i class="fa fa-life-ring fa-fw"></i>
-                </a>
-              </li>
-              
-              <!-- User Account: style can be found in dropdown.less -->
-              <li class="dropdown user user-menu">
-                <!-- Menu Toggle Button -->
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img src="app/images/photos/{login}.jpg" class="user-image" alt="User Image">
-                  <span class="hidden-xs">{username}</span>
-                </a>
-                <ul class="dropdown-menu">
-                  <!-- User image -->
-                  <li class="user-header" style="height:initial">
-                    <!-- <i class="fa fa-user fa-3x" style="color:white"></i> -->
-                    <img src="app/images/photos/{login}.jpg" onError="this.onerror=null;this.src='app/templates/{template}/img/avatar5.png';" style="border-radius:50%" alt="User" />
-                    <p>
-                      {username}
-                      <br>{usermail}
-                      <br><a href="index.php?class=SystemProfileView" style="color:white;font-size:12px">[_t{Profile}]</a>
-                    </p>
-                  </li>
-                  <!-- Menu Body -->
-                  <!-- Menu Footer-->
-                  <li class="user-footer">
-                    <div class="pull-left">
-                      <a generator="adianti" href="index.php?class=LoginForm&method=reloadPermissions&static=1" class="btn btn-default btn-flat">_t{Reload}</a>
-                    </div>
-                    <div class="pull-right">
-                      <a generator="adianti" href="index.php?class=LoginForm&method=onLogout&static=1" class="btn btn-default btn-flat">_t{Exit}</a>
-                    </div>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div><!-- /.navbar-custom-menu -->
         </div>
         <!-- /.container-fluid -->
       </nav>
