@@ -29,7 +29,7 @@
 
     <header>
       <div id="app_header_logo">
-          <img src="app/templates/{template}/img/formdin_logo_small.png">
+          <a href="{login-link}" target=”_blank”><img src="app/templates/{template}/img/formdin_logo_small.png"></a>
       </div>
       <div id="app_header_title">
           <div id="app_header_title_main">
@@ -49,7 +49,6 @@
         <div class="container">
 
           <div class="navbar-header">
-            <a href="{logo-link-class}" class="navbar-brand"><b>{logo-lg}</b></a>
             <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#main-menu" href="#main-menu" aria-controls="main-menu">
               <i class="fa fa-bars"></i>
             </button>
@@ -89,7 +88,7 @@
 
     <footer>
       <div id="app_footer_message"><b>Version</b> {system_version}</div>
-      <div id="app_footer_company"><strong>{userunitid} - {userunitname}</strong></div>
+      <div id="app_footer_company"></div>
       <div id="app_footer_module">        
       </div>
     </footer>

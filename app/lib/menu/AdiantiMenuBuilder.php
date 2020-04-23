@@ -25,7 +25,7 @@ class AdiantiMenuBuilder
                 $menu_string = ob_get_clean();
                 
                 $menu_string = str_replace('class="dropdown-menu level-1" id="main-menu-top"', 'class="nav navbar-nav" id="main-menu-top"', $menu_string);
-                //$menu_string = str_replace('<a href="', '<a class="dropdown-item" href="', $menu_string);
+                //$menu_string = str_replace('<a href="', '<a class="dropdown-menu" href="', $menu_string);
                 return $menu_string;
             break;
             default:
