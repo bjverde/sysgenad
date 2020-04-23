@@ -7,10 +7,7 @@
                 <action>WelcomeView</action>
             </menuitem>
             
-            <menuitem label='Aprenda'>
-                <icon>fa:book fa-fw</icon>
-                <action>LearnView</action>
-            </menuitem>
+
             
             <menuitem label='Template'>
                 <icon>fa:desktop fa-fw</icon>
@@ -23,13 +20,21 @@
             </menuitem>
         </menu>
     </menuitem>
+    <menuitem label='Wizard'>
+        <icon>fa:magic fa-fw</icon>
+        <action>WelcomeView</action>
+    </menuitem>      
     <menuitem label='Ajuda'>
         <icon>fa:life-ring fa-fw</icon>
         <menu>
             <menuitem label='Ajuda'>
                 <icon>fa:life-ring fa-fw</icon>
-                <action>AjudaView</action>
-            </menuitem>      
+                <action>BuildView</action>
+            </menuitem>
+            <menuitem label='Aprenda'>
+                <icon>fa:book fa-fw</icon>
+                <action>LearnView</action>
+            </menuitem>            
             <menuitem label='Ver módulos'>
                 <icon>fa:cube fa-fw</icon>
                 <action>SystemModulesCheckView</action>
