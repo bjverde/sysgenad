@@ -6,9 +6,6 @@
                 <icon>fa:life-ring fa-fw</icon>
                 <action>WelcomeView</action>
             </menuitem>
-            
-
-            
             <menuitem label='Template'>
                 <icon>fa:desktop fa-fw</icon>
                 <action>TemplateView</action>
@@ -22,7 +19,7 @@
     </menuitem>
     <menuitem label='Wizard'>
         <icon>fa:magic fa-fw</icon>
-        <action>WelcomeView</action>
+<action>Gen00</action>>                
     </menuitem>      
     <menuitem label='Ajuda'>
         <icon>fa:life-ring fa-fw</icon>
@@ -31,7 +28,7 @@
                 <icon>fa:life-ring fa-fw</icon>
                 <action>BuildView</action>
             </menuitem>
-            <menuitem label='Aprenda'>
+            <menuitem label='Aprenda Adianti Framework'>
                 <icon>fa:book fa-fw</icon>
                 <action>LearnView</action>
             </menuitem>            
