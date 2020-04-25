@@ -5,7 +5,7 @@
  * SourceCode https://github.com/bjverde/formDin5
  * @author Reinaldo A. Barrêto Junior
  * 
- * É uma reconstrução do FormDin 4 Sobre o Adianti 7
+ * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -62,14 +62,15 @@ class TFormDin
     /**
      * Método construtor da classe do Formulario Padronizado em BoorStrap
      * ------------------------------------------------------------------------
-     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.1
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados com:
      * 
-     * FormDin 5 - Alguns parametros estão marcados como DEPRECATED por não 
-     * funcionar no Adianti foram mantidos para diminuir o impacto sobre
-     * as migrações.
-     *
-     * FORMDIN5 = Parametro novo disponivel apenas na nova versão
-     * NOT_IMPLEMENTED = parametros que serão implementados em versões futuras
+     * NOT_IMPLEMENTED = Parâmetro não implementados, talvez funcione em 
+     *                   verões futuras do FormDin. Não vai fazer nada
+     * DEPRECATED = Parâmetro que não vai funcionar no Adianti e foi mantido
+     *              para o impacto sobre as migrações. Vai gerar um Warning
+     * FORMDIN5 = Parâmetro novo disponivel apenas na nova versão
+
      * ------------------------------------------------------------------------
      * <code>
      * 	$frm = new TFormDin('Título do Formuláio');
@@ -77,8 +78,8 @@ class TFormDin
      * </code>
      *
      * @param string $strName   - 1: Titulo que irá aparecer no Form
-     * @param string $strHeight - 2: DEPRECATED: Altura em pixels - padrão=400px
-     * @param string $strWidth  - 3: DEPRECATED: largura em pixels - padrão=800px
+     * @param string $strHeight - 2: DEPRECATED: INFORME NULL para remover o Warning
+     * @param string $strWidth  - 3: DEPRECATED: INFORME NULL para remover o Warning
      * @param bool $strFormName - 4: ID nome do formulario para criação da tag form. Padrão=formdin
      * @param string $strMethod - 5: NOT_IMPLEMENTED: metodo GET ou POST, utilizado pelo formulario para submeter as informações. padrão=POST
      * @param string $strAction - 6: NOT_IMPLEMENTED: página/url para onde os dados serão enviados. Padrão = propria página
@@ -142,8 +143,8 @@ class TFormDin
     /**
     * Adiciona um campo oculto ao layout
     * 
-    * FormDin 5 - Alguns parametros foram DESATIVADO
-    * por não funcionar no Adianti 7.1 e foram mantidos
+    * FormDin 5 - Alguns parametros foram marcados com NOT_IMPLEMENTED
+    * por não funcionar no Adianti 7.X e foram mantidos
     * para diminuir o impacto sobre a migração
     *
     * @param string $strName       - 1: Id do Campo
@@ -164,8 +165,8 @@ class TFormDin
     /**
      * Adicionar campo entrada de dados texto livre.
      * 
-     * FormDin 5 - Alguns parametros foram DESATIVADO
-     * por não funcionar no Adianti 7.1 e foram mantidos
+     * FormDin 5 - Alguns parametros marcados com NOT_IMPLEMENTED
+     * por não funcionar no Adianti 7.X e foram mantidos
      * para diminuir o impacto sobre a migração
      *
      * @param string $id              -  1: ID do campo
@@ -176,7 +177,7 @@ class TFormDin
      * @param string $strValue        -  6: texto preenchido
      * @param boolean $boolNewLine    -  7: DESATIVADO Nova linha
      * @param string $strHint         -  9: DESATIVADO
-     * @param string $strExampleText  -  9: PlaceHolder um Texto de exemplo
+     * @param string $strExampleText  -  9: PlaceHolder é um Texto de exemplo
      * @param boolean $boolLabelAbove - 10: DESATIVADO - Label sobre
      * @param boolean $boolNoWrapLabel- 11: DESATIVADO
      * @return TEntry
@@ -229,6 +230,37 @@ class TFormDin
         $this->addFields([$label], [$objField]);
         return $objField;
     }
+ 
+    /**
+     * Adicionar campo entrada de dados texto com mascara
+     * 
+     * FormDin 5 - Alguns parametros foram DESATIVADO
+     * por não funcionar no Adianti 7.1 e foram mantidos
+     * para diminuir o impacto sobre a migração
+     * 
+     * S - Represents an alpha character (A-Z,a-z)
+     * 9 - Represents a numeric character (0-9)
+     * A - Represents an alphanumeric character (A-Z,a-z,0-9)
+     *
+     * @param string $id              - 1: id do campo
+     * @param string $strLabel        - 2: Rotulo do campo que irá aparece na tela
+     * @param boolean $boolRequired   - 3: Obrigatorio
+     * @param string $strMask         - 4: A mascara
+     * @param boolean $boolNewLine    - 5: DESATIVADO Nova linha
+     * @param string $strValue        - 6: texto preenchido
+     * @param boolean $boolLabelAbove - 7: DESATIVADO - Label sobre
+     * @param boolean $boolNoWrapLabel- 8: DESATIVADO
+     * @param string $strExampleText  - 9: PlaceHolder é um Texto de exemplo
+     * @return void
+     */
+    public function addMaskField( $id, $strLabel=null, $boolRequired=false, $strMask=null, $boolNewLine=null, $strValue=null, $boolLabelAbove=null, $boolNoWrapLabel=null, $strExampleText=null )
+    {
+        $formDinSwitch = new TFormDinMaskField($id,$strLabel,$boolRequired,$itens);
+        $objField = $formDinSwitch->getAdiantiObj();
+        $label = $this->getLabelField($strLabel,$boolRequired);
+        $this->addFields([$label], [$objField]);
+        return $objField;
+    }    
 
     /**
     * Adicionar campo tipo combobox ou menu select
