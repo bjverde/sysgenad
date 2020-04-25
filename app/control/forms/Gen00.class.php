@@ -11,7 +11,7 @@ class Gen00 extends TPage
         try
         {
             // create the HTML Renderer
-            $this->html = new THtmlRenderer('app/resources/welcome.html');
+            $this->html = new THtmlRenderer('app/resources/gen00.html');
             $this->html->enableSection('main');
             
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP00);
