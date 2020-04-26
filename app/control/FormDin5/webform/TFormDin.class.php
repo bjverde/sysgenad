@@ -251,7 +251,15 @@ class TFormDin
      * @param string $strExampleText  - 9: PlaceHolder é um Texto de exemplo
      * @return void
      */
-    public function addMaskField( $id, $strLabel=null, $boolRequired=false, $strMask=null, $boolNewLine=null, $strValue=null, $boolLabelAbove=null, $boolNoWrapLabel=null, $strExampleText=null )
+    public function addMaskField( $id
+                                , $strLabel=null
+                                , $boolRequired=false
+                                , $strMask=null
+                                , $boolNewLine=null
+                                , $strValue=null
+                                , $boolLabelAbove=null
+                                , $boolNoWrapLabel=null
+                                , $strExampleText=null )
     {
         $formDinSwitch = new TFormDinMaskField($id,$strLabel,$boolRequired,$itens);
         $objField = $formDinSwitch->getAdiantiObj();
