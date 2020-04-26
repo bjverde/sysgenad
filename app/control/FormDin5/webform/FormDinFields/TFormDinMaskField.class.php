@@ -5,7 +5,7 @@
  * SourceCode https://github.com/bjverde/formDin5
  * @author Reinaldo A. Barrêto Junior
  * 
- * É uma reconstrução do FormDin 4 Sobre o Adianti 7
+ * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -57,16 +57,12 @@
  * @author Reinaldo A. Barrêto Junior
  */
 class TFormDinMaskField extends TFormDinGenericField
-{
-    protected $adiantiObj;
-    protected $label;
-    
+{    
     /**
-     * Adicionar campo entrada de dados texto com mascara
      * ------------------------------------------------------------------------
-     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
-     * os parâmetros do metodos foram marcados veja documentação da classe para
-     * saber o que cada marca singinifica.
+     * FormDin 5, que é uma reconstrução do FormDin 4 sobre o Adianti 7.X
+     * Alguns parâmetros têm uma TAG, veja documentação da classe para saber
+     * o que cada marca significa.
      * ------------------------------------------------------------------------
      * 
      * S - Represents an alpha character (A-Z,a-z)

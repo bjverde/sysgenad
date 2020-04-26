@@ -5,7 +5,7 @@
  * SourceCode https://github.com/bjverde/formDin5
  * @author Reinaldo A. Barrêto Junior
  * 
- * É uma reconstrução do FormDin 4 Sobre o Adianti 7
+ * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -40,14 +40,29 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-class TFormDinTextField
+/**
+ * Classe para criação campo texto simples
+ * ------------------------------------------------------------------------
+ * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * os parâmetros do metodos foram marcados com:
+ * 
+ * NOT_IMPLEMENTED = Parâmetro não implementados, talvez funcione em 
+ *                   verões futuras do FormDin. Não vai fazer nada
+ * DEPRECATED = Parâmetro que não vai funcionar no Adianti e foi mantido
+ *              para o impacto sobre as migrações. Vai gerar um Warning
+ * FORMDIN5 = Parâmetro novo disponivel apenas na nova versão
+ * ------------------------------------------------------------------------
+ * 
+ * @author Reinaldo A. Barrêto Junior
+ */
+class TFormDinTextField extends TFormDinGenericField
 {
-    protected $adiantiObj;
-    
-
     /**
-     * Campo de entrada de dados texto livre
-     * Reconstruido FormDin 4 Sobre o Adianti 7
+     * ------------------------------------------------------------------------
+     * FormDin 5, que é uma reconstrução do FormDin 4 sobre o Adianti 7.X
+     * Alguns parâmetros têm uma TAG, veja documentação da classe para saber
+     * o que cada marca significa.
+     * ------------------------------------------------------------------------
      *
      * @param string $id            - 1: ID do campo
      * @param string $strLabel      - 2: Label do campo, usado para validações
@@ -58,35 +73,21 @@ class TFormDinTextField
      * @return TEntry
      */
     public function __construct(string $id
-                               ,string $strLabel
+                               ,string $label
                                ,int $intMaxLength = null
                                ,$boolRequired = false
-                               ,string $strValue=null
-                               ,string $strExampleText =null)
+                               ,string $value=null
+                               ,string $placeholder =null)
     {
-        $this->adiantiObj = new TEntry($id);
-        $this->adiantiObj->setId($id);
-        if($intMaxLength>=1){
-            $this->adiantiObj->addValidation($strLabel, new TMaxLengthValidator, array($intMaxLength));
-        }
-        if($boolRequired){
-            $strLabel = empty($strLabel)?$id:$strLabel;
-            $this->adiantiObj->addValidation($strLabel, new TRequiredValidator);
-        }
-        if(!empty($strValue)){
-            $this->adiantiObj->setValue($strValue);
-        }
-        $this->setExampleText($strExampleText);
+        $adiantiObj = new TEntry($id);
+        parent::__construct($adiantiObj,$id,$label,$boolRequired,$value,$placeholder);
+        $this->setMaxLength($label,$intMaxLength);
         return $this->getAdiantiObj();
     }
 
-    public function getAdiantiObj(){
-        return $this->adiantiObj;
-    }
-
-    public function setExampleText($placeholder){
-        if(!empty($placeholder)){
-            $this->adiantiObj->placeholder = $placeholder;
+    public function setMaxLength($label,$intMaxLength){
+        if($intMaxLength>=1){
+            $this->getAdiantiObj()->addValidation($label, new TMaxLengthValidator, array($intMaxLength));
         }
     }
 }
