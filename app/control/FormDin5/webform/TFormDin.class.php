@@ -252,7 +252,7 @@ class TFormDin
      * @return void
      */
     public function addMaskField( $id
-                                , $strLabel=null
+                                , $label=null
                                 , $boolRequired=false
                                 , $strMask=null
                                 , $boolNewLine=null
@@ -261,9 +261,9 @@ class TFormDin
                                 , $boolNoWrapLabel=null
                                 , $strExampleText=null )
     {
-        $formDinSwitch = new TFormDinMaskField($id,$strLabel,$boolRequired,$itens);
+        $formDinSwitch = new TFormDinMaskField($id,$label,$boolRequired,$strMask,$boolNewLine,$strValue,$boolLabelAbove,$boolNoWrapLabel,$strExampleText);
         $objField = $formDinSwitch->getAdiantiObj();
-        $label = $this->getLabelField($strLabel,$boolRequired);
+        $label = $this->getLabelField($label,$boolRequired);
         $this->addFields([$label], [$objField]);
         return $objField;
     }    
