@@ -28,8 +28,9 @@ $content     = str_replace('{login-link}', $ini['system']['login-link'], $conten
 
 echo $content;
 
-if (isset($_REQUEST['class']))
-{
+if (isset($_REQUEST['class'])){
     $method = isset($_REQUEST['method']) ? $_REQUEST['method'] : NULL;
     AdiantiCoreApplication::loadPage($_REQUEST['class'], $method, $_REQUEST);
+} else {
+    AdiantiCoreApplication::loadPage('Gen00', null, null);
 }
