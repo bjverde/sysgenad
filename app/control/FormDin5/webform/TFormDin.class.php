@@ -117,6 +117,11 @@ class TFormDin
         return $this->adiantiObj;
     }
 
+    public function show()
+    {
+        return $this->getAdiantiObj();
+    }
+
     /**
      * Inclusão 
      * @param array $label - label que será incluido com o campo
@@ -154,7 +159,7 @@ class TFormDin
         $formField = new TFormDinHiddenField($id,$strValue,$boolRequired);
         $objField = $formField->getAdiantiObj();
         $this->adiantiObj->addFields([$objField]);
-        return $objField;
+        return $formField;
     }
 
     /**
@@ -199,7 +204,7 @@ class TFormDin
         $objField = $formDinTextField->getAdiantiObj();
         $label = $this->getLabelField($strLabel,$boolRequired);
         $this->addFields([$label], [$objField]);
-        return $objField;
+        return $formDinTextField;
     }
 
     /**
@@ -225,7 +230,7 @@ class TFormDin
         $objField = $formDinSwitch->getAdiantiObj();
         $label = $this->getLabelField($strLabel,$boolRequired);
         $this->addFields([$label], [$objField]);
-        return $objField;
+        return $formDinSwitch;
     }
  
     /**
@@ -270,7 +275,7 @@ class TFormDin
         $objField = $formDinSwitch->getAdiantiObj();
         $label = $this->getLabelField($label,$boolRequired);
         $this->addFields([$label], [$objField]);
-        return $objField;
+        return $formDinSwitch;
     }    
 
     /**
@@ -324,7 +329,7 @@ class TFormDin
         $objField = $formDinSelectField->getAdiantiObj();
         $label = $this->getLabelField($strLabel,$boolRequired);
         $this->addFields([$label], [$objField]);
-        return $objField;
+        return $formDinSelectField;
     }
 
     //----------------------------------------------------------------

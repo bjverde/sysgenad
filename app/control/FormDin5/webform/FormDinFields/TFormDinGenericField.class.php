@@ -43,11 +43,16 @@
 
  /**
   * Classe generica de campos do Adianti
+  *
+  * Junta parte das classes FormDin TControl e TElement
   */
 class TFormDinGenericField
 {
     protected $adiantiObj;
     protected $label;
+
+    private $tooltip;
+    private $readOnly;
     
     /**
      *
@@ -113,4 +118,37 @@ class TFormDinGenericField
             $this->getAdiantiObj()->placeholder = $placeholder;
         }
     }
+
+
+    //------------------------------------------------------------------------------
+	/**
+	 * Set um Toolpit em um determinado campo pode ser usado com
+	 * @param string $strTitle - Titulo
+	 * @param string $strText - Texto que irá aparecer
+	 * @param string $strImagem
+	 * @return TControl
+	 */
+	public function setTooltip($strTitle=null,$strText=null,$strImagem=null)
+	{
+        $this->tooltip = $strText;
+		$this->getAdiantiObj()->setTip($strText);
+	}
+	//------------------------------------------------------------------------------
+	public function getTooltip()
+	{
+		return $this->tooltip;
+	}
+	public function setReadOnly($boolNewValue=null)
+	{
+        $this->readOnly = $boolNewValue;
+        if($boolNewValue){
+            $this->getAdiantiObj()->setEditable(FALSE);
+        }else{
+            $this->getAdiantiObj()->setEditable(TRUE);
+        }
+	}
+	public function getReadOnly()
+	{
+		return ( $this->readOnly === true) ? true : false;
+	}
 }
