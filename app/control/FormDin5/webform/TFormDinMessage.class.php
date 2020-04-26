@@ -66,6 +66,7 @@ class TFormDinMessage {
     const ERROR_TYPE_NOT_SET = 'A variable has not been defined! ';
 
     const ERROR_FD5_PARAM_MIGRA  = 'Falha na migração do FormDin 4 para 5.';
+    const ERROR_FD5_OBJ_ADI  = 'Erro objeto Adianti Fieald não pode ficar em branco.';
     
     public function __construct() {
     }

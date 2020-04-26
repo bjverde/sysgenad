@@ -56,7 +56,7 @@
  * 
  * @author Reinaldo A. Barrêto Junior
  */
-class TFormDinMaskField
+class TFormDinMaskField extends TFormDinGenericField
 {
     protected $adiantiObj;
     protected $label;
@@ -85,24 +85,17 @@ class TFormDinMaskField
      * @return void
      */
     public function __construct( $id
-                               , $strLabel=null
+                               , $label=null
                                , $boolRequired=false
                                , $strMask=null
                                , $boolNewLine=null
-                               , $strValue=null
+                               , $value=null
                                , $boolLabelAbove=null
                                , $boolNoWrapLabel=null
-                               , $strExampleText=null )
+                               , $placeholder=null )
     {
-        $this->adiantiObj = new TEntry($id);
-        $this->adiantiObj->setId($id);
-        $this->adiantiObj->addValidation($strLabel, new TCNPJValidator);
-        $this->adiantiObj->setMask('99.999.999/9999-99', $boolSendMask);
-        if($boolRequired){
-            $strLabel = empty($strLabel)?$id:$strLabel;
-            $this->adiantiObj->addValidation($strLabel, new TRequiredValidator);
-        }
-        $this->setExampleText($strExampleText); 
+        $adiantiObj = new TEntry($id);
+        parent::__construct($adiantiObj,$id,$label,$boolRequired,$value,$placeholder);
         return $this->getAdiantiObj();
     }
 
