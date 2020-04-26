@@ -24,7 +24,7 @@ class Gen00 extends TPage
             $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9');
             $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
 
-            $this->form = $frm->getAdiantiObj();
+            $this->form = $frm->show();
 
             // wrap the page content using vertical box
             $vbox = new TVBox;
