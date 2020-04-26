@@ -82,6 +82,7 @@ class TFormDinMaskField extends TFormDinGenericField
      * @param boolean $boolLabelAbove - 7: NOT_IMPLEMENTED - Label sobre
      * @param boolean $boolNoWrapLabel- 8: NOT_IMPLEMENTED
      * @param string $strExampleText  - 9: PlaceHolder é um Texto de exemplo
+     * @param boolean $boolSendMask   - 10: Se as mascara deve ser enviada ou não para o post. DEFAULT = False.
      * @return void
      */
     public function __construct( $id
@@ -92,20 +93,12 @@ class TFormDinMaskField extends TFormDinGenericField
                                , $value=null
                                , $boolLabelAbove=null
                                , $boolNoWrapLabel=null
-                               , $placeholder=null )
+                               , $placeholder=null
+                               , $boolSendMask=false )
     {
         $adiantiObj = new TEntry($id);
         parent::__construct($adiantiObj,$id,$label,$boolRequired,$value,$placeholder);
+        $this->getAdiantiObj()->setMask($strMask, $boolSendMask);
         return $this->getAdiantiObj();
-    }
-
-    public function getAdiantiObj(){
-        return $this->adiantiObj;
-    }
-
-    public function setExampleText($placeholder){
-        if(!empty($placeholder)){
-            $this->adiantiObj->placeholder = $placeholder;
-        }
-    }    
+    }   
 }

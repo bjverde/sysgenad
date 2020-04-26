@@ -249,6 +249,7 @@ class TFormDin
      * @param boolean $boolLabelAbove - 7: NOT_IMPLEMENTED - Label sobre
      * @param boolean $boolNoWrapLabel- 8: NOT_IMPLEMENTED
      * @param string $strExampleText  - 9: PlaceHolder é um Texto de exemplo
+     * @param boolean $boolSendMask   -10: FORMDIN5: Se as mascara deve ser enviada ou não para o post. DEFAULT = False.
      * @return void
      */
     public function addMaskField( $id
@@ -259,9 +260,13 @@ class TFormDin
                                 , $strValue=null
                                 , $boolLabelAbove=null
                                 , $boolNoWrapLabel=null
-                                , $strExampleText=null )
+                                , $strExampleText=null 
+                                , $boolSendMask=false)
     {
-        $formDinSwitch = new TFormDinMaskField($id,$label,$boolRequired,$strMask,$boolNewLine,$strValue,$boolLabelAbove,$boolNoWrapLabel,$strExampleText);
+        $formDinSwitch = new TFormDinMaskField($id,$label,$boolRequired
+                                              ,$strMask,$boolNewLine,$strValue
+                                              ,$boolLabelAbove,$boolNoWrapLabel
+                                              ,$strExampleText,$boolSendMask);
         $objField = $formDinSwitch->getAdiantiObj();
         $label = $this->getLabelField($label,$boolRequired);
         $this->addFields([$label], [$objField]);
