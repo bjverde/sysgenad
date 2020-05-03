@@ -4,16 +4,18 @@
         <div class="card panel">
             <div class="card-header panel-heading">
                <div class="card-title panel-title">
-                   <div style="width: 100%"> <i class="far fa-clock gray" aria-hidden="true"></i> Guia rápido</div>
+                   <div style="width: 100%"> <i class="far fa-clock gray" aria-hidden="true"></i>Orientações sobre a estrutura de banco de dados</div>
                 </div>
             </div>
-            <div class="card-body panel-body" style="text-align:center">
-                <p>
-                O Guia rápido demonstra os passos mínimos para instalar e configurar uma aplicação no Adianti Framework. Este é um tutorial com recomendações genéricas, tanto para Linux, Windows, ou Mac.
-                </p>
-            </div>
-            <div class="card-footer panel-footer" style="text-align:center">
-                <a href="https://www.adianti.com.br/framework-quickstart" target="newwindow" class="btn btn-default"> <i class="far fa-clock blue" aria-hidden="true"></i> Abrir guia rápido </a>
+            <div class="card-body panel-body">
+                <br> Sigua as 4 dicas abaixo e será mais feliz ! Essas orientações não são obrigatorias, seguindo o código gerado irá funcionar de forma mais facil. 
+                <a href="https://github.com/bjverde/formDin/wiki/Usando-DAO-e-VO#dicas-para-modelar-o-banco-de-dados" target="_blank">Veja na Wiki do formDin em detalhes cada dica.</a>
+                <ul>
+                    <li>NÃO use chaves primárias composta !! Evite chaves primarias compostas. Procure utilizar sempre a chaves primaria simples com AUTOINCREMENT. Transforme as chaves compostas em chaves candidatas com Unique Key.</li>
+                    <li>Procure criar chaves primárias (PK) com nomes únicos. Nada de toda PK com o nome ID</li>
+                    <li>Use VIEWS e/ou SubSelects</li>
+                    <li>Use tabelas de apoio, para os "tipos"</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -43,16 +45,18 @@
         <div class="card panel">
             <div class="card-header panel-heading">
                <div class="card-title panel-title">
-                   <div style="width: 100%"><i class="fa fa-code gray" aria-hidden="true"></i> Referência da API</div>
+                   <div style="width: 100%"><i class="fa fa-code gray" aria-hidden="true"></i>Tipo de sistema</div>
                 </div>
             </div>
-            <div class="card-body panel-body" style="text-align:center">
-                <p>
-                A Referência da API trata-se de documentação online gerada automaticamente com base na estrutura de classes, métodos, assinaturas e cabeçalhos dos mesmos. 
-                </p>
-            </div>
-            <div class="card-footer panel-footer" style="text-align:center">
-                <a href="https://www.adianti.com.br/api-framework-a-a" target="newwindow" class="btn btn-default"> <i class="fa fa-code blue" aria-hidden="true"></i> Abrir referência da API </a>
+            <div class="card-body panel-body">
+                <b>ATENÇÃO:</b> Para API REST é preciso habilitar a mod_rewrite no Apache. 
+                <a href="https://github.com/bjverde/formDin/wiki/API-REST">Informações sobre no Wiki do FormDin</a> 
+                
+                <ul>
+                    <li>Somente tela FormDin: Padrão FormDin com a geração de menus, dao, vo, negocio e tela</li>
+                    <li>Somente API REST: Padrão RESTFull via api Json. Não tem menus e telas. tudo irá responder no SISTEMA/API</li>
+                    <li>FormDin + REST: É descrição completa do nome do sistema ou o que significa a sigla</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -61,16 +65,17 @@
         <div class="card panel">
             <div class="card-header panel-heading">
                <div class="card-title panel-title">
-                   <div style="width: 100%"><i class="far fa-file-pdf gray" aria-hidden="true"></i> Documentação da API</div>
+                <div style="width: 100%"><i class="fa fa-code gray" aria-hidden="true"></i>Tipo de sistema</div>
                 </div>
             </div>
-            <div class="card-body panel-body" style="text-align:center">
-                <p>
-                A Documentação da API é documentação contínua em PDF gerada automaticamente com base na estrutura de classes, métodos, assinaturas e cabeçalhos dos mesmos. 
-                </p>
-            </div>
-            <div class="card-footer panel-footer" style="text-align:center">
-                <a href="https://www.adianti.com.br/framework-docs" target="newwindow" class="btn btn-default"> <i class="far fa-file-pdf blue" aria-hidden="true"></i> Abrir a documentação da API </a>
+            <div class="card-body panel-body">
+                EasyLabel é um recurso que irá alterar a Label dos campos das telas FormDin. Diminuindo seu trabalho de alterar as labels, no momento conta com regras fixas. Se o campo da tabela coincidir com o Tipo e a Regex o label será alterado. Exemplos: 
+                <ul>
+                    <li>Tipo Numerico e nome do campo QTALGO = Quantidade Algo</li>
+                    <li>Tipo Data e nome do campo DTALGO = Data Algo</li>
+                    <li>Tipo Texto e nome do campo MNALGO = Nome Algo</li>
+                    <li>Tipo Texto e nome do campo DSALGO = Descrição Algo</li>
+                </ul>
             </div>
         </div>
     </div>
