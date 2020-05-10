@@ -14,44 +14,7 @@ class TGeneratorHelper
     const TP_SYSTEM_FORM = 'TP_SYSTEM_FORM';
     const TP_SYSTEM_REST = 'TP_SYSTEM_REST';
     const TP_SYSTEM_FORM_REST = 'TP_SYSTEM_FORM_REST';
-    
-    public static function validadeFormDinMinimumVersion($html)
-    {
-        $texto = '<b>Versão do FormDin</b>: ';
-        $formVersion = explode("-", FORMDIN_VERSION);
-        $formVersion = $formVersion[0];
-        if (version_compare($formVersion,FORMDIN_VERSION_MIN_VERSION,'>=')) {
-            $texto =  $texto.'<span class="success">'.FORMDIN_VERSION.'</span>';
-            $html->add($texto);            
-            $result = true;
-        } else {
-            $texto =  $texto.'<span class="failure">'.FORMDIN_VERSION.'</span>, atualize para a versão: '.FORMDIN_VERSION_MIN_VERSION;
-            $html->add($texto);
-            $result = false;
-        }
-        return $result;
-    }    
-    
-    public static function validadePhpMinimumVersion($html)
-    {
-        $texto = '<b>Versão do PHP</b>: ';
-        if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-            $texto =  $texto.'<span class="success">'.phpversion().'</span><br>';
-            $html->add($texto);
-            $result = true;
-        } elseif (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-            $texto =  $texto.'<span class="failure">'.phpversion().' </span><br>';
-            $texto =  $texto.'<span class="alert">Para um melhor desempenho atualize seu servidor para PHP 7.0.0 ou seperior </span><br>';
-            $html->add($texto);
-            $result = true;
-        } else {
-            $texto =  $texto.'<span class="failure">'.phpversion().' atualize seu sistema para o PHP 5.4.0 ou seperior </span><br>';
-            $texto =  $texto.'<br><br><span class="alert">O FormDin precisa de uma versão mais atual do PHP</span><br>';
-            $html->add($texto);
-            $result = false;
-        }
-        return $result;
-    }
+
     
     public static function testar($extensao = null, $html)
     {
@@ -84,31 +47,31 @@ class TGeneratorHelper
     {
         // https://secure.php.net/manual/pt_BR/pdo.drivers.php
         $result = false;
-        if ($DBMS == DBMS_MYSQL) {
+        if ($DBMS == FormDinHelper::DBMS_MYSQL) {
             if (self::testar('PDO_MYSQL', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == DBMS_SQLITE) {
+        } elseif ($DBMS == FormDinHelper::DBMS_SQLITE) {
             if (self::testar('PDO_SQLITE', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == DBMS_SQLSERVER) {
+        } elseif ($DBMS == FormDinHelper::DBMS_SQLSERVER) {
             if (self::testar('PDO_SQLSRV', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == DBMS_ACCESS) {
+        } elseif ($DBMS == FormDinHelper::DBMS_ACCESS) {
             if (self::testar('PDO_ODBC', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == DBMS_FIREBIRD) {
+        } elseif ($DBMS == FormDinHelper::DBMS_FIREBIRD) {
             if (self::testar('PDO_FIREBIRD', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == DBMS_ORACLE) {
+        } elseif ($DBMS == FormDinHelper::DBMS_ORACLE) {
             if (self::testar('PDO_OCI', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == DBMS_POSTGRES) {
+        } elseif ($DBMS == FormDinHelper::DBMS_POSTGRES) {
             if (self::testar('PDO_PGSQL', $html)) {
                 $result = true;
             }
@@ -340,19 +303,19 @@ class TGeneratorHelper
     private static function getConfigByDBMS($DBMS)
     {
         switch ($DBMS) {
-            case DBMS_MYSQL:
+            case FormDinHelper::DBMS_MYSQL:
                 $SCHEMA = false;
                 $TPGRID = self::getConfigGridMySql($DBMS);
             break;
-            case DBMS_SQLSERVER:
+            case FormDinHelper::DBMS_SQLSERVER:
                 $SCHEMA = true;
                 $TPGRID = self::getConfigGridSqlServer($DBMS);
             break;
-            case DBMS_POSTGRES:
+            case FormDinHelper::DBMS_POSTGRES:
                 $SCHEMA = true;
                 $TPGRID = self::getConfigGridPostgresql($DBMS);
             break;
-            case DBMS_SQLITE;
+            case FormDinHelper::DBMS_SQLITE;
                 $SCHEMA = false;
                 $TPGRID = GRID_SQL_PAGINATION;
             break;             
