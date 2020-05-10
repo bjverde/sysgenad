@@ -75,7 +75,7 @@ class Gen00 extends TPage
      */
     function onReload()
     {
-        
+
     }
     
     /**
@@ -89,17 +89,32 @@ class Gen00 extends TPage
 
     public function onSave($param)
     {
-        $data = $this->form->getData();
-        $this->form->setData($data);
+        try {
 
-        //Função do FormDin para Debug
-        FormDinHelper::d($param,'$param');
-        FormDinHelper::debug($data,'$data');
-        FormDinHelper::debug($_REQUEST,'$_REQUEST');
+            $data = $this->form->getData();
+            $this->form->setData($data);
+    
+            //Função do FormDin para Debug
+            FormDinHelper::d($param,'$param');
+            FormDinHelper::debug($data,'$data');
+            FormDinHelper::debug($_REQUEST,'$_REQUEST');
 
-        TSession::setValue('registration_course', ['course_id' => $param['code'],
-        'course_description' => $param['description']] );
+            $GEN_SYSTEM_ACRONYM = strtolower($frm->get('GEN_SYSTEM_ACRONYM'));
+            TGeneratorHelper::validateFolderName($GEN_SYSTEM_ACRONYM);
+            $_SESSION[APLICATIVO]=null;
+            $_SESSION[APLICATIVO]['DBMS']['TYPE']=$frm->get('DBMS');
+            $_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM']=$GEN_SYSTEM_ACRONYM;
+            $_SESSION[APLICATIVO]['GEN_SYSTEM_VERSION']=$frm->get('GEN_SYSTEM_VERSION');
+            $_SESSION[APLICATIVO]['GEN_SYSTEM_NAME']=$frm->get('GEN_SYSTEM_NAME');
+            $_SESSION[APLICATIVO][TableInfo::TP_SYSTEM]=$frm->get(TableInfo::TP_SYSTEM);
+            $_SESSION[APLICATIVO]['EASYLABEL']=$frm->get('EASYLABEL');
+            $frm->redirect('gen01.php', 'Redirect realizado com sucesso.', true);
 
-        AdiantiCoreApplication::loadPage('MultiStepRegistration3View');
+            //TSession::setValue('registration_course', ['course_id' => $param['code'],
+            //'course_description' => $param['description']] );
+            //AdiantiCoreApplication::loadPage('MultiStepRegistration3View');
+        } catch (Exception $e) {
+            $frm->setMessage($e->getMessage());
+        }
     }
 }
