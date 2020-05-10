@@ -20,7 +20,7 @@ class Gen00 extends TPage
             
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP00);
             
-            $frm = new TFormDin('Configurações');
+            $frm = new TFormDin(Message::GEN00_TITLE);
 
             $html = '<h3>Campos:</h3>
             <ul>
@@ -60,6 +60,23 @@ class Gen00 extends TPage
             new TMessage('error', $e->getMessage());
         }
     }
+
+    /**
+     * shows the page
+     */
+    function show()
+    {
+        $this->onReload();
+        parent::show();
+    }
+
+    /**
+     * Load the data into the datagrid
+     */
+    function onReload()
+    {
+        
+    }
     
     /**
      * Clear filters
@@ -79,5 +96,10 @@ class Gen00 extends TPage
         FormDinHelper::d($param,'$param');
         FormDinHelper::debug($data,'$data');
         FormDinHelper::debug($_REQUEST,'$_REQUEST');
+
+        TSession::setValue('registration_course', ['course_id' => $param['code'],
+        'course_description' => $param['description']] );
+
+        AdiantiCoreApplication::loadPage('MultiStepRegistration3View');
     }
 }

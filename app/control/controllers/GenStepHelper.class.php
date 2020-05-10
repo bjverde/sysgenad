@@ -5,6 +5,7 @@ class GenStepHelper
     const STEP01 = 'Config DataBase';
     const STEP02 = 'Select Tables';
     const STEP03 = 'Result';
+    const STEP04 = 'Result';
 
     public static function getStepPage($stepPage)
     {
@@ -13,6 +14,7 @@ class GenStepHelper
         $pagestep->addItem(self::STEP01);
         $pagestep->addItem(self::STEP02);
         $pagestep->addItem(self::STEP03);
+        $pagestep->addItem(self::STEP04);
         $pagestep->select($stepPage);
         return $pagestep;
     }
