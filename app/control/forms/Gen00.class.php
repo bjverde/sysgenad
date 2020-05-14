@@ -35,17 +35,14 @@ class Gen00 extends TPage
             $frm->addTextField('GEN_SYSTEM_ACRONYM','Sigla do Sistema', 50, true);
             $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9');
             $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
-
-            $this->form = $frm->show();
-
-
-            // add form actions
+            
             // O Adianti permite a Internacionalização - A função _t('string') serve
             //para traduzir termos no sistema. Veja ApplicationTranslator escrevendo
             //primeiro em ingles e depois traduzindo
-            $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'far:check-circle green');
-            $this->form->addActionLink(_t('Clear'),  new TAction([$this, 'clear']), 'fa:eraser red');
+            $frm->setAction('Continuar','onSave',$this,false,'fa:chevron-circle-right','green');
+            $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
 
+            $this->form = $frm->show();
 
             // wrap the page content using vertical box
             $vbox = new TVBox;
@@ -90,29 +87,26 @@ class Gen00 extends TPage
     public function onSave($param)
     {
         try {
-
-            $data = $this->form->getData();
-            $this->form->setData($data);
+            //$data = $this->form->getData();
+            //$this->form->setData($data);
     
             //Função do FormDin para Debug
-            FormDinHelper::d($param,'$param');
-            FormDinHelper::debug($data,'$data');
-            FormDinHelper::debug($_REQUEST,'$_REQUEST');
+            //FormDinHelper::d($param,'$param');
+            //FormDinHelper::debug($data,'$data');
+            //FormDinHelper::debug($_REQUEST,'$_REQUEST');
+            //FormDinHelper::debug($_SESSION,'$_SESSION');
 
-            $GEN_SYSTEM_ACRONYM = strtolower($frm->get('GEN_SYSTEM_ACRONYM'));
+            $GEN_SYSTEM_ACRONYM = RequestHelper::get('GEN_SYSTEM_ACRONYM') ;
             TGeneratorHelper::validateFolderName($GEN_SYSTEM_ACRONYM);
-            $_SESSION[APLICATIVO]=null;
-            $_SESSION[APLICATIVO]['DBMS']['TYPE']=$frm->get('DBMS');
-            $_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM']=$GEN_SYSTEM_ACRONYM;
-            $_SESSION[APLICATIVO]['GEN_SYSTEM_VERSION']=$frm->get('GEN_SYSTEM_VERSION');
-            $_SESSION[APLICATIVO]['GEN_SYSTEM_NAME']=$frm->get('GEN_SYSTEM_NAME');
-            $_SESSION[APLICATIVO][TableInfo::TP_SYSTEM]=$frm->get(TableInfo::TP_SYSTEM);
-            $_SESSION[APLICATIVO]['EASYLABEL']=$frm->get('EASYLABEL');
-            $frm->redirect('gen01.php', 'Redirect realizado com sucesso.', true);
 
-            //TSession::setValue('registration_course', ['course_id' => $param['code'],
-            //'course_description' => $param['description']] );
-            //AdiantiCoreApplication::loadPage('MultiStepRegistration3View');
+            TSession::clear();
+            TSession::setValue('DBMS',['TYPE'=>RequestHelper::get('DBMS')]);
+            TSession::setValue('GEN_SYSTEM_ACRONYM',$GEN_SYSTEM_ACRONYM);
+            TSession::setValue('GEN_SYSTEM_VERSION',RequestHelper::get('GEN_SYSTEM_VERSION'));
+            TSession::setValue('GEN_SYSTEM_NAME',RequestHelper::get('GEN_SYSTEM_NAME'));
+            //TSession::setValue(TableInfo::TP_SYSTEM,RequestHelper::get(TableInfo::TP_SYSTEM));
+            //TSession::setValue('EASYLABEL',RequestHelper::get('EASYLABEL'));
+            AdiantiCoreApplication::loadPage('Gen01');
         } catch (Exception $e) {
             $frm->setMessage($e->getMessage());
         }

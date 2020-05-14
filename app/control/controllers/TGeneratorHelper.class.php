@@ -121,6 +121,7 @@ class TGeneratorHelper
     
     public static function validateFolderName($nome)
     {
+        $nome=StringHelper::strtolower_utf8($nome);
         $is_string = is_string($nome);
         $strlen    = strlen($nome) > 50;
         $preg      = preg_match('/^(([a-z]|[0-9]|_)+|)$/', $nome, $matches);

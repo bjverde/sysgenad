@@ -18,7 +18,7 @@ class Gen01 extends TPage
             $this->html = new THtmlRenderer('app/resources/gen00.html');
             $this->html->enableSection('main');
             
-            $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP00);
+            $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP01);
             
             $frm = new TFormDin(Message::GEN01_TITLE);
 
@@ -36,15 +36,12 @@ class Gen01 extends TPage
             $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9');
             $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
 
+
+            $frm->setAction('Voltar','onSave',$this,false,'fa:chevron-circle-left','green');
+            $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
+            $frm->setAction('Gerar Estrutura','onSave',$this,false,'fa:chevron-circle-right','green');
+
             $this->form = $frm->show();
-
-
-            // add form actions
-            // O Adianti permite a Internacionalização - A função _t('string') serve
-            //para traduzir termos no sistema. Veja ApplicationTranslator escrevendo
-            //primeiro em ingles e depois traduzindo
-            $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'far:check-circle green');
-            $this->form->addActionLink(_t('Clear'),  new TAction([$this, 'clear']), 'fa:eraser red');
 
 
             // wrap the page content using vertical box
@@ -59,6 +56,11 @@ class Gen01 extends TPage
         {
             new TMessage('error', $e->getMessage());
         }
+    }
+
+    public function back()
+    {
+        AdiantiCoreApplication::loadPage('Gen00');
     }
     
     /**
