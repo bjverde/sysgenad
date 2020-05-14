@@ -13,22 +13,11 @@ class Gen01 extends TPage
         parent::__construct();
         
         try
-        {
-            // create the HTML Renderer
-            $this->html = new THtmlRenderer('app/resources/gen00.html');
-            $this->html->enableSection('main');
-            
+        {            
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP01);
             
             $frm = new TFormDin(Message::GEN01_TITLE);
 
-            $html = '<h3>Campos:</h3>
-            <ul>
-                <li>Sigla do Sistema: A sigla do sistema é o ID do sistema. Será utiliza para criar a pasta do novo sistema. Por padrão aparecerá no canto superior esquerdo</li>
-                <li>Versão do sistema: É número da versão. É recomendável utilizar <a href="https://semver.org/lang/pt-BR/" target="_blank">o versionamento semântico</a></li>
-                <li>Nome do sistema: É descrição completa do nome do sistema ou o que significa a sigla</li>
-            </ul>';
-            $frm->addHtmlField('aviso',$html,null,null);
             //$formDin->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType, null, null, null, null, null, null, ' ', 0);
             $dbType = FormDinHelper::getListDBMS();
             $frm->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType);
@@ -37,9 +26,9 @@ class Gen01 extends TPage
             $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
 
 
-            $frm->setAction('Voltar','onSave',$this,false,'fa:chevron-circle-left','green');
+            $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
             $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
-            $frm->setAction('Gerar Estrutura','onSave',$this,false,'fa:chevron-circle-right','green');
+            $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'onSave',$this,false,'fa:chevron-circle-right','green');
 
             $this->form = $frm->show();
 
