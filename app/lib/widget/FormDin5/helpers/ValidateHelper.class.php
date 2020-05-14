@@ -41,11 +41,13 @@
  */
 class ValidateHelper
 {
-    const TYPE_ERRO_NOTICIE = 'TYPE_ERRO_NOTICIE';
-    const TYPE_ERRO_WARNING = 'TYPE_ERRO_WARNING';
+    const TRIGGER_ERROR_NOTICIE = 'TRIGGER_ERROR_NOTICIE';
+    const TRIGGER_ERROR_WARNING = 'TRIGGER_ERROR_WARNING';
+    const TRIGGER_ERROR_ERROR   = 'TRIGGER_ERROR_ERROR';
     const TYPE_ERRO_EXECEPTION = 'TYPE_ERRO_EXECEPTION';
     const TYPE_ERRO_MSG_DECREP = 'TYPE_ERRO_MSG_DECREP';
     const TYPE_ERRO_MSG_NOT_IMPLEMENTED = 'TYPE_ERRO_MSG_NOT_IMPLEMENTED';
+    const TYPE_ERRO_MSG_CHANGE = 'TYPE_ERRO_MSG_CHANGE';
     
     public static function methodLine($method,$line,$nameMethodValidate)
     {
@@ -72,7 +74,7 @@ class ValidateHelper
             throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_NOT_SET.'See the method: '.$method.' in the line: '.$line);
         }
     }
-    
+    //--------------------------------------------------------------------------------
     /**
      * Validade is array and not empty
      * @param array $array
@@ -87,8 +89,7 @@ class ValidateHelper
         if( empty($array) || !is_array($array) ){
             throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_NOT_ARRAY.'See the method: '.$method.' in the line: '.$line);
         }
-    }
-    
+    }    
     //--------------------------------------------------------------------------------
     /**
      * Validate Object Type is Instance Of TPDOConnectionObj
@@ -107,18 +108,38 @@ class ValidateHelper
             throw new InvalidArgumentException('Informed class is not an instance of TPDOConnectionObj. See the method: '.$method.' in the line: '.$line);
         }
     }
-
+    //--------------------------------------------------------------------------------
+    public static function triggerError($msg,$typeErro)
+    {
+        if($typeErro == self::TYPE_ERRO_EXECEPTION){
+            throw new InvalidArgumentException($msg);
+        }else if($typeErro == self::TRIGGER_ERROR_ERROR){
+            trigger_error($msg, E_ERROR);
+        }else if($typeErro == self::TRIGGER_ERROR_WARNING){
+            trigger_error($msg, E_USER_WARNING);
+        }else{
+            trigger_error($msg, E_USER_NOTICE);
+        }
+    }
+    //--------------------------------------------------------------------------------
+    public static function typeErrorMsg($typeErroMsg)
+    {
+        $complemento = null;
+        if($typeErroMsg==self::TYPE_ERRO_MSG_NOT_IMPLEMENTED){
+            $complemento = ' não foi implementado!';
+        }else if($typeErroMsg == self::TYPE_ERRO_MSG_CHANGE){
+            $complemento = ' FOI ALTERADO!';
+        }else{
+            $complemento = ' FOI DESCONTINUADO!!';
+        }
+        return $complemento;
+    }    
     //--------------------------------------------------------------------------------
     public static function validadeParam($paramName,$paramValue,$typeErro,$typeErroMsg,$class,$method,$line)
     {
         $test = isset($paramValue) && !empty($paramValue);
         if($test){
-            $complemento = null;
-            if($typeErroMsg==self::TYPE_ERRO_MSG_NOT_IMPLEMENTED){
-                $complemento = ' não foi implementado!';
-            }else{
-                $complemento = ' FOI DESCONTINUADO!!';
-            }
+            $complemento = self::typeErrorMsg($typeErroMsg);
 
             $msg = TFormDinMessage::ERROR_FD5_PARAM_MIGRA
                 .' O parametro: '.$paramName
@@ -127,13 +148,21 @@ class ValidateHelper
                 .', no metodo: '.$method
                 .', na linha: '.$line
                 ;
-            if($typeErro == self::TYPE_ERRO_EXECEPTION){
-                throw new InvalidArgumentException($msg);
-            } else if($typeErro == self::TYPE_ERRO_WARNING){
-                trigger_error($msg, E_USER_WARNING);
-            }else{
-                trigger_error($msg, E_USER_NOTICE);
-            }
+            self::triggerError($msg,$typeErro);
+        }
+    }
+    //--------------------------------------------------------------------------------
+    public static function migrarMensage($mensagem,$typeErro,$typeErroMsg,$class,$method,$line)
+    {
+        $test = isset($mensagem) && !empty($mensagem);
+        if($test){
+            $complemento = self::typeErrorMsg($typeErroMsg);
+
+            $msg = TFormDinMessage::ERROR_FD5_PARAM_MIGRA
+                .$complemento
+                .': '.$mensagem
+                ;
+            self::triggerError($msg,$typeErro);
         }
     }
 }

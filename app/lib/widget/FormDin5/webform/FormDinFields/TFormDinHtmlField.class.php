@@ -97,5 +97,9 @@ class TFormDinHtmlField extends TFormDinGenericField
         $label = is_null($label)?'':$label;
         parent::__construct($adiantiObj,$id,$label,null,null,null);
         return $this->getAdiantiObj();
-    }   
+    }
+
+    public function setId($id){
+        $this->getAdiantiObj()->id = $id;
+    }
 }

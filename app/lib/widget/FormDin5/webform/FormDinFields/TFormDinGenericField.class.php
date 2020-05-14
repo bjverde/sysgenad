@@ -109,7 +109,8 @@ class TFormDinGenericField
     }
 
     public function setId($id){
-        $this->getAdiantiObj()->id = $id;
+        //$this->getAdiantiObj()->id = $id;
+        $this->getAdiantiObj()->setId($id);
     }
 
     public function setRequired($boolRequired){
