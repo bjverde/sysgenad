@@ -33,7 +33,7 @@ class Gen00 extends TPage
             $dbType = FormDinHelper::getListDBMS();
             $frm->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType);
             $frm->addTextField('GEN_SYSTEM_ACRONYM','Sigla do Sistema', 50, true);
-            $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9');
+            $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9',null,'0.0.0');
             $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
             
             // O Adianti permite a Internacionalização - A função _t('string') serve

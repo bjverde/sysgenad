@@ -13,7 +13,9 @@ class Gen01 extends TPage
         parent::__construct();
         
         try
-        {            
+        {   
+            FormDinHelper::debug($_SESSION,'$_SESSION');
+
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP01);
             
             $frm = new TFormDin(Message::GEN01_TITLE);
@@ -45,6 +47,20 @@ class Gen01 extends TPage
         {
             new TMessage('error', $e->getMessage());
         }
+    }
+
+    public function getPanelAviso()
+    {
+        // creates a panel
+        $panel = new TPanelGroup('Configurações');
+        
+        $table = new TTable;
+        $table->border = 1;
+        $table->style = 'border-collapse:collapse';
+        $table->width = '100%';
+        $table->addRowSet('a1','a2');
+        $table->addRowSet('b1','b2');
+        $panel->add($table);
     }
 
     public function back()
