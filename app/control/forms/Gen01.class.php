@@ -15,31 +15,19 @@ class Gen01 extends TPage
         try
         {   
             FormDinHelper::debug($_SESSION,'$_SESSION');
+            $DBMS = TSession::getValue('DBMS');
+            TPage::include_css('app/resources/sysgen.css');
 
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP01);
             
-            $frm = new TFormDin(Message::GEN01_TITLE);
-
-            //$formDin->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType, null, null, null, null, null, null, ' ', 0);
-            $dbType = FormDinHelper::getListDBMS();
-            $frm->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType);
-            $frm->addTextField('GEN_SYSTEM_ACRONYM','Sigla do Sistema', 50, true);
-            $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9');
-            $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
-
-
-            $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
-            $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
-            $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'onSave',$this,false,'fa:chevron-circle-right','green');
-
-            $this->form = $frm->show();
-
+            $this->form = $this->getMainForm();
 
             // wrap the page content using vertical box
             $vbox = new TVBox;
             $vbox->style = 'width: 100%';
             $vbox->add( $pagestep );
-            $vbox->add( $this->html );
+            $vbox->add( $this->getPanelConfig() );
+            $vbox->add( $this->getPanelAviso() );
             $vbox->add( $this->form );
             parent::add($vbox);
         }
@@ -49,18 +37,54 @@ class Gen01 extends TPage
         }
     }
 
+    public function getPanelConfig()
+    {
+        $formField = new TFormDinHtmlField('conf', '');
+        $html = $formField->getAdiantiObj();
+        $html->add('<br><b>Extensões PHP necessárias para o correto funcionamento:</b><br>');
+        $DBMS = TSession::getValue('DBMS');
+        $validoPDOAndDBMS = TGeneratorHelper::validatePDOAndDBMS($DBMS['TYPE'], $html);
+
+        // creates a panel
+        $panel = new TPanelGroup(Message::GEN01_GPX1_TITLE);
+        $panel->add($html);
+
+        return $panel;
+    }
+
     public function getPanelAviso()
     {
+        $formField = new TFormDinHtmlField('conf', '');
+        $html = $formField->getAdiantiObj();
+        $html->add('<br>'.Message::INFO_CONNECT.'<br>');
+
         // creates a panel
-        $panel = new TPanelGroup('Configurações');
+        $panel = new TPanelGroup(Message::GEN00_GPX3_TITLE);
+        $panel->add($html);
+
+        return $panel;
+    }
+
+    public function getMainForm()
+    {
+
+        $frm = new TFormDin(Message::GEN01_TITLE);
+
+        //$formDin->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType, null, null, null, null, null, null, ' ', 0);
+        $dbType = FormDinHelper::getListDBMS();
+        $frm->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType);
+        $frm->addTextField('GEN_SYSTEM_ACRONYM','Sigla do Sistema', 50, true);
+        $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9');
+        $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
+
+
+        $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
+        $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
+        $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'onSave',$this,false,'fa:chevron-circle-right','green');
+
         
-        $table = new TTable;
-        $table->border = 1;
-        $table->style = 'border-collapse:collapse';
-        $table->width = '100%';
-        $table->addRowSet('a1','a2');
-        $table->addRowSet('b1','b2');
-        $panel->add($table);
+        return $frm->show();
+
     }
 
     public function back()
