@@ -23,7 +23,7 @@ use DomDocument;
 /**
  * Standard Collection Trait
  *
- * @version    7.1
+ * @version    7.2
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -261,6 +261,8 @@ trait AdiantiStandardCollectionTrait
                 throw new Exception(AdiantiCoreTranslator::translate('^1 was not defined. You must call ^2 in ^3', 'Active Record', 'setActiveRecord()', AdiantiCoreTranslator::translate('Constructor')));
             }
             
+            $param_criteria = $param;
+            
             // open a transaction with database
             TTransaction::open($this->database);
             
@@ -279,10 +281,10 @@ trait AdiantiStandardCollectionTrait
 
             if (is_array($this->orderCommands) && !empty($param['order']) && !empty($this->orderCommands[$param['order']]))
             {
-                $param['order'] = $this->orderCommands[$param['order']];
+                $param_criteria['order'] = $this->orderCommands[$param['order']];
             }
             
-            $criteria->setProperties($param); // order, offset
+            $criteria->setProperties($param_criteria); // order, offset
             $criteria->setProperty('limit', $limit);
             
             if ($this->formFilters)
