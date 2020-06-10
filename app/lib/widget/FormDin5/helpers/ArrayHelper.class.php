@@ -1,10 +1,11 @@
 <?php
 /*
- * Formdin Framework
- * Copyright (C) 2012 Ministério do Planejamento
- * Criado por Luís Eugênio Barbosa
- * Essa versão é um Fork https://github.com/bjverde/formDin
- *
+ * ----------------------------------------------------------------------------
+ * Formdin 5 Framework
+ * SourceCode https://github.com/bjverde/formDin5
+ * @author Reinaldo A. Barrêto Junior
+ * 
+ * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -28,9 +29,9 @@
  * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
  * do Software Livre (FSF).
  *
- * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
+ * Este programa é distribuí1do na esperança que possa ser útil, mas SEM NENHUMA
  * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
- * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
+ * APLICAÇÃO EM PARTICULAR. Veja a Licen?a Pública Geral GNU/LGPL em portugu?s
  * para maiores detalhes.
  *
  * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
@@ -38,6 +39,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 class ArrayHelper
 {
     
@@ -254,10 +256,10 @@ class ArrayHelper
         $result['formarray'] = $array;
         
         if( !self::has($attributeName, $array) ) {
-            $result['message'] = TMessage::ARRAY_ATTRIBUTE_NOT_EXIST;
+            $result['message'] = TFormDinMessage::ARRAY_ATTRIBUTE_NOT_EXIST;
         }else{
             if( !self::formDinGetValue($array, $attributeName, $keyIndex) ){
-                $result['message'] = TMessage::ARRAY_KEY_NOT_EXIST;
+                $result['message'] = TFormDinMessage::ARRAY_KEY_NOT_EXIST;
             }else{
                 $arrayResult = array();
                 foreach ($array as $attribute => $arrayAttribute) {

@@ -29,9 +29,9 @@
  * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
  * do Software Livre (FSF).
  *
- * Este programa é distribuí1do na esperança que possa ser útil, mas SEM NENHUMA
+ * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
  * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
- * APLICAÇÃO EM PARTICULAR. Veja a Licen?a Pública Geral GNU/LGPL em portugu?s
+ * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
  * para maiores detalhes.
  *
  * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
@@ -57,7 +57,10 @@
  */
 class TFormDin
 {
+    const TYPE_FIELD  = 'feild';
+    const TYPE_LAYOUT = 'layout';
     protected $adiantiObj;
+    private $listFormElements = array();
 
     /**
      * Método construtor da classe do Formulario Padronizado em BoorStrap
@@ -113,6 +116,122 @@ class TFormDin
                                      ,__CLASS__,__METHOD__,__LINE__);                                     
     }
 
+    /**
+     * Recebe a chave da posição do elemento e verifica se o proximo elemento
+     * deve ficar em mesma linha ou na proxima
+     * @param int $key
+     * @return void
+     */
+    public function nextElementNewLine($key)
+    {
+        $result = null;
+        $listFormElements = $this->getListFormElements();
+        if( ArrayHelper::has($key+1,$listFormElements) ){
+            $result = $listFormElements[$key+1]['boolNewLine'];
+        }
+        return $result;
+    }
+
+    /**
+     * Recebe um elemento e retorna o array do Label
+     *
+     * @param [type] $element
+     * @return void
+     */
+    public function getArrayElementLabelAbove($element)
+    {
+        ValidateHelper::isArray($element,__METHOD__,__LINE__);
+        $result = null;
+        $label = $element['label'];
+        $obj   = $element['obj'];
+        if($element['boolLabelAbove']==true){
+            $result = array([$label, $obj]);
+        }else{
+            $result = array([$label], [$obj]);
+        }
+        return $result;
+    }
+
+    /**
+     * Recebe a chave da posição da posição inicial, vai percorrendo a lista
+     * para retorna o array de duas posição
+     * $result['key'] - ultimo elemento incluido
+     *  $result['row']- array com todos os alementos da lista
+     * 
+     * @param int $key
+     * @return array
+     */
+    public function addFieldsRow($key)
+    {
+        $result = array();
+        $listFormElements = $this->getListFormElements();
+        if( $this->nextElementNewLine($key)===true ){
+            $result['key']=$key;
+            $element = $listFormElements[$key];
+            $result['row']=$this->getArrayElementLabelAbove($element);
+        }else if( $this->nextElementNewLine($key)===false ){
+            $row = array();
+            while( $this->nextElementNewLine($key)==false && ArrayHelper::has($key,$listFormElements)) {
+                $element = $listFormElements[$key];
+                $label = $element['label'];
+                $obj   = $element['obj'];
+                if($element['boolLabelAbove']==true){
+                    $row[]=[$label, $obj];
+                }else{
+                    $row[]=[$label];
+                    $row[]=[$obj];
+                }
+                $key = $key + 1;
+            }
+            $result['key']=$key;
+            $result['row']=$row;
+        }else{
+            $result['key']=$key;
+            if(!ArrayHelper::has($key,$listFormElements)){
+                $result['row']=null;
+            }else{
+                $element = $listFormElements[$key];
+                $result['row']=$this->getArrayElementLabelAbove($element);
+            }            
+        }
+        return $result;
+    }
+
+    public function getAdiantiObj2()
+    {
+        $listFormElements = $this->getListFormElements();
+        $qtd = CountHelper::count($listFormElements);
+        //foreach ($listFormElements as $key => $element){
+        $key = 0;
+        while ($key < $qtd) {
+            $fieldsRowResult = $this->addFieldsRow($key);            
+            $fieldsRow = $fieldsRowResult['row'];
+            $adiantiObj = $this->adiantiObj;
+            call_user_func_array(array($adiantiObj, "addFields"), $fieldsRow);
+            $key = $fieldsRowResult['key'];
+            $key = $key + 1;
+            /*
+            $element = $listFormElements[$key];
+            if($element['type']==self::TYPE_FIELD){
+                $fieldsRowResult = $this->addFieldsRow($key);
+                $key = $fieldsRowResult['key'];
+                $fieldsRow = $fieldsRowResult['row'];
+                $adiantiObj = $this->adiantiObj;
+                call_user_func_array(array($adiantiObj, "addFields"), $fieldsRow);
+                //https://www.php.net/manual/pt_BR/function.call-user-func-array.php
+            }
+            if($element['type']==self::TYPE_LAYOUT){
+                    //$fieldsRow = $this->addFieldsRow($element);
+                    //$adiantiObj = $this->adiantiObj;
+                    //call_user_func_array(array($adiantiObj, "addFields"), $fieldsRow);
+                    //https://www.php.net/manual/pt_BR/function.call-user-func-array.php
+            }
+            */
+        }
+        return $this->adiantiObj;
+    }
+
+
     public function getAdiantiObj()
     {
         return $this->adiantiObj;
@@ -120,7 +239,27 @@ class TFormDin
 
     public function show()
     {
-        return $this->getAdiantiObj();
+        return $this->getAdiantiObj2();
+    }
+
+    public function addElementFormList($obj
+                                         ,$type = self::TYPE_FIELD
+                                         ,$label=null
+                                         ,$boolNewLine=true
+                                         ,$boolLabelAbove=false)
+    {
+        $element = array();
+        $element['obj']=$obj;
+        $element['type']=$type;
+        $element['label']=$label;
+        $element['boolNewLine']=$boolNewLine;
+        $element['boolLabelAbove']=$boolLabelAbove;
+        $this->listFormElements[]=$element;
+    }
+
+    public function getListFormElements()
+    {
+        return $this->listFormElements;
     }
 
     /**
@@ -129,7 +268,7 @@ class TFormDin
      * @param array $campo - campo que será incluido
      * @param array $boolLabelAbove - informa se o Label é acima
      */
-    public function addFields($label, $campo, $boolLabelAbove = false)
+    protected function addFields($label, $campo, $boolLabelAbove = false)
     {
         if($boolLabelAbove){
             $this->adiantiObj->addFields([$label, $campo]);
@@ -443,8 +582,8 @@ class TFormDin
      * @param boolean $boolRequired   -  4: Obrigatorio ou não. DEFAULT = False.
      * @param integer $intSize        -  5: NOT_IMPLEMENTED quantidade de caracteres visíveis
      * @param string $strValue        -  6: texto preenchido
-     * @param boolean $boolNewLine    -  7: NOT_IMPLEMENTED Nova linha
-     * @param string $strHint         -  9: NOT_IMPLEMENTED
+     * @param boolean $boolNewLine    -  7: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
+     * @param string $strHint         -  8: NOT_IMPLEMENTED
      * @param string $strExampleText  -  9: PlaceHolder é um Texto de exemplo
      * @param boolean $boolLabelAbove - 10: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @param boolean $boolNoWrapLabel- 11: NOT_IMPLEMENTED
@@ -471,7 +610,8 @@ class TFormDin
         $formField->setExampleText($strExampleText);
         $objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        $this->addFields($label ,$objField ,$boolLabelAbove);
+        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
 
@@ -489,7 +629,7 @@ class TFormDin
      * @param boolean $boolRequired    - 4: Obrigatorio
      * @param integer $intColumns      - 5: Largura use px ou %, valores inteiros serão multiplicados 1.5 e apresentado em px
      * @param integer $intRows         - 6: Altura use px ou %, valores inteiros serão multiplicados 4 e apresentado em px
-     * @param boolean $boolNewLine     - 7: NOT_IMPLEMENTED nova linha
+     * @param boolean $boolNewLine     - 7: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
      * @param boolean $boolLabelAbove  - 8: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @param boolean $boolShowCounter - 9: NOT_IMPLEMENTED Contador de caracteres ! Só funciona em campos não RichText
      * @param string  $strValue       - 10: texto preenchido
@@ -522,7 +662,8 @@ class TFormDin
         $objField = $formField->getFullComponent();
         //$objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        $this->addFields($label ,$objField ,$boolLabelAbove);
+        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
     	return $formField;
     }
 
@@ -569,7 +710,7 @@ class TFormDin
      * @param string $strLabel        - 2: Rotulo do campo que irá aparece na tela
      * @param boolean $boolRequired   - 3: Obrigatorio
      * @param string $strMask         - 4: A mascara
-     * @param boolean $boolNewLine    - 5: NOT_IMPLEMENTED Nova linha
+     * @param boolean $boolNewLine    - 5: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
      * @param string $strValue        - 6: texto preenchido
      * @param boolean $boolLabelAbove - 7: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @param boolean $boolNoWrapLabel- 8: NOT_IMPLEMENTED
@@ -594,7 +735,8 @@ class TFormDin
                                               ,$strExampleText,$boolSendMask);
         $objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        $this->addFields($label ,$objField ,$boolLabelAbove);
+        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }    
 
@@ -626,7 +768,7 @@ class TFormDin
      * @param string  $strLabel       - 2: Label do campo
      * @param boolean $boolRequired   - 3: Obrigatorio. Default FALSE
      * @param mixed   $mixOptions     - 4: array dos valores. no formato "key=>value". No FormDin 5 só permite array PHP
-     * @param boolean $boolNewLine    - 5: NOT_IMPLEMENTED Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
+     * @param boolean $boolNewLine    - 5: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
      * @param boolean $boolLabelAbove - 6: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @param mixed   $mixValue       - 7: NOT_IMPLEMENTED Valor DEFAULT, informe o ID do array
      * @param boolean $boolMultiSelect- 8: NOT_IMPLEMENTED Default FALSE = SingleSelect, TRUE = MultiSelect
@@ -650,7 +792,8 @@ class TFormDin
         $formField = new TFormDinSelectField($id,$strLabel,$boolRequired,$mixOptions);
         $objField = $formField->getAdiantiObj();
         $label = $this->getLabelField($strLabel,$boolRequired);
-        $this->addFields($label ,$objField ,$boolLabelAbove);
+        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
     /**
@@ -671,7 +814,7 @@ class TFormDin
      * @param string $strLabel       - 4: Label do campo
      * @param string $strWidth       - 5: NOT_IMPLEMENTED
      * @param string $strHeight      - 6: NOT_IMPLEMENTED
-     * @param boolean $boolNewLine   - 7: NOT_IMPLEMENTED Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param boolean $boolNewLine   - 7: Default TRUE = campo em nova linha, FALSE continua na linha anterior
      * @param boolean $boolLabelAbove  8: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @return THtml Field
      */
@@ -692,7 +835,8 @@ class TFormDin
                                           ,$strWidth,$boolNewLine,$boolNoWrapLabel);
         $objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        $this->addFields($label ,$objField ,$boolLabelAbove);
+        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
     //----------------------------------------------------------------
