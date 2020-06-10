@@ -77,13 +77,21 @@ class Gen01 extends TPage
         $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9');
         $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
 
+        // creates a frame
+        $frame = new TFrame;
+        $frame->oid = 'frame-measures';
+        $frame->setLegend('Measures');
+        
 
         $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
         $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
         $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'onSave',$this,false,'fa:chevron-circle-right','green');
 
+        $objAdianti = $frm->show();
+
+        $objAdianti->addContent([$frame]);
         
-        return $frm->show();
+        return $objAdianti;
 
     }
 
