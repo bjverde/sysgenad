@@ -76,8 +76,6 @@ class TFormDinHtmlField extends TFormDinGenericField
      * @param string $strLabel       - 4: Label do campo
      * @param string $strWidth       - 5: NOT_IMPLEMENTED
      * @param string $strHeight      - 6: NOT_IMPLEMENTED
-     * @param boolean $boolNewLine   - 7: NOT_IMPLEMENTED Default TRUE = campo em nova linha, FALSE continua na linha anterior
-     * @param boolean $boolLabelAbove  8: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @return THtml Field
      */     
     public function __construct( string $id
@@ -87,8 +85,7 @@ class TFormDinHtmlField extends TFormDinGenericField
                                , $strHeight=null
                                , $strWidth=null
                                , $boolNewLine=null
-                               , $boolLabelAbove=null
-                               , $boolNoWrapLabel=null )
+                               )
     {
         $adiantiObj = new TElement('div');
         $adiantiObj->id = $id;

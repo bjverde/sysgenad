@@ -73,8 +73,8 @@ class TFormDinMemoField extends TFormDinGenericField
      * @param string  $strLabel        - 2: Label
      * @param integer $intMaxLength    - 3: Tamanho maximos
      * @param boolean $boolRequired    - 4: Obrigatorio
-     * @param integer $intColumns      - 5: Qtd colunas
-     * @param integer $intRows         - 6: Qtd linhas
+     * @param integer $intColumns      - 5: Largura use px ou %, valores inteiros serão multiplicados 1.5 e apresentado em px
+     * @param integer $intRows         - 6: Altura use px ou %, valores inteiros serão multiplicados 4 e apresentado em px
      * @param boolean $boolNewLine     - 7: NOT_IMPLEMENTED nova linha
      * @param boolean $boolLabelAbove  - 8: NOT_IMPLEMENTED Label sobre o campo
      * @param boolean $boolShowCounter - 9: NOT_IMPLEMENTED Contador de caracteres ! Só funciona em campos não RichText
@@ -88,8 +88,8 @@ class TFormDinMemoField extends TFormDinGenericField
                               , $label=null
                               , $intMaxLength
                               , $boolRequired=null
-                              , $intColumns=null
-                              , $intRows=null
+                              , $intColumns='20px'
+                              , $intRows='5px'
                               , $boolNewLine=null
                               , $boolLabelAbove=null
                               , $boolShowCounter=null
