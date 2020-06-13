@@ -88,15 +88,13 @@ class TFormDinHtmlField extends TFormDinGenericField
                                )
     {
         $adiantiObj = new TElement('div');
-        $adiantiObj->id = $id;
-        $adiantiObj->add($value);
-        //FormDinHelper::d($label,'$label');
         $label = is_null($label)?'':$label;
         parent::__construct($adiantiObj,$id,$label,null,null,null);
+        $this->add($value);
         return $this->getAdiantiObj();
     }
 
-    public function setId($id){
-        $this->getAdiantiObj()->id = $id;
+    public function add($element){
+        $this->getAdiantiObj()->add($element);
     }
 }

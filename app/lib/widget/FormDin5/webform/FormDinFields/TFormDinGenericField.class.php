@@ -109,8 +109,14 @@ class TFormDinGenericField
     }
 
     public function setId($id){
-        //$this->getAdiantiObj()->id = $id;
-        $this->getAdiantiObj()->setId($id);
+        $adiantiObj = $this->getAdiantiObj();
+        if($adiantiObj instanceof TElement){
+            $adiantiObj->id = $id;
+        } elseif($adiantiObj instanceof TText){
+            $adiantiObj->id = $id;
+        }else{
+            $adiantiObj->setId($id);
+        }
     }
 
     public function setRequired($boolRequired){
