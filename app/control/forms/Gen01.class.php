@@ -16,6 +16,8 @@ class Gen01 extends TPage
         {   
             FormDinHelper::debug($_SESSION,'$_SESSION');
             $DBMS = TSession::getValue('DBMS');
+            $DBMS_TYPE  = $DBMS['TYPE'];
+
             TPage::include_css('app/resources/sysgen.css');
 
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP01);
@@ -25,45 +27,46 @@ class Gen01 extends TPage
             $frm->addGroupField('gpx1', Message::GEN01_GPX1_TITLE);
                 $html = $frm->addHtmlField('conf', '');
                 $html->add('<br><b>Extensões PHP necessárias para o correto funcionamento:</b><br>');
-                $DBMS = TSession::getValue('DBMS');
-                $validoPDOAndDBMS = TGeneratorHelper::validatePDOAndDBMS($DBMS['TYPE'], $html);
+                $validoPDOAndDBMS = TGeneratorHelper::validatePDOAndDBMS($DBMS_TYPE, $html);
             $frm->closeGroup();
         
             $frm->addGroupField('gpxHelp', Message::GEN00_GPX3_TITLE);
                 $html = $frm->addHtmlField('conf', '');
                 $html->add('<br>'.Message::INFO_CONNECT.'<br>');
             $frm->closeGroup();
-    
-    
-            //$formDin->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType, null, null, null, null, null, null, ' ', 0);
-            $dbType = FormDinHelper::getListDBMS();
-            $frm->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType);
-            $frm->addTextField('GEN_SYSTEM_ACRONYM','Sigla do Sistema', 50, true);
-            $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9');
-            $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
-    
-            // creates a frame
-            $frame = new TFrame;
-            $frame->oid = 'frame-measures';
-            $frame->setLegend('Measures');
-    
-            $filed1      = new TEntry('entry');
-            $filed1Label = new TLabel('TEntry');
-    
-            $filed2      = new TEntry('entry');
-            $filed2Label = new TLabel('TEntry');
-    
-            //$frame->add([ $filed1Label ],   [ $filed1 ]);
-            $frame->add( $filed1Label );
-            $frame->add( $filed1 );
-            $frame->add( '<br>' );
-            $frame->add( $filed2Label );
-            $frame->add( $filed2 );
-            
-    
+            if ($validoPDOAndDBMS) {
+                $frm->addGroupField('gpx2', Message::GEN01_GPX2_TITLE);
+                    $frm->addHiddenField('type', $DBMS_TYPE);
+                    $frm->addHiddenField('prep', 1);
+                    if($DBMS_TYPE == FormDinHelper::DBMS_MYSQL){
+                        $frm->addHiddenField('myDbType', FormDinHelper::DBMS_MYSQL);
+                        $listMyDbVersion = array(TableInfo::DBMS_VERSION_MYSQL_8_GTE=>TableInfo::DBMS_VERSION_MYSQL_8_GTE_LABEL
+                                                ,TableInfo::DBMS_VERSION_MYSQL_8_LT =>TableInfo::DBMS_VERSION_MYSQL_8_LT_LABEL
+                                            );
+                        //$frm->addSelectField('myDbVersion', 'Escolha a versão do DBMS:', true, $listMyDbVersion, null, null, null, null, null, null, ' ');    
+                        $frm->addTextField('myHost', 'Host:'    , 20, true, 20, '127.0.0.1'   , true, null, null, true);
+                        $frm->addTextField('myDb'  , 'Database:', 20, true, 20, 'form_exemplo',false, null, null, true);
+                        
+                        $frm->addTextField('myUser', 'User:'    , 40, true, 20, 'form_exemplo', true, null, null, true);
+                        $frm->addTextField('myPass', 'Password:', 40, true, 20, '123456'      ,false, null, null, true);
+                        $frm->addTextField('myPort', 'Porta:'   , 6 ,false, 6 , '3306'        ,false, null, null, true, false);
+                        //$frm->addButton(Message::BUTTON_LABEL_TEST_CONNECT, null, 'btnTestarmy', 'testarConexao("my")', null, true, false);
+                        $frm->addHtmlField('myGride', '');
+                    }elseif($DBMS_TYPE == FormDinHelper::DBMS_SQLITE){
+                        $frm->addHiddenField('host');
+                        $frm->addHiddenField('port');
+                        $frm->addTextField('name', 'Database:', 80, true, 80, __DIR__.DS.'..'.DS.'bancos_locais'.DS.'bdApoio.s3db', false, null, null, false);
+                        $frm->addHiddenField('user');
+                        $frm->addHiddenField('pass');
+                    }
+                $frm->closeGroup();                
+            }
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
             $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
-            $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'onSave',$this,false,'fa:chevron-circle-right','green');
+            
+            if ($validoPDOAndDBMS) {
+                $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'onSave',$this,false,'fa:chevron-circle-right','green');
+            }
     
             $this->form = $frm->show();
 
@@ -104,9 +107,8 @@ class Gen01 extends TPage
         FormDinHelper::debug($data,'$data');
         FormDinHelper::debug($_REQUEST,'$_REQUEST');
 
-        TSession::setValue('registration_course', ['course_id' => $param['code'],
-        'course_description' => $param['description']] );
+        ManualConnection::testConnection($param);
 
-        AdiantiCoreApplication::loadPage('MultiStepRegistration3View');
+        //AdiantiCoreApplication::loadPage('MultiStepRegistration3View');
     }
 }

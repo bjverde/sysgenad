@@ -118,7 +118,7 @@ class FormDinHelper
         $list = array();
         //$list[self::DBMS_ACCESS]='Access';
         //$list[self::DBMS_FIREBIRD]='FIREBIRD';
-        $list[self::DBMS_MYSQL]='MySQL';
+        $list[self::DBMS_MYSQL]='MariaDB ou MySQL';
         $list[self::DBMS_ORACLE]='Oracle';
         $list[self::DBMS_POSTGRES]='PostgreSQL';
         $list[self::DBMS_SQLITE]='SqLite';
