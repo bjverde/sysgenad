@@ -55,7 +55,7 @@ class Gen01 extends TPage
                     }elseif($DBMS_TYPE == FormDinHelper::DBMS_SQLITE){
                         $frm->addHiddenField('host');
                         $frm->addHiddenField('port');
-                        $frm->addTextField('name', 'Database:', 80, true, 80, __DIR__.DS.'..'.DS.'bancos_locais'.DS.'bdApoio.s3db', false, null, null, false);
+                        $frm->addTextField('name', 'Database:', 80, true, 80, __DIR__.DS.'..'.DS.'..'.DS.'database'.DS.'bdApoio.s3db', false, null, null, false);
                         $frm->addHiddenField('user');
                         $frm->addHiddenField('pass');
                     }

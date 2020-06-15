@@ -39,8 +39,9 @@ class Gen00 extends TPage
             // O Adianti permite a Internacionalização - A função _t('string') serve
             //para traduzir termos no sistema. Veja ApplicationTranslator escrevendo
             //primeiro em ingles e depois traduzindo
-            $frm->setAction('Continuar','onSave',$this,false,'fa:chevron-circle-right','green');
             $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
+            $frm->setAction('Continuar','onSave',$this,false,'fa:chevron-circle-right','green');
+            
 
             $this->form = $frm->show();
 
