@@ -14,10 +14,14 @@ class Gen00 extends TPage
         
         try
         {
+            TSession::clear();
+            
             // create the HTML Renderer
             $this->html = new THtmlRenderer('app/resources/gen00.html');
             $this->html->enableSection('main');
             
+            TPage::include_css('app/resources/sysgen.css');
+
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP00);
             
             $frm = new TFormDin(Message::GEN00_TITLE);

@@ -20,7 +20,7 @@ class Gen01 extends TPage
 
             TPage::include_css('app/resources/sysgen.css');
 
-            $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP01);
+            $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP02);
             
             $frm = new TFormDin(Message::GEN01_TITLE);
 
@@ -104,26 +104,20 @@ class Gen01 extends TPage
             //$this->form->setData($data);
     
             //Função do FormDin para Debug
-            FormDinHelper::debug($param,'$param');
+            //FormDinHelper::d($param,'$param');
             //FormDinHelper::debug($data,'$data');
             //FormDinHelper::debug($_REQUEST,'$_REQUEST');
             //FormDinHelper::debug($_SESSION,'$_SESSION');
 
-            $connectOK = ManualConnection::testConnection($param);
+            ManualConnection::testConnection($param);
 
-            if ($connectOK instanceof PDO) {
-                $_SESSION[APPLICATION_NAME]['DBMS']['USER'] = $param['user'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['PASSWORD'] = $param['pass'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['DATABASE'] = $param['name'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['HOST']     = $param['host'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['PORT']     = $param['port'];
-                //$_SESSION[APPLICATION_NAME]['DBMS']['SCHEMA']   = $param['name'];
-                //$_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  = $param['name'];
-
-                //AdiantiCoreApplication::loadPage('Gen02');
-            } else {
-                prepareReturnAjax(0, null, $dao->getError());
-            }            
+            TSession::setValue('DBMS',['TYPE'=>RequestHelper::get('DBMS')]);
+            TSession::setValue('GEN_SYSTEM_ACRONYM',$GEN_SYSTEM_ACRONYM);
+            TSession::setValue('GEN_SYSTEM_VERSION',RequestHelper::get('GEN_SYSTEM_VERSION'));
+            TSession::setValue('GEN_SYSTEM_NAME',RequestHelper::get('GEN_SYSTEM_NAME'));
+            //TSession::setValue(TableInfo::TP_SYSTEM,RequestHelper::get(TableInfo::TP_SYSTEM));
+            //TSession::setValue('EASYLABEL',RequestHelper::get('EASYLABEL'));
+            AdiantiCoreApplication::loadPage('Gen02');
         } catch (Exception $e) {
             $frm->setMessage($e->getMessage());
         }

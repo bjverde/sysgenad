@@ -277,7 +277,7 @@ class FormDinHelper
             echo "<script>try{fwUnblockUI();}catch(e){try{top.app_unblockUI();}catch(e){}}</script>";
             echo "<fieldset style='text-align:left;'><legend><font color=\"#007000\">".$strComentario."</font></legend><pre>" ;
             foreach ( $arrBacktrace[0] as $strAttribute => $mixValue ) {
-                if( is_string( $mixValue ) ) {
+                if( !is_array($mixValue) ) {
                     echo "<b>" . $strAttribute . "</b> ". $mixValue ."\n";
                 }
             }
@@ -287,7 +287,7 @@ class FormDinHelper
             if( is_object($mixExpression) ) {
                 var_dump( $mixExpression );
             } else {
-            print_r($mixExpression);
+                print_r($mixExpression);
             }
             echo "</pre></fieldset>";
             echo '</div>';
