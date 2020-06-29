@@ -76,19 +76,19 @@ class TFormDinButton {
     *
     * @param object  $objForm           - 1 : FORMDIN5 Objeto do Form, é só informar $this
     * @param mixed   $mixValue          - 2 : Label do Botão ou array('Gravar', 'Limpar') com nomes
-    * @param string  $strAction         - 3 : Nome da ação, ignorando $strName $strOnClick. Se ficar null será utilizado o valor de mixValue
+    * @param string  $strAction         - 3 : NOT_IMPLEMENTED Nome da ação, ignorando $strName $strOnClick. Se ficar null será utilizado o valor de mixValue
     * @param string  $strName           - 4 : Nome da ação com submit
-    * @param string  $strOnClick        - 5 : Nome da função javascript
-    * @param string  $strConfirmMessage - 6 : Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
+    * @param string  $strOnClick        - 5 : NOT_IMPLEMENTED Nome da função javascript
+    * @param string  $strConfirmMessage - 6 : NOT_IMPLEMENTED Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
     * @param boolean $boolNewLine       - 7 : Em nova linha. DEFAULT = true
     * @param boolean $boolFooter        - 8 : Mostrar o botão no rodapé do form. DEFAULT = true
     * @param string  $strImage          - 9 : Imagem no botão. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
-    * @param string  $strImageDisabled  -10 : Imagem no desativado. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
+    * @param string  $strImageDisabled  -10 : NOT_IMPLEMENTED Imagem no desativado. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
     * @param string  $strHint           -11 : Texto hint para explicar
-    * @param string  $strVerticalAlign  -12 :
-    * @param boolean $boolLabelAbove    -13 : Position text label. DEFAULT is false. NULL = false. 
-    * @param string  $strLabel          -14 : Text label 
-    * @param string  $strHorizontalAlign-15 : Text Horizontal align. DEFAULT = center. Valeus center, left, right
+    * @param string  $strVerticalAlign  -12 : NOT_IMPLEMENTED
+    * @param boolean $boolLabelAbove    -13 : NOT_IMPLEMENTED Position text label. DEFAULT is false. NULL = false. 
+    * @param string  $strLabel          -14 : NOT_IMPLEMENTED Text label 
+    * @param string  $strHorizontalAlign-15 : NOT_IMPLEMENTED Text Horizontal align. DEFAULT = center. Valeus center, left, right
     * @return TButton|string|array
     */
     public function __construct($objForm
@@ -107,22 +107,23 @@ class TFormDinButton {
                                 , $strLabel=null
                                 , $strHorizontalAlign=null)
     {
+        $adiantiObj = new TButton('btn'.$strName);
         $this->setObjForm($objForm);
+        $this->setAdiantiObj($adiantiObj);
         $this->setLabel($label);
-        $mixMessage = $this->getMixMessage();
-        $this->adiantiObj = new TMessage($type,$mixMessage,$action,$title_msg);
-        return $this->adiantiObj;
+        $this->setAction($strName);
+        $this->setImage($strImage);
+        return $this->getAdiantiObj();
     }
 
     public function setObjForm($objForm)
     {
+        if( empty($objForm) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }
         if( !is_object($objForm) ){
-            $msg = 'o metodo addButton MUDOU! o primeiro parametro agora recebe $this! o Restando está igual ;-)';
-            ValidateHelper::migrarMensage($msg
-                                         ,ValidateHelper::TRIGGER_ERROR_ERROR
-                                         ,ValidateHelper::TYPE_ERRO_MSG_CHANGE
-                                         ,__CLASS__,__METHOD__,__LINE__);
-        }       
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }        
         return $this->objForm=$objForm;
     }
     public function getObjForm(){
@@ -134,11 +135,12 @@ class TFormDinButton {
         if( is_array($label) ){
             $msg = 'O parametro $mixValue não recebe mais um array! Faça uma chamada por Action';
             ValidateHelper::migrarMensage($msg
-                                         ,ValidateHelper::TRIGGER_ERROR_ERROR
-                                         ,ValidateHelper::TYPE_ERRO_MSG_CHANGE
+                                         ,ValidateHelper::ERROR
+                                         ,ValidateHelper::MSG_CHANGE
                                          ,__CLASS__,__METHOD__,__LINE__);
         }else{
             $this->label=$label;
+            $this->getAdiantiObj()->setLabel($label);
         }
     }
     public function getLabel(){
@@ -149,11 +151,37 @@ class TFormDinButton {
     {
         if( empty($adiantiObj) ){
             throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
-        }        
+        }
+        if( !is_object($adiantiObj) ){
+            $msg = 'o metodo addButton MUDOU! o primeiro parametro agora recebe $this! o Restando está igual ;-)';
+            ValidateHelper::migrarMensage($msg
+                                         ,ValidateHelper::ERROR
+                                         ,ValidateHelper::MSG_CHANGE
+                                         ,__CLASS__,__METHOD__,__LINE__);
+        }
         return $this->adiantiObj=$adiantiObj;
     }
     public function getAdiantiObj(){
         return $this->adiantiObj;
     }
+
+    public function setAction($strName)
+    {
+        if( empty($strName) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_EMPTY_INPUT);
+        }
+        $objForm = $this->getObjForm();
+        $action = new TAction(array($objForm, $strName));
+        $label = $this->getLabel();
+        $this->getAdiantiObj()->setAction($action,$label);
+    }
+
+    public function setImage($strImage)
+    {
+        if( !empty($strImage) ){
+            $this->getAdiantiObj()->setImage($strImage);
+        }
+    }
+
 }
 ?>

@@ -103,13 +103,13 @@ class TFormDin
     public function validateDeprecated($strHeigh,$strWidth)
     {
         ValidateHelper::validadeParam('strHeigh',$strHeigh
-                                     ,ValidateHelper::TRIGGER_ERROR_WARNING
-                                     ,ValidateHelper::TYPE_ERRO_MSG_DECREP
+                                     ,ValidateHelper::WARNING
+                                     ,ValidateHelper::MSG_DECREP
                                      ,__CLASS__,__METHOD__,__LINE__);
 
         ValidateHelper::validadeParam('strWidth',$strWidth
-                                     ,ValidateHelper::TRIGGER_ERROR_WARNING
-                                     ,ValidateHelper::TYPE_ERRO_MSG_DECREP
+                                     ,ValidateHelper::WARNING
+                                     ,ValidateHelper::MSG_DECREP
                                      ,__CLASS__,__METHOD__,__LINE__);                                     
     }
 
@@ -357,7 +357,7 @@ class TFormDin
     * Para que o botão fique alinhado na frente de um campo com labelAbove=true, basta
     * definir o parametro boolLabelAbove do botão para true tambem.
     *
-    * @param object  $objForm           - 1 : FORMDIN5 Objeto do Form, é só informar $this
+    * @param object  $objForm           - 1 : FORMDIN5 Objeto do Adianti da classe do Form, é só informar $this
     * @param mixed   $mixValue          - 2 : Label do Botão ou array('Gravar', 'Limpar') com nomes
     * @param string  $strAction         - 3 : NOT_IMPLEMENTED Nome da ação, ignorando $strName $strOnClick. Se ficar null será utilizado o valor de mixValue
     * @param string  $strName           - 4 : Nome da ação com submit
@@ -367,7 +367,7 @@ class TFormDin
     * @param boolean $boolFooter        - 8 : Mostrar o botão no rodapé do form. DEFAULT = true
     * @param string  $strImage          - 9 : Imagem no botão. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
     * @param string  $strImageDisabled  -10 : NOT_IMPLEMENTED Imagem no desativado. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
-    * @param string  $strHint           -11 : Texto hint para explicar
+    * @param string  $strHint           -11 : NOT_IMPLEMENTED Texto hint para explicar
     * @param string  $strVerticalAlign  -12 : NOT_IMPLEMENTED
     * @param boolean $boolLabelAbove    -13 : NOT_IMPLEMENTED Position text label. DEFAULT is false. NULL = false. 
     * @param string  $strLabel          -14 : NOT_IMPLEMENTED Text label 
@@ -391,32 +391,41 @@ class TFormDin
                             , $strHorizontalAlign=null)
     {
         if( !is_object($objForm) ){
-            $msg = 'o metodo addButton MUDOU! o primeiro parametro agora recebe $this! o Restando está igual ;-)';
+            $track = debug_backtrace();
+            $msg = 'o metodo addButton MUDOU! o primeiro parametro agora recebe $this! o Restante está igual ;-)';
             ValidateHelper::migrarMensage($msg
-                                         ,ValidateHelper::TRIGGER_ERROR_ERROR
-                                         ,ValidateHelper::TYPE_ERRO_MSG_CHANGE
-                                         ,__CLASS__,__METHOD__,__LINE__);
+                                         ,ValidateHelper::ERROR
+                                         ,ValidateHelper::MSG_CHANGE
+                                         ,$track[0]['class']
+                                         ,$track[0]['function']
+                                         ,$track[0]['line']
+                                         ,$track[0]['file']
+                                        );
         }else{
+
             if($boolFooter){
                 return $this->setAction($mixValue,$strName,$objForm,false,$strImage);
             }else{
                 $formField = new TFormDinButton($objForm
-                                            , $mixValue
-                                            , $strAction=null
-                                            , $strName=null
-                                            , $strOnClick=null
-                                            , $strConfirmMessage=null
-                                            , $boolNewLine=null
-                                            , $boolFooter=null
-                                            , $strImage=null
-                                            , $strImageDisabled=null
-                                            , $strHint=null
-                                            , $strVerticalAlign=null
-                                            , $boolLabelAbove=null
-                                            , $strLabel=null
-                                            , $strHorizontalAlign=null);
+                                                , $mixValue
+                                                , $strAction
+                                                , $strName
+                                                , $strOnClick
+                                                , $strConfirmMessage
+                                                , $boolNewLine
+                                                , $boolFooter
+                                                , $strImage
+                                                , $strImageDisabled
+                                                , $strHint
+                                                , $strVerticalAlign
+                                                , $boolLabelAbove
+                                                , $strLabel
+                                                , $strHorizontalAlign
+                                            );
                 $objField = $formField->getAdiantiObj();
-                $this->adiantiObj->addFields([$objField]);
+                //$this->adiantiObj->addFields([$objField]);
+                $this->addElementFormList($objField,self::TYPE_FIELD,null,$boolNewLine);
+                //$this->addElementFormList($objField,self::TYPE_LAYOUT,null,$boolNewLine);
                 return $formField;
             }
         }
@@ -450,11 +459,16 @@ class TFormDin
                              , $methodPost=true)
     {
         if( is_array($actionsLabel) ){
+            $track = debug_backtrace();
             $msg = 'Não é permitido usar ARRAY no setAction, migre para chamada unica por Action';
             ValidateHelper::migrarMensage($msg
-                                         ,ValidateHelper::TRIGGER_ERROR_WARNING
-                                         ,ValidateHelper::TYPE_ERRO_MSG_DECREP
-                                         ,__CLASS__,__METHOD__,__LINE__);
+                                         ,ValidateHelper::ERROR
+                                         ,ValidateHelper::MSG_CHANGE
+                                         ,$track[0]['class']
+                                         ,$track[0]['function']
+                                         ,$track[0]['line']
+                                         ,$track[0]['file']
+                                        );
         }else{
             ValidateHelper::isSet($actionsName,__METHOD__,__LINE__);
             ValidateHelper::isSet($objForm,__METHOD__,__LINE__);
@@ -574,7 +588,8 @@ class TFormDin
     {
         $formField = new TFormDinHiddenField($id,$strValue,$boolRequired);
         $objField = $formField->getAdiantiObj();
-        $this->adiantiObj->addFields([$objField]);
+        //$this->adiantiObj->addFields([$objField]);
+        $this->addElementFormList($objField,self::TYPE_FIELD);
         return $formField;
     }
 
@@ -929,8 +944,8 @@ class TFormDin
      */
     public function setShowCloseButton( $boolNewValue=null ){
         ValidateHelper::validadeParam('$boolNewValue',$boolNewValue
-                                    ,ValidateHelper::TRIGGER_ERROR_WARNING
-                                    ,ValidateHelper::TYPE_ERRO_MSG_DECREP
+                                    ,ValidateHelper::WARNING
+                                    ,ValidateHelper::MSG_DECREP
                                     ,__CLASS__,__METHOD__,__LINE__); 
     }
 
@@ -940,8 +955,8 @@ class TFormDin
      */
     public function setFlat($boolNewValue=null){
         ValidateHelper::validadeParam('$boolNewValue',$boolNewValue
-                                    ,ValidateHelper::TRIGGER_ERROR_WARNING
-                                    ,ValidateHelper::TYPE_ERRO_MSG_DECREP
+                                    ,ValidateHelper::WARNING
+                                    ,ValidateHelper::MSG_DECREP
                                     ,__CLASS__,__METHOD__,__LINE__); 
     }
 
@@ -951,8 +966,8 @@ class TFormDin
      */
     public function setMaximize($boolNewValue = null){
         ValidateHelper::validadeParam('$boolNewValue',$boolNewValue
-                                    ,ValidateHelper::TRIGGER_ERROR_WARNING
-                                    ,ValidateHelper::TYPE_ERRO_MSG_DECREP
+                                    ,ValidateHelper::WARNING
+                                    ,ValidateHelper::MSG_DECREP
                                     ,__CLASS__,__METHOD__,__LINE__); 
     }
 
@@ -962,8 +977,8 @@ class TFormDin
      */
     public function setHelpOnLine(){
         ValidateHelper::validadeParam('$setHelpOnLine',null
-                                ,ValidateHelper::TRIGGER_ERROR_WARNING
-                                ,ValidateHelper::TYPE_ERRO_MSG_DECREP
+                                ,ValidateHelper::WARNING
+                                ,ValidateHelper::MSG_DECREP
                                 ,__CLASS__,__METHOD__,__LINE__); 
     }
 }
