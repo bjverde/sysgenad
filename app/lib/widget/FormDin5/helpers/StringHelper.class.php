@@ -101,5 +101,106 @@ class StringHelper
         $limpo = preg_replace("/\D/", '', $value);
         return $limpo;
     }
+
+    /**
+     * Recebe uma string do tipo "olá à mim! ñ" e retona "ola a mim! n"
+     * https://pt.stackoverflow.com/questions/49645/remover-acentos-de-uma-string-em-phps
+     * https://stackoverflow.com/questions/13614622/transliterate-any-convertible-utf8-char-into-ascii-equivalent
+     * @param string $string
+     * @return string
+     */
+    public static function tirarAcentos($string) 
+    {
+        $string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+        return $string;
+    }
+
+    /**
+     * Recebe uma string remove tudo que não faz partes das palavras Brasileira
+     * e espaços em branco
+     * @param string $string
+     * @return string
+     */
+    public static function removeCaracteresEspeciais($string) 
+    {
+        $string = preg_replace('/[^a-zA-Z0-9\sÀÁÃÂÉÊÍÓÕÔÚÜÇÑàáãâéêíóõôúüçñ]/', '', $string);
+        return $string;
+    }
+
+    /**
+     * Recebe uma string remove espaços em branco
+     * @param string $string
+     * @return string
+     */
+    public static function removeEspacoBranco($string) 
+    {
+        $string = preg_replace('/[\s]/', '', $string);
+        return $string;
+    }
+
+
+    /**
+     * Recebe uma string "minha string"e converte para o formato PascalCase
+     * "MinhaString"
+     * https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function string2PascalCase($string) 
+    {
+        $string = self::removeCaracteresEspeciais($string);
+        $string = self::tirarAcentos($string);
+        $string = mb_convert_case ( $string, MB_CASE_TITLE );
+        $string = self::removeEspacoBranco($string);
+        return $string;
+    }
+
+    /**
+     * Recebe uma string "minha string"e converte para o formato CamelCase
+     * "minhaString"
+     * https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function string2CamelCase($string) 
+    {
+        $string = self::string2PascalCase($string);
+        $string = lcfirst($string);
+        return $string;
+    }
+
+    /**
+     * Recebe uma string "minha string"e converte para o formato KebabCase
+     * "minha-string"
+     * https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function string2KebabCase($string) 
+    {
+        $string = self::removeCaracteresEspeciais($string);
+        $string = self::tirarAcentos($string);
+        $string = mb_convert_case ( $string,  MB_CASE_LOWER );
+        $string = preg_replace('/[\s]/', '-', $string);
+        return $string;
+    }
+
+    /**
+     * Recebe uma string "minha string"e converte para o formato KebabCase
+     * "minha-string"
+     * https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function string2SnakeCase($string) 
+    {
+        $string = self::string2KebabCase($string);
+        $string = preg_replace('/[-]/', '_', $string);
+        return $string;
+    }
     
 }
