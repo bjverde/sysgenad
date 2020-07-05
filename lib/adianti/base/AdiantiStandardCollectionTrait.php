@@ -23,7 +23,7 @@ use DomDocument;
 /**
  * Standard Collection Trait
  *
- * @version    7.2
+ * @version    7.2.2
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -211,7 +211,8 @@ trait AdiantiStandardCollectionTrait
         
         if (isset($param['static']) && ($param['static'] == '1') )
         {
-            AdiantiCoreApplication::loadPage(get_class($this), 'onReload', ['offset'=>0, 'first_page'=>1] );
+            $class = get_class($this);
+            AdiantiCoreApplication::loadPage($class, 'onReload', ['offset'=>0, 'first_page'=>1] );
         }
         else
         {

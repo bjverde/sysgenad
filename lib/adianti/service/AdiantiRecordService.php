@@ -9,7 +9,7 @@ use Adianti\Database\TFilter;
 /**
  * Record rest service
  *
- * @version    7.2
+ * @version    7.2.2
  * @package    service
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
