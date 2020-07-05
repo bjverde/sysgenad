@@ -157,7 +157,7 @@ class Gen01 extends TPage
                     AdiantiCoreApplication::loadPage('Gen02');
                 }
             } else {
-                $frm->redirect('gen02.php', null, true);
+                AdiantiCoreApplication::loadPage('Gen02');
             }
         }//Fim test user
     }

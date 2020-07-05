@@ -22,7 +22,7 @@ class Gen01 extends TPage
 
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP02);
             
-            $frm = new TFormDin(Message::GEN01_TITLE);
+            $frm = new TFormDin(Message::GEN02_TITLE);
 
             $frm->addGroupField('gpx1', Message::GEN01_GPX1_TITLE);
                 $html = $frm->addHtmlField('conf', '');

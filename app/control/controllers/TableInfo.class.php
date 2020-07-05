@@ -61,23 +61,23 @@ final class TableInfo
         $return = null;
         switch ($dbType) {
             //-------------------
-            case DBMS_MYSQL:
+            case FormDinHelper::DBMS_MYSQL:
                 $return = 'my';
             break;
             //-------------------
-            case DBMS_SQLITE:
+            case FormDinHelper::DBMS_SQLITE:
                 $return = 'sq';
             break;
             //-------------------
-            case DBMS_SQLSERVER:
+            case FormDinHelper::DBMS_SQLSERVER:
                 $return = 'ss';
             break;
             //-------------------
-            case DBMS_POSTGRES:
+            case FormDinHelper::DBMS_POSTGRES:
                 $return = 'pg';
             break;
             //-------------------
-            case DBMS_ORACLE:
+            case FormDinHelper::DBMS_ORACLE:
                 $return = 'ora';
             break;
         }
@@ -88,23 +88,23 @@ final class TableInfo
         $return = false;
         switch ($dbType) {
             //-------------------
-            case DBMS_MYSQL:
+            case FormDinHelper::DBMS_MYSQL:
                 $return = false;
             break;
             //-------------------
-            case DBMS_SQLITE:
+            case FormDinHelper::DBMS_SQLITE:
                 $return = false;
             break;
             //-------------------
-            case DBMS_SQLSERVER:
+            case FormDinHelper::DBMS_SQLSERVER:
                 $return = true;
             break;
             //-------------------
-            case DBMS_POSTGRES:
+            case FormDinHelper::DBMS_POSTGRES:
                 $return = true;
             break;
             //-------------------
-            case DBMS_ORACLE:
+            case FormDinHelper::DBMS_ORACLE:
                 $return = false;
             break;
         }
@@ -115,13 +115,13 @@ final class TableInfo
         $return = false;
         switch ($dbType) {
             //-------------------
-            case DBMS_SQLSERVER:
+            case FormDinHelper::DBMS_SQLSERVER:
                 $return = array(TableInfo::DBMS_VERSION_SQLSERVER_2012_GTE=>TableInfo::DBMS_VERSION_SQLSERVER_2012_GTE_LABEL
                                ,TableInfo::DBMS_VERSION_SQLSERVER_2012_LT =>TableInfo::DBMS_VERSION_SQLSERVER_2012_LT_LABEL
                                );
             break;
             //-------------------
-            case DBMS_POSTGRES:
+            case FormDinHelper::DBMS_POSTGRES:
                 $return = array(TableInfo::DBMS_VERSION_POSTGRES_96_GTE=>TableInfo::DBMS_VERSION_POSTGRES_96_GTE_LABEL
                                ,TableInfo::DBMS_VERSION_POSTGRES_95_LT  =>TableInfo::DBMS_VERSION_POSTGRES_95_LT_LABEL
                                );
