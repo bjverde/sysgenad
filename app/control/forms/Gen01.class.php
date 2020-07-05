@@ -137,8 +137,28 @@ class Gen01 extends TPage
 
     }
 
-    public function next($param)
+    public function next()
     {
-
+        if (!ArrayHelper::has('USER', $_SESSION[APPLICATION_NAME]['DBMS'])) {
+            $text[] = Message::GEN02_NOT_READY;
+            $text = TFormDinMessage::messageTransform($text);
+            new TMessage(TFormDinMessage::TYPE_ERROR, $text);
+        }else{
+            $dbType   = $_SESSION[APPLICATION_NAME]['DBMS']['TYPE'];
+            if( TableInfo::getDbmsWithVersion($dbType) ){
+                $banco    = TableInfo::getPreDBMS($dbType);
+                $dbversion= PostHelper::get($banco.'DbVersion');
+                if (empty($dbversion)){
+                    $text[] = Message::WARNING_NO_DBMS_VER;
+                    $text = TFormDinMessage::messageTransform($text);
+                    new TMessage(TFormDinMessage::TYPE_WARING, $text);
+                }else{
+                    $_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  =  $dbversion;
+                    AdiantiCoreApplication::loadPage('Gen02');
+                }
+            } else {
+                $frm->redirect('gen02.php', null, true);
+            }
+        }//Fim test user
     }
 }
