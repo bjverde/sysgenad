@@ -117,17 +117,23 @@ class TFormDinMessage {
     }
 
     public function setMixMessage($mixMessage){
+        $this->mixMessage= self::messageTransform($mixMessage);
+    }
+    public function getMixMessage(){
+        return $this->mixMessage;
+    }
+
+    public static function messageTransform($mixMessage){
+        $result = null;
         if(is_array($mixMessage)){
             $mixMessage = implode( '<br>', $mixMessage );
             $mixMessage = preg_replace( '/' . chr( 10 ) . '/', '<br>', $mixMessage );
             $mixMessage = preg_replace( '/' . chr( 13 ) . '/', '', $mixMessage );
-            $this->mixMessage=$mixMessage;
+            $result=$mixMessage;
         }else{
-            $this->mixMessage=$mixMessage;
-        }        
-    }
-    public function getMixMessage(){
-        return $this->mixMessage;
+            $result=$mixMessage;
+        }
+        return $result;
     }
 }
 ?>

@@ -58,7 +58,7 @@
 class FormDinHelper
 {
 
-    const FORMDIN_VERSION = '5.0.0-alpha6';
+    const FORMDIN_VERSION = '5.0.0-alpha7';
 
     const DBMS_ACCESS = 'ACCESS';
     const DBMS_FIREBIRD = 'ibase';

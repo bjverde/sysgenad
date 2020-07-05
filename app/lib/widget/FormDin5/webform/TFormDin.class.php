@@ -130,10 +130,10 @@ class TFormDin
     }
 
     /**
-     * Recebe um elemento e retorna o array do Label
+     * Recebe um elemento e retorna o array com Label do campo e Obj do campo
      *
-     * @param [type] $element
-     * @return void
+     * @param object $element
+     * @return array 
      */
     public function getArrayElementLabelAbove($element)
     {
@@ -149,13 +149,27 @@ class TFormDin
         return $result;
     }
 
+    public function addtElementInRow($listFormElements,$key,$row){
+        $element = $listFormElements[$key];
+        $label = $element['label'];
+        $obj   = $element['obj'];
+        if($element['boolLabelAbove']==true){
+            $row[]=[$label, $obj];
+        }else{
+            $row[]=[$label];
+            $row[]=[$obj];
+        }
+        return $row;
+    }
+
     /**
-     * Recebe a chave da posição da posição inicial, vai percorrendo a lista
-     * para retorna o array de duas posição
+     * Recebe a chave da posição da posição inicial da lista de objetos do form
+     * Percorrendo a lista para determinar todos objeto de uma linha do form.
+     * Retorna o array de duas posição
      * $result['key'] - ultimo elemento incluido
-     *  $result['row']- array com todos os alementos da lista
+     * $result['row'] - array com todos os alementos da lista
      * 
-     * @param int $key
+     * @param int $key - 1: Posição inicial da lista de objetos
      * @return array
      */
     public function addFieldsRow($key)
@@ -169,6 +183,8 @@ class TFormDin
         }else if( $this->nextElementNewLine($key)===false ){
             $row = array();
             while( $this->nextElementNewLine($key)==false && ArrayHelper::has($key,$listFormElements)) {
+                $row = $this->addtElementInRow($listFormElements,$key,$row);
+                /*
                 $element = $listFormElements[$key];
                 $label = $element['label'];
                 $obj   = $element['obj'];
@@ -178,7 +194,12 @@ class TFormDin
                     $row[]=[$label];
                     $row[]=[$obj];
                 }
+                */
                 $key = $key + 1;
+            }
+            if( $this->nextElementNewLine($key)==true && ArrayHelper::has($key,$listFormElements)){
+                $row = $this->addtElementInRow($listFormElements,$key,$row);
+                //$key = $key + 1;
             }
             $result['key']=$key;
             $result['row']=$row;
@@ -252,6 +273,16 @@ class TFormDin
         return $this->getAdiantiObj2();
     }
 
+    /**
+     * Adciona um Objeto Adianti na lista de objetos que compeen o Formulário.
+     * 
+     * @param object $obj  -  1: objeto Adianti
+     * @param string $type -  2: Typo confirmo constante
+     * @param object $label - 3: objeto do tipo Label do $obj
+     * @param boolean $boolNewLine    - 4: DEFAULT = True = campo em nova linha. FALSE = mesma linha
+     * @param boolean $boolLabelAbove - 5: DEFAULT = FALSE = Label na frente do campo. TRUE = Label sobre o campo
+     * @return void
+     */
     public function addElementFormList($obj
                                          ,$type = self::TYPE_FIELD
                                          ,$label=null
@@ -273,10 +304,10 @@ class TFormDin
     }
 
     /**
-     * Inclusão 
-     * @param array $label - label que será incluido com o campo
-     * @param array $campo - campo que será incluido
-     * @param array $boolLabelAbove - informa se o Label é acima
+     * Inclusão de um campo no Form
+     * @param object $label - label que será incluido com o campo
+     * @param object $campo - campo que será incluido
+     * @param boolean $boolLabelAbove - informa se o Label é acima
      */
     protected function addFields($label, $campo, $boolLabelAbove = false)
     {
@@ -936,7 +967,7 @@ class TFormDin
     //----------------------------------------------------------------
     //----------------------------------------------------------------
     //----------------------------------------------------------------
-    //----------------------------------------------------------------s    
+    //----------------------------------------------------------------
 
     /**
      * @deprecated mantido apenas para diminir o impacto na migração do FormDin 4 para FormDin 5 sobre Adianti 7.1

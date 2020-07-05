@@ -56,24 +56,14 @@ class TFormDinLabelField
      */
     public function __construct(string $strLabel
                                ,$boolRequired = false)
-    {
-        $adiantiObj = null;
+    {        
         if($boolRequired){
-            $adiantiObj = new TLabel($strLabel, 'red');
+            $this->adiantiObj = new TLabel($strLabel, 'red');
         }else{
-            $adiantiObj = new TLabel($strLabel);
+            $this->adiantiObj = new TLabel($strLabel);
         }
-        $this->setAdiantiObj($adiantiObj);
-        $this->setId($strLabel);
     }
 
-    public function setAdiantiObj($adiantiObj)
-    {
-        if( empty($adiantiObj) ){
-            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
-        }
-        return $this->adiantiObj=$adiantiObj;
-    }
     public function getAdiantiObj(){
         return $this->adiantiObj;
     }
@@ -88,15 +78,5 @@ class TFormDinLabelField
 	{
 		return $this->getAdiantiObj()->getProperty('class');
     }
-    //------------------------------------------------------------------------------
-    public function setId($id)
-	{
-        $id = StringHelper::string2SnakeCase($id);
-        $id = 'tlabel_'.$id.'_'.mt_rand(1000000000, 1999999999);
-        $this->getAdiantiObj()->setId($id);
-	}
-	public function getId()
-	{
-		return $this->getAdiantiObj()->getId();
-    }
+	//------------------------------------------------------------------------------       
 }
