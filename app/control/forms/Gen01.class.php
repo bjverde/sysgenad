@@ -44,12 +44,12 @@ class Gen01 extends TPage
                                                 ,TableInfo::DBMS_VERSION_MYSQL_8_LT =>TableInfo::DBMS_VERSION_MYSQL_8_LT_LABEL
                                             );
                         //$frm->addSelectField('myDbVersion', 'Escolha a versão do DBMS:', true, $listMyDbVersion, null, null, null, null, null, null, ' ');    
-                        $frm->addTextField('myHost', 'Host:'    , 20, true, 20, '127.0.0.1'   , true, null, null, true);
-                        $frm->addTextField('myDb'  , 'Database:', 20, true, 20, 'form_exemplo',false, null, null, true);
+                        $frm->addTextField('host', 'Host:'    , 20, true, 20, '127.0.0.1'   , true, null, null, true);
+                        $frm->addTextField('name'  , 'Database:', 20, true, 20, 'form_exemplo',false, null, null, true);
                         
-                        $frm->addTextField('myUser', 'User:'    , 40, true, 20, 'form_exemplo', true, null, null, true);
-                        $frm->addTextField('myPass', 'Password:', 40, true, 20, '123456'      ,false, null, null, true);
-                        $frm->addTextField('myPort', 'Porta:'   , 6 ,false, 6 , '3306'        ,false, null, null, true, false);
+                        $frm->addTextField('user', 'User:'    , 40, true, 20, 'form_exemplo', true, null, null, true);
+                        $frm->addTextField('pass', 'Password:', 40, true, 20, '123456'      ,false, null, null, true);
+                        $frm->addTextField('port', 'Porta:'   , 6 ,false, 6 , '3306'        ,false, null, null, true, false);
                         //$frm->addButton(Message::BUTTON_LABEL_TEST_CONNECT, null, 'btnTestarmy', 'testarConexao("my")', null, true, false);
                         $frm->addHtmlField('myGride', '');
                     }elseif($DBMS_TYPE == FormDinHelper::DBMS_SQLITE){
@@ -62,7 +62,7 @@ class Gen01 extends TPage
                     }
                 $frm->closeGroup();
                 $frm->addGroupField('gpx3');
-                    $frm->addButton($this,'Testar Conexão',null,'testConnection',null,null,true,false,'fas:fa-plug green');
+                    $frm->addButton($this,Message::BUTTON_LABEL_TEST_CONNECT,null,'testConnection',null,null,true,false,'fas:fa-plug green');
                 $frm->closeGroup();
             }
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
@@ -125,7 +125,7 @@ class Gen01 extends TPage
                 //$_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  = $param['name'];
 
                 //AdiantiCoreApplication::loadPage('Gen02');
-                $text[] = 'OK!';
+                $text[] = Message::MSG_TEST_CONNECT;
                 $text = TFormDinMessage::messageTransform($text);
                 new TMessage(TFormDinMessage::TYPE_INFO, $text);
             }

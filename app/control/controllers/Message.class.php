@@ -67,6 +67,7 @@ final class Message
     const BUTTON_LABEL_CONF  = 'Gerar Config';
     const BUTTON_LABEL_GEN_STRUCTURE = 'Gerar estrutura';
     const BUTTON_LABEL_TEST_CONNECT  = 'Testar Conexão';
+    const MSG_TEST_CONNECT  = 'Conexão OK! Pode clicar em "Gerar"';
 
     const INFO_CONNECT    = 'Informe os parâmetros de conexão no banco e click no botão: '.self::BUTTON_LABEL_TEST_CONNECT
     .'. Só depois poderá clicar em : '.self::BUTTON_LABEL_GEN_STRUCTURE;
