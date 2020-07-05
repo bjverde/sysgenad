@@ -1,5 +1,5 @@
 <?php
-class Gen01 extends TPage
+class Gen02 extends TPage
 {
 
     // trait com onReload, onSearch, onDelete...
