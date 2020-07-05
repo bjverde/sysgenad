@@ -29,7 +29,7 @@ class Gen01 extends TPage
                 $html->add('<br><b>Extensões PHP necessárias para o correto funcionamento:</b><br>');
                 $validoPDOAndDBMS = TGeneratorHelper::validatePDOAndDBMS($DBMS_TYPE, $html);
             $frm->closeGroup();
-        
+
             $frm->addGroupField('gpxHelp', Message::GEN00_GPX3_TITLE);
                 $html = $frm->addHtmlField('conf', '');
                 $html->add('<br>'.Message::INFO_CONNECT.'<br>');
@@ -55,11 +55,15 @@ class Gen01 extends TPage
                     }elseif($DBMS_TYPE == FormDinHelper::DBMS_SQLITE){
                         $frm->addHiddenField('host');
                         $frm->addHiddenField('port');
-                        $frm->addTextField('name', 'Database:', 80, true, 80, __DIR__.DS.'..'.DS.'..'.DS.'database'.DS.'bdApoio.s3db', false, null, null, false);
+                        $value = __DIR__.DS.'..'.DS.'..'.DS.'database'.DS.'bdApoio.s3db';
+                        $frm->addTextField('name', 'Database:', 80, true, 80, $value);
                         $frm->addHiddenField('user');
                         $frm->addHiddenField('pass');
                     }
-                $frm->closeGroup();                
+                $frm->closeGroup();
+                $frm->addGroupField('gpx3');
+                    $frm->addButton($this,'Testar Conexão',null,'testConnection',null,null,true,false,'fas:fa-plug green');
+                $frm->closeGroup();
             }
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
             $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
@@ -97,7 +101,7 @@ class Gen01 extends TPage
         $this->onReload();
     }
 
-    public function next($param)
+    public function testConnection($param)
     {
         try {
             //$data = $this->form->getData();
@@ -121,12 +125,20 @@ class Gen01 extends TPage
                 //$_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  = $param['name'];
 
                 //AdiantiCoreApplication::loadPage('Gen02');
-            } else {
-                prepareReturnAjax(0, null, $dao->getError());
-            }            
+                $text[] = 'OK!';
+                $text = TFormDinMessage::messageTransform($text);
+                new TMessage(TFormDinMessage::TYPE_INFO, $text);
+            }
         } catch (Exception $e) {
-            $frm->setMessage($e->getMessage());
+            $text[] = $e->getMessage();
+            $text = TFormDinMessage::messageTransform($text);
+            new TMessage(TFormDinMessage::TYPE_ERROR, $text);
         }
+
+    }
+
+    public function next($param)
+    {
 
     }
 }
