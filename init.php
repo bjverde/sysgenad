@@ -22,7 +22,7 @@ define('PATH', dirname(__FILE__));
 define('LANG', $ini['general']['language']);
 
 // ============= SysGen For Adianti  =================//
-
+define('ROOT_PATH', '../');
 if(!defined('ROWS_PER_PAGE') ) { 
     define('ROWS_PER_PAGE', 20); 
 }

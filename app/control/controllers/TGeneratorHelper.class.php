@@ -15,7 +15,8 @@ class TGeneratorHelper
     const TP_SYSTEM_REST = 'TP_SYSTEM_REST';
     const TP_SYSTEM_FORM_REST = 'TP_SYSTEM_FORM_REST';
 
-    
+    const GEN_SYSTEM_ACRONYM = 'GEN_SYSTEM_ACRONYM';
+
     public static function testar($extensao = null, $html)
     {
         if (extension_loaded($extensao)) {
@@ -138,7 +139,8 @@ class TGeneratorHelper
     }
     public static function getPathNewSystem()
     {
-        return ROOT_PATH.$_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM'];
+        //return ROOT_PATH.$_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM'];
+        return ROOT_PATH.TSysgenSession::getValue(self::GEN_SYSTEM_ACRONYM);
     }
     
     public static function copySystemSkeletonToNewSystemByTpSystem($pathSkeleton)
@@ -160,7 +162,7 @@ class TGeneratorHelper
     
     public static function copySystemSkeletonToNewSystem()
     {
-        $tpSystem = $_SESSION[APLICATIVO][TableInfo::TP_SYSTEM];
+        $tpSystem = TSysgenSession::getValue(TableInfo::TP_SYSTEM);
         switch ($tpSystem) {
             case self::TP_SYSTEM_FORM:
                 $pathSkeleton  = 'system_skeleton'.DS.'common';

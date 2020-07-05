@@ -24,6 +24,30 @@ class Gen02 extends TPage
 
             $frm->addGroupField('gpx1', Message::GEN02_GPX1_TITLE);
                 $html = $frm->addHtmlField('conf', '');
+
+                try {
+                    //$listTablesAll = TGeneratorHelper::loadTablesFromDatabase();
+                    
+                    $path = TGeneratorHelper::getPathNewSystem();
+                    TGeneratorHelper::mkDir($path);
+                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_MKDIR_SYSTEM.$path));
+                    TGeneratorHelper::copySystemSkeletonToNewSystem();
+                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_COPY_SYSTEM_SKELETON));
+                    TGeneratorHelper::createFileConstants();
+                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONSTANTS));
+                    TGeneratorHelper::createFileConfigDataBase();
+                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONFIG_DATABASE));
+                    TGeneratorHelper::createFileAutoload();
+                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_AUTOLOAD));
+                    TGeneratorHelper::createFileIndex();
+                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_INDEX));
+                    $html->add('<br>');
+                    $html->add('<br>');
+                    $html->add(Message::SEL_TABLES_GENERATE);
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+                    $frm->setMessage($e->getMessage());
+                }                
             $frm->closeGroup();
     
             $this->form = $frm->show();
