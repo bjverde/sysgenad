@@ -12,7 +12,7 @@ use DateTime;
 /**
  * DateTimePicker Widget
  *
- * @version    7.2
+ * @version    7.2.2
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -95,7 +95,16 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
      */
     public static function convertToMask($value, $fromMask, $toMask)
     {
-        if ($value)
+        if (is_array($value)) // vector fields (field list)
+        {
+            foreach ($value as $key => $item)
+            {
+                $value[$key] = self::convertToMask($item, $fromMask, $toMask);
+            }
+            
+            return $value;
+        }
+        else if ($value)
         {
             $value = substr($value,0,strlen($fromMask));
             

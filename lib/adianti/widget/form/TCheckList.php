@@ -13,7 +13,7 @@ use Adianti\Validator\TFieldValidator;
 /**
  * Checklist
  *
- * @version    7.2
+ * @version    7.2.2
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio

@@ -15,7 +15,7 @@ use ReflectionClass;
 /**
  * Wrapper class to deal with forms
  *
- * @version    7.2
+ * @version    7.2.2
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio

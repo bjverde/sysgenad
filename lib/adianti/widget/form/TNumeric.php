@@ -7,7 +7,7 @@ use Adianti\Widget\Form\TEntry;
 /**
  * Numeric Widget
  *
- * @version    7.2
+ * @version    7.2.2
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio

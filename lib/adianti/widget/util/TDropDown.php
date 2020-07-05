@@ -9,7 +9,7 @@ use Adianti\Widget\Util\TImage;
 /**
  * TDropDown Widget
  *
- * @version    7.2
+ * @version    7.2.2
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio

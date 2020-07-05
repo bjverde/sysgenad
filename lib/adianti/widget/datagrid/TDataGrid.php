@@ -18,7 +18,7 @@ use Exception;
 /**
  * DataGrid Widget: Allows to create datagrids with rows, columns and actions
  *
- * @version    7.2
+ * @version    7.2.2
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -1065,7 +1065,7 @@ class TDataGrid extends TTable
                         }
                     }
                     
-                    if (!empty($totalFunction))
+                    if (!empty($totalFunction) || !empty($totalCallback))
                     {
                         $this->hasTotalFunction = true;
                         $cell->{'data-total-function'} = $totalFunction;

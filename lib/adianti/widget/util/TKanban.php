@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Widget\Util;
 
+use Adianti\Database\TTransaction;
 use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Base\TElement;
 use Adianti\Control\TAction;
@@ -13,7 +14,7 @@ use ApplicationTranslator;
 /**
  * Kanban
  *
- * @version    7.2
+ * @version    7.2.2
  * @package    widget
  * @subpackage util
  * @author     Artur Comunello
@@ -33,6 +34,7 @@ class TKanban extends TElement
     protected $stageDropAction;
     protected $templatePath;
     protected $itemTemplate;
+    protected $itemDatabase;
     
     /**
      * Class Constructor
@@ -125,6 +127,15 @@ class TKanban extends TElement
     public function setItemTemplate($template)
     {
         $this->itemTemplate = $template;
+    }
+    
+    /**
+     * Set item min database
+     * @param $database min database
+     */
+    public function setItemDatabase($database)
+    {
+        $this->itemDatabase = $database;
     }
     
     /**
@@ -221,6 +232,11 @@ class TKanban extends TElement
         $itemSortable->{'class'}    = 'kanban-item-sortable ' . $this->kanban->item_class;
         $itemSortable->{'stage_id'} = $stage->{'stage_id'};
         
+        if (!empty($this->itemDatabase))
+        {
+            TTransaction::open($this->itemDatabase);
+        }
+        
         if (!empty($this->items[$stage->{'stage_id'}]))
         {
             foreach ($this->items[$stage->{'stage_id'}] as $key => $item)
@@ -228,7 +244,12 @@ class TKanban extends TElement
                 $itemSortable->add(self::renderItem($item));
             }
         }
-
+        
+        if (!empty($this->itemDatabase))
+        {
+            TTransaction::close();
+        }
+        
         $stage->add($itemSortable);
     }
     
