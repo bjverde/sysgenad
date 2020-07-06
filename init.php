@@ -22,6 +22,9 @@ define('PATH', dirname(__FILE__));
 define('LANG', $ini['general']['language']);
 
 // ============= SysGen For Adianti  =================//
+define('FORMDIN_VERSION', $ini['system']['formdin_min_version']);
+define('SYSTEM_VERSION', $ini['system']['version']);
+
 define('ROOT_PATH', '../');
 if(!defined('ROWS_PER_PAGE') ) { 
     define('ROWS_PER_PAGE', 20); 

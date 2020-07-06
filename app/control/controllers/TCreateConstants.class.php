@@ -28,10 +28,10 @@ class TCreateConstants extends TCreateFileContent
         $this->addBlankLine();
         $this->addLine('define(\'FORMDIN_VERSION_MIN\', \''.FORMDIN_VERSION.'\');');        
         $this->addBlankLine();
-        $this->addLine('define(\'SYSTEM_VERSION\' , \''.$_SESSION[APLICATIVO]['GEN_SYSTEM_VERSION'].'\');');
-        $this->addLine('define(\'SYSTEM_ACRONYM\' , \''.$_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM'].'\');');
+        $this->addLine('define(\'SYSTEM_VERSION\' , \''.TSysgenSession::getValue('GEN_SYSTEM_VERSION').'\');');
+        $this->addLine('define(\'SYSTEM_ACRONYM\' , \''.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM').'\');');
         $this->addLine('define(\'APLICATIVO\'     , SYSTEM_ACRONYM);');
-        $this->addLine('define(\'SYSTEM_NAME\'    , \''.$_SESSION[APLICATIVO]['GEN_SYSTEM_NAME'].'\');');
+        $this->addLine('define(\'SYSTEM_NAME\'    , \''.TSysgenSession::getValue('GEN_SYSTEM_NAME').'\');');
         $this->addLine('//define(\'SYSTEM_NAME_SUB\' , \'Subtítulo do sistema\');');
         $this->addLine('//define(\'SYSTEM_UNIT\' , \'Nome unidade que irá aparecer no rodapé\');');        
         $this->addBlankLine();

@@ -75,7 +75,7 @@ class TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function getGenSystemAcronym()
     {
-        return $_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM'];
+        return TSysgenSession::getValue('GEN_SYSTEM_ACRONYM');
     }
     //--------------------------------------------------------------------------------------
     public function addSysGenHeaderNote()
