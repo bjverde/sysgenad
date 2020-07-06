@@ -1,10 +1,10 @@
 <menu>
     <menuitem label='Wizard'>
-        <icon>fa:magic fa-fw</icon>
+        <icon>fa:magic fa-fw #f0db4f</icon>
         <action>Gen00</action>>                
     </menuitem>      
     <menuitem label='Ajuda'>
-        <icon>fa:life-ring fa-fw</icon>
+        <icon>fa:life-ring fa-fw red</icon>
         <menu>
             <menuitem label='Ajuda'>
                 <icon>fa:life-ring fa-fw</icon>
