@@ -26,6 +26,8 @@ $content     = str_replace('{logo-lg}', $ini['system']['logo-lg'], $content);
 $content     = str_replace('{logo-link-class}', $ini['system']['logo-link-class'], $content);
 $content     = str_replace('{login-link}', $ini['system']['login-link'], $content);
 
+$content     = str_replace('{login}', $ini['system']['login'], $content);
+
 echo $content;
 
 if (isset($_REQUEST['class'])){
