@@ -1,0 +1,86 @@
+<!--[main]-->
+<div class="row" style="font-family:Open Sans">
+    <div class="col-sm-6">
+        <div class="card panel">
+            <div class="card-header panel-heading">
+               <div class="card-title panel-title">
+                   <div style="width: 100%"> <i class="far fa-clock gray" aria-hidden="true"></i>Orientações sobre a estrutura de banco de dados</div>
+                </div>
+            </div>
+            <div class="card-body panel-body">
+                <br> Sigua as 4 dicas abaixo e será mais feliz ! Essas orientações não são obrigatorias, seguindo o código gerado irá funcionar de forma mais facil. 
+                <a href="https://github.com/bjverde/formDin/wiki/Usando-DAO-e-VO#dicas-para-modelar-o-banco-de-dados" target="_blank">Veja na Wiki do formDin em detalhes cada dica.</a>
+                <ul>
+                    <li>NÃO use chaves primárias composta !! Evite chaves primarias compostas. Procure utilizar sempre a chaves primaria simples com AUTOINCREMENT. Transforme as chaves compostas em chaves candidatas com Unique Key.</li>
+                    <li>Procure criar chaves primárias (PK) com nomes únicos. Nada de toda PK com o nome ID</li>
+                    <li>Use VIEWS e/ou SubSelects</li>
+                    <li>Use tabelas de apoio, para os "tipos"</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-6">
+        <div class="card panel">
+            <div class="card-header panel-heading">
+               <div class="card-title panel-title">
+                   <div style="width: 100%"><i class="far fa-folder gray" aria-hidden="true"></i> Estrutura de diretórios</div>
+                </div>
+            </div>
+            <div class="card-body panel-body" style="text-align:center">
+                <p>
+                A seguir, você tem acesso à estrutura de diretórios utilizada pelo Adianti framework.
+                Todas as classes do framework, e outros arquivos necessários estão localizados sob o diretório /lib/adianti. 
+                </p>
+            </div>
+            <div class="card-footer panel-footer" style="text-align:center">
+                <a href="https://www.adianti.com.br/framework-structure" target="newwindow" class="btn btn-default"> <i class="far fa-folder blue" aria-hidden="true"></i> Ver estrutura de diretórios </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+<div class="row" style="font-family:Open Sans">
+    <div class="col-sm-6">
+        <div class="card panel">
+            <div class="card-header panel-heading">
+               <div class="card-title panel-title">
+                   <div style="width: 100%"><i class="fa fa-code gray" aria-hidden="true"></i>Tipo de sistema</div>
+                </div>
+            </div>
+            <div class="card-body panel-body">
+                <b>ATENÇÃO:</b> Para API REST é preciso habilitar a mod_rewrite no Apache. 
+                <a href="https://github.com/bjverde/formDin/wiki/API-REST">Informações sobre no Wiki do FormDin</a> 
+                
+                <ul>
+                    <li>Somente tela FormDin: Padrão FormDin com a geração de menus, dao, vo, negocio e tela</li>
+                    <li>Somente API REST: Padrão RESTFull via api Json. Não tem menus e telas. tudo irá responder no SISTEMA/API</li>
+                    <li>FormDin + REST: É descrição completa do nome do sistema ou o que significa a sigla</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-6">
+        <div class="card panel">
+            <div class="card-header panel-heading">
+               <div class="card-title panel-title">
+                <div style="width: 100%"><i class="fa fa-code gray" aria-hidden="true"></i>Tipo de sistema</div>
+                </div>
+            </div>
+            <div class="card-body panel-body">
+                EasyLabel é um recurso que irá alterar a Label dos campos das telas FormDin. Diminuindo seu trabalho de alterar as labels, no momento conta com regras fixas. Se o campo da tabela coincidir com o Tipo e a Regex o label será alterado. Exemplos: 
+                <ul>
+                    <li>Tipo Numerico e nome do campo QTALGO = Quantidade Algo</li>
+                    <li>Tipo Data e nome do campo DTALGO = Data Algo</li>
+                    <li>Tipo Texto e nome do campo MNALGO = Nome Algo</li>
+                    <li>Tipo Texto e nome do campo DSALGO = Descrição Algo</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
+<!--[/main]-->
