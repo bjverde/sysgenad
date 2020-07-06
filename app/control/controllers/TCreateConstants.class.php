@@ -15,30 +15,33 @@ class TCreateConstants extends TCreateFileContent
 
     public function __construct()
     {
-        $this->setFileName('constantes.php');
-        $path = TGeneratorHelper::getPathNewSystem().DS.'includes'.DS;
+        $this->setFileName('application.ini');
+        $path = TGeneratorHelper::getPathNewSystem().DS.'app'.DS.'config'.DS;
         $this->setFilePath($path);
     }
     //--------------------------------------------------------------------------------------
     public function show($print = false)
     {
         $this->lines=null;
-        $this->addLine('<?php');
-        $this->addSysGenHeaderNote();
         $this->addBlankLine();
-        $this->addLine('define(\'FORMDIN_VERSION_MIN\', \''.FORMDIN_VERSION.'\');');        
+        $this->addLine('[general]');
+        $this->addLine('timezone = America/Sao_Paulo');
+        $this->addLine('language = pt');
+        $this->addLine('application ='.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM'));
+        $this->addLine('theme = theme_formdinv');
+        $this->addLine('seed = ');
+        $this->addLine('debug = 1');
         $this->addBlankLine();
-        $this->addLine('define(\'SYSTEM_VERSION\' , \''.TSysgenSession::getValue('GEN_SYSTEM_VERSION').'\');');
-        $this->addLine('define(\'SYSTEM_ACRONYM\' , \''.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM').'\');');
-        $this->addLine('define(\'APLICATIVO\'     , SYSTEM_ACRONYM);');
-        $this->addLine('define(\'SYSTEM_NAME\'    , \''.TSysgenSession::getValue('GEN_SYSTEM_NAME').'\');');
-        $this->addLine('//define(\'SYSTEM_NAME_SUB\' , \'Subtítulo do sistema\');');
-        $this->addLine('//define(\'SYSTEM_UNIT\' , \'Nome unidade que irá aparecer no rodapé\');');        
         $this->addBlankLine();
-        $this->addLine('if (! defined ( \'DS\' )) {');
-        $this->addLine(ESP.'define(\'DS\'   , DIRECTORY_SEPARATOR);');
-        $this->addLine('}');
-        $this->addLine('?>');
+        $this->addLine('[system]');
+        $this->addLine('formdin_min_version='.FORMDIN_VERSION);
+        $this->addLine('version='.TSysgenSession::getValue('GEN_SYSTEM_VERSION'));
+        $this->addLine('system_name='.TSysgenSession::getValue('GEN_SYSTEM_NAME'));
+        $this->addLine(';system_name_sub=\'Subtítulo do sistema\'');
+        $this->addLine('logo-lg='.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM'));
+        $this->addLine('logo-mini = /images/icon.png');
+        $this->addLine('logo-link-class = \'index.php?class=WelcomeView.class\'');
+        $this->addLine('login-link = https://github.com/bjverde/sysgenad');
         if ($print) {
             echo $this->getLinesString();
         } else {
