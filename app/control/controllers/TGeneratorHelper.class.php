@@ -170,10 +170,10 @@ class TGeneratorHelper
 
         switch ($tpSystem) {
             case self::TP_SYSTEM_FORM:
-                $pathSkeleton  = 'system_skeleton'.DS.'common';
+                $pathSkeleton  = 'system_skeleton';
                 self::copySystemSkeletonToNewSystemByTpSystem($pathSkeleton);
-                $pathSkeleton  = 'system_skeleton'.DS.'form';
-                self::copySystemSkeletonToNewSystemByTpSystem($pathSkeleton);
+                //$pathSkeleton  = 'system_skeleton'.DS.'form';
+                //self::copySystemSkeletonToNewSystemByTpSystem($pathSkeleton);
             break;
             //--------------------------------------------------------------------------------
             case self::TP_SYSTEM_REST:
