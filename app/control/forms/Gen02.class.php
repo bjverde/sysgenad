@@ -36,7 +36,7 @@ class Gen02 extends TPage
                     TGeneratorHelper::createFileConstants();
                     $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONSTANTS));
                     TGeneratorHelper::createFileConfigDataBase();
-                    //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONFIG_DATABASE));
+                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONFIG_DATABASE));
                     //TGeneratorHelper::createFileAutoload();
                     //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_AUTOLOAD));
                     //TGeneratorHelper::createFileIndex();
