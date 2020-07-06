@@ -36,20 +36,23 @@ class Gen02 extends TPage
                     TGeneratorHelper::createFileConstants();
                     $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONSTANTS));
                     TGeneratorHelper::createFileConfigDataBase();
-                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONFIG_DATABASE));
-                    TGeneratorHelper::createFileAutoload();
-                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_AUTOLOAD));
-                    TGeneratorHelper::createFileIndex();
-                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_INDEX));
+                    //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONFIG_DATABASE));
+                    //TGeneratorHelper::createFileAutoload();
+                    //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_AUTOLOAD));
+                    //TGeneratorHelper::createFileIndex();
+                    //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_INDEX));
                     $html->add('<br>');
                     $html->add('<br>');
                     $html->add(Message::SEL_TABLES_GENERATE);
                 } catch (Exception $e) {
                     echo $e->getMessage();
-                    $frm->setMessage($e->getMessage());
+                    $frm->setMessage($e->getMessage(),TFormDinMessage::TYPE_ERROR);
                 }                
             $frm->closeGroup();
     
+            $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
+            $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
+
             $this->form = $frm->show();
 
             // wrap the page content using vertical box

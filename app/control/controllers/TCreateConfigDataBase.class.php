@@ -15,7 +15,7 @@ class TCreateConfigDataBase extends TCreateFileContent
 
     public function __construct()
     {
-        $this->setFileName('config_conexao.php');
+        $this->setFileName('maindatabase.ini');
         $path = TGeneratorHelper::getPathNewSystem().DS.'app'.DS.'config';
         $this->setFilePath($path);
     }
@@ -23,18 +23,14 @@ class TCreateConfigDataBase extends TCreateFileContent
     public function show($print = false)
     {
         $this->lines=null;
-        $this->addLine('<?php');
-        $this->addSysGenHeaderNote();
-        $this->addBlankLine();
-        $this->addLine('define(\'BANCO\'   , \''.$_SESSION[APPLICATION_NAME]['DBMS']['TYPE'].'\');');
-        $this->addLine('define(\'HOST\'    , \''.$_SESSION[APPLICATION_NAME]['DBMS']['HOST'].'\');');
-        $this->addLine('define(\'PORT\'    , \''.$_SESSION[APPLICATION_NAME]['DBMS']['PORT'].'\');');
-        $this->addLine('define(\'DATABASE\', \''.$_SESSION[APPLICATION_NAME]['DBMS']['DATABASE'].'\');');
-        $this->addLine('define(\'SCHEMA\'  , \''.$_SESSION[APPLICATION_NAME]['DBMS']['SCHEMA'].'\');');
-        $this->addLine('define(\'USUARIO\' , \''.$_SESSION[APPLICATION_NAME]['DBMS']['USER'].'\');');
-        $this->addLine('define(\'SENHA\'   , \''.$_SESSION[APPLICATION_NAME]['DBMS']['PASSWORD'].'\');');
-        $this->addLine('define(\'UTF8_DECODE\'   , 0); //Decode String APP (UTF-8) to Database ISO-8859-1');
-        $this->addLine('?>');
+        $this->addLine('host = "'.$_SESSION[APPLICATION_NAME]['DBMS']['HOST'].'"');
+        $this->addLine('port = "'.$_SESSION[APPLICATION_NAME]['DBMS']['PORT'].'"');
+        $this->addLine('name = "'.$_SESSION[APPLICATION_NAME]['DBMS']['DATABASE'].'"');
+        $this->addLine('user = "'.$_SESSION[APPLICATION_NAME]['DBMS']['USER'].'"');
+        $this->addLine('pass = "'.$_SESSION[APPLICATION_NAME]['DBMS']['PASSWORD'].'"');
+        $this->addLine('type = "'.$_SESSION[APPLICATION_NAME]['DBMS']['TYPE'].'"');
+        $this->addLine('prep = "1"');
+        $this->addLine('slog = SystemSqlLogService');
         if ($print) {
             echo $this->getLinesString();
         } else {
