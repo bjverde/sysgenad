@@ -16,7 +16,7 @@ class TCreateConstants extends TCreateFileContent
     public function __construct()
     {
         $this->setFileName('application.ini');
-        $path = TGeneratorHelper::getPathNewSystem().DS.'app'.DS.'config'.DS;
+        $path = TGeneratorHelper::getPathNewSystem().DS.'app'.DS.'config';
         $this->setFilePath($path);
     }
     //--------------------------------------------------------------------------------------

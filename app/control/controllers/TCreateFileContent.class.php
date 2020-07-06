@@ -116,7 +116,8 @@ class TCreateFileContent
                 unlink($fullPathfile);
             }
             $payload = $this->show(false);
-            file_put_contents($fullPathfile, $payload);
+            $output = file_put_contents($fullPathfile, $payload);
+            FormDinHelper::debug($output);
         }
     }
 }
