@@ -80,4 +80,6 @@ final class Message
 
     const ERRO_LIST_COLUMNS_EMPTY     = 'List of Columns Properties is empty';
     const ERRO_LIST_COLUMNS_NOT_ARRAY = 'List of Columns Properties not is a array';
+
+    const ERRO_EMPTY_TP_SYSTEM = 'Empty Type System';
 }
