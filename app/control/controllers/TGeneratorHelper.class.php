@@ -244,23 +244,24 @@ class TGeneratorHelper
     
     public static function getTDAOConect($tableName, $schema)
     {
-        $dbType   = $_SESSION[APLICATIVO]['DBMS']['TYPE'];
-        $user     = $_SESSION[APLICATIVO]['DBMS']['USER'];
-        $password = $_SESSION[APLICATIVO]['DBMS']['PASSWORD'];
-        $dataBase = $_SESSION[APLICATIVO]['DBMS']['DATABASE'];
-        $host     = $_SESSION[APLICATIVO]['DBMS']['HOST'];
-        $port     = $_SESSION[APLICATIVO]['DBMS']['PORT'];
-        $schema   = is_null($schema)?$_SESSION[APLICATIVO]['DBMS']['SCHEMA']:$schema;
+        $DBMS = TSession::getValue('DBMS');
+        $dbType   = $DBMS['TYPE'];
+        $user     = $DBMS['USER'];
+        $password = $DBMS['PASSWORD'];
+        $dataBase = $DBMS['DATABASE'];
+        $host     = $DBMS['HOST'];
+        $port     = $DBMS['PORT'];
+        $schema   = is_null($schema)?$DBMS['SCHEMA']:$schema;
         
-        $dao = new TDAO($tableName, $dbType, $user, $password, $dataBase, $host, $port, $schema);
+        $dao = new TFormDinDaoDbms($tableName, $dbType, $user, $password, $dataBase, $host, $port, $schema);
         return $dao;
     }
     
     public static function loadTablesFromDatabase()
     {
         $listAllTables = array();
-        if(ArrayHelper::has(TableInfo::LIST_TABLES_DB, $_SESSION[APLICATIVO])){
-            $listAllTables = $_SESSION[APLICATIVO][TableInfo::LIST_TABLES_DB];
+        if(ArrayHelper::has(TableInfo::LIST_TABLES_DB, $_SESSION[APPLICATION_NAME])){
+            $listAllTables = $_SESSION[APPLICATION_NAME][TableInfo::LIST_TABLES_DB];
         }else{
             $dao = self::getTDAOConect(null, null);
             $listAllTables = $dao->loadTablesFromDatabase();

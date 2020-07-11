@@ -26,7 +26,7 @@ class Gen02 extends TPage
                 $html = $frm->addHtmlField('conf', '');
 
                 try {
-                    //$listTablesAll = TGeneratorHelper::loadTablesFromDatabase();
+                    $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();
                     
                     $path = TGeneratorHelper::getPathNewSystem();
                     TGeneratorHelper::mkDir($path);
