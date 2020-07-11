@@ -14,8 +14,7 @@ class Gen02 extends TPage
         
         try
         {   
-            FormDinHelper::debug($_SESSION,'$_SESSION');
-
+            
             TPage::include_css('app/resources/sysgen.css');
 
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP02);
@@ -27,6 +26,8 @@ class Gen02 extends TPage
 
                 try {
                     $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();
+
+                    FormDinHelper::debug($_SESSION,'$_SESSION');
                     
                     $path = TGeneratorHelper::getPathNewSystem();
                     TGeneratorHelper::mkDir($path);
