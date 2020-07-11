@@ -265,20 +265,21 @@ class TGeneratorHelper
         }else{
             $dao = self::getTDAOConect(null, null);
             $listAllTables = $dao->loadTablesFromDatabase();
+            $listAllTables = ArrayHelper::convertArrayPdo2FormDin($listAllTables);
             if (!is_array($listAllTables)) {
                 throw new InvalidArgumentException(Message::ERRO_LIST_TABLE_NOT_ARRAY);
             }
             foreach ($listAllTables['TABLE_NAME'] as $key => $value) {
                 $listAllTables['idSelected'][] = $listAllTables['TABLE_SCHEMA'][$key].$value.$listAllTables['COLUMN_QTD'][$key].$listAllTables['TABLE_TYPE'][$key];
             }
-            $_SESSION[APLICATIVO][TableInfo::LIST_TABLES_DB] = $listAllTables;
+            $_SESSION[APPLICATION_NAME][TableInfo::LIST_TABLES_DB] = $listAllTables;
         }
         return $listAllTables;
     }
     
     public static function getConfigGridSqlServer($DBMS)
     {
-        $dbversion = $_SESSION[APLICATIVO]['DBMS']['VERSION'];
+        $dbversion = $_SESSION[APPLICATION_NAME]['DBMS']['VERSION'];
         $TPGRID = GRID_SQL_PAGINATION;
         $withVersion = TableInfo::getDbmsWithVersion($DBMS);
         if( ($dbversion == TableInfo::DBMS_VERSION_SQLSERVER_2012_LT) && $withVersion ){
@@ -289,7 +290,7 @@ class TGeneratorHelper
     
     public static function getConfigGridMySql($DBMS)
     {
-        $dbversion = $_SESSION[APLICATIVO]['DBMS']['VERSION'];
+        $dbversion = $_SESSION[APPLICATION_NAME]['DBMS']['VERSION'];
         $TPGRID = GRID_SQL_PAGINATION;
         $withVersion = TableInfo::getDbmsWithVersion($DBMS);
         if( ($dbversion == TableInfo::DBMS_VERSION_MYSQL_8_LT) && $withVersion ){
@@ -300,7 +301,7 @@ class TGeneratorHelper
     
     public static function getConfigGridPostgresql($DBMS)
     {
-        $dbversion = $_SESSION[APLICATIVO]['DBMS']['VERSION'];
+        $dbversion = $_SESSION[APPLICATION_NAME]['DBMS']['VERSION'];
         $TPGRID = GRID_SQL_PAGINATION;
         $withVersion = TableInfo::getDbmsWithVersion($DBMS);        
         if( ($dbversion == TableInfo::DBMS_VERSION_POSTGRES_95_LT) && $withVersion ){

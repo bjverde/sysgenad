@@ -39,7 +39,6 @@ class Gen01 extends TPage
                     $frm->addHiddenField('type', $DBMS_TYPE);
                     $frm->addHiddenField('prep', 1);
                     if($DBMS_TYPE == FormDinHelper::DBMS_MYSQL){
-                        $frm->addHiddenField('myDbType', FormDinHelper::DBMS_MYSQL);
                         $listMyDbVersion = array(TableInfo::DBMS_VERSION_MYSQL_8_GTE=>TableInfo::DBMS_VERSION_MYSQL_8_GTE_LABEL
                                                 ,TableInfo::DBMS_VERSION_MYSQL_8_LT =>TableInfo::DBMS_VERSION_MYSQL_8_LT_LABEL
                                             );
@@ -50,6 +49,8 @@ class Gen01 extends TPage
                         $frm->addTextField('user', 'User:'    , 40, true, 20, 'form_exemplo', true, null, null, true);
                         $frm->addTextField('pass', 'Password:', 40, true, 20, '123456'      ,false, null, null, true);
                         $frm->addTextField('port', 'Porta:'   , 6 ,false, 6 , '3306'        ,false, null, null, true, false);
+                        $frm->addHiddenField('schema');
+                        $frm->addHiddenField('version');
                         //$frm->addButton(Message::BUTTON_LABEL_TEST_CONNECT, null, 'btnTestarmy', 'testarConexao("my")', null, true, false);
                         $frm->addHtmlField('myGride', '');
                     }elseif($DBMS_TYPE == FormDinHelper::DBMS_SQLITE){
@@ -59,6 +60,8 @@ class Gen01 extends TPage
                         $frm->addTextField('name', 'Database:', 80, true, 80, $value);
                         $frm->addHiddenField('user');
                         $frm->addHiddenField('pass');
+                        $frm->addHiddenField('schema');
+                        $frm->addHiddenField('version');
                     }
                 $frm->closeGroup();
                 $frm->addGroupField('gpx3');
@@ -121,8 +124,8 @@ class Gen01 extends TPage
                 $_SESSION[APPLICATION_NAME]['DBMS']['DATABASE'] = $param['name'];
                 $_SESSION[APPLICATION_NAME]['DBMS']['HOST']     = $param['host'];
                 $_SESSION[APPLICATION_NAME]['DBMS']['PORT']     = $param['port'];
-                //$_SESSION[APPLICATION_NAME]['DBMS']['SCHEMA']   = $param['name'];
-                //$_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  = $param['name'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['SCHEMA']   = $param['schema'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  = $param['version'];
 
                 //AdiantiCoreApplication::loadPage('Gen02');
                 $text[] = Message::MSG_TEST_CONNECT;
