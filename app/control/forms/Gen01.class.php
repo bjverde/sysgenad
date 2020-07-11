@@ -126,6 +126,7 @@ class Gen01 extends TPage
                 $_SESSION[APPLICATION_NAME]['DBMS']['SCHEMA']   = $param['SCHEMA'];
                 $_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  = $param['VERSION'];
 
+                //MSG depois do loadPage para evitar o carregando 2x
                 $text[] = Message::MSG_TEST_CONNECT;
                 $text = TFormDinMessage::messageTransform($text);
                 new TMessage(TFormDinMessage::TYPE_INFO, $text);
