@@ -14,7 +14,6 @@ class Gen01 extends TPage
         
         try
         {   
-            FormDinHelper::debug($_SESSION,'$_SESSION');
             $DBMS = TSession::getValue('DBMS');
             $DBMS_TYPE  = $DBMS['TYPE'];
 
@@ -111,7 +110,7 @@ class Gen01 extends TPage
             $this->form->setData($data);// mantém o form preenchido
     
             //Função do FormDin para Debug
-            FormDinHelper::debug($param,'$param');
+            //FormDinHelper::debug($param,'$param');
             //FormDinHelper::debug($data,'$data');
             //FormDinHelper::debug($_REQUEST,'$_REQUEST');
             //FormDinHelper::debug($_SESSION,'$_SESSION');
