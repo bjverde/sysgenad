@@ -36,32 +36,32 @@ class Gen01 extends TPage
             $frm->closeGroup();
             if ($validoPDOAndDBMS) {
                 $frm->addGroupField('gpx2', Message::GEN01_GPX2_TITLE);
-                    $frm->addHiddenField('type', $DBMS_TYPE);
-                    $frm->addHiddenField('prep', 1);
+                    $frm->addHiddenField('TYPE', $DBMS_TYPE);
+                    $frm->addHiddenField('PREP', 1);
                     if($DBMS_TYPE == FormDinHelper::DBMS_MYSQL){
                         $listMyDbVersion = array(TableInfo::DBMS_VERSION_MYSQL_8_GTE=>TableInfo::DBMS_VERSION_MYSQL_8_GTE_LABEL
                                                 ,TableInfo::DBMS_VERSION_MYSQL_8_LT =>TableInfo::DBMS_VERSION_MYSQL_8_LT_LABEL
                                             );
                         //$frm->addSelectField('myDbVersion', 'Escolha a versão do DBMS:', true, $listMyDbVersion, null, null, null, null, null, null, ' ');    
-                        $frm->addTextField('host', 'Host:'    , 20, true, 20, '127.0.0.1'   , true, null, null, true);
-                        $frm->addTextField('name'  , 'Database:', 20, true, 20, 'form_exemplo',false, null, null, true);
+                        $frm->addTextField('HOST', 'Host:'    , 20, true, 20, '127.0.0.1'   , true, null, null, true);
+                        $frm->addTextField('DATABASE'  , 'Database:', 20, true, 20, 'form_exemplo',false, null, null, true);
                         
-                        $frm->addTextField('user', 'User:'    , 40, true, 20, 'form_exemplo', true, null, null, true);
-                        $frm->addTextField('pass', 'Password:', 40, true, 20, '123456'      ,false, null, null, true);
-                        $frm->addTextField('port', 'Porta:'   , 6 ,false, 6 , '3306'        ,false, null, null, true, false);
-                        $frm->addHiddenField('schema');
-                        $frm->addHiddenField('version');
+                        $frm->addTextField('USER', 'User:'    , 40, true, 20, 'form_exemplo', true, null, null, true);
+                        $frm->addTextField('PASSWORD', 'Password:', 40, true, 20, '123456'      ,false, null, null, true);
+                        $frm->addTextField('PORT', 'Porta:'   , 6 ,false, 6 , '3306'        ,false, null, null, true, false);
+                        $frm->addHiddenField('SCHEMA');
+                        $frm->addHiddenField('VERSION');
                         //$frm->addButton(Message::BUTTON_LABEL_TEST_CONNECT, null, 'btnTestarmy', 'testarConexao("my")', null, true, false);
                         $frm->addHtmlField('myGride', '');
                     }elseif($DBMS_TYPE == FormDinHelper::DBMS_SQLITE){
-                        $frm->addHiddenField('host');
-                        $frm->addHiddenField('port');
+                        $frm->addHiddenField('HOST');
+                        $frm->addHiddenField('PORT');
                         $value = __DIR__.DS.'..'.DS.'..'.DS.'database'.DS.'bdApoio.s3db';
-                        $frm->addTextField('name', 'Database:', 80, true, 80, $value);
-                        $frm->addHiddenField('user');
-                        $frm->addHiddenField('pass');
-                        $frm->addHiddenField('schema');
-                        $frm->addHiddenField('version');
+                        $frm->addTextField('DATABASE', 'Database:', 80, true, 80, $value);
+                        $frm->addHiddenField('USER');
+                        $frm->addHiddenField('PASSWORD');
+                        $frm->addHiddenField('SCHEMA');
+                        $frm->addHiddenField('VERSION');
                     }
                 $frm->closeGroup();
                 $frm->addGroupField('gpx3');
@@ -71,7 +71,7 @@ class Gen01 extends TPage
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
             $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
             
-            if ($validoPDOAndDBMS) {
+            if ($validoPDOAndDBMS && ArrayHelper::has('USER', $DBMS) ) {
                 $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'next',$this,false,'fa:chevron-circle-right','green');
             }
     
@@ -107,8 +107,8 @@ class Gen01 extends TPage
     public function testConnection($param)
     {
         try {
-            //$data = $this->form->getData();
-            //$this->form->setData($data);
+            $data = $this->form->getData(); // obtém os dados do formulário
+            $this->form->setData($data);// mantém o form preenchido
     
             //Função do FormDin para Debug
             FormDinHelper::debug($param,'$param');
@@ -119,18 +119,18 @@ class Gen01 extends TPage
             $connectOK = ManualConnection::testConnection($param);
 
             if ($connectOK instanceof PDO) {
-                $_SESSION[APPLICATION_NAME]['DBMS']['USER'] = $param['user'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['PASSWORD'] = $param['pass'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['DATABASE'] = $param['name'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['HOST']     = $param['host'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['PORT']     = $param['port'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['SCHEMA']   = $param['schema'];
-                $_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  = $param['version'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['USER'] = $param['USER'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['PASSWORD'] = $param['PASSWORD'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['DATABASE'] = $param['DATABASE'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['HOST']     = $param['HOST'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['PORT']     = $param['PORT'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['SCHEMA']   = $param['SCHEMA'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  = $param['VERSION'];
 
-                //AdiantiCoreApplication::loadPage('Gen02');
                 $text[] = Message::MSG_TEST_CONNECT;
                 $text = TFormDinMessage::messageTransform($text);
                 new TMessage(TFormDinMessage::TYPE_INFO, $text);
+                AdiantiCoreApplication::loadPage('Gen01','onLoadFromSession'); //POG para recarregar a pagina
             }
         } catch (Exception $e) {
             $text[] = $e->getMessage();
@@ -138,6 +138,24 @@ class Gen01 extends TPage
             new TMessage(TFormDinMessage::TYPE_ERROR, $text);
         }
 
+    }
+
+    public function onLoadFromSession()
+    {
+        $data = TSession::getValue('DBMS');
+        
+        // monta um objeto para enviar dados após o post
+        $obj = new StdClass;
+        $obj->TYPE = $data['TYPE'];
+        $obj->USER = $data['USER'];
+        $obj->PASSWORD = $data['PASSWORD'];
+        $obj->DATABASE = $data['DATABASE'];
+        $obj->HOST = $data['HOST'];
+        $obj->PORT = $data['PORT'];
+        $obj->SCHEMA = $data['SCHEMA'];
+        $obj->VERSION = $data['VERSION'];
+
+        $this->form->setData($obj);// mantém o form preenchido
     }
 
     public function next()
