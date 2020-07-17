@@ -56,6 +56,8 @@ header
 	background	:#efefef;
 	background-repeat:repeat-x;
 	background-image:url(../img/headerbgsilver.gif);
+	font-family: arial, times new roman;
+	color: #000000;
 }
 #app_header_logo
 {
@@ -140,6 +142,9 @@ footer
 	height          :20px;
 	background-repeat:repeat-x;
 	background-image:url('../img/footerbgsilver.gif');
+	font-family: arial, times new roman;
+	color: #000000;
+	z-index: 910;
 }
 #app_footer_message
 {
@@ -155,6 +160,11 @@ footer
 {
 	float: right;
 	width: 30%;	
+}
+.main-sidebar{
+	margin-top :56px;
+	margin-bottom: 20px;
+	min-height: unset;
 }
 
 
