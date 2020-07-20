@@ -4,7 +4,7 @@ class Gen02 extends TPage
     protected $form; // registration form
     protected $datagrid; // listing
     protected $pageNavigation;
-    
+
     // trait com onReload, onSearch, onDelete...
     use Adianti\Base\AdiantiStandardListTrait;
 
@@ -25,34 +25,28 @@ class Gen02 extends TPage
             $frm = new TFormDin(Message::GEN02_TITLE);
 
             $frm->addGroupField('gpx1', Message::GEN02_GPX1_TITLE);
-                $html = $frm->addHtmlField('conf', '');
+            $html = $frm->addHtmlField('conf', '');
 
-                $listTablesAll = null;
-                try {
-                    $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();
+            $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();
 
-                    FormDinHelper::debug($_SESSION,'$_SESSION');
-                    
-                    $path = TGeneratorHelper::getPathNewSystem();
-                    TGeneratorHelper::mkDir($path);
-                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_MKDIR_SYSTEM.$path));
-                    TGeneratorHelper::copySystemSkeletonToNewSystem();
-                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_COPY_SYSTEM_SKELETON));
-                    TGeneratorHelper::createFileConstants();
-                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONSTANTS));
-                    TGeneratorHelper::createFileConfigDataBase();
-                    $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONFIG_DATABASE));
-                    //TGeneratorHelper::createFileAutoload();
-                    //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_AUTOLOAD));
-                    //TGeneratorHelper::createFileIndex();
-                    //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_INDEX));
-                    $html->add('<br>');
-                    $html->add('<br>');
-                    $html->add(Message::SEL_TABLES_GENERATE);
-                } catch (Exception $e) {
-                    echo $e->getMessage();
-                    $frm->setMessage($e->getMessage(),TFormDinMessage::TYPE_ERROR);
-                }                
+            FormDinHelper::debug($_SESSION,'$_SESSION');
+            
+            $path = TGeneratorHelper::getPathNewSystem();
+            TGeneratorHelper::mkDir($path);
+            $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_MKDIR_SYSTEM.$path));
+            TGeneratorHelper::copySystemSkeletonToNewSystem();
+            $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_COPY_SYSTEM_SKELETON));
+            TGeneratorHelper::createFileConstants();
+            $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONSTANTS));
+            TGeneratorHelper::createFileConfigDataBase();
+            $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONFIG_DATABASE));
+            //TGeneratorHelper::createFileAutoload();
+            //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_AUTOLOAD));
+            //TGeneratorHelper::createFileIndex();
+            //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_INDEX));
+            $html->add('<br>');
+            $html->add('<br>');
+            $html->add(Message::SEL_TABLES_GENERATE);              
             $frm->closeGroup();
     
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
@@ -60,25 +54,46 @@ class Gen02 extends TPage
 
             $this->form = $frm->show();
 
-            $grid = new TFormDinGrid($this,'grid','Exemplo Grid Simples 17');
+            $grid = new TFormDinGrid($this
+                                    ,'gd'               // id do gride
+                                    ,'Lista de Tabelas' // titulo do gride
+                                    , $listTablesAll    // array de dados
+                                );    
             //$grid->setHeight(2500);
             $grid->addColumn('code',  'Code', null, 'center');
-            $grid->addColumn('name',  'Name', null, 'left');
-            $grid->addColumn('city',  'City', null, 'left');
-            $grid->addColumn('state','State', null, 'left');
+            $grid->addColumn('TABLE_SCHEMA', 'TABLE_SCHEMA');
+            $grid->addColumn('COLUMN_QTD', 'COLUMN_QTD');
+            $grid->addColumn('TABLE_TYPE', 'TABLE_TYPE');
             $this->datagrid = $grid->show();
             $panel = $grid->getPanelGroupGrid();
+
+
+/*
+    $gride = new TGrid('gd'                 // id do gride
+                      , 'Lista de Tabelas'  // titulo do gride
+                      , $listTablesAll);    // array de dados
+
+    $gride->setCreateDefaultEditButton(false);
+    $gride->setCreateDefaultDeleteButton(false);
+    $gride->addRowNumColumn();
+    $gride->addColumn('TABLE_SCHEMA', 'TABLE_SCHEMA');
+    $gride->addCheckColumn('idTableSelected', 'TABLE_NAME', 'idSelected', 'TABLE_NAME', true, true);
+    $gride->addColumn('COLUMN_QTD', 'COLUMN_QTD');
+    $gride->addColumn('TABLE_TYPE', 'TABLE_TYPE');
+*/
 
             // wrap the page content using vertical box
             $vbox = new TVBox;
             $vbox->style = 'width: 100%';
             $vbox->add( $pagestep );
             $vbox->add( $this->form );
+            $vbox->add( $panel );
             parent::add($vbox);
         }
         catch (Exception $e)
         {
             new TMessage('error', $e->getMessage());
+            FormDinHelper::debug($e,'$e');
         }
     }
 
