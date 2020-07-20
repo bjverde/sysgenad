@@ -254,7 +254,6 @@ class TFormDin
                 $key = $fieldsRowResult['key'];
             }elseif ($element['type']==self::TYPE_HIDDEN){
                 $adiantiObj = $this->adiantiObj;
-                //$adiantiObj->addContent( [$element['obj']] );
                 $adiantiObj->addFields( [$element['obj']] );
             }elseif ($element['type']==self::TYPE_LAYOUT){
                 $adiantiObj = $this->adiantiObj;

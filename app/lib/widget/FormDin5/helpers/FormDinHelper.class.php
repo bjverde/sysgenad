@@ -58,15 +58,7 @@
 class FormDinHelper
 {
 
-    const FORMDIN_VERSION = '5.0.0-alpha7';
-
-    const DBMS_ACCESS = 'ACCESS';
-    const DBMS_FIREBIRD = 'ibase';
-    const DBMS_MYSQL    = 'mysql';
-    const DBMS_ORACLE   = 'oracle';
-    const DBMS_POSTGRES = 'pgsql';
-    const DBMS_SQLITE   = 'sqlite';
-    const DBMS_SQLSERVER = 'sqlsrv';
+    const FORMDIN_VERSION = '5.0.0-alpha8';
 
     /**
      * Return FormDin version
@@ -111,20 +103,7 @@ class FormDinHelper
 			    throw new DomainException($msg);
 			}
 		}
-	}    
-    
-    public static function getListDBMS()
-    {
-        $list = array();
-        //$list[self::DBMS_ACCESS]='Access';
-        //$list[self::DBMS_FIREBIRD]='FIREBIRD';
-        $list[self::DBMS_MYSQL]='MariaDB ou MySQL';
-        $list[self::DBMS_ORACLE]='Oracle';
-        $list[self::DBMS_POSTGRES]='PostgreSQL';
-        $list[self::DBMS_SQLITE]='SqLite';
-        $list[self::DBMS_SQLSERVER]='SQL Server';
-        return $list;
-    }
+	}
 
 
     //--------------------------------------------------------------------------------
@@ -243,13 +222,16 @@ class FormDinHelper
         return $result;
     }
 
-
+    /**
+     * @codeCoverageIgnore
+     */
     public static function d( $mixExpression,$strComentario='Debug', $boolExit=FALSE )
     {        
         return self::debug($mixExpression,$strComentario,$boolExit);
     }
 
-    /***
+    /**
+     * @codeCoverageIgnore
      * função para depuração. Exibe o modulo a linha e a variável/objeto solicitado
      * Retirado do FormDin 4.9.0
      * https://github.com/bjverde/formDin/blob/master/base/includes/funcoes.inc

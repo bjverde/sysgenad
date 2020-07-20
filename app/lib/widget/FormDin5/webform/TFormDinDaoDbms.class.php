@@ -449,6 +449,12 @@ class TFormDinDaoDbms
 		return $sql;
 	}
 
+	/**
+	 * @codeCoverageIgnore
+	 * Retorna a lista de tabela de banco de dados
+	 *
+	 * @return void
+	 */
 	public function loadTablesFromDatabase() {
 		$DbType = $this->getType();
 		$sql = null;
