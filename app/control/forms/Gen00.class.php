@@ -48,7 +48,7 @@ class Gen00 extends TPage
                                 <li>Nome do sistema: É descrição completa do nome do sistema ou o que significa a sigla</li>
                             </ul>';
                 $frm->addHtmlField('aviso',$html,null,null);            
-                $dbType = FormDinHelper::getListDBMS();
+                $dbType = TFormDinPdoConnection::getListDBMS();
                 $frm->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType);
                 $frm->addTextField('GEN_SYSTEM_ACRONYM','Sigla do Sistema', 50, true);
                 $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9',null,'0.0.0');
