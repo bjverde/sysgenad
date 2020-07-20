@@ -37,7 +37,7 @@ class Gen01 extends TPage
                 $frm->addGroupField('gpx2', Message::GEN01_GPX2_TITLE);
                     $frm->addHiddenField('TYPE', $DBMS_TYPE);
                     $frm->addHiddenField('PREP', 1);
-                    if($DBMS_TYPE == FormDinHelper::DBMS_MYSQL){
+                    if($DBMS_TYPE == TFormDinPdoConnection::DBMS_MYSQL){
                         $listMyDbVersion = array(TableInfo::DBMS_VERSION_MYSQL_8_GTE=>TableInfo::DBMS_VERSION_MYSQL_8_GTE_LABEL
                                                 ,TableInfo::DBMS_VERSION_MYSQL_8_LT =>TableInfo::DBMS_VERSION_MYSQL_8_LT_LABEL
                                             );
@@ -52,7 +52,7 @@ class Gen01 extends TPage
                         $frm->addHiddenField('VERSION');
                         //$frm->addButton(Message::BUTTON_LABEL_TEST_CONNECT, null, 'btnTestarmy', 'testarConexao("my")', null, true, false);
                         $frm->addHtmlField('myGride', '');
-                    }elseif($DBMS_TYPE == FormDinHelper::DBMS_SQLITE){
+                    }elseif($DBMS_TYPE == TFormDinPdoConnection::DBMS_SQLITE){
                         $frm->addHiddenField('HOST');
                         $frm->addHiddenField('PORT');
                         $value = __DIR__.DS.'..'.DS.'..'.DS.'database'.DS.'bdApoio.s3db';
