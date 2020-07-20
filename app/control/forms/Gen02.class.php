@@ -1,7 +1,10 @@
 <?php
 class Gen02 extends TPage
 {
-
+    protected $form; // registration form
+    protected $datagrid; // listing
+    protected $pageNavigation;
+    
     // trait com onReload, onSearch, onDelete...
     use Adianti\Base\AdiantiStandardListTrait;
 
@@ -24,6 +27,7 @@ class Gen02 extends TPage
             $frm->addGroupField('gpx1', Message::GEN02_GPX1_TITLE);
                 $html = $frm->addHtmlField('conf', '');
 
+                $listTablesAll = null;
                 try {
                     $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();
 
@@ -55,6 +59,15 @@ class Gen02 extends TPage
             $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
 
             $this->form = $frm->show();
+
+            $grid = new TFormDinGrid($this,'grid','Exemplo Grid Simples 17');
+            //$grid->setHeight(2500);
+            $grid->addColumn('code',  'Code', null, 'center');
+            $grid->addColumn('name',  'Name', null, 'left');
+            $grid->addColumn('city',  'City', null, 'left');
+            $grid->addColumn('state','State', null, 'left');
+            $this->datagrid = $grid->show();
+            $panel = $grid->getPanelGroupGrid();
 
             // wrap the page content using vertical box
             $vbox = new TVBox;

@@ -48,31 +48,31 @@ class TGeneratorHelper
     {
         // https://secure.php.net/manual/pt_BR/pdo.drivers.php
         $result = false;
-        if ($DBMS == FormDinHelper::DBMS_MYSQL) {
+        if ($DBMS == TFormDinPdoConnection::DBMS_MYSQL) {
             if (self::testar('PDO_MYSQL', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == FormDinHelper::DBMS_SQLITE) {
+        } elseif ($DBMS == TFormDinPdoConnection::DBMS_SQLITE) {
             if (self::testar('PDO_SQLITE', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == FormDinHelper::DBMS_SQLSERVER) {
+        } elseif ($DBMS == TFormDinPdoConnection::DBMS_SQLSERVER) {
             if (self::testar('PDO_SQLSRV', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == FormDinHelper::DBMS_ACCESS) {
+        } elseif ($DBMS == TFormDinPdoConnection::DBMS_ACCESS) {
             if (self::testar('PDO_ODBC', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == FormDinHelper::DBMS_FIREBIRD) {
+        } elseif ($DBMS == TFormDinPdoConnection::DBMS_FIREBIRD) {
             if (self::testar('PDO_FIREBIRD', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == FormDinHelper::DBMS_ORACLE) {
+        } elseif ($DBMS == TFormDinPdoConnection::DBMS_ORACLE) {
             if (self::testar('PDO_OCI', $html)) {
                 $result = true;
             }
-        } elseif ($DBMS == FormDinHelper::DBMS_POSTGRES) {
+        } elseif ($DBMS == TFormDinPdoConnection::DBMS_POSTGRES) {
             if (self::testar('PDO_PGSQL', $html)) {
                 $result = true;
             }
@@ -313,19 +313,19 @@ class TGeneratorHelper
     private static function getConfigByDBMS($DBMS)
     {
         switch ($DBMS) {
-            case FormDinHelper::DBMS_MYSQL:
+            case TFormDinPdoConnection::DBMS_MYSQL:
                 $SCHEMA = false;
                 $TPGRID = self::getConfigGridMySql($DBMS);
             break;
-            case FormDinHelper::DBMS_SQLSERVER:
+            case TFormDinPdoConnection::DBMS_SQLSERVER:
                 $SCHEMA = true;
                 $TPGRID = self::getConfigGridSqlServer($DBMS);
             break;
-            case FormDinHelper::DBMS_POSTGRES:
+            case TFormDinPdoConnection::DBMS_POSTGRES:
                 $SCHEMA = true;
                 $TPGRID = self::getConfigGridPostgresql($DBMS);
             break;
-            case FormDinHelper::DBMS_SQLITE;
+            case TFormDinPdoConnection::DBMS_SQLITE;
                 $SCHEMA = false;
                 $TPGRID = GRID_SQL_PAGINATION;
             break;             
