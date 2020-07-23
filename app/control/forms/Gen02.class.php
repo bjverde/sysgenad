@@ -28,10 +28,7 @@ class Gen02 extends TPage
             $html = $frm->addHtmlField('conf', '');
 
             $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();            
-            $listTablesAll = ArrayHelper::convertArrayFormDin2Pdo($listTablesAll);
-            foreach( $listTablesAll as $keyNumber => $value ) {
-                $listTablesAll[$keyNumber] = (object)$value;
-            }
+            $listTablesAll = ArrayHelper::convertArrayFormDin2Adianti($listTablesAll);
 
             FormDinHelper::debug($listTablesAll,'$listTablesAll');
             
@@ -64,8 +61,9 @@ class Gen02 extends TPage
                                     , $listTablesAll    // array de dados
                                 );    
             //$grid->setHeight(2500);
-            $grid->addColumn('code',  'Code', null, 'center');
+            $grid->addColumn('idSelected',  'Code', null, 'center');
             $grid->addColumn('TABLE_SCHEMA', 'TABLE_SCHEMA');
+            $grid->addColumn('TABLE_NAME', 'TABLE_NAME');
             $grid->addColumn('COLUMN_QTD', 'COLUMN_QTD');
             $grid->addColumn('TABLE_TYPE', 'TABLE_TYPE');
             $this->datagrid = $grid->show();

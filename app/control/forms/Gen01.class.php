@@ -85,7 +85,6 @@ class Gen01 extends TPage
         }
         catch (Exception $e)
         {
-            TFormDinMessage::logRecord($e);
             new TMessage('error', $e->getMessage());
         }
     }
@@ -134,7 +133,6 @@ class Gen01 extends TPage
                 AdiantiCoreApplication::loadPage('Gen01','onLoadFromSession'); //POG para recarregar a pagina
             }
         } catch (Exception $e) {
-            TFormDinMessage::logRecord($e);
             $text[] = $e->getMessage();
             $text = TFormDinMessage::messageTransform($text);
             new TMessage(TFormDinMessage::TYPE_ERROR, $text);
