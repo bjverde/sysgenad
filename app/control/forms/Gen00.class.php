@@ -24,7 +24,7 @@ class Gen00 extends TPage
 
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP00);
             
-            $frm = new TFormDin(Message::GEN00_TITLE);
+            $frm = new TFormDin($this,Message::GEN00_TITLE);
             
             $frm->addGroupField('gpxTpSystem', Message::GPX_TYPE_SYSTEM);
                 //$frm->addHtmlField('info', null, 'ajuda/info_gen00_tpsys_pt-br.php')->setClass('htmlInfo', true);
@@ -58,8 +58,8 @@ class Gen00 extends TPage
             // O Adianti permite a Internacionalização - A função _t('string') serve
             //para traduzir termos no sistema. Veja ApplicationTranslator escrevendo
             //primeiro em ingles e depois traduzindo
-            $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
-            $frm->setAction('Continuar','onSave',$this,false,'fa:chevron-circle-right','green');
+            $frm->setActionLink(_t('Clear'),'clear',false,'fa:eraser','red');
+            $frm->setAction('Continuar','onSave',false,'fa:chevron-circle-right','green');
             
 
             $this->form = $frm->show();

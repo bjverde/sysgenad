@@ -21,7 +21,7 @@ class Gen01 extends TPage
 
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP01);
             
-            $frm = new TFormDin(Message::GEN01_TITLE);
+            $frm = new TFormDin($this,Message::GEN01_TITLE);
 
             $frm->addGroupField('gpx1', Message::GEN01_GPX1_TITLE);
                 $html = $frm->addHtmlField('conf', '');
@@ -64,14 +64,14 @@ class Gen01 extends TPage
                     }
                 $frm->closeGroup();
                 $frm->addGroupField('gpx3');
-                    $frm->addButton($this,Message::BUTTON_LABEL_TEST_CONNECT,null,'testConnection',null,null,true,false,'fas:fa-plug green');
+                    $frm->addButton(Message::BUTTON_LABEL_TEST_CONNECT,null,'testConnection',null,null,true,false,'fas:fa-plug green');
                 $frm->closeGroup();
             }
-            $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
-            $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
+            $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',false,'fa:chevron-circle-left','green');
+            $frm->setActionLink(_t('Clear'),'clear',false,'fa:eraser','red');
             
             if ($validoPDOAndDBMS && ArrayHelper::has('USER', $DBMS) ) {
-                $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'next',$this,false,'fa:chevron-circle-right','green');
+                $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'next',false,'fa:chevron-circle-right','green');
             }
     
             $this->form = $frm->show();
@@ -85,6 +85,7 @@ class Gen01 extends TPage
         }
         catch (Exception $e)
         {
+            TFormDinMessage::logRecord($e);
             new TMessage('error', $e->getMessage());
         }
     }
@@ -133,6 +134,7 @@ class Gen01 extends TPage
                 AdiantiCoreApplication::loadPage('Gen01','onLoadFromSession'); //POG para recarregar a pagina
             }
         } catch (Exception $e) {
+            TFormDinMessage::logRecord($e);
             $text[] = $e->getMessage();
             $text = TFormDinMessage::messageTransform($text);
             new TMessage(TFormDinMessage::TYPE_ERROR, $text);

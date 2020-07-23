@@ -22,14 +22,18 @@ class Gen02 extends TPage
 
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP02);
             
-            $frm = new TFormDin(Message::GEN02_TITLE);
+            $frm = new TFormDin($this,Message::GEN02_TITLE);
 
             $frm->addGroupField('gpx1', Message::GEN02_GPX1_TITLE);
             $html = $frm->addHtmlField('conf', '');
 
-            $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();
+            $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();            
+            $listTablesAll = ArrayHelper::convertArrayFormDin2Pdo($listTablesAll);
+            foreach( $listTablesAll as $keyNumber => $value ) {
+                $listTablesAll[$keyNumber] = (object)$value;
+            }
 
-            FormDinHelper::debug($_SESSION,'$_SESSION');
+            FormDinHelper::debug($listTablesAll,'$listTablesAll');
             
             $path = TGeneratorHelper::getPathNewSystem();
             TGeneratorHelper::mkDir($path);
@@ -49,8 +53,8 @@ class Gen02 extends TPage
             $html->add(Message::SEL_TABLES_GENERATE);              
             $frm->closeGroup();
     
-            $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',$this,false,'fa:chevron-circle-left','green');
-            $frm->setActionLink(_t('Clear'),'clear',$this,false,'fa:eraser','red');
+            $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',false,'fa:chevron-circle-left','green');
+            $frm->setActionLink(_t('Clear'),'clear',false,'fa:eraser','red');
 
             $this->form = $frm->show();
 
