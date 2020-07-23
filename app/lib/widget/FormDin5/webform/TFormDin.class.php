@@ -60,6 +60,8 @@ class TFormDin
     const TYPE_FIELD  = 'feild';
     const TYPE_LAYOUT = 'layout';
     const TYPE_HIDDEN = 'hidden';
+    
+    private $objForm;
     protected $adiantiObj;
     private $listFormElements = array();
 
@@ -75,18 +77,20 @@ class TFormDin
      * 	$frm->show();
      * </code>
      *
-     * @param string $strName   - 01: Titulo que irá aparecer no Form
-     * @param string $strHeight - 02: DEPRECATED: INFORME NULL para remover o Warning
-     * @param string $strWidth  - 03: DEPRECATED: INFORME NULL para remover o Warning
-     * @param bool $strFormName - 04: ID nome do formulario para criação da tag form. Padrão=formdin
-     * @param string $strMethod - 05: NOT_IMPLEMENTED: metodo GET ou POST, utilizado pelo formulario para submeter as informações. padrão=POST
-     * @param string $strAction - 06: NOT_IMPLEMENTED: página/url para onde os dados serão enviados. Padrão = propria página
-     * @param boolean $boolPublicMode - 07: NOT_IMPLEMENTED: ignorar mensagem fwSession_exprired da aplicação e não chamar atela de login
-     * @param boolean $boolRequired   - 08: FORMDIN5: Se vai fazer validação no Cliente (Navegador)
+     * @param object $objForm   - 01: FORMDIN5 Objeto do Adianti da classe do Form, é só informar $this
+     * @param string $strName   - 02: Titulo que irá aparecer no Form
+     * @param string $strHeight - 03: DEPRECATED: INFORME NULL para remover o Warning
+     * @param string $strWidth  - 04: DEPRECATED: INFORME NULL para remover o Warning
+     * @param bool $strFormName - 05: ID nome do formulario para criação da tag form. Padrão=formdin
+     * @param string $strMethod - 06: NOT_IMPLEMENTED: metodo GET ou POST, utilizado pelo formulario para submeter as informações. padrão=POST
+     * @param string $strAction - 07: NOT_IMPLEMENTED: página/url para onde os dados serão enviados. Padrão = propria página
+     * @param boolean $boolPublicMode - 08: NOT_IMPLEMENTED: ignorar mensagem fwSession_exprired da aplicação e não chamar atela de login
+     * @param boolean $boolRequired   - 09: FORMDIN5: Se vai fazer validação no Cliente (Navegador)
      *
      * @return BootstrapFormBuilder
      */    
-    public function __construct(string $strTitle
+    public function __construct($objForm
+                               ,string $strTitle
                                ,$strHeigh = null
                                ,$strWidth = null
                                ,string $strName = 'formdin'
@@ -95,10 +99,26 @@ class TFormDin
                                ,$boolPublicMode  = null
                                ,$boolClientValidation = true)
     {
-        $this->validateDeprecated($strHeigh,$strWidth);
-        $bootForm = new BootstrapFormBuilder($strName);
-        $this->setAdiantiObj( $bootForm, $strName,$strTitle, $boolClientValidation);
-        return $this->getAdiantiObj();
+
+        if( !is_object($objForm) ){
+            $track = debug_backtrace();
+            $msg = TFormDinMessage::ERROR_FD5_FORM_MIGRAT;
+            ValidateHelper::migrarMensage($msg
+                                         ,ValidateHelper::ERROR
+                                         ,ValidateHelper::MSG_CHANGE
+                                         ,$track[0]['class']
+                                         ,$track[0]['function']
+                                         ,$track[0]['line']
+                                         ,$track[0]['file']
+                                        );
+        }else{
+            $this->setObjForm($objForm);
+
+            $this->validateDeprecated($strHeigh,$strWidth);
+            $bootForm = new BootstrapFormBuilder($strName);
+            $this->setAdiantiObj( $bootForm, $strName,$strTitle, $boolClientValidation);
+            return $this->getAdiantiObj();
+        }
     }
 
     public function validateDeprecated($strHeigh,$strWidth)
@@ -113,6 +133,21 @@ class TFormDin
                                      ,ValidateHelper::MSG_DECREP
                                      ,__CLASS__,__METHOD__,__LINE__);                                     
     }
+
+    public function setObjForm($objForm)
+    {
+        if( empty($objForm) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }
+        if( !is_object($objForm) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }        
+        return $this->objForm=$objForm;
+    }
+    public function getObjForm(){
+        return $this->objForm;
+    }
+
 
     /**
      * Recebe a chave da posição do elemento e verifica se o proximo elemento
@@ -392,25 +427,23 @@ class TFormDin
     * Para que o botão fique alinhado na frente de um campo com labelAbove=true, basta
     * definir o parametro boolLabelAbove do botão para true tambem.
     *
-    * @param object  $objForm           - 1 : FORMDIN5 Objeto do Adianti da classe do Form, é só informar $this
-    * @param mixed   $mixValue          - 2 : Label do Botão ou array('Gravar', 'Limpar') com nomes
-    * @param string  $strAction         - 3 : NOT_IMPLEMENTED Nome da ação, ignorando $strName $strOnClick. Se ficar null será utilizado o valor de mixValue
-    * @param string  $strName           - 4 : Nome da ação com submit
-    * @param string  $strOnClick        - 5 : NOT_IMPLEMENTED Nome da função javascript
-    * @param string  $strConfirmMessage - 6 : NOT_IMPLEMENTED Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
-    * @param boolean $boolNewLine       - 7 : Em nova linha. DEFAULT = true
-    * @param boolean $boolFooter        - 8 : Mostrar o botão no rodapé do form. DEFAULT = true
-    * @param string  $strImage          - 9 : Imagem no botão. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
-    * @param string  $strImageDisabled  -10 : NOT_IMPLEMENTED Imagem no desativado. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
-    * @param string  $strHint           -11 : NOT_IMPLEMENTED Texto hint para explicar
-    * @param string  $strVerticalAlign  -12 : NOT_IMPLEMENTED
-    * @param boolean $boolLabelAbove    -13 : NOT_IMPLEMENTED Position text label. DEFAULT is false. NULL = false. 
-    * @param string  $strLabel          -14 : NOT_IMPLEMENTED Text label 
-    * @param string  $strHorizontalAlign-15 : NOT_IMPLEMENTED Text Horizontal align. DEFAULT = center. Valeus center, left, right
+    * @param mixed   $mixValue          - 1 : Label do Botão ou array('Gravar', 'Limpar') com nomes
+    * @param string  $strAction         - 2 : NOT_IMPLEMENTED Nome da ação, ignorando $strName $strOnClick. Se ficar null será utilizado o valor de mixValue
+    * @param string  $strName           - 3 : Nome da ação com submit
+    * @param string  $strOnClick        - 4 : NOT_IMPLEMENTED Nome da função javascript
+    * @param string  $strConfirmMessage - 5 : NOT_IMPLEMENTED Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
+    * @param boolean $boolNewLine       - 6 : Em nova linha. DEFAULT = true
+    * @param boolean $boolFooter        - 7 : Mostrar o botão no rodapé do form. DEFAULT = true
+    * @param string  $strImage          - 8 : Imagem no botão. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
+    * @param string  $strImageDisabled  - 9 : NOT_IMPLEMENTED Imagem no desativado. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
+    * @param string  $strHint           -10 : NOT_IMPLEMENTED Texto hint para explicar
+    * @param string  $strVerticalAlign  -11 : NOT_IMPLEMENTED
+    * @param boolean $boolLabelAbove    -12 : NOT_IMPLEMENTED Position text label. DEFAULT is false. NULL = false. 
+    * @param string  $strLabel          -13 : NOT_IMPLEMENTED Text label 
+    * @param string  $strHorizontalAlign-14 : NOT_IMPLEMENTED Text Horizontal align. DEFAULT = center. Valeus center, left, right
     * @return TButton|string|array
     */
-    public function addButton( $objForm
-                            , $mixValue
+    public function addButton( $mixValue
 				       		, $strAction=null
 				       		, $strName=null
 				       		, $strOnClick=null
@@ -425,45 +458,31 @@ class TFormDin
 				       		, $strLabel=null
                             , $strHorizontalAlign=null)
     {
-        if( !is_object($objForm) ){
-            $track = debug_backtrace();
-            $msg = 'o metodo addButton MUDOU! o primeiro parametro agora recebe $this! o Restante está igual ;-)';
-            ValidateHelper::migrarMensage($msg
-                                         ,ValidateHelper::ERROR
-                                         ,ValidateHelper::MSG_CHANGE
-                                         ,$track[0]['class']
-                                         ,$track[0]['function']
-                                         ,$track[0]['line']
-                                         ,$track[0]['file']
-                                        );
+        $objForm =  $this->getObjForm();
+        if($boolFooter){
+            return $this->setAction($mixValue,$strName,false,$strImage);
         }else{
-
-            if($boolFooter){
-                return $this->setAction($mixValue,$strName,$objForm,false,$strImage);
-            }else{
-                $formField = new TFormDinButton($objForm
-                                                , $mixValue
-                                                , $strAction
-                                                , $strName
-                                                , $strOnClick
-                                                , $strConfirmMessage
-                                                , $boolNewLine
-                                                , $boolFooter
-                                                , $strImage
-                                                , $strImageDisabled
-                                                , $strHint
-                                                , $strVerticalAlign
-                                                , $boolLabelAbove
-                                                , $strLabel
-                                                , $strHorizontalAlign
-                                            );
-                $objField = $formField->getAdiantiObj();
-                //$this->adiantiObj->addFields([$objField]);
-                $this->addElementFormList($objField,self::TYPE_FIELD,null,$boolNewLine);
-                //$this->addElementFormList($objField,self::TYPE_LAYOUT,null,$boolNewLine);
-                return $formField;
-            }
-        }
+            $formField = new TFormDinButton($objForm
+                                            , $mixValue
+                                            , $strAction
+                                            , $strName
+                                            , $strOnClick
+                                            , $strConfirmMessage
+                                            , $boolNewLine
+                                            , $boolFooter
+                                            , $strImage
+                                            , $strImageDisabled
+                                            , $strHint
+                                            , $strVerticalAlign
+                                            , $boolLabelAbove
+                                            , $strLabel
+                                            , $strHorizontalAlign
+                                        );
+            $objField = $formField->getAdiantiObj();
+            $this->addElementFormList($objField,self::TYPE_FIELD,null,$boolNewLine);
+            //$this->addElementFormList($objField,self::TYPE_LAYOUT,null,$boolNewLine);
+            return $formField;
+        } //FIM else $boolFooter
     }
 
    /**
@@ -478,7 +497,6 @@ class TFormDin
     *
     * @param mixed $actionsLabel- 1: Texto ações.
     * @param object $actionsName- 2: FORMDIN5 Nome da ação
-    * @param object $objForm    - 2: FORMDIN5 Objeto do Form, é só informar $this
     * @param boolean $header    - 3: FORMDIN5 mostrar ação Título. DEFAULT=false, mostra no rodapé. TRUE = mostra no Título
     * @param string $iconImagem - 4: FORMDIN5 icone ou imagem do botão.
     * @param string $color      - 5: FORMDIN5 cor do icone.
@@ -487,7 +505,6 @@ class TFormDin
     */
     public function setAction( $actionsLabel
                              , $actionsName=null
-                             , $objForm=null
                              , $header=false
                              , $iconImagem=null
                              , $color=null 
@@ -505,6 +522,7 @@ class TFormDin
                                          ,$track[0]['file']
                                         );
         }else{
+            $objForm = $this->getObjForm();
             ValidateHelper::isSet($actionsName,__METHOD__,__LINE__);
             ValidateHelper::isSet($objForm,__METHOD__,__LINE__);
 
@@ -538,18 +556,18 @@ class TFormDin
     *
     * @param mixed $actionsLabel- 1: Texto ações.
     * @param object $actionsName- 2: FORMDIN5 Nome da ação
-    * @param object $objForm    - 2: FORMDIN5 Objeto do Form, é só informar $this
     * @param boolean $header    - 3: FORMDIN5 mostrar ação Título. DEFAULT=TRUE, mostra no Título. false, mostra no rodapé. 
     * @param string $iconImagem - 4: FORMDIN5 icone ou imagem do botão.
     * @param string $color      - 5: FORMDIN5 cor do icone.
     * @param string $methodPost - 6: FORMDIN5 Metodo da ação fas um Post. DEFAULT=true, POST. FALSE, GET
     * @return TButton
     */
-    public function setActionHeader( $actionsLabel, $actionsName=null, $objForm=null
+    public function setActionHeader( $actionsLabel
+                                   , $actionsName=null                                   
                                    , $header=true, $iconImagem=null, $color=null
                                    , $methodPost=true)
     {
-        return $this->setAction($actionsLabel, $actionsName, $objForm, $header, $iconImagem, $color,$methodPost);
+        return $this->setAction($actionsLabel, $actionsName, $header, $iconImagem, $color,$methodPost);
     }
 
    /**
@@ -564,7 +582,6 @@ class TFormDin
     *
     * @param mixed $actionsLabel- 1: Texto ações.
     * @param object $actionsName- 2: FORMDIN5 Nome da ação
-    * @param object $objForm    - 2: FORMDIN5 Objeto do Form, é só informar $this
     * @param boolean $header    - 3: FORMDIN5 mostrar ação Título. DEFAULT=false, mostra no rodapé. TRUE = mostra no Título
     * @param string $iconImagem - 4: FORMDIN5 icone ou imagem do botão.
     * @param string $color      - 5: FORMDIN5 cor do icone.
@@ -572,12 +589,11 @@ class TFormDin
     */
     public function setActionLink( $actionsLabel
                                  , $actionsName=null
-                                 , $objForm=null
                                  , $header=false
                                  , $iconImagem=null
                                  , $color=null)
     {
-        return $this->setAction($actionsLabel, $actionsName, $objForm, $header, $iconImagem, $color,false);
+        return $this->setAction($actionsLabel, $actionsName, $header, $iconImagem, $color,false);
     } 
 
    /**
@@ -591,16 +607,16 @@ class TFormDin
     *
     * @param mixed $actionsLabel- 1: Texto ações.
     * @param object $actionsName- 2: FORMDIN5 Nome da ação
-    * @param object $objForm    - 2: FORMDIN5 Objeto do Form, é só informar $this
     * @param boolean $header    - 3: FORMDIN5 mostrar ação Título. DEFAULT=TRUE, mostra no Título. false, mostra no rodapé. 
     * @param string $iconImagem - 4: FORMDIN5 icone ou imagem do botão.
     * @param string $color      - 5: FORMDIN5 cor do icone.
     * @return TButton
     */
-    public function setActionHeaderLink( $actionsLabel, $actionsName=null, $objForm=null
+    public function setActionHeaderLink( $actionsLabel
+                                       , $actionsName=null
                                        , $header=true, $iconImagem=null, $color=null)
     {
-        return $this->setAction($actionsLabel, $actionsName, $objForm, $header, $iconImagem, $color,false);
+        return $this->setAction($actionsLabel, $actionsName, $header, $iconImagem, $color,false);
     }
 
 
@@ -739,19 +755,23 @@ class TFormDin
      * @param string $strLabel       - 2: Label do campo
      * @param boolean $boolRequired  - 3: Obrigatorio
      * @param array $itens           - 4: Informe um array do tipo "chave=>valor", com maximo de 2 elementos
-     * @param boolean $boolLabelAbove- 5: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param boolean $boolNewLine   - 5: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
+     * @param boolean $boolLabelAbove- 6: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @return TRadioGroup
      */
     public function addSwitchField(string $id
                                   ,string $strLabel
                                   ,$boolRequired = false
-                                  ,array $itens= null
-                                  ,$boolLabelAbove=false)
+                                  ,array $itens=null
+                                  ,$boolNewLine=null
+                                  ,$boolLabelAbove=null)
     {
         $formField = new TFormDinSwitch($id,$strLabel,$boolRequired,$itens);
         $objField = $formField->getAdiantiObj();
-        $label = $this->getLabelField($strLabel,$boolRequired);
-        $this->addFields($label ,$objField ,$boolLabelAbove);
+        $label = $formField->getLabel();
+        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+
         return $formField;
     }
     /**

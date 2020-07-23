@@ -40,7 +40,22 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-class TFormDinSwitch
+ /**
+ * Classe para criação campo do tipo Switch
+ * ------------------------------------------------------------------------
+ * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * os parâmetros do metodos foram marcados com:
+ * 
+ * NOT_IMPLEMENTED = Parâmetro não implementados, talvez funcione em 
+ *                   verões futuras do FormDin. Não vai fazer nada
+ * DEPRECATED = Parâmetro que não vai funcionar no Adianti e foi mantido
+ *              para o impacto sobre as migrações. Vai gerar um Warning
+ * FORMDIN5 = Parâmetro novo disponivel apenas na nova versão
+ * ------------------------------------------------------------------------
+ * 
+ * @author Reinaldo A. Barrêto Junior
+ */
+class TFormDinSwitch extends TFormDinGenericField
 {
     protected $adiantiObj;
     
@@ -54,20 +69,30 @@ class TFormDinSwitch
      * @param array $itens
      * @return mixed TRadioGroup
      */
-    public function __construct(string $id,string $strLabel,$boolRequired = false,array $itens= null)
+    public function __construct(string $id,string $label,$boolRequired = false,array $itens= null)
     {
-        $this->adiantiObj = new TRadioGroup($id);
-        $this->adiantiObj->setLayout('horizontal');
-        $this->adiantiObj->setUseButton();
+        $adiantiObj = new TRadioGroup($id);
+        $adiantiObj->setLayout('horizontal');
+        $adiantiObj->setUseButton();
         $items = ['S'=>'Sim', 'N'=>'Não'];
-        $this->adiantiObj->addItems($items);
-        if($boolRequired){
-            $strLabel = empty($strLabel)?$id:$strLabel;
-            $this->adiantiObj->addValidation($strLabel, new TRequiredValidator);
-        }        
+        $adiantiObj->addItems($items);
+        $this->setAdiantiObj($adiantiObj);
+
+        parent::__construct($this->getAdiantiObj(),$id,$label,$boolRequired,null,null);
+       
         return $this->getAdiantiObj();
     }
-
+    
+    public function setAdiantiObj($adiantiObj)
+    {
+        if( empty($adiantiObj) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }
+        if( !is_object($adiantiObj) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        } 
+        return $this->adiantiObj=$adiantiObj;
+    }
     public function getAdiantiObj(){
         return $this->adiantiObj;
     }

@@ -168,7 +168,7 @@ class TFormDinButton {
     public function setAction($strName)
     {
         if( empty($strName) ){
-            throw new InvalidArgumentException(TFormDinMessage::ERROR_EMPTY_INPUT);
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_EMPTY_INPUT.': strName');
         }
         $objForm = $this->getObjForm();
         $action = new TAction(array($objForm, $strName));
