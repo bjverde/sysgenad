@@ -108,12 +108,6 @@ class Gen01 extends TPage
         try {
             $data = $this->form->getData(); // obtém os dados do formulário
             $this->form->setData($data);// mantém o form preenchido
-    
-            //Função do FormDin para Debug
-            //FormDinHelper::debug($param,'$param');
-            //FormDinHelper::debug($data,'$data');
-            //FormDinHelper::debug($_REQUEST,'$_REQUEST');
-            //FormDinHelper::debug($_SESSION,'$_SESSION');
 
             $connectOK = ManualConnection::testConnection($param);
 

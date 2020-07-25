@@ -107,14 +107,8 @@ class Gen00 extends TPage
     public function onSave($param)
     {
         try {
-            //$data = $this->form->getData();
-            //$this->form->setData($data);
-    
-            //Função do FormDin para Debug
-            //FormDinHelper::d($param,'$param');
-            //FormDinHelper::debug($data,'$data');
-            //FormDinHelper::debug($_REQUEST,'$_REQUEST');
-            //FormDinHelper::debug($_SESSION,'$_SESSION');
+            $data = $this->form->getData();
+            $this->form->setData($data);
 
             $GEN_SYSTEM_ACRONYM = RequestHelper::get('GEN_SYSTEM_ACRONYM') ;
             TGeneratorHelper::validateFolderName($GEN_SYSTEM_ACRONYM);
