@@ -114,10 +114,18 @@ class Gen02 extends TPage
             $data = $this->form->getData(); // optional parameter: active record class
             $this->form->setData($data);    // put the data back to the form
     
-            FormDinHelper::debug($param,'$param');
-            FormDinHelper::debug($data,'$data');
-
-            AdiantiCoreApplication::loadPage('Gen03'); //POG para recarregar a pagina
+            $listTableSelected = null;
+            foreach( $param as $key => $valey ) {
+                if(strpos($key, 'idTableSelected') !== false){
+                    $listTableSelected[]=$valey;
+                }
+            }
+            if( CountHelper::count($listTableSelected) == 0 ){
+                new TMessage('error', Message::WARNING_NO_TABLE);
+            } else {
+                TSysgenSession::setValue('idTableSelected',$listTableSelected);
+                //AdiantiCoreApplication::loadPage('Gen03'); //POG para recarregar a pagina
+            }            
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
@@ -129,6 +137,8 @@ class Gen02 extends TPage
      */
     function onReload()
     {
+        $this->datagrid->clear();
+
         $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();            
         $listTablesAll = ArrayHelper::convertArrayFormDin2Adianti($listTablesAll);
 
