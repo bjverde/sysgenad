@@ -85,7 +85,6 @@ class Gen02 extends TPage
             $vbox->style = 'width: 100%';
             $vbox->add( $pagestep );
             $vbox->add( $this->form );
-            //$vbox->add( $panel );
             parent::add($vbox);
         }
         catch (Exception $e)
