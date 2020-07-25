@@ -116,6 +116,8 @@ class Gen02 extends TPage
     
             FormDinHelper::debug($param,'$param');
             FormDinHelper::debug($data,'$data');
+
+            AdiantiCoreApplication::loadPage('Gen03'); //POG para recarregar a pagina
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
@@ -133,7 +135,7 @@ class Gen02 extends TPage
         foreach( $listTablesAll as $idRow => $ObjRow ) {
             // add an regular object to the datagrid
             $item = new StdClass;
-            $item->idSelected  = new TCheckButton('idSelected'.$idRow);
+            $item->idSelected  = new TCheckButton('idTableSelected'.$idRow);
             $item->idSelected->setIndexValue($ObjRow->idSelected);
             $item->TABLE_SCHEMA   = $ObjRow->TABLE_SCHEMA;
             $item->TABLE_NAME     = $ObjRow->TABLE_NAME;
