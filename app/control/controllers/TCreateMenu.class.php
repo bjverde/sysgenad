@@ -1,0 +1,119 @@
+<?php
+/**
+ * SysGen - System Generator with Formdin Framework
+ * Download Formdin Framework: https://github.com/bjverde/formDin
+ *
+ * @author  Bjverde <bjverde@yahoo.com.br>
+ * @license https://github.com/bjverde/sysgen/blob/master/LICENSE GPL-3.0
+ * @link    https://github.com/bjverde/sysgen
+ *
+ * PHP Version 5.6
+ */
+
+class TCreateMenu extends TCreateFileContent
+{
+    private $listTableNames;
+
+    public function __construct()
+    {
+        $this->setFileName('menu.xml');
+        $path = TGeneratorHelper::getPathNewSystem().DS;
+        $this->setFilePath($path);
+    }
+    //--------------------------------------------------------------------------------------
+    public function setListTableNames($listTableNames)
+    {
+        TGeneratorHelper::validateListTableNames($listTableNames);
+        $this->listTableNames = $listTableNames;
+    }
+    public function getListTableNames()
+    {
+        return $this->listTableNames;
+    }
+    //--------------------------------------------------------------------------------------
+    public function addBasicMenuItems($keyFatherItem, $tableTypeObjeto)
+    {
+        $listTableNames = $this->listTableNames['TABLE_NAME'];
+        foreach ($listTableNames as $key => $table) {
+            $tableType = strtoupper($this->listTableNames['TABLE_TYPE'][$key]);
+            if ($tableType == $tableTypeObjeto) {
+                $this->addLine('$menu->add(\''.$keyFatherItem.'.'.$key.'\''
+                              .',\''.$keyFatherItem.'\''
+                              .',\''.strtolower($table).'\',\'modulos/'.strtolower($table).'.php\''
+                              .', null, \'Icon_35-512.png\');');
+            }
+        }
+    }
+    //--------------------------------------------------------------------------------------
+    public function typeTableExist($tableType){
+        $listTableType = $this->listTableNames['TABLE_TYPE'];
+        $result = array_search($tableType, $listTableType);
+        if($result === false){
+            $result = false;
+        }else if($result === ''){
+            $result = false;
+        }else{
+            $result = true;
+        }
+        return $result;
+    }
+    //--------------------------------------------------------------------------------------
+    public function addBasicMenuCruds()
+    {
+        $tableType = TableInfo::TB_TYPE_TABLE;
+        $typeTableExist = $this->typeTableExist($tableType);
+        if($typeTableExist){
+            $this->addLine(ESP."<menuitem label='Cruds'>");
+            $this->addLine(ESP.ESP."<icon>fa:magic fa-fw #f0db4f</icon>");
+            $this->addLine(ESP.ESP."<menu>");
+            //$this->addBasicMenuItems( $tableType );
+            $this->addLine(ESP.ESP."</menu>");
+            $this->addLine(ESP."</menuitem>");
+        }
+    }
+    //--------------------------------------------------------------------------------------
+    public function addBasicMenuViews()
+    {
+        $tableType = TableInfo::TB_TYPE_VIEW;
+        $typeTableExist = $this->typeTableExist($tableType);
+        if($typeTableExist){
+            $this->addLine(ESP."<menuitem label='Views'>");
+            $this->addLine(ESP.ESP."<icon>fa:magic fa-fw #f0db4f</icon>");
+            $this->addLine(ESP.ESP."<menu>");
+            //$this->addBasicMenuItems( $tableType );
+            $this->addLine(ESP.ESP."</menu>");
+            $this->addLine(ESP."</menuitem>");
+        }
+    }
+    //--------------------------------------------------------------------------------------
+    public function addBasicMenuProcedure()
+    {
+        $tableType = TableInfo::TB_TYPE_PROCEDURE;
+        $typeTableExist = $this->typeTableExist($tableType);
+        if($typeTableExist){
+            $this->addLine(ESP."<menuitem label='Procedure'>");
+            $this->addLine(ESP.ESP."<icon>fa:magic fa-fw #f0db4f</icon>");
+            $this->addLine(ESP.ESP."<menu>");
+            //$this->addBasicMenuItems( $tableType );
+            $this->addLine(ESP.ESP."</menu>");
+            $this->addLine(ESP."</menuitem>");
+        }
+    }
+    //--------------------------------------------------------------------------------------
+    public function show($print = false)
+    {
+        $this->lines=null;
+        $this->addLine('<menu>');
+        $this->addBasicMenuCruds();
+        $this->addBlankLine();
+        $this->addBasicMenuViews();
+        $this->addBlankLine();
+        $this->addBasicMenuProcedure();
+        $this->addLine('</menu>');
+        if ($print) {
+            echo $this->getLinesString();
+        } else {
+            return $this->getLinesString();
+        }
+    }
+}
