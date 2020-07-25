@@ -163,7 +163,6 @@ class TGeneratorHelper
     public static function copySystemSkeletonToNewSystem()
     {
         $tpSystem = TSysgenSession::getValue(TableInfo::TP_SYSTEM);
-        FormDinHelper::debug($tpSystem);
         if (empty($tpSystem)) {
             throw new InvalidArgumentException(Message::ERRO_EMPTY_TP_SYSTEM);
         }
