@@ -25,40 +25,35 @@ class Gen02 extends TPage
             $frm = new TFormDin($this,Message::GEN02_TITLE);
 
             $frm->addGroupField('gpx1', Message::GEN02_GPX1_TITLE);
-            $html = $frm->addHtmlField('conf', '');
-
-            $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();            
-            $listTablesAll = ArrayHelper::convertArrayFormDin2Adianti($listTablesAll);
-
-            FormDinHelper::debug($listTablesAll,'$listTablesAll');
-            
-            $path = TGeneratorHelper::getPathNewSystem();
-            TGeneratorHelper::mkDir($path);
-            $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_MKDIR_SYSTEM.$path));
-            TGeneratorHelper::copySystemSkeletonToNewSystem();
-            $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_COPY_SYSTEM_SKELETON));
-            TGeneratorHelper::createFileConstants();
-            $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONSTANTS));
-            TGeneratorHelper::createFileConfigDataBase();
-            $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONFIG_DATABASE));
-            //TGeneratorHelper::createFileAutoload();
-            //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_AUTOLOAD));
-            //TGeneratorHelper::createFileIndex();
-            //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_INDEX));
-            $html->add('<br>');
-            $html->add('<br>');
-            $html->add(Message::SEL_TABLES_GENERATE);              
+                $html = $frm->addHtmlField('conf', '');
+                
+                $path = TGeneratorHelper::getPathNewSystem();
+                TGeneratorHelper::mkDir($path);
+                $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_MKDIR_SYSTEM.$path));
+                TGeneratorHelper::copySystemSkeletonToNewSystem();
+                $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_COPY_SYSTEM_SKELETON));
+                TGeneratorHelper::createFileConstants();
+                $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONSTANTS));
+                TGeneratorHelper::createFileConfigDataBase();
+                $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONFIG_DATABASE));
+                //TGeneratorHelper::createFileAutoload();
+                //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_AUTOLOAD));
+                //TGeneratorHelper::createFileIndex();
+                //$html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_INDEX));
+                $html->add('<br>');
+                $html->add('<br>');
+                $html->add(Message::SEL_TABLES_GENERATE);              
             $frm->closeGroup();
     
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',false,'fa:chevron-circle-left','green');
             $frm->setActionLink(_t('Clear'),'clear',false,'fa:eraser','red');
+            $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'next',false,'fa:chevron-circle-right','green');
 
             $this->form = $frm->show();
 
             $grid = new TFormDinGrid($this
                                     ,'gd'               // id do gride
                                     ,'Lista de Tabelas' // titulo do gride
-                                    , $listTablesAll    // array de dados
                                 );    
             //$grid->setHeight(2500);
             $grid->addColumn('idSelected',  'Code', null, 'center');
@@ -67,7 +62,8 @@ class Gen02 extends TPage
             $grid->addColumn('COLUMN_QTD', 'COLUMN_QTD');
             $grid->addColumn('TABLE_TYPE', 'TABLE_TYPE');
             $this->datagrid = $grid->show();
-            $panel = $grid->getPanelGroupGrid();
+            $panelGrid = $grid->getPanelGroupGrid();
+            $this->form->addContent([$panelGrid]);
 
 
 /*
@@ -89,7 +85,7 @@ class Gen02 extends TPage
             $vbox->style = 'width: 100%';
             $vbox->add( $pagestep );
             $vbox->add( $this->form );
-            $vbox->add( $panel );
+            //$vbox->add( $panel );
             parent::add($vbox);
         }
         catch (Exception $e)
@@ -116,10 +112,46 @@ class Gen02 extends TPage
     public function next($param)
     {
         try {
-            AdiantiCoreApplication::loadPage('Gen02');
+            $data = $this->form->getData(); // optional parameter: active record class
+            $this->form->setData($data);    // put the data back to the form
+    
+            FormDinHelper::debug($param,'$param');
+            FormDinHelper::debug($data,'$data');
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
+    }
 
+    
+    /**
+     * Load the data into the datagrid
+     */
+    function onReload()
+    {
+        $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();            
+        $listTablesAll = ArrayHelper::convertArrayFormDin2Adianti($listTablesAll);
+
+        foreach( $listTablesAll as $idRow => $ObjRow ) {
+            // add an regular object to the datagrid
+            $item = new StdClass;
+            $item->idSelected  = new TCheckButton('idSelected'.$idRow);
+            $item->idSelected->setIndexValue($ObjRow->idSelected);
+            $item->TABLE_SCHEMA   = $ObjRow->TABLE_SCHEMA;
+            $item->TABLE_NAME     = $ObjRow->TABLE_NAME;
+            $item->COLUMN_QTD     = $ObjRow->COLUMN_QTD;
+            $item->TABLE_TYPE     = $ObjRow->TABLE_TYPE;
+            $this->datagrid->addItem($item);
+            $this->form->addField($item->idSelected); // important!
+        }
+
+    }
+
+    /**
+     * shows the page
+     */
+    function show()
+    {
+        $this->onReload();
+        parent::show();
     }
 }

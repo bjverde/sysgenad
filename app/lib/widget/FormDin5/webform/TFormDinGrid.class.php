@@ -161,6 +161,7 @@ class TFormDinGrid
             $this->setId($strName);
             $this->setHeight($strHeight);
             //$this->setWidth($strWidth);
+            $this->setData($mixData);
 
             $panel = new TPanelGroup($strTitle);
             $this->setPanelGroupGrid($panel);
