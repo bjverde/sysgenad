@@ -110,7 +110,7 @@ class Gen02 extends TPage
             } else {
                 TSysgenSession::setValue('idTableSelected',$listTableSelected);
                 AdiantiCoreApplication::loadPage('Gen03'); //POG para recarregar a pagina
-            }            
+            }
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
