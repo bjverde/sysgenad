@@ -139,7 +139,6 @@ class TGeneratorHelper
     }
     public static function getPathNewSystem()
     {
-        //return ROOT_PATH.$_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM'];
         return ROOT_PATH.TSysgenSession::getValue(self::GEN_SYSTEM_ACRONYM);
     }
     
@@ -213,7 +212,7 @@ class TGeneratorHelper
         $file = new CreateAutoloadDAO();
         $file->saveFile();
 
-        if( $_SESSION[APLICATIVO][TableInfo::TP_SYSTEM] != self::TP_SYSTEM_FORM ){
+        if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != self::TP_SYSTEM_FORM ){
             $file = new CreateAutoloadAPI();
             $file->saveFile();
         }
@@ -309,20 +308,22 @@ class TGeneratorHelper
         return $TPGRID;
     }
 
-    private static function getConfigByDBMS($DBMS)
+    private static function getConfigByDBMS()
     {
-        switch ($DBMS) {
+        $DBMS      = TSysgenSession::getValue('DBMS');
+        $DBMS_TYPE = $DBMS['TYPE'];
+        switch ($DBMS_TYPE) {
             case TFormDinPdoConnection::DBMS_MYSQL:
                 $SCHEMA = false;
-                $TPGRID = self::getConfigGridMySql($DBMS);
+                $TPGRID = self::getConfigGridMySql($DBMS_TYPE);
             break;
             case TFormDinPdoConnection::DBMS_SQLSERVER:
                 $SCHEMA = true;
-                $TPGRID = self::getConfigGridSqlServer($DBMS);
+                $TPGRID = self::getConfigGridSqlServer($DBMS_TYPE);
             break;
             case TFormDinPdoConnection::DBMS_POSTGRES:
                 $SCHEMA = true;
-                $TPGRID = self::getConfigGridPostgresql($DBMS);
+                $TPGRID = self::getConfigGridPostgresql($DBMS_TYPE);
             break;
             case TFormDinPdoConnection::DBMS_SQLITE;
                 $SCHEMA = false;
@@ -340,8 +341,7 @@ class TGeneratorHelper
     
     public static function createFilesControllers($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
-        $DBMS       = $_SESSION[APLICATIVO]['DBMS']['TYPE'];
-        $configDBMS = self::getConfigByDBMS($DBMS);
+        $configDBMS = self::getConfigByDBMS();
         $generator  = new CreateControllers($tableName);
         $generator->setTableType($tableType);
         $generator->setListColumnsProperties($listColumnsProperties);
@@ -358,8 +358,7 @@ class TGeneratorHelper
     
     public static function createFilesDaoVoFromTable($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
-        $DBMS        = $_SESSION[APLICATIVO]['DBMS']['TYPE'];
-        $configDBMS  = self::getConfigByDBMS($DBMS);
+        $configDBMS  = self::getConfigByDBMS();
         $folder      = self::getPathNewSystem().DS.'dao'.DS;
 
         $generatorVo = new TCreateVO($folder,$tableName, $listColumnsProperties,$DBMS);
@@ -375,8 +374,7 @@ class TGeneratorHelper
     
     public static function createFilesForms($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
-        $DBMS       = $_SESSION[APLICATIVO]['DBMS']['TYPE'];
-        $configDBMS = self::getConfigByDBMS($DBMS);
+        $configDBMS = self::getConfigByDBMS();
         $pathFolder = self::getPathNewSystem().DS.'modulos'.DS;
         $geradorForm= new TCreateForm($pathFolder ,$tableName ,$listColumnsProperties);
         $geradorForm->setTableType($tableType);
@@ -401,11 +399,11 @@ class TGeneratorHelper
         self::createFilesControllers($tableName, $listColumnsProperties, $tableSchema, $tableType);
         self::createFilesTests($tableName, $listColumnsProperties, $tableSchema, $tableType);
 
-        if( $_SESSION[APLICATIVO][TableInfo::TP_SYSTEM] != TGeneratorHelper::TP_SYSTEM_REST ){
+        if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_REST ){
             self::createFilesForms($tableName, $listColumnsProperties, $tableSchema, $tableType);
         }
 
-        if( $_SESSION[APLICATIVO][TableInfo::TP_SYSTEM] != TGeneratorHelper::TP_SYSTEM_FORM ){
+        if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_FORM ){
             self::createFilesControllesAndRoutesAPI($tableName, $listColumnsProperties, $tableSchema, $tableType);
         }
     }
@@ -417,14 +415,14 @@ class TGeneratorHelper
         $dirSysGen = array_pop($dir);
         $dirSysGen = array_pop($dir);
         $url    = explode($dirSysGen, $url);
-        $result = $url[0].$_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM'];
+        $result = $url[0].TSysgenSession::getValue(self::GEN_SYSTEM_ACRONYM);
         return $result;
     }
     
     public static function loadTablesSelected()
     {
         $listTablesAll   = TGeneratorHelper::loadTablesFromDatabase();
-        $idTableSelected = $_SESSION[APLICATIVO]['idTableSelected'];
+        $idTableSelected = TSysgenSession::getValue('idTableSelected');
         $listTablesSelected = array();
         foreach ($idTableSelected as $id) {
             $keyTable = array_search($id, $listTablesAll['idSelected']);
@@ -437,7 +435,7 @@ class TGeneratorHelper
     
     public static function removeFieldsDuplicateOnSelectedTables($listFieldsTable)
     {
-        ArrayHelper::validateIsArray($listFieldsTable, __METHOD__, __LINE__);
+        ValidateHelper::isArray($listFieldsTable, __METHOD__, __LINE__);
         $listFieldsTablePDO = ArrayHelper::convertArrayFormDin2Pdo($listFieldsTable,false);
         $listColumnName = $listFieldsTable['COLUMN_NAME'];
         $listFieldsTableResult = array();
@@ -491,7 +489,7 @@ class TGeneratorHelper
             $formDinType = TCreateForm::convertDataType2FormDinType($dataType);
             $listFieldsTable[TCreateForm::FORMDIN_TYPE_COLUMN_NAME][$key] = $formDinType;
             
-            if( $_SESSION[APLICATIVO][TableInfo::TP_SYSTEM] != self::TP_SYSTEM_REST ){
+            if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != self::TP_SYSTEM_REST ){
                 $fkTypeScreenReferenced = self::getFKTypeScreenReferencedSelected($table, $tableSchema, $listFieldsTable, $key);
                 $listFieldsTable[TableInfo::FK_TYPE_SCREEN_REFERENCED][$key] = $fkTypeScreenReferenced;
             }
