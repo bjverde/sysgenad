@@ -67,7 +67,7 @@ class TFormDinGenericField
      */
     public function __construct($adiantiObj
                                ,string $id
-                               ,string $label
+                               ,$label
                                ,$boolRequired = false
                                ,string $value=null
                                ,string $placeholder =null)
@@ -95,13 +95,16 @@ class TFormDinGenericField
     protected function setLabelTxt($label){
         $this->labelTxt = $label;
     }
-    protected function getLabelTxt(){
+    public function getLabelTxt(){
         return $this->labelTxt;
     }
 
-    protected function setLabel($label,$boolRequired){
-        $formDinLabelField = new TFormDinLabelField($label,$boolRequired);
-        $label = $formDinLabelField->getAdiantiObj();
+    public function setLabel($label,$boolRequired){
+        if(!empty($label)){
+            $this->setLabelTxt($label);
+            $formDinLabelField = new TFormDinLabelField($label,$boolRequired);
+            $label = $formDinLabelField->getAdiantiObj();
+        }
         $this->labelObj = $label;
     }
     public function getLabel(){

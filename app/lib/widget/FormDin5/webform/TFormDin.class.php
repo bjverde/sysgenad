@@ -60,6 +60,8 @@ class TFormDin
     const TYPE_FIELD  = 'feild';
     const TYPE_LAYOUT = 'layout';
     const TYPE_HIDDEN = 'hidden';
+    const TYPE_ADIANTI_FIELD_NATIVE  = 'adianti_field_native';
+    const TYPE_ADIANTI_LAYOUT_NATIVE = 'adianti_layout_native';
     
     private $objForm;
     protected $adiantiObj;
@@ -178,9 +180,17 @@ class TFormDin
         $label = $element['label'];
         $obj   = $element['obj'];
         if($element['boolLabelAbove']==true){
-            $result = array([$label, $obj]);
+            if( empty($label) ){
+                $result = array([$obj]);
+            }else{
+                $result = array([$label, $obj]);
+            }
         }else{
-            $result = array([$label], [$obj]);
+            if( empty($label) ){
+                $result = array([$obj]);
+            }else{
+                $result = array([$label], [$obj]);
+            }
         }
         return $result;
     }
@@ -190,10 +200,18 @@ class TFormDin
         $label = $element['label'];
         $obj   = $element['obj'];
         if($element['boolLabelAbove']==true){
-            $row[]=[$label, $obj];
+            if( empty($label) ){
+                $row[]=[$obj];
+            }else{
+                $row[]=[$label, $obj];
+            }            
         }else{
-            $row[]=[$label];
-            $row[]=[$obj];
+            if( empty($label) ){
+                $row[]=[$obj];
+            }else{
+                $row[]=[$label];
+                $row[]=[$obj];
+            }
         }
         return $row;
     }
@@ -276,6 +294,7 @@ class TFormDin
 
     public function getAdiantiObj2()
     {
+        $adiantiObj = $this->adiantiObj;
         $listFormElements = $this->getListFormElements();
         $qtd = CountHelper::count($listFormElements);
         $key = 0;
@@ -284,14 +303,17 @@ class TFormDin
             if($element['type']==self::TYPE_FIELD){
                 $fieldsRowResult = $this->addFieldsRow($key);
                 $fieldsRow = $fieldsRowResult['row'];
-                $adiantiObj = $this->adiantiObj;
                 call_user_func_array(array($adiantiObj, "addFields"), $fieldsRow);
                 $key = $fieldsRowResult['key'];
             }elseif ($element['type']==self::TYPE_HIDDEN){
-                $adiantiObj = $this->adiantiObj;
                 $adiantiObj->addFields( [$element['obj']] );
+            }elseif ($element['type']==self::TYPE_ADIANTI_FIELD_NATIVE){
+                //$adiantiObj->addFields( $element['obj'] );
+                call_user_func_array(array($adiantiObj, "addFields"), $element['obj']);
+            }elseif ($element['type']==self::TYPE_ADIANTI_LAYOUT_NATIVE){
+                //$adiantiObj->addContent( $element['obj'] );
+                call_user_func_array(array($adiantiObj, "addContent"), $element['obj']);
             }elseif ($element['type']==self::TYPE_LAYOUT){
-                $adiantiObj = $this->adiantiObj;
                 $adiantiObj->addContent( [$element['obj']] );
                 //call_user_func_array(array($adiantiObj, "addFields"), $fieldsRow);
                 //https://www.php.net/manual/pt_BR/function.call-user-func-array.php
@@ -343,18 +365,21 @@ class TFormDin
     }
 
     /**
-     * Inclusão de um campo no Form
-     * @param object $label - label que será incluido com o campo
-     * @param object $campo - campo que será incluido
-     * @param boolean $boolLabelAbove - informa se o Label é acima
+     * Inclusão de campos no Form, usando elementos nativos do Adianti
      */
-    protected function addFields($label, $campo, $boolLabelAbove = false)
+    public function addFields()
     {
-        if($boolLabelAbove){
-            $this->adiantiObj->addFields([$label, $campo]);
-        }else{
-            $this->adiantiObj->addFields([$label], [$campo]);
-        }
+        $args = func_get_args();
+        $this->addElementFormList($args,self::TYPE_ADIANTI_FIELD_NATIVE);
+    }
+
+    /**
+     * Inclusão de um conteudo no Form, usando um elementos nativos do Adianti
+     */
+    public function addContent()
+    {
+        $args = func_get_args();
+        $this->addElementFormList($args,self::TYPE_ADIANTI_LAYOUT_NATIVE);
     }
 
     protected function getLabelField($strLabel,$boolRequired=false)

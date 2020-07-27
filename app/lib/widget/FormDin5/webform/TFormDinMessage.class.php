@@ -78,6 +78,7 @@ class TFormDinMessage {
     const ERROR_EMPTY_INPUT = 'O Parametro não pode ficar em branco';
     const ERROR_TYPE_NOT_INT = 'Tipo não númerico! ';
     const ERROR_TYPE_NOT_ARRAY = 'Tipo não é um array! ';
+    const ERROR_TYPE_ARRAY_EMP = 'O array está vazio! ';
     const ERROR_TYPE_NOT_SET = 'A variable has not been defined! ';
 
     const ERROR_FD5_PARAM_MIGRA  = 'Falha na migração do FormDin 4 para 5.';

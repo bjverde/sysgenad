@@ -84,12 +84,15 @@ class ValidateHelper
      * @throws InvalidArgumentException
      * @return void
      */
-    public static function isArray($array,$method,$line)
+    public static function isArray($array,$method,$line, $validadeEmptyArray = true)
     {
         self::methodLine($method, $line, __METHOD__);
-        if( empty($array) || !is_array($array) ){
+        if( !is_array($array) ){
             throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_NOT_ARRAY.'See the method: '.$method.' in the line: '.$line);
         }
+        if( $validadeEmptyArray && empty($array)){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_ARRAY_EMP.'See the method: '.$method.' in the line: '.$line);
+        }        
     }    
     //--------------------------------------------------------------------------------
     /**
