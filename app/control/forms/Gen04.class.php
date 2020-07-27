@@ -1,5 +1,5 @@
 <?php
-class Gen03 extends TPage
+class Gen04 extends TPage
 {
     protected $form; // registration form
     protected $datagrid; // listing
@@ -20,9 +20,9 @@ class Gen03 extends TPage
             
             TPage::include_css('app/resources/sysgen.css');
 
-            $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP03);
+            $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP04);
             
-            $frm = new TFormDin($this,Message::GEN03_TITLE);
+            $frm = new TFormDin($this,Message::GEN04_TITLE);
 
             if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_REST ){
                 $frm->addGroupField('gpx1', Message::GEN02_GPX1_TITLE);
