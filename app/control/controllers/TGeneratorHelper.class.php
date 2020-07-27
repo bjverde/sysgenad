@@ -158,6 +158,11 @@ class TGeneratorHelper
             }
         }
     }
+    public static function copyAdiantiToNewSystem()
+    {
+        $pathSkeleton = 'system_skeleton/../vendor';
+        self::copySystemSkeletonToNewSystemByTpSystem($pathSkeleton);
+    }    
     
     public static function copySystemSkeletonToNewSystem()
     {
@@ -170,8 +175,7 @@ class TGeneratorHelper
             case self::TP_SYSTEM_FORM:
                 $pathSkeleton  = 'system_skeleton';
                 self::copySystemSkeletonToNewSystemByTpSystem($pathSkeleton);
-                //$pathSkeleton  = 'system_skeleton'.DS.'form';
-                //self::copySystemSkeletonToNewSystemByTpSystem($pathSkeleton);
+                //self::copyAdiantiToNewSystem();
             break;
             //--------------------------------------------------------------------------------
             case self::TP_SYSTEM_REST:
@@ -416,8 +420,15 @@ class TGeneratorHelper
             $url = $url[0];
         }
         $dir = explode(DS, __DIR__);
-        $dirSysGen = array_pop($dir);
-        $dirSysGen = array_pop($dir);
+        if( TSysgenSession::getTpSysgen() == TSysgenSession::TP_SYSGEN_ADIANTI){
+            $dirSysGen = array_pop($dir);
+            $dirSysGen = array_pop($dir);
+            $dirSysGen = array_pop($dir);
+            $dirSysGen = array_pop($dir);
+        }else{
+            $dirSysGen = array_pop($dir);
+            $dirSysGen = array_pop($dir);
+        }
         $url    = explode($dirSysGen, $url);
         $result = $url[0].TSysgenSession::getValue(self::GEN_SYSTEM_ACRONYM);
         return $result;
