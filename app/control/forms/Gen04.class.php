@@ -24,23 +24,21 @@ class Gen04 extends TPage
             
             $frm = new TFormDin($this,Message::GEN04_TITLE);
 
-            if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_REST ){
-                $frm->addGroupField('gpx1', Message::GEN02_GPX1_TITLE);
-                    $html = $frm->addHtmlField('conf', '');
-                $frm->closeGroup();
+            $frm->addGroupField('gpx1',Message::GEN02_GPX1_TITLE);
+                $html = $frm->addHtmlField('conf','');
+            $frm->closeGroup();
 
-                $frm->addGroupField('gpx2', Message::GPX_TYPE_CONFIG);
-                    $html = $frm->addHtmlField('logType', '');
-                $frm->closeGroup();
+            $listTables = TGeneratorHelper::loadTablesSelected();
+            $tpSystem   = TSysgenSession::getValue(TableInfo::TP_SYSTEM);
 
-                /*
-                $frm->addGroupField('gpx3',Message::GRID_LIST_FK_COLUMN);
-                    $frm->addHtmlField('info', null, 'ajuda/info_gen03_typefields_pt-br.php')->setClass('htmlInfo', true);
-                $frm->closeGroup();
-                */
-            }else{
-                $html = $frm->addHtmlField('conf', '');
-                $html->add('<br><b>XXXXXX</b><br>');
+            FormDinHelper::debug($listTables);
+            
+            if( $tpSystem != TGeneratorHelper::TP_SYSTEM_FORM ){
+                TGeneratorHelper::createApiIndexAndRouter($listTables);
+                $html->add(TGeneratorHelper::showMsg(true, Message::CREATED_API_INDEX));
+                
+                $html->add('<a href="'.TGeneratorHelper::getUrlNewSystem().'/api" target="_blank">'.TGeneratorHelper::getUrlNewSystem().'/api </a>');
+                $html->add('<br>');
             }
     
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',false,'fa:chevron-circle-left','green');
