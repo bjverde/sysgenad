@@ -29,11 +29,13 @@ class Gen01 extends TPage
                 $validoPDOAndDBMS = TGeneratorHelper::validatePDOAndDBMS($DBMS_TYPE, $html);
             $frm->closeGroup();
 
-            $frm->addGroupField('gpxHelp', Message::GEN00_GPX3_TITLE);
-                $html = $frm->addHtmlField('conf', '');
-                $html->add('<br>'.Message::INFO_CONNECT.'<br>');
-            $frm->closeGroup();
             if ($validoPDOAndDBMS) {
+
+                $frm->addGroupField('gpxHelp', Message::GEN00_GPX3_TITLE);
+                    $html = $frm->addHtmlField('conf', '');
+                    $html->add('<br>'.Message::INFO_CONNECT.'<br>');
+                $frm->closeGroup();
+
                 $frm->addGroupField('gpx2', Message::GEN01_GPX2_TITLE);
                     $frm->addHiddenField('TYPE', $DBMS_TYPE);
                     $frm->addHiddenField('PREP', 1);
