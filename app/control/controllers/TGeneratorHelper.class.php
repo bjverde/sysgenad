@@ -158,10 +158,47 @@ class TGeneratorHelper
             }
         }
     }
-    public static function copyAdiantiToNewSystem()
+    public static function copyAdiantiToNewSystem($pathAdianti)
     {
-        $pathSkeleton = 'system_skeleton/../vendor';
-        self::copySystemSkeletonToNewSystemByTpSystem($pathSkeleton);
+        $pathNewSystem = self::getPathNewSystem();
+
+        if( is_file($pathAdianti) ){
+            $origin = $pathAdianti;
+            $target = $pathNewSystem.DS.$origin;
+
+            /*
+            echo ' <hr>';
+            echo ' <pre>';
+            echo ' <br><strong>oriem:</strong>       ' . $origin;
+            echo ' <br><strong>destino:</strong>     ' . $target;
+            echo ' </pre>';
+            */
+
+            copy($origin, $target);
+        } else {
+            self::mkDir($pathNewSystem.DS.$pathAdianti);
+            $list = new RecursiveDirectoryIterator($pathAdianti);
+            $it   = new RecursiveIteratorIterator($list);
+            
+            foreach ($it as $file) {
+                if ($it->isFile()) {
+                    $origin = $pathAdianti.DS.$it->getSubPathName();
+                    $target = $pathNewSystem.DS.$origin;
+
+                    echo ' <hr>';
+                    echo ' <pre>';
+                    echo ' <br><strong>SubPathName:</strong> ' . $it->getSubPathName();
+                    echo ' <br><strong>SubPath:</strong>     ' . $it->getSubPath();
+                    echo ' <br><strong>oriem:</strong>       ' . $origin;
+                    echo ' <br><strong>destino:</strong>     ' . $target;
+                    echo ' </pre>';
+
+                    //self::mkDir($pathNewSystem.DS.$it->getSubPath());
+                    //copy($origin, $target);
+                }
+            }
+        } // FIM is_file 
+
     }    
     
     public static function copySystemSkeletonToNewSystem()

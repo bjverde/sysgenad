@@ -48,6 +48,9 @@ class Gen04 extends TPage
                 $html->add(TGeneratorHelper::showMsg(true,Message::NEW_SYSTEM_OK));
                 $html->add('<a href="'.TGeneratorHelper::getUrlNewSystem().'" target="_blank">'.TGeneratorHelper::getUrlNewSystem().'</a>');
                 $html->add('<br>');
+
+                TGeneratorHelper::copyAdiantiToNewSystem('cmd.php');
+                TGeneratorHelper::copyAdiantiToNewSystem('vendor');
             }
     
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',false,'fa:chevron-circle-left','green');
