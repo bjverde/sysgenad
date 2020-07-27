@@ -65,21 +65,6 @@ class Gen02 extends TPage
             $panelGrid = $grid->getPanelGroupGrid();
             $this->form->addContent([$panelGrid]);
 
-
-/*
-    $gride = new TGrid('gd'                 // id do gride
-                      , 'Lista de Tabelas'  // titulo do gride
-                      , $listTablesAll);    // array de dados
-
-    $gride->setCreateDefaultEditButton(false);
-    $gride->setCreateDefaultDeleteButton(false);
-    $gride->addRowNumColumn();
-    $gride->addColumn('TABLE_SCHEMA', 'TABLE_SCHEMA');
-    $gride->addCheckColumn('idTableSelected', 'TABLE_NAME', 'idSelected', 'TABLE_NAME', true, true);
-    $gride->addColumn('COLUMN_QTD', 'COLUMN_QTD');
-    $gride->addColumn('TABLE_TYPE', 'TABLE_TYPE');
-*/
-
             // wrap the page content using vertical box
             $vbox = new TVBox;
             $vbox->style = 'width: 100%';
