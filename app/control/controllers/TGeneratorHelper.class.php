@@ -411,6 +411,10 @@ class TGeneratorHelper
     public static function getUrlNewSystem()
     {
         $url = ServerHelper::getCurrentUrl(true);
+        if( TSysgenSession::getTpSysgen() == TSysgenSession::TP_SYSGEN_ADIANTI){
+            $url = explode('engine.php', $url);
+            $url = $url[0];
+        }
         $dir = explode(DS, __DIR__);
         $dirSysGen = array_pop($dir);
         $dirSysGen = array_pop($dir);
