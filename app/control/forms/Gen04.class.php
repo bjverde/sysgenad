@@ -40,6 +40,15 @@ class Gen04 extends TPage
                 $html->add('<a href="'.TGeneratorHelper::getUrlNewSystem().'/api" target="_blank">'.TGeneratorHelper::getUrlNewSystem().'/api </a>');
                 $html->add('<br>');
             }
+
+            if( $tpSystem != TGeneratorHelper::TP_SYSTEM_REST ){
+                TGeneratorHelper::createFileMenu($listTables);
+                $html->add(TGeneratorHelper::showMsg(true, Message::CREATED_MENU));
+                
+                $html->add(TGeneratorHelper::showMsg(true,Message::NEW_SYSTEM_OK));
+                $html->add('<a href="'.TGeneratorHelper::getUrlNewSystem().'" target="_blank">'.TGeneratorHelper::getUrlNewSystem().'</a>');
+                $html->add('<br>');
+            }
     
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',false,'fa:chevron-circle-left','green');
             $frm->setActionLink(_t('Clear'),'clear',false,'fa:eraser','red');
