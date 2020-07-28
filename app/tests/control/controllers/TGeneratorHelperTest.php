@@ -65,29 +65,23 @@ class TGeneratorHelperTest extends TestCase
         return $listFieldSelectedTable;
     }
     
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testRemoveFieldsDuplicateOnSelectedTable_FailNull()
     {
+        $this->expectException(InvalidArgumentException::class);
         $listFieldsTable = null;        
         $this->assertNull( TGeneratorHelper::removeFieldsDuplicateOnSelectedTables($listFieldsTable) );
     }
     
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testRemoveFieldsDuplicateOnSelectedTable_FailArrayNull()
     {
+        $this->expectException(InvalidArgumentException::class);
         $listFieldsTable = array();
         $this->assertNull( TGeneratorHelper::removeFieldsDuplicateOnSelectedTables($listFieldsTable) );
     }
     
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testRemoveFieldsDuplicateOnSelectedTable_FailString()
     {
+        $this->expectException(InvalidArgumentException::class);
         $listFieldsTable = 'xxx';
         $this->assertNull( TGeneratorHelper::removeFieldsDuplicateOnSelectedTables($listFieldsTable) );
     }
@@ -129,35 +123,27 @@ class TGeneratorHelperTest extends TestCase
     }
     */
     
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testValidateListTableNames_null()
     {
+        $this->expectException(InvalidArgumentException::class);
         TGeneratorHelper::validateListTableNames(null);
     }
     
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testValidateListTableNames_string()
     {
+        $this->expectException(InvalidArgumentException::class);
         TGeneratorHelper::validateListTableNames('x');
     }
     
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testValidateListColumnsProperties_null()
     {
+        $this->expectException(InvalidArgumentException::class);
         TGeneratorHelper::validateListColumnsProperties(null);
     }
     
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testValidateListColumnsProperties_string()
     {
+        $this->expectException(InvalidArgumentException::class);
         TGeneratorHelper::validateListColumnsProperties('x');
     }
 }

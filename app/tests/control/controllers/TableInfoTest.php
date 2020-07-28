@@ -38,46 +38,46 @@ class TableInfoTest extends TestCase
     public function testGetPreDBMS_MySql()
     {
         $result = 'my';
-        $expected = TableInfo::getPreDBMS(DBMS_MYSQL);
+        $expected = TableInfo::getPreDBMS(TFormDinPdoConnection::DBMS_MYSQL);
         $this->assertEquals($expected, $result);
     }
 
     public function testGetPreDBMS_SqLite()
     {
         $result = 'sq';
-        $expected = TableInfo::getPreDBMS(DBMS_SQLITE);
+        $expected = TableInfo::getPreDBMS(TFormDinPdoConnection::DBMS_SQLITE);
         $this->assertEquals($expected, $result);
     }
 
     public function testGetPreDBMS_SqlServer()
     {
         $result = 'ss';
-        $expected = TableInfo::getPreDBMS(DBMS_SQLSERVER);
+        $expected = TableInfo::getPreDBMS(TFormDinPdoConnection::DBMS_SQLSERVER);
         $this->assertEquals($expected, $result);
     }
 
     public function testGetPreDBMS_PostGreSql()
     {
         $result = 'pg';
-        $expected = TableInfo::getPreDBMS(DBMS_POSTGRES);
+        $expected = TableInfo::getPreDBMS(TFormDinPdoConnection::DBMS_POSTGRES);
         $this->assertEquals($expected, $result);
     }
     //--------------------------------------------------------
     public function testGetDbmsWithVersion_MySql(){
         $result = false;
-        $expected = TableInfo::getDbmsWithVersion(DBMS_MYSQL);
+        $expected = TableInfo::getDbmsWithVersion(TFormDinPdoConnection::DBMS_MYSQL);
         $this->assertEquals($expected, $result);
     }
 
     public function testGetDbmsWithVersion_SqLite(){
         $result = false;
-        $expected = TableInfo::getDbmsWithVersion(DBMS_SQLITE);
+        $expected = TableInfo::getDbmsWithVersion(TFormDinPdoConnection::DBMS_SQLITE);
         $this->assertEquals($expected, $result);
     }
 
     public function testGetDbmsWithVersion_SqlServer(){
         $result = true;
-        $expected = TableInfo::getDbmsWithVersion(DBMS_SQLSERVER);
+        $expected = TableInfo::getDbmsWithVersion(TFormDinPdoConnection::DBMS_SQLSERVER);
         $this->assertEquals($expected, $result);
     }
     
