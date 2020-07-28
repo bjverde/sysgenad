@@ -318,11 +318,12 @@ class TGeneratorHelper
     
     public static function getConfigGridSqlServer($DBMS)
     {
-        $dbversion = $_SESSION[APPLICATION_NAME]['DBMS']['VERSION'];
-        $TPGRID = GRID_SQL_PAGINATION;
+        $sessionDBMS = TSysgenSession::getValue('DBMS');
+        $dbversion = $sessionDBMS['VERSION'];
+        $TPGRID = FormDinHelper::GRID_SQL_PAGINATION;
         $withVersion = TableInfo::getDbmsWithVersion($DBMS);
         if( ($dbversion == TableInfo::DBMS_VERSION_SQLSERVER_2012_LT) && $withVersion ){
-            $TPGRID = GRID_SCREEN_PAGINATION;
+            $TPGRID = FormDinHelper::GRID_SCREEN_PAGINATION;
         }
         return $TPGRID;
     }

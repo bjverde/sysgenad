@@ -31,9 +31,9 @@ class TCreateFileContentTest extends TestCase
      * Prepares the environment before running a test.
      */
     protected function setUp(): void {
-    	$_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM']='test';
+        TSysgenSession::setValue('GEN_SYSTEM_ACRONYM', 'test');
         parent::setUp();
-        $this->create = new TCreateFileContent();        
+        $this->create = new TCreateFileContent();
     }
 
     /**

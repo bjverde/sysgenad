@@ -59,6 +59,8 @@ class FormDinHelper
 {
 
     const FORMDIN_VERSION = '5.0.0-alpha10';
+    const GRID_SCREEN_PAGINATION = 'GRID_SCREEN_PAGINATION';
+    const GRID_SQL_PAGINATION    = 'GRID_SQL_PAGINATION';
 
     /**
      * Return FormDin version
