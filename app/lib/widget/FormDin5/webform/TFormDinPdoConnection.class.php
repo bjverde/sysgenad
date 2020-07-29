@@ -68,6 +68,7 @@ class TFormDinPdoConnection
             $this->setDatabase($database);
         }
         $this->setFech($fech);
+        $this->setCase($case);
     }
 
     public function setDatabase($database)
