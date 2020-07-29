@@ -37,7 +37,8 @@ class TCreateConstants extends TCreateFileContent
         $this->addLine('formdin_min_version='.FORMDIN_VERSION);
         $this->addLine('version='.TSysgenSession::getValue('GEN_SYSTEM_VERSION'));
         $this->addLine('system_name='.TSysgenSession::getValue('GEN_SYSTEM_NAME'));
-        $this->addLine(';system_name_sub=\'Subtítulo do sistema\'');
+        $this->addLine('system_name_sub=\'Subtítulo do sistema\'');
+        $this->addLine('login = \'login\'');
         $this->addLine('logo-lg='.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM'));
         $this->addLine('logo-mini = /images/icon.png');
         $this->addLine('logo-link-class = \'index.php?class=WelcomeView.class\'');
