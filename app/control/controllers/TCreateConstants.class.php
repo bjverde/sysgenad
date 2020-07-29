@@ -41,7 +41,7 @@ class TCreateConstants extends TCreateFileContent
         $this->addLine('login = \'login\'');
         $this->addLine('logo-lg='.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM'));
         $this->addLine('logo-mini = /images/icon.png');
-        $this->addLine('logo-link-class = \'index.php?class=WelcomeView.class\'');
+        $this->addLine('logo-link-class = \'index.php?class=Gen00.class\'');
         $this->addLine('login-link = https://localhost/'.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM'));
         if ($print) {
             echo $this->getLinesString();
