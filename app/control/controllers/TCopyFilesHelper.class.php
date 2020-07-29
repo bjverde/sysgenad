@@ -75,7 +75,13 @@ class TCopyFilesHelper
         TCopyFilesHelper::adiantiFolderToNewSystem('index.php');
         TCopyFilesHelper::adiantiFolderToNewSystem('init.php');
         
-        TCopyFilesHelper::adiantiFolderToNewSystem('lib');
+        TCopyFilesHelper::adiantiFolderToNewSystem('app/lib');
+        TCopyFilesHelper::adiantiFolderToNewSystem('app/output');
+        TCopyFilesHelper::adiantiFolderToNewSystem('app/reports');
+        TCopyFilesHelper::adiantiFolderToNewSystem('app/resources');
+        TCopyFilesHelper::adiantiFolderToNewSystem('app/service');
+        TCopyFilesHelper::adiantiFolderToNewSystem('app/templates');
+        TCopyFilesHelper::adiantiFolderToNewSystem('app/view');
         TCopyFilesHelper::adiantiFolderToNewSystem('lib');
         TCopyFilesHelper::adiantiFolderToNewSystem('tmp');
         TCopyFilesHelper::adiantiFolderToNewSystem('vendor');
