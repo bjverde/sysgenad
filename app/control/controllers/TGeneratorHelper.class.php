@@ -184,17 +184,21 @@ class TGeneratorHelper
                 if ($it->isFile()) {
                     $origin = $pathAdianti.DS.$it->getSubPathName();
                     $target = $pathNewSystem.DS.$origin;
+                    $mkdir  = $pathNewSystem.DS.$pathAdianti.DS.$it->getSubPath();
 
+                    /*
                     echo ' <hr>';
                     echo ' <pre>';
                     echo ' <br><strong>SubPathName:</strong> ' . $it->getSubPathName();
                     echo ' <br><strong>SubPath:</strong>     ' . $it->getSubPath();
                     echo ' <br><strong>oriem:</strong>       ' . $origin;
                     echo ' <br><strong>destino:</strong>     ' . $target;
+                    echo ' <br><strong>mkdir:</strong>       ' . $mkdir;
                     echo ' </pre>';
+                    */
 
-                    //self::mkDir($pathNewSystem.DS.$it->getSubPath());
-                    //copy($origin, $target);
+                    self::mkDir($mkdir);
+                    copy($origin, $target);
                 }
             }
         } // FIM is_file 
