@@ -307,6 +307,18 @@ class TGeneratorHelper
         $generator->saveFile();
     }
     
+    public static function createFilesModel($tableName, $listColumnsProperties, $tableSchema, $tableType)
+    {
+        $configDBMS  = self::getConfigByDBMS();
+        $folder      = self::getPathNewSystem().DS.'app'.DS.'model'.DS.'maindatabase'.DS;
+               
+        $generatorDao = new TCreateModel($folder,$tableName, $listColumnsProperties);
+        $generatorDao->setTableType($tableType);
+        $generatorDao->setDatabaseManagementSystem($DBMS);
+        $generatorDao->setTableSchema($tableSchema);
+        $generatorDao->saveFile();
+    }
+
     public static function createFilesDaoVoFromTable($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
         $configDBMS  = self::getConfigByDBMS();
@@ -344,14 +356,15 @@ class TGeneratorHelper
         //$generator->saveFile();
     }
     
-    public static function createFilesFormClassDaoVoFromTable($tableName, $listColumnsProperties, $tableSchema, $tableType)
+    public static function createFilesFormControllerModelFromTable($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
-        self::createFilesDaoVoFromTable($tableName, $listColumnsProperties,$tableSchema,$tableType);
-        self::createFilesControllers($tableName, $listColumnsProperties, $tableSchema, $tableType);
-        self::createFilesTests($tableName, $listColumnsProperties, $tableSchema, $tableType);
+        self::createFilesModel($tableName, $listColumnsProperties,$tableSchema,$tableType);
+        //self::createFilesDaoVoFromTable($tableName, $listColumnsProperties,$tableSchema,$tableType);
+        //self::createFilesControllers($tableName, $listColumnsProperties, $tableSchema, $tableType);
+        //self::createFilesTests($tableName, $listColumnsProperties, $tableSchema, $tableType);
 
         if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_REST ){
-            self::createFilesForms($tableName, $listColumnsProperties, $tableSchema, $tableType);
+            //self::createFilesForms($tableName, $listColumnsProperties, $tableSchema, $tableType);
         }
 
         if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_FORM ){

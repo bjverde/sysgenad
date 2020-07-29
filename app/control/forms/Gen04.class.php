@@ -56,17 +56,16 @@ class Gen04 extends TPage
                 $tableType   = $listTables['TABLE_TYPE'][$key];
                 $listFieldsTable = TGeneratorHelper::loadFieldsTablesSelectedWithFormDin($table,$tableType,$tableSchema);
                 FormDinHelper::debug($listFieldsTable);
-                /*
+                
                 $tableType = strtoupper($listTables['TABLE_TYPE'][$key]);
                 $key = $key + 1;
                 if($tableType == TableInfo::TB_TYPE_TABLE){
-                    TGeneratorHelper::createFilesFormClassDaoVoFromTable($table, $listFieldsTable ,$tableSchema ,$tableType);
+                    TGeneratorHelper::createFilesFormControllerModelFromTable($table, $listFieldsTable ,$tableSchema ,$tableType);
                     $html->add('<br>'.$key.Message::CREATED_TABLE_ITEN.$table);
                 }else{
-                    TGeneratorHelper::createFilesFormClassDaoVoFromTable($table, $listFieldsTable ,$tableSchema ,$tableType);
+                    TGeneratorHelper::createFilesFormControllerModelFromTable($table, $listFieldsTable ,$tableSchema ,$tableType);
                     $html->add('<br>'.$key.Message::CREATED_VIEW_ITEN.$table);
                 }
-                */
                 
                 /*
                 $grid = new TFormDinGrid($this
