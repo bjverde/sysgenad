@@ -14,17 +14,18 @@ class Gen00 extends TPage
         
         try
         {
-            $frm = new TFormDin($this,'Sistema criado');
+            $frm = new TFormDin($this,'Novo sistema');
 
-            $frm->addGroupField('gp', 'Informações iniciais');
-                $html = '<h2>Sistema criado usando SysGenAd e FormDin</h2>
-                            <ul>
-                                <li>Sigla do Sistema: A sigla do sistema é o ID do sistema. Será utiliza para criar a pasta do novo sistema. Por padrão aparecerá no canto superior esquerdo</li>
-                                <li>Versão do sistema: É número da versão. É recomendável utilizar <a href="https://semver.org/lang/pt-BR/" target="_blank">o versionamento semântico</a></li>
-                                <li>Nome do sistema: É descrição completa do nome do sistema ou o que significa a sigla</li>
-                            </ul>';
-                $frm->addHtmlField('aviso',$html,null,null);
-            $frm->closeGroup();
+            $html = '<h2>Seu novo sistema criado usando SysGenAd, Adianti e FormDin5</h2>
+                     <br>
+                     <br> Esse sistema foi criado de forma automatica usando:
+                        <ul>
+                            <li><a href="https://www.adianti.com.br/" target="_blank">Adinati FrameWork 7.2.2</a> criado por <a href="http://www.dalloglio.net/" target="_blank">Pablo Dall\'Oglio</a></li>
+                            <li><a href="https://github.com/bjverde/formDin5" target="_blank">FormDin 5</a> é um meta FrameWork, conconstruido sobre o Adinati. Portando não é um FrameWork completo, ele tem total depencendia do Adinati. É um Framework de transição do FormDin 4 para o Adianti, facilitando a migração. É uma abastração das chamadas do FormDin no Adianti</li>
+                            <li>SysGenAd: É descrição completa do nome do sistema ou o que significa a sigla</li>
+                            <li>Versão do sistema: É número da versão. É recomendável utilizar <a href="https://semver.org/lang/pt-BR/" target="_blank">o versionamento semântico</a></li>                            
+                        </ul>';
+            $frm->addHtmlField('aviso',$html,null,null);
 
             $this->form = $frm->show();
 
