@@ -30,7 +30,7 @@ class Gen02 extends TPage
                 $path = TGeneratorHelper::getPathNewSystem();
                 TGeneratorHelper::mkDir($path);
                 $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_MKDIR_SYSTEM.$path));
-                TGeneratorHelper::copySystemSkeletonToNewSystem();
+                TCopyFilesHelper::systemSkeletonToNewSystem();
                 $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_COPY_SYSTEM_SKELETON));
                 TGeneratorHelper::createFileConstants();
                 $html->add(TGeneratorHelper::showMsg(true, Message::GEN02_CREATED_CONSTANTS));
