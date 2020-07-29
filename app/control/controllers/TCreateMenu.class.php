@@ -31,15 +31,15 @@ class TCreateMenu extends TCreateFileContent
         return $this->listTableNames;
     }
     //--------------------------------------------------------------------------------------
-    public function addBasicMenuItems($ESP, $tableType)
+    public function addBasicMenuItems($ESP, $tableTypeObj)
     {
         $listTableNames = $this->listTableNames['TABLE_NAME'];
         foreach ($listTableNames as $key => $table) {
             $tableType = strtoupper($this->listTableNames['TABLE_TYPE'][$key]);
-            if ($tableType == $tableType) {
+            if ($tableTypeObj == $tableType) {
                 $this->addLine($ESP.ESP.'<menuitem label=\''.$table.'\'>');
                 $this->addLine($ESP.ESP.ESP.'<icon>fa:book fa-fw</icon>');
-                $this->addLine($ESP.ESP.ESP.'<action>LearnView</action>');
+                $this->addLine($ESP.ESP.ESP.'<action>'.$table.'</action>');
                 $this->addLine($ESP.ESP.'</menuitem>');
             }
         }
