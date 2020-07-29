@@ -49,10 +49,37 @@ class Gen04 extends TPage
                 $html->add('<a href="'.TGeneratorHelper::getUrlNewSystem().'" target="_blank">'.TGeneratorHelper::getUrlNewSystem().'</a>');
                 $html->add('<br>');
             }
+
+
+            foreach ($listTables['TABLE_NAME'] as $key=>$table){
+                $tableSchema = $listTables['TABLE_SCHEMA'][$key];
+                $tableType   = $listTables['TABLE_TYPE'][$key];
+                $listFieldsTable = TGeneratorHelper::loadFieldsTablesSelectedWithFormDin($table,$tableType,$tableSchema);
+                $tableType = strtoupper($listTables['TABLE_TYPE'][$key]);
+                $key = $key + 1;
+                if($tableType == TableInfo::TB_TYPE_TABLE){
+                    TGeneratorHelper::createFilesFormClassDaoVoFromTable($table, $listFieldsTable ,$tableSchema ,$tableType);
+                    $html->add('<br>'.$key.Message::CREATED_TABLE_ITEN.$table);
+                }else{
+                    TGeneratorHelper::createFilesFormClassDaoVoFromTable($table, $listFieldsTable ,$tableSchema ,$tableType);
+                    $html->add('<br>'.$key.Message::CREATED_VIEW_ITEN.$table);
+                }
+                
+                $grid = new TFormDinGrid($this
+                                   ,'gd.$table'      // id do gride
+                                   ,$key.Message::FIELDS_TABLE_VIEW.$table   // titulo do gride
+                                   ,$listFieldsTable 	      // array de dados
+                                   );
+
+                $this->datagrid = $grid->show();
+                $panelGrid = $grid->getPanelGroupGrid();
+                $this->form->addContent([$panelGrid]);
+            }
+
+
     
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',false,'fa:chevron-circle-left','green');
             $frm->setActionLink(_t('Clear'),'clear',false,'fa:eraser','red');
-            $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'next',false,'fa:chevron-circle-right','green');
 
             $this->form = $frm->show();
 
@@ -83,18 +110,6 @@ class Gen04 extends TPage
         $this->clearFilters();
         $this->onReload();
     }
-
-    public function next($param)
-    {
-        try {
-            $data = $this->form->getData(); // optional parameter: active record class
-            $this->form->setData($data);    // put the data back to the form
-            AdiantiCoreApplication::loadPage('Gen04'); //POG para recarregar a pagina
-        } catch (Exception $e) {
-            new TMessage('error', $e->getMessage());
-        }
-    }
-
     
     /**
      * Load the data into the datagrid

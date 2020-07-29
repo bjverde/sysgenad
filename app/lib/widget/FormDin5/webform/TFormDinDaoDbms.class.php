@@ -160,6 +160,18 @@ class TFormDinDaoDbms
 		return $this->schema;
 	}
 
+	public function executeSql($sql,$arrayTypeReturn = ArrayHelper::TYPE_PDO)
+	{
+		//O result vem no padrão PDO
+		$result  = $this->getConnection()->executeSql($sql);
+		if($arrayTypeReturn == ArrayHelper::TYPE_FORMDIN){
+			$result = ArrayHelper::convertArrayPdo2FormDin($result,TRUE);
+		}else if($arrayTypeReturn == ArrayHelper::TYPE_ADIANTI){
+			$result = ArrayHelper::convertArray2Adianti($result);
+		}
+		return $result;
+	}
+
 	/**
 	* Adiciona campos da tabela ao array de campos que serão utilizados
 	* nos binds e nos métodos save, insert e delete da classe
@@ -802,8 +814,8 @@ class TFormDinDaoDbms
 			$params=array($this->getTableName());
 		}
 		else if( $DbType == TFormDinPdoConnection::DBMS_SQLITE) {
-			$stmt = $this->getConn()->query( "PRAGMA table_info(".$this->getTableName().")");
-			$res  = $stmt->fetchAll();
+			$sql  = "PRAGMA table_info(".$this->getTableName().")";
+			$res  = $this->executeSql($sql);
 			$data = null;
 			$sql  = null;
 			foreach($res as $rownum => $row)
