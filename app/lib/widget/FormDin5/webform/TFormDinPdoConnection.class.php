@@ -52,6 +52,7 @@ class TFormDinPdoConnection
 
     private $database = null;
     private $fech = null;
+    private $case = null;
 
 
     private $host;
@@ -61,7 +62,7 @@ class TFormDinPdoConnection
     private $pass;
     private $type;
 
-    public function __construct($database = null,$fech = null)
+    public function __construct($database = null,$fech = null,$case = null)
     {
         if(!empty($database)){
             $this->setDatabase($database);
@@ -91,6 +92,18 @@ class TFormDinPdoConnection
     public function getFech()
     {
         return $this->fech;
+    }
+
+    public function setCase($case)
+    {
+        if(empty($case)){
+            $case = PDO::CASE_UPPER;
+        }
+        $this->case = $case;
+    }
+    public function getCase()
+    {
+        return $this->case;
     }
 
     /**
@@ -236,11 +249,13 @@ class TFormDinPdoConnection
             $configConnect = $this->getConfigConnect();
             $database = $configConnect['database'];
             $db = $configConnect['db'];
+            $case     = $this->getCase();
             $fech     = $this->getFech();
             
             TTransaction::open($database,$db); // abre uma transação
             $conn = TTransaction::get();   // obtém a conexão  
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $conn->setAttribute(PDO::ATTR_CASE, $case);
             $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $fech);
             $stmt = $conn->query($sql);    // realiza a consulta
             $result = $stmt->fetchall();
