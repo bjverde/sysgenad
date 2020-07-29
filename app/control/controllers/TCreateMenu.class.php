@@ -31,16 +31,16 @@ class TCreateMenu extends TCreateFileContent
         return $this->listTableNames;
     }
     //--------------------------------------------------------------------------------------
-    public function addBasicMenuItems($keyFatherItem, $tableTypeObjeto)
+    public function addBasicMenuItems($ESP, $tableType)
     {
         $listTableNames = $this->listTableNames['TABLE_NAME'];
         foreach ($listTableNames as $key => $table) {
             $tableType = strtoupper($this->listTableNames['TABLE_TYPE'][$key]);
-            if ($tableType == $tableTypeObjeto) {
-                $this->addLine('$menu->add(\''.$keyFatherItem.'.'.$key.'\''
-                              .',\''.$keyFatherItem.'\''
-                              .',\''.strtolower($table).'\',\'modulos/'.strtolower($table).'.php\''
-                              .', null, \'Icon_35-512.png\');');
+            if ($tableType == $tableType) {
+                $this->addLine($ESP.ESP.'<menuitem label=\''.$table.'\'>');
+                $this->addLine($ESP.ESP.ESP.'<icon>fa:book fa-fw</icon>');
+                $this->addLine($ESP.ESP.ESP.'<action>LearnView</action>');
+                $this->addLine($ESP.ESP.'</menuitem>');
             }
         }
     }
@@ -66,7 +66,7 @@ class TCreateMenu extends TCreateFileContent
             $this->addLine(ESP."<menuitem label='Cruds'>");
             $this->addLine(ESP.ESP."<icon>fa:magic fa-fw #f0db4f</icon>");
             $this->addLine(ESP.ESP."<menu>");
-            //$this->addBasicMenuItems( $tableType );
+            $this->addBasicMenuItems( ESP.ESP, $tableType );
             $this->addLine(ESP.ESP."</menu>");
             $this->addLine(ESP."</menuitem>");
         }
@@ -80,7 +80,7 @@ class TCreateMenu extends TCreateFileContent
             $this->addLine(ESP."<menuitem label='Views'>");
             $this->addLine(ESP.ESP."<icon>fa:magic fa-fw #f0db4f</icon>");
             $this->addLine(ESP.ESP."<menu>");
-            //$this->addBasicMenuItems( $tableType );
+            $this->addBasicMenuItems( ESP.ESP, $tableType );
             $this->addLine(ESP.ESP."</menu>");
             $this->addLine(ESP."</menuitem>");
         }
@@ -94,7 +94,7 @@ class TCreateMenu extends TCreateFileContent
             $this->addLine(ESP."<menuitem label='Procedure'>");
             $this->addLine(ESP.ESP."<icon>fa:magic fa-fw #f0db4f</icon>");
             $this->addLine(ESP.ESP."<menu>");
-            //$this->addBasicMenuItems( $tableType );
+            $this->addBasicMenuItems( ESP.ESP, $tableType );
             $this->addLine(ESP.ESP."</menu>");
             $this->addLine(ESP."</menuitem>");
         }
