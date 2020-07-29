@@ -55,15 +55,6 @@ class TCreateModel extends TCreateFileContent
         return $this->keyColumnName;
     }
     //------------------------------------------------------------------------------------
-    public function setDatabaseManagementSystem($databaseManagementSystem)
-    {
-        return $this->databaseManagementSystem = strtoupper($databaseManagementSystem);
-    }
-    public function getDatabaseManagementSystem()
-    {
-        return $this->databaseManagementSystem;
-    }
-    //------------------------------------------------------------------------------------
     public function setTableSchema($tableSchema)
     {
         return $this->tableSchema = $tableSchema;

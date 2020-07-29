@@ -278,11 +278,11 @@ class TGeneratorHelper
             break;
             case TFormDinPdoConnection::DBMS_SQLITE;
                 $SCHEMA = false;
-                $TPGRID = GRID_SQL_PAGINATION;
+                $TPGRID = FormDinHelper::GRID_SQL_PAGINATION;
             break;             
             default:
                 $SCHEMA = false;
-                $TPGRID = GRID_SCREEN_PAGINATION;
+                $TPGRID = FormDinHelper::GRID_SCREEN_PAGINATION;
         }
         $config = array();
         $config['SCHEMA'] = $SCHEMA;
@@ -309,12 +309,10 @@ class TGeneratorHelper
     
     public static function createFilesModel($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
-        $configDBMS  = self::getConfigByDBMS();
         $folder      = self::getPathNewSystem().DS.'app'.DS.'model'.DS.'maindatabase'.DS;
                
         $generatorDao = new TCreateModel($folder,$tableName, $listColumnsProperties);
         $generatorDao->setTableType($tableType);
-        $generatorDao->setDatabaseManagementSystem($DBMS);
         $generatorDao->setTableSchema($tableSchema);
         $generatorDao->saveFile();
     }
