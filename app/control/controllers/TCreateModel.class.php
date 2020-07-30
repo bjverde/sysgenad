@@ -98,6 +98,17 @@ class TCreateModel extends TCreateFileContent
         return $this->aColumns;
     }
     //--------------------------------------------------------------------------------------
+    public function getColumnsWithOutPkTable()
+    {
+        $listColumns = array();
+        foreach ($this->getColumns() as $v) {
+            if ($v != strtolower($this->keyColumnName)) {
+                $listColumns[]=$v;
+            }
+        }
+        return $listColumns;
+    }
+    //--------------------------------------------------------------------------------------
     public function setListColumnsProperties($listColumnsProperties)
     {
         TGeneratorHelper::validateListColumnsProperties($listColumnsProperties);
@@ -139,6 +150,13 @@ class TCreateModel extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
+    public function addFieldRecord($esp)
+    {
+        foreach ($this->getColumnsWithOutPkTable() as $v) {
+            $this->addLine($esp."parent::addAttribute('".$v."');");
+        }
+    }
+    //--------------------------------------------------------------------------------------
     public function show($print = false)
     {
         $this->lines=null;
@@ -148,10 +166,12 @@ class TCreateModel extends TCreateFileContent
         $this->addLine('{');
         $this->addLine(ESP.'const TABLENAME = \''.$this->tableName.'\';');
         $this->addLine(ESP.'const PRIMARYKEY= \''.$this->keyColumnName.'\';');
-        $this->addLine(ESP.'const IDPOLICY  = \'serial\';');
+        $this->addLine(ESP.'const IDPOLICY  = \'serial\'; //{max, serial}');
         $this->addBlankLine();
         $this->addLine(ESP.'public function __construct($id = NULL, $callObjectLoad = TRUE)');
         $this->addLine(ESP.'{');
+        $this->addLine(ESP.ESP.'parent::__construct($id, $callObjectLoad);');
+        $this->addFieldRecord(ESP.ESP);
         $this->addLine(ESP.'}');
         $this->addBlankLine();
         $this->addLine("}");
