@@ -336,7 +336,7 @@ class TGeneratorHelper
     public static function createFilesForms($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
         $configDBMS = self::getConfigByDBMS();
-        $pathFolder = self::getPathNewSystem().DS.'modulos'.DS;
+        $pathFolder = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'views'.DS;
         $geradorForm= new TCreateForm($pathFolder ,$tableName ,$listColumnsProperties);
         $geradorForm->setTableType($tableType);
         $geradorForm->setGridType($configDBMS['TPGRID']);
@@ -362,7 +362,7 @@ class TGeneratorHelper
         //self::createFilesTests($tableName, $listColumnsProperties, $tableSchema, $tableType);
 
         if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_REST ){
-            //self::createFilesForms($tableName, $listColumnsProperties, $tableSchema, $tableType);
+            self::createFilesForms($tableName, $listColumnsProperties, $tableSchema, $tableType);
         }
 
         if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_FORM ){

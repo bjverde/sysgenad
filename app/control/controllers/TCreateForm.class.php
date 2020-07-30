@@ -35,6 +35,8 @@ class TCreateForm extends TCreateFileContent
     const FORM_FKTYPE_AUTOSEARCH = 'AUTOSEARCH';
     const FORM_FKTYPE_SELECTCRUD = 'SELECTCRUD';
 
+    const CHAR_MAX_TEXT_FIELD = 101;
+
     /**
      * Create file FROM form a table info
      * @param string $pathFolder   - folder path to create file
@@ -371,7 +373,7 @@ class TCreateForm extends TCreateFileContent
                 break;
             default:
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
-                if ($CHAR_MAX < CHAR_MAX_TEXT_FIELD) {
+                if ($CHAR_MAX < self::CHAR_MAX_TEXT_FIELD) {
                     $this->addLine('$frm->addTextField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$CHAR_MAX.','.$REQUIRED.','.$CHAR_MAX.');');
                 } else {
                     $this->addLine('$frm->addMemoField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$CHAR_MAX.','.$REQUIRED.',80,3);');
@@ -397,7 +399,8 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     private function addBasicViewController_logCatch($qtdTab)
     {
-        $logType = ArrayHelper::getDefaultValeu($_SESSION[APLICATIVO], 'logType', 2);
+        $logType = TSysgenSession::getValue('logType');
+        $logType = empty($logType)?2:$logType;;
         if ($logType == 2) {
             $this->addLine($qtdTab.'catch (DomainException $e) {');
             $this->addLine($qtdTab.ESP.'$frm->addMessage( $e->getMessage() ); //addMessage evita o problema do setMessage');
@@ -497,7 +500,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine('$acao = isset($acao) ? $acao : null;');
         $this->addLine('switch( $acao ) {');
         $this->addBasicaViewController_limpar();
-        if ($this->gridType == GRID_SIMPLE) {
+        if ($this->gridType == FormDinHelper::GRID_SIMPLE) {
             $this->addBasicaViewController_buscar();
         }
         if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
@@ -648,7 +651,7 @@ class TCreateForm extends TCreateFileContent
     public function addGrid()
     {
         
-        if ($this->gridType == GRID_SIMPLE) {
+        if ($this->gridType == FormDinHelper::GRID_SIMPLE) {
             $this->addBasicaGrid();
             $this->addBlankLine();
             $this->addLine('$frm->show();');
@@ -660,17 +663,17 @@ class TCreateForm extends TCreateFileContent
             $this->addLine(ESP.'$maxRows = ROWS_PER_PAGE;');
             $this->addLine(ESP.'$whereGrid = getWhereGridParameters($frm);');
             $this->addLine(ESP.'$controller = new '.$this->tableRefClass.'();');
-            if ($this->gridType == GRID_SQL_PAGINATION) {
+            if ($this->gridType == FormDinHelper::GRID_SQL_PAGINATION) {
                 $this->addLine(ESP.'$page = PostHelper::get(\'page\');');                
                 $this->addLine(ESP.'$dados = $controller->selectAllPagination( $primaryKey.\' DESC\', $whereGrid, $page,  $maxRows);');
                 $this->addLine(ESP.'$realTotalRowsSqlPaginator = $controller->selectCount( $whereGrid );');
-            } elseif ($this->gridType == GRID_SCREEN_PAGINATION) {
+            } elseif ($this->gridType == FormDinHelper::GRID_SCREEN_PAGINATION) {
                 $this->addLine(ESP.'$dados = $controller->selectAll($primaryKey.\' DESC\',$whereGrid);');
                 $this->addLine(ESP.'$realTotalRowsSqlPaginator = $controller->selectCount( $whereGrid );');
             }
             $this->getMixUpdateFields(ESP);
             $this->addLine(ESP.'$gride = new TGrid( \'gd\'                        // id do gride');
-            if ($this->gridType == GRID_SQL_PAGINATION) {
+            if ($this->gridType == FormDinHelper::GRID_SQL_PAGINATION) {
                 $this->addLine(ESP.'				   ,\'Gride with SQL Pagination. Qtd: \'.$realTotalRowsSqlPaginator // titulo do gride');
             }else{
                 $this->addLine(ESP.'				   ,\'Gride with Screen Pagination. Qtd: \'.$realTotalRowsSqlPaginator // titulo do gride');
@@ -678,7 +681,7 @@ class TCreateForm extends TCreateFileContent
             $this->addLine(ESP.'				   );');
             $this->addLine(ESP.'$gride->addKeyField( $primaryKey ); // chave primaria');
             $this->addLine(ESP.'$gride->setData( $dados ); // array de dados');
-            if ($this->gridType == GRID_SQL_PAGINATION) {
+            if ($this->gridType == FormDinHelper::GRID_SQL_PAGINATION) {
                 $this->addLine(ESP.'$gride->setRealTotalRowsSqlPaginator( $realTotalRowsSqlPaginator );');
             }
             $this->addLine(ESP.'$gride->setMaxRows( $maxRows );');
@@ -709,7 +712,7 @@ class TCreateForm extends TCreateFileContent
         if ($this->getTableType() == TableInfo::TB_TYPE_PROCEDURE) {
             $this->addLine('$frm->addButton(\'Executar\', null, \'Executar\', null, null, true, false);');
         }else{
-            if ($this->gridType == GRID_SIMPLE) {
+            if ($this->gridType == FormDinHelper::GRID_SIMPLE) {
                 $this->addLine('$frm->addButton(\'Buscar\', null, \'Buscar\', null, null, true, false);');
             } else {
                 $this->addLine('$frm->addButton(\'Buscar\', null, \'btnBuscar\', \'buscar()\', null, true, false);');
@@ -729,7 +732,7 @@ class TCreateForm extends TCreateFileContent
         $this->addBlankLine();
         $this->addLine('defined(\'APLICATIVO\') or die();');
         $this->addBlankLine();
-        if ($this->gridType == GRID_SIMPLE) {
+        if ($this->gridType == FormDinHelper::GRID_SIMPLE) {
             $this->addLine('$whereGrid = \' 1=1 \';');
         }
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
@@ -745,7 +748,7 @@ class TCreateForm extends TCreateFileContent
         }
         $this->addBlankLine();
         $this->addBlankLine();
-        if ($this->gridType != GRID_SIMPLE) {
+        if ($this->gridType != FormDinHelper::GRID_SIMPLE) {
             $this->addLine('$frm->addHiddenField( \'BUSCAR\' ); //Campo oculto para buscas');
         }
         $this->addFields();
