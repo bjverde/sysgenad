@@ -730,39 +730,39 @@ class TCreateForm extends TCreateFileContent
         $this->addLine('<?php');
         $this->addSysGenHeaderNote();
         $this->addBlankLine();
-        $this->addLine('defined(\'APLICATIVO\') or die();');
+        $this->addLine("class ".$this->tableRef." extends TPage");
+        $this->addLine("{");
         $this->addBlankLine();
-        if ($this->gridType == FormDinHelper::GRID_SIMPLE) {
-            $this->addLine('$whereGrid = \' 1=1 \';');
-        }
-        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine('$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
-        }
-        $this->addLine('$frm = new TForm(\''.$this->formTitle.'\',800,950);');
-        $this->addLine('$frm->setShowCloseButton(false);');
-        $this->addLine('$frm->setFlat(true);');
-        $this->addLine('$frm->setMaximize(true);');
-        //$this->addLine('$frm->setAutoSize(true);');  // https://github.com/bjverde/formDin/issues/48 problema com o Chrome
-        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine('$frm->setHelpOnLine(\'Ajuda\',600,980,\'ajuda/ajuda_tela.php\',null);');
-        }
+        $this->addLine(ESP.'protected $form; // registration form');
+        $this->addLine(ESP.'protected $datagrid; // listing');
+        $this->addLine(ESP.'protected $pageNavigation;');
         $this->addBlankLine();
+        $this->addLine(ESP.'// trait com onReload, onSearch, onDelete...');
+        $this->addLine(ESP.'use Adianti\Base\AdiantiStandardListTrait;');
         $this->addBlankLine();
-        if ($this->gridType != FormDinHelper::GRID_SIMPLE) {
-            $this->addLine('$frm->addHiddenField( \'BUSCAR\' ); //Campo oculto para buscas');
-        }
-        $this->addFields();
+        $this->addLine(ESP.'public function __construct()');
+        $this->addLine(ESP.'{');
+        $this->addLine(ESP.ESP.'parent::__construct();');
         $this->addBlankLine();
-        $this->addButtons();
+        $this->addLine(ESP.ESP.'try {');
+        $this->addLine(ESP.ESP.ESP.'$frm = new TFormDin($this,\''.$this->tableRef.'\');');
+        $this->addLine(ESP.ESP.ESP.'$frm->addHiddenField(\'idxx\'); //POG para evitar problema de noticie');
+        $this->addLine(ESP.ESP.ESP.'$this->form = $frm->show();');
         $this->addBlankLine();
-        $this->addBasicaViewController();
+        $this->addLine(ESP.ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
         $this->addBlankLine();
-        if( $this->getTableType() == TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine('$frm->show();');
-            $this->addLine("?>");
-        }else{
-            $this->addGrid();
-        }
+        $this->addLine(ESP.ESP.ESP.'// creates the page structure using a table');
+        $this->addLine(ESP.ESP.ESP.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
+        $this->addLine(ESP.ESP.ESP.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
+        $this->addLine(ESP.ESP.ESP.'$vbox->add($this->form);');
+        $this->addBlankLine();
+        $this->addLine(ESP.ESP.ESP.'// add the table inside the page');
+        $this->addLine(ESP.ESP.ESP.'parent::add($vbox);');
+        $this->addLine(ESP.ESP.'} catch (Exception $e) {');
+        $this->addLine(ESP.ESP.ESP.'new TMessage(\'error\', $e->getMessage());');
+        $this->addLine(ESP.ESP.'}');//FIM try-catch construct
+        $this->addLine(ESP.'}');//FIM construct
+        $this->addLine("}");//FIM class
         return $this->showContent($print);
     }
 }
