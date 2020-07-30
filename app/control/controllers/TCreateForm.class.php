@@ -109,7 +109,7 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function setGridType($gridType)
     {
-        $gridType = ( !empty($gridType) ) ?$gridType : GRID_SIMPLE;
+        $gridType = ( !empty($gridType) ) ?$gridType : FormDinHelper::GRID_SIMPLE;
         $this->gridType = $gridType;
     }
     public function getGridType()
@@ -283,8 +283,8 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     private function addFieldNumber($key, $fieldName, $REQUIRED)
     {
-        $NUM_LENGTH = self::getColumnsPropertieNumLength($key);
-        $NUM_SCALE  = self::getColumnsPropertieNumScale($key);
+        $NUM_LENGTH = $this->getColumnsPropertieNumLength($key);
+        $NUM_SCALE  = $this->getColumnsPropertieNumScale($key);
         $fieldLabel = EasyLabel::convertLabel($fieldName, self::FORMDIN_TYPE_NUMBER);
         
         $this->addLine('$frm->addNumberField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$NUM_LENGTH.','.$REQUIRED.','.$NUM_SCALE.');');
@@ -293,8 +293,8 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     private function addFieldForenAutoComplete($key, $fieldName, $REQUIRED)
     {
-        $NUM_LENGTH = self::getColumnsPropertieNumLength($key);
-        $REFERENCED_TABLE_NAME = self::getColumnsPropertieReferencedTable($key);
+        $NUM_LENGTH = $this->getColumnsPropertieNumLength($key);
+        $REFERENCED_TABLE_NAME = $this->getColumnsPropertieReferencedTable($key);
         $mixUpDatefields = $fieldName.'|'.$fieldName.','.$fieldName.'TEXT|'.$fieldName.'TEXT';
             
         $this->addLine('$frm->addGroupField(\'gpx1'.$fieldName.'\',\''.$fieldName.'\');');
@@ -321,7 +321,7 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     private function addFieldForenKeySelectField($key, $fieldName, $REQUIRED)
     {
-        $REFERENCED_TABLE_NAME = self::getColumnsPropertieReferencedTable($key);
+        $REFERENCED_TABLE_NAME = $this->getColumnsPropertieReferencedTable($key);
         $REFERENCED_TABLE_NAME = $this->getTableRefCC($REFERENCED_TABLE_NAME);
         
         $this->addLine('$controller'.$REFERENCED_TABLE_NAME.' = new '.$REFERENCED_TABLE_NAME.'();');
@@ -333,11 +333,11 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     private function addFieldNumberOrForeignKey($key, $fieldName, $REQUIRED)
     {        
-        $KEY_TYPE   = self::getColumnsPropertieKeyType($key);
+        $KEY_TYPE   = $this->getColumnsPropertieKeyType($key);
         if ($KEY_TYPE != TableInfo::KEY_TYPE_FK) {
             $this->addFieldNumber($key, $fieldName, $REQUIRED);
         } else {            
-            $fkTypeScreenReferenced = self::getFkTypeScreenReferenced($key);
+            $fkTypeScreenReferenced = $this->getFkTypeScreenReferenced($key);
             switch ($fkTypeScreenReferenced) {
                 case self::FORM_FKTYPE_AUTOCOMPLETE:
                     $this->addFieldForenAutoComplete($key, $fieldName, $REQUIRED);
@@ -357,10 +357,10 @@ class TCreateForm extends TCreateFileContent
         if($notPK){
             $key = $key+1;
         }
-        $CHAR_MAX    = self::getColumnsPropertieCharMax($key);
-        $REQUIRED    = self::getColumnsPropertieRequired($key);
+        $CHAR_MAX    = $this->getColumnsPropertieCharMax($key);
+        $REQUIRED    = $this->getColumnsPropertieRequired($key);
         //$DATA_TYPE   = self::getColumnsPropertieDataType($key);
-        $formDinType = self::getColumnsPropertieFormDinType($key);
+        $formDinType = $this->getColumnsPropertieFormDinType($key);
 
         switch ($formDinType) {
             case self::FORMDIN_TYPE_DATE:
