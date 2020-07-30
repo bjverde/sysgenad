@@ -39,7 +39,7 @@ class TCreateMenu extends TCreateFileContent
             if ($tableTypeObj == $tableType) {
                 $this->addLine($ESP.ESP.'<menuitem label=\''.$table.'\'>');
                 $this->addLine($ESP.ESP.ESP.'<icon>fa:book fa-fw</icon>');
-                $this->addLine($ESP.ESP.ESP.'<action>'.$table.'</action>');
+                $this->addLine($ESP.ESP.ESP.'<action>'.$table.'Form</action>');
                 $this->addLine($ESP.ESP.'</menuitem>');
             }
         }

@@ -48,7 +48,7 @@ class TCreateForm extends TCreateFileContent
         $tableName = strtolower($tableName);
         $this->setFormTitle($tableName);
         $this->setTableRef($tableName);
-        $this->setFileName(strtolower($tableName).'.php');
+        $this->setFileName(strtolower($tableName).'Form.class.php');
         $this->setFilePath($pathFolder);
         $this->setListColumnsProperties($listColumnsProperties);
         $this->configArrayColumns();
@@ -730,7 +730,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine('<?php');
         $this->addSysGenHeaderNote();
         $this->addBlankLine();
-        $this->addLine("class ".$this->tableRef." extends TPage");
+        $this->addLine("class ".$this->tableRef."Form extends TPage");
         $this->addLine("{");
         $this->addBlankLine();
         $this->addLine(ESP.'protected $form; // registration form');
