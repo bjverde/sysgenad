@@ -138,7 +138,7 @@ class TCreateMenuTest extends TestCase
     
     public function testAddBasicMenuCruds_3tables()
     {
-        $expected = 5; //3 Tables + 1 header line
+        $expected = 17; //3 Tables + 1 header line
         $listTableNames   = $this->mockDatabase->generateTablesSelected3t5v();
         $this->createMenu->setListTableNames($listTableNames);
         $this->createMenu->addBasicMenuCruds();
@@ -149,7 +149,7 @@ class TCreateMenuTest extends TestCase
     
     public function testAddBasicMenuCruds_1tables()
     {
-        $expected = 5; //1 Tables + 1 header line
+        $expected = 9; //1 Tables + 1 header line
         $listTableNames   = $this->mockDatabase->generateTablesSelected1t7v();
         $this->createMenu->setListTableNames($listTableNames);
         $this->createMenu->addBasicMenuCruds();
@@ -160,7 +160,7 @@ class TCreateMenuTest extends TestCase
     
     public function testAddBasicMenuViews_5Views()
     {
-        $expected = 5; //5 Views + 1 header line
+        $expected = 25; //5 Views + 1 header line
         $listTableNames   = $this->mockDatabase->generateTablesSelected3t5v();
         $this->createMenu->setListTableNames($listTableNames);
         $this->createMenu->addBasicMenuViews();
@@ -171,7 +171,7 @@ class TCreateMenuTest extends TestCase
     
     public function testAddBasicMenuViews_7Views()
     {
-        $expected = 5; //7 Views + 1 header line
+        $expected = 33; //7 Views + 1 header line
         $listTableNames   = $this->mockDatabase->generateTablesSelected1t7v();
         $this->createMenu->setListTableNames($listTableNames);
         $this->createMenu->addBasicMenuViews();
@@ -182,7 +182,7 @@ class TCreateMenuTest extends TestCase
 
     public function testAddBasicMenuViews_2StoredProcedure()
     {
-        $expected = 5; //2 SP + 1 header line
+        $expected = 13; //2 SP + 1 header line
         $listTableNames   = $this->mockDatabase->generateTablesSelected3t5v2p();
         $this->createMenu->setListTableNames($listTableNames);
         $this->createMenu->addBasicMenuProcedure();
