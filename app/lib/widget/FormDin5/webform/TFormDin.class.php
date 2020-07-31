@@ -1013,6 +1013,74 @@ class TFormDin
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
+
+    /**
+     * Adiciona campo de entrada de dados numérico
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     * 
+     * @param string $strName            - 1: ID do campo
+     * @param string $strLabel           - 2: Label do campo, que irá aparecer na tela do usuario
+     * @param integer $intMaxLength      - 3: Quantidade maxima de digitos.
+     * @param boolean $boolRequired      - 4: Obrigatorio
+     * @param integer $intDecimalPlaces  - 5: Quantidade de casas decimais.
+     * @param boolean $boolNewLine       - 6: Campo em nova linha. Default = true = inicia em nova linha, false = continua na linha anterior 
+     * @param string $strValue           - 7: valor inicial do campo
+     * @param string $strMinValue        - 8: valor minimo permitido. Null = não tem limite.
+     * @param string $strMaxValue        - 9: valor maxima permitido. Null = não tem limite.
+     * @param boolean $boolFormatInteger -10: Inteiros com ou sem ponto de separação
+     * @param string $strDirection       -11:
+     * @param boolean $boolAllowZero     -12:
+     * @param boolean $boolAllowNull     -13:
+     * @param boolean $boolLabelAbove    -14:
+     * @param boolean $boolNoWrapLabel   -15:
+     * @param string $strHint            -16:
+     * @return TNumber
+     */       
+	public function addNumberField( $strName
+				           		, $strLabel=null
+				           		, $intMaxLength
+				           		, $boolRequired=null
+				           		, $intDecimalPlaces=null
+				           		, $boolNewLine=null
+				           		, $strValue=null
+				           		, $strMinValue=null
+				           		, $strMaxValue=null
+				           		, $boolFormatInteger=null
+				           		, $strDirection=null
+				           		, $boolAllowZero=null
+				           		, $boolAllowNull=null
+				           		, $boolLabelAbove=null
+				           		, $boolNoWrapLabel=null
+				           		, $strHint=null )
+	{
+		$formField = new TFormDinNumericField( $strName
+                                            , $strLabel
+                                            , $intMaxLength
+                                            , $boolRequired
+                                            , $intDecimalPlaces
+                                            , $boolNewLine
+                                            , $strValue
+                                            , $strMinValue
+                                            , $strMaxValue
+                                            , $boolFormatInteger
+                                            , $strDirection
+                                            , $boolAllowZero
+                                            , $boolAllowNull
+                                            , $boolLabelAbove
+                                            , $boolNoWrapLabel
+                                            , $strHint);
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+	}
+
+
+
     //----------------------------------------------------------------
     //----------------------------------------------------------------
     //----------------------------------------------------------------

@@ -40,7 +40,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-class TFormDinNumericField
+class TFormDinNumericField extends TFormDinGenericField
 {
     const COMMA = ',';
     const DOT = '.';
@@ -73,12 +73,12 @@ class TFormDinNumericField
      * @return TNumber
      */ 
     public function __construct(string $id
-                               ,string $strLabel
+                               ,string $label
                                ,int $intMaxLength = null
                                ,$boolRequired = false
                                ,int $decimalPlaces=null
                                ,$boolNewLine=null
-                               ,$strValue=null
+                               ,$value=null
                                ,$strMinValue=null
                                ,$strMaxValue=null
                                ,$boolFormatInteger=null
@@ -87,34 +87,19 @@ class TFormDinNumericField
                                ,$boolAllowNull=null
                                ,$boolLabelAbove=null
                                ,$boolNoWrapLabel=null
-                               ,$strHint=null
+                               ,$placeholder=null
                                ,string $strExampleText =null)
     {
         $decimalsSeparator = $this->getDecimalsSeparator();
         $thousandSeparator = $this->getThousandSeparator();
-        $this->setLabel($strLabel);
-        $this->adiantiObj = new TNumeric($id, $decimalPlaces, $decimalsSeparator, $thousandSeparator, $replaceOnPost = true);
-        $this->adiantiObj->setId($id);
-        $this->setRequired($boolRequired);
-        if(!empty($strValue)){
-            $this->adiantiObj->setValue($strValue);
-        }
+        $adiantiObj = new TNumeric($id, $decimalPlaces, $decimalsSeparator, $thousandSeparator, $replaceOnPost = true);
+        parent::__construct($adiantiObj,$id,$label,$boolRequired,$value,$placeholder);
+
         $this->setMaxLength($intMaxLength);
         $this->setMinValue($strMinValue);
         $this->setMaxValue($strMaxValue);
         $this->setExampleText($strExampleText);
         return $this->getAdiantiObj();
-    }
-
-    public function getAdiantiObj(){
-        return $this->adiantiObj;
-    }
-
-    public function getLabel(){
-        return $this->label;
-    }
-    public function setLabel($label){
-        $this->label = $label;
     }
 
     public function getDecimalsSeparator(){
@@ -145,40 +130,26 @@ class TFormDinNumericField
         $this->thousandSeparator = $thousandSeparator;
     }
 
-    public function setRequired($boolRequired){
-        if($boolRequired){
-            $strLabel = $this->getLabel();
-            $this->adiantiObj->addValidation($strLabel, new TRequiredValidator);
-        }
-    }
-
-    public function setExampleText($placeholder)
-    {
-        if(!empty($placeholder)){
-            $this->adiantiObj->placeholder = $placeholder;
-        }
-    }
-
     public function setMaxLength($intMaxLength)
     {
         if($intMaxLength>=1){
-            $strLabel = $this->getLabel();
-            $this->adiantiObj->addValidation($strLabel, new TMaxLengthValidator, array($intMaxLength));
+            $strLabel = $this->getLabelTxt();
+            $this->getAdiantiObj()->addValidation($strLabel, new TMaxLengthValidator, array($intMaxLength));
         }
     }
     public function setMinValue($strMinValue)
     {
         if(is_int($strMinValue)){
-            $strLabel = $this->getLabel();
-            $this->adiantiObj->addValidation($strLabel, new TMinValueValidator, array($strMinValue));
+            $strLabel = $this->getLabelTxt();
+            $this->getAdiantiObj()->addValidation($strLabel, new TMinValueValidator, array($strMinValue));
         }
     }
 
     public function setMaxValue($strMaxValue)
     {
         if(is_int($strMaxValue)){
-            $strLabel = $this->getLabel();
-            $this->adiantiObj->addValidation($strLabel, new TMaxValueValidator, array($strMaxValue));
+            $strLabel = $this->getLabelTxt();
+            $this->getAdiantiObj()->addValidation($strLabel, new TMaxValueValidator, array($strMaxValue));
         }
     }
 }
