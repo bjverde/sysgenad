@@ -767,26 +767,22 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'parent::__construct();');
         $this->addBlankLine();
-        $this->addLine(ESP.ESP.'try {');
-        $this->addLine(ESP.ESP.ESP.'$frm = new TFormDin($this,\''.$this->tableRef.'\');');
-        $this->addLine(ESP.ESP.ESP.'$frm->addHiddenField(\'idxx\'); //POG para evitar problema de noticie');
-        $this->addLine(ESP.ESP.ESP.'$this->form = $frm->show();');
+        $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->tableRef.'\');');
+        $this->addLine(ESP.ESP.'$frm->addHiddenField(\'idxx\'); //POG para evitar problema de noticie');
+        $this->addLine(ESP.ESP.'$this->form = $frm->show();');
         $this->addBlankLine();
-        $this->addLine(ESP.ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
+        $this->addLine(ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
         $this->addBlankLine();
-        $this->addLine(ESP.ESP.ESP.'// creates the page structure using a table');
-        $this->addLine(ESP.ESP.ESP.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
-        $this->addLine(ESP.ESP.ESP.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
+        $this->addLine(ESP.ESP.'// creates the page structure using a table');
+        $this->addLine(ESP.ESP.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
+        $this->addLine(ESP.ESP.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
         $this->addBlankLine();
-        $this->addButtons(ESP.ESP.ESP);
+        $this->addButtons(ESP.ESP);
         $this->addBlankLine();
-        $this->addLine(ESP.ESP.ESP.'$vbox->add($this->form);');
+        $this->addLine(ESP.ESP.'$vbox->add($this->form);');
         $this->addBlankLine();
-        $this->addLine(ESP.ESP.ESP.'// add the table inside the page');
-        $this->addLine(ESP.ESP.ESP.'parent::add($vbox);');
-        $this->addLine(ESP.ESP.'} catch (Exception $e) {');
-        $this->addLine(ESP.ESP.ESP.'new TMessage(\'error\', $e->getMessage());');
-        $this->addLine(ESP.ESP.'}');//FIM try-catch construct
+        $this->addLine(ESP.ESP.'// add the table inside the page');
+        $this->addLine(ESP.ESP.'parent::add($vbox);');
         $this->addLine(ESP.'}');//FIM construct
         $this->addBasicViewController(null);
         $this->addLine("}");//FIM class
