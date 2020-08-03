@@ -707,6 +707,29 @@ class TCreateForm extends TCreateFileContent
         }
     }
     //--------------------------------------------------------------------------------------
+    public function addMethod_onSave($qtdTab)
+    {
+        $this->addLine($qtdTab.'public function onSave($param)');
+        $this->addLine($qtdTab.'{');
+        $this->addLine($qtdTab.ESP.'try{');
+        $this->addLine($qtdTab.ESP.'$this->form->validate();');
+        $this->addLine($qtdTab.ESP.'$data = $this->form->getData();');
+        $this->addLine($qtdTab.ESP.'$this->form->setData($data);');        
+        $this->addLine($qtdTab.'}');
+    }    
+    //--------------------------------------------------------------------------------------
+    public function addMethod_onClear($qtdTab)
+    {
+        $this->addLine($qtdTab.'/**');
+        $this->addLine($qtdTab.' * Clear filters');
+        $this->addLine($qtdTab.' */');
+        $this->addLine($qtdTab.'public function onClear()');
+        $this->addLine($qtdTab.'{');
+        $this->addLine($qtdTab.ESP.'$this->clearFilters();');
+        $this->addLine($qtdTab.ESP.'$this->onReload();');
+        $this->addLine($qtdTab.'}');
+    }    
+    //--------------------------------------------------------------------------------------
     public function addButtons($qtdTab)
     {
         $this->addLine($qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve');
@@ -758,6 +781,10 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.'}');//FIM try-catch construct
         $this->addLine(ESP.'}');//FIM construct
         $this->addLine("}");//FIM class
+        $this->addBlankLine();
+        $this->addMethod_onClear(null);
+        $this->addBlankLine();
+        $this->addBlankLine();
         return $this->showContent($print);
     }
 }

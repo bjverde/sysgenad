@@ -217,7 +217,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_numLines(){
-	    $expectedQtd = 52;
+	    $expectedQtd = 63;
 	    
 	    $this->create->setTableType(TableInfo::TB_TYPE_VIEW);
 	    $resultArray = $this->create->show('array');
