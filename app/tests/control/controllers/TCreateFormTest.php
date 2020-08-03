@@ -164,7 +164,25 @@ class TCreateFormTest extends TestCase
 	    $this->assertSame($expected, $size);
 	}
 	
-	public function testAddButtons(){
+	public function testAddButtons_VIEW(){
+		$qtdTab = ESP.ESP.ESP;
+	    $expected = array();
+	    $expected[] = $qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
+	    $expected[] = $qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo'.EOL;
+		$expected[] = $qtdTab.'//primeiro em ingles e depois traduzindo'.EOL;
+		$expected[] = $qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');'.EOL;
+	
+		$this->create->setTableType(TableInfo::TB_TYPE_VIEW);
+	    $this->create->addButtons($qtdTab);
+	    $result = $this->create->getLinesArray();
+	    
+	    $this->assertSame($expected[0], $result[0]);
+	    $this->assertSame($expected[1], $result[1]);
+		$this->assertSame($expected[2], $result[2]);
+		$this->assertSame($expected[3], $result[3]);
+	}
+
+	public function testAddButtons_TABLE(){
 		$qtdTab = ESP.ESP.ESP;
 	    $expected = array();
 	    $expected[] = $qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
@@ -173,6 +191,7 @@ class TCreateFormTest extends TestCase
 		$expected[] = $qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );'.EOL;
 		$expected[] = $qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');'.EOL;
 	
+		$this->create->setTableType(TableInfo::TB_TYPE_TABLE);
 	    $this->create->addButtons($qtdTab);
 	    $result = $this->create->getLinesArray();
 	    
@@ -243,23 +262,40 @@ class TCreateFormTest extends TestCase
 	    $this->assertEquals( $expectedQtd, $size);
 	}
 	
-	public function testShow_numLines(){
-	    $expectedQtd = 83;
-	    
-	    $this->create->setTableType(TableInfo::TB_TYPE_VIEW);
-	    $resultArray = $this->create->show('array');
-	    $size = CountHelper::count($resultArray);
-	    $this->assertEquals( $expectedQtd, $size);
-	}
-	
-	public function testShow(){
+	public function testShow_VIEW(){
+		$expectedQtd = 82;
+
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
 		$expected[15] = ESP.'protected $form; // registration form'.EOL;
 		$expected[16] = ESP.'protected $datagrid; // listing'.EOL;
 		$expected[17] = ESP.'protected $pageNavigation;'.EOL;
 	    
-	    $resultArray = $this->create->show('array');
+		$this->create->setTableType(TableInfo::TB_TYPE_VIEW);
+		$resultArray = $this->create->show('array');
+		$size = CountHelper::count($resultArray);
+		
+		$this->assertEquals( $expectedQtd, $size );
+		$this->assertSame($expected[12], $resultArray[12]);
+		$this->assertSame($expected[15], $resultArray[15]);
+		$this->assertSame($expected[16], $resultArray[16]);
+		$this->assertSame($expected[17], $resultArray[17]);
+	}
+	
+	public function testShow_TABLE(){
+		$expectedQtd = 83;
+
+	    $expected = array();
+		$expected[12] = 'class testForm extends TPage'.EOL;
+		$expected[15] = ESP.'protected $form; // registration form'.EOL;
+		$expected[16] = ESP.'protected $datagrid; // listing'.EOL;
+		$expected[17] = ESP.'protected $pageNavigation;'.EOL;
+		
+		$this->create->setTableType(TableInfo::TB_TYPE_TABLE);
+		$resultArray = $this->create->show('array');
+		$size = CountHelper::count($resultArray);
+		
+		$this->assertEquals( $expectedQtd, $size );
 		$this->assertSame($expected[12], $resultArray[12]);
 		$this->assertSame($expected[15], $resultArray[15]);
 		$this->assertSame($expected[16], $resultArray[16]);

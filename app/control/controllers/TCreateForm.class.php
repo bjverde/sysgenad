@@ -494,7 +494,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.'break;');
     }    
     //--------------------------------------------------------------------------------------
-    private function addBasicaViewController()
+    private function addBasicViewController()
     {
         $this->addBlankLine();
         $this->addLine('$acao = isset($acao) ? $acao : null;');
@@ -750,7 +750,9 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve');
         $this->addLine($qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo');
         $this->addLine($qtdTab.'//primeiro em ingles e depois traduzindo');
-        $this->addLine($qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );');
+        if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
+            $this->addLine($qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );');
+        }
         $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');');
     }
     //--------------------------------------------------------------------------------------
