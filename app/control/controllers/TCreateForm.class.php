@@ -769,6 +769,9 @@ class TCreateForm extends TCreateFileContent
         $this->addBlankLine();
         $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->tableRef.'\');');
         $this->addLine(ESP.ESP.'$frm->addHiddenField(\'idxx\'); //POG para evitar problema de noticie');
+        $this->addBlankLine();
+        $this->addButtons(ESP.ESP);
+        $this->addBlankLine();        
         $this->addLine(ESP.ESP.'$this->form = $frm->show();');
         $this->addBlankLine();
         $this->addLine(ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
@@ -776,9 +779,6 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.'// creates the page structure using a table');
         $this->addLine(ESP.ESP.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
         $this->addLine(ESP.ESP.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
-        $this->addBlankLine();
-        $this->addButtons(ESP.ESP);
-        $this->addBlankLine();
         $this->addLine(ESP.ESP.'$vbox->add($this->form);');
         $this->addBlankLine();
         $this->addLine(ESP.ESP.'// add the table inside the page');
