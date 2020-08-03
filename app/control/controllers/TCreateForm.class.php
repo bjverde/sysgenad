@@ -630,62 +630,16 @@ class TCreateForm extends TCreateFileContent
     }
     //--------------------------------------------------------------------------------------
     public function addGrid()
-    {
-        
-        if ($this->gridType == FormDinHelper::GRID_SIMPLE) {
-            $this->addBasicaGrid();
-            $this->addBlankLine();
-            $this->addLine('$frm->show();');
-            $this->addLine("?>");
-        } else {
-            $this->addGetWhereGridParameters();
-            $this->addBlankLine();
-            $this->addLine('if( isset( $_REQUEST[\'ajax\'] )  && $_REQUEST[\'ajax\'] ) {');
-            $this->addLine(ESP.'$maxRows = ROWS_PER_PAGE;');
-            $this->addLine(ESP.'$whereGrid = getWhereGridParameters($frm);');
-            $this->addLine(ESP.'$controller = new '.$this->tableRefClass.'();');
-            if ($this->gridType == FormDinHelper::GRID_SQL_PAGINATION) {
-                $this->addLine(ESP.'$page = PostHelper::get(\'page\');');                
-                $this->addLine(ESP.'$dados = $controller->selectAllPagination( $primaryKey.\' DESC\', $whereGrid, $page,  $maxRows);');
-                $this->addLine(ESP.'$realTotalRowsSqlPaginator = $controller->selectCount( $whereGrid );');
-            } elseif ($this->gridType == FormDinHelper::GRID_SCREEN_PAGINATION) {
-                $this->addLine(ESP.'$dados = $controller->selectAll($primaryKey.\' DESC\',$whereGrid);');
-                $this->addLine(ESP.'$realTotalRowsSqlPaginator = $controller->selectCount( $whereGrid );');
-            }
-            $this->getMixUpdateFields(ESP);
-            $this->addLine(ESP.'$gride = new TGrid( \'gd\'                        // id do gride');
-            if ($this->gridType == FormDinHelper::GRID_SQL_PAGINATION) {
-                $this->addLine(ESP.'				   ,\'Gride with SQL Pagination. Qtd: \'.$realTotalRowsSqlPaginator // titulo do gride');
-            }else{
-                $this->addLine(ESP.'				   ,\'Gride with Screen Pagination. Qtd: \'.$realTotalRowsSqlPaginator // titulo do gride');
-            }
-            $this->addLine(ESP.'				   );');
-            $this->addLine(ESP.'$gride->addKeyField( $primaryKey ); // chave primaria');
-            $this->addLine(ESP.'$gride->setData( $dados ); // array de dados');
-            if ($this->gridType == FormDinHelper::GRID_SQL_PAGINATION) {
-                $this->addLine(ESP.'$gride->setRealTotalRowsSqlPaginator( $realTotalRowsSqlPaginator );');
-            }
-            $this->addLine(ESP.'$gride->setMaxRows( $maxRows );');
-            $this->addLine(ESP.'$gride->setUpdateFields($mixUpdateFields);');
-            $this->addLine(ESP.'$gride->setUrl( \''.$this->getFormFileName().'\' );');
-            $this->addBlankLine();
-            $this->addColumnsGrid(ESP);
-            $this->addBlankLine();
-            if ($this->getTableType() == TableInfo::TB_TYPE_VIEW) {
-                $this->addLine(ESP.'$gride->enableDefaultButtons(false);');
-            }
-            $this->addBlankLine();
-            $this->addLine(ESP.'$gride->show();');
-            $this->addLine(ESP.'die();');
-            $this->addLine('}');
-            $this->addBlankLine();
-            $this->addLine('$frm->addHtmlField(\'gride\');');
-            $this->addLine('$frm->addJavascript(\'init()\');');
-            $this->addLine('$frm->show();');
-            $this->addBlankLine();
-            $this->addLine("?>");
-            $this->addGridPagination_jsScript();
-        }
+    {   
+        $this->addBlankLine();     
+        $this->addLine('$grid = new TFormDinGrid($this,\'grid\',\'Gride\');');
+        $this->addColumnsGrid(ESP);
+        $this->addBlankLine();
+        $this->addLine('$this->datagrid = $grid->show();');
+        $this->addLine('//$this->pageNavigation = $grid->getPageNavigation();');
+        $this->addLine('$panelGroupGrid = $grid->getPanelGroupGrid();');
+        $this->addBlankLine();
+        $this->addBlankLine();
     }
     //--------------------------------------------------------------------------------------
     public function addMethod_onSave($qtdTab)
@@ -771,13 +725,15 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.'$this->setActiveRecord(\''.$this->tableRef.'\'); // define the Active Record');
         $this->addLine(ESP.ESP.'$this->setDefaultOrder(\''.$this->getPrimaryKeyTable().'\', \'asc\'); // define the default order');
         $this->addBlankLine();
+        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
+            $this->addLine('$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
+        }        
         $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
         $this->addLine(ESP.ESP.'$frm->addHiddenField(\'idxx\'); //POG para evitar problema de noticie');
         $this->addBlankLine();
         $this->addButtons(ESP.ESP);
         $this->addBlankLine();        
         $this->addLine(ESP.ESP.'$this->form = $frm->show();');
-        $this->addBlankLine();
         $this->addLine(ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
         $this->addBlankLine();
         $this->addLine(ESP.ESP.'// creates the page structure using a table');

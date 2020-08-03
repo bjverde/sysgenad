@@ -135,60 +135,12 @@ class TCreateFormTest extends TestCase
 	    $expected = TCreateForm::FORMDIN_TYPE_NUMBER;
 	    $result = TCreateForm::convertDataType2FormDinType('TINYINT');
 	    $this->assertSame($expected, $result);
-	}
-	
-	public function testShow_GridSimple_numlines(){
-	    $expectedQtd = 23;
-	    
-	    $this->create->setGridType(FormDinHelper::GRID_SIMPLE);
-	    $this->create->setTableType(TableInfo::TB_TYPE_TABLE);
-	    $this->create->addGrid();
-	    $result = $this->create->getLinesArray();
-	    
-	    $size = CountHelper::count($result);
-	    $this->assertEquals( $expectedQtd, $size);
-	}
-	
-	public function testAddGrid_GridSimple(){
-	    $expected = array();
-	    $expected[] = EOL;
-	    $expected[] = '$controller = new Test();'.EOL;
-	    $expected[] = '$dados = $controller->selectAll($primaryKey,$whereGrid);'.EOL;
-	    $expected[] = '$mixUpdateFields = $primaryKey.\'|\'.$primaryKey'.EOL;
-	    $expected[] = '                .\',NM_TEST|NM_TEST\''.EOL;
-	    $expected[] = '                .\',TIP_TEST|TIP_TEST\''.EOL;
-	    $expected[] = '                ;'.EOL;
-	    
-	    $this->create->setGridType(FormDinHelper::GRID_SIMPLE);
-	    $this->create->setTableType(TableInfo::TB_TYPE_TABLE);
-	    $this->create->addGrid();
-	    $result = $this->create->getLinesArray();
-	    
-	    $this->assertSame($expected[0], $result[0]);
-	    $this->assertSame($expected[1], $result[1]);
-	    $this->assertSame($expected[2], $result[2]);
-	    $this->assertSame($expected[3], $result[3]);
-	    $this->assertSame($expected[4], $result[4]);
-	    $this->assertSame($expected[5], $result[5]);
-	}
-	
-	
-	public function testShow_GridSqlPaginator_numlines(){
-	    $expectedQtd = 65;
-	    
-	    $this->create->setGridType(FormDinHelper::GRID_SQL_PAGINATION);
-	    $this->create->setTableType(TableInfo::TB_TYPE_TABLE);
-	    $this->create->addGrid();
-	    $result = $this->create->getLinesArray();
-	    
-	    $size = CountHelper::count($result);
-	    $this->assertEquals( $expectedQtd, $size);
 	}	
 	
-	public function testShow_GridScreenPaginator_numlines(){
-	    $expectedQtd = 63;
+	public function testShow_Grid_Paginator(){
+	    $expectedQtd = 12;
 	    
-	    $this->create->setGridType(FormDinHelper::GRID_SCREEN_PAGINATION);
+	    $this->create->setGridType(FormDinHelper::GRID_SQL_PAGINATION);
 	    $this->create->setTableType(TableInfo::TB_TYPE_TABLE);
 	    $this->create->addGrid();
 	    $result = $this->create->getLinesArray();
@@ -263,7 +215,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW(){
-		$expectedQtd = 58;
+		$expectedQtd = 62;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
@@ -283,7 +235,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_TABLE(){
-		$expectedQtd = 79;
+		$expectedQtd = 83;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
