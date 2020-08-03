@@ -136,33 +136,6 @@ class TCreateFormTest extends TestCase
 	    $result = TCreateForm::convertDataType2FormDinType('TINYINT');
 	    $this->assertSame($expected, $result);
 	}
-
-	public function testAddMethod_onSave(){
-		$expectedSize = 20;
-		$qtdTab = null;
-		$expected = array();
-		$expected[2] = $qtdTab.'public function onSave($param)'.EOL;
-		$expected[3] = $qtdTab.'{'.EOL;
-	
-	    $this->create->addMethod_onSave($qtdTab);
-		$result = $this->create->getLinesArray();
-		$size = CountHelper::count($result);
-	    
-		$this->assertSame($expectedSize, $size);
-		$this->assertSame($expected[2], $result[2]);
-		$this->assertSame($expected[3], $result[3]);
-	}	
-
-	public function testAddMethod_onClear(){
-	    $expected = 10;
-		$qtdTab = ESP.ESP.ESP;
-	
-	    $this->create->addMethod_onClear($qtdTab);
-		$result = $this->create->getLinesArray();
-		$size = CountHelper::count($result);
-	    
-	    $this->assertSame($expected, $size);
-	}
 	
 	public function testShow_GridSimple_numlines(){
 	    $expectedQtd = 23;
@@ -223,6 +196,33 @@ class TCreateFormTest extends TestCase
 	    $size = CountHelper::count($result);
 	    $this->assertEquals( $expectedQtd, $size);
 	}
+
+	public function testAddMethod_onSave(){
+		$expectedSize = 20;
+		$qtdTab = null;
+		$expected = array();
+		$expected[2] = $qtdTab.'public function onSave($param)'.EOL;
+		$expected[3] = $qtdTab.'{'.EOL;
+	
+	    $this->create->addMethod_onSave($qtdTab);
+		$result = $this->create->getLinesArray();
+		$size = CountHelper::count($result);
+	    
+		$this->assertSame($expectedSize, $size);
+		$this->assertSame($expected[2], $result[2]);
+		$this->assertSame($expected[3], $result[3]);
+	}	
+
+	public function testAddMethod_onClear(){
+	    $expected = 10;
+		$qtdTab = ESP.ESP.ESP;
+	
+	    $this->create->addMethod_onClear($qtdTab);
+		$result = $this->create->getLinesArray();
+		$size = CountHelper::count($result);
+	    
+	    $this->assertSame($expected, $size);
+	}	
 
 	public function testAddButtons_VIEW(){
 		$qtdTab = ESP.ESP.ESP;
