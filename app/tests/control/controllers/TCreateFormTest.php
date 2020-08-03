@@ -256,7 +256,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW_numLines(){
-	    $expectedQtd = 101;
+	    $expectedQtd = 45;
 	    
 	    $this->create->setTableType(TableInfo::TB_TYPE_VIEW);
 	    $resultArray = $this->create->show('array');
@@ -265,7 +265,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW_GridSqlPagination_numLines(){
-	    $expectedQtd = 105;
+	    $expectedQtd = 45;
 	    
 	    $this->create->setGridType(FormDinHelper::GRID_SQL_PAGINATION);
 	    $this->create->setTableType(TableInfo::TB_TYPE_VIEW);
@@ -275,7 +275,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_TABLE_numLines(){
-	    $expectedQtd = 100;	    
+	    $expectedQtd = 45;	    
 	    
 	    $resultArray = $this->create->show('array');
 	    $size = CountHelper::count($resultArray);
@@ -283,7 +283,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_TABLE_GridSqlPagination_numLines(){
-	    $expectedQtd = 104;
+	    $expectedQtd = 45;
 	    
 	    $this->create->setGridType(FormDinHelper::GRID_SQL_PAGINATION);
 	    $resultArray = $this->create->show('array');
@@ -293,7 +293,7 @@ class TCreateFormTest extends TestCase
 	
 	public function testShow(){
 	    $expected = array();
-	    $expected[12] = 'defined(\'APLICATIVO\') or die();'.EOL;
+	    $expected[12] = 'class testForm extends TPage'.EOL;
 	    
 	    $resultArray = $this->create->show('array');
 	    $this->assertSame($expected[12], $resultArray[12]);
