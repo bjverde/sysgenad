@@ -795,6 +795,7 @@ class TCreateForm extends TCreateFileContent
         $this->addBlankLine();
         $this->addMethod_onClear(null);
         $this->addBlankLine();
+        $this->addMethod_onSave(null);
         $this->addBlankLine();
         return $this->showContent($print);
     }

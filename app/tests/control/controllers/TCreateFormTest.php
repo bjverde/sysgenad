@@ -244,7 +244,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_numLines(){
-	    $expectedQtd = 63;
+	    $expectedQtd = 81;
 	    
 	    $this->create->setTableType(TableInfo::TB_TYPE_VIEW);
 	    $resultArray = $this->create->show('array');
@@ -254,9 +254,15 @@ class TCreateFormTest extends TestCase
 	
 	public function testShow(){
 	    $expected = array();
-	    $expected[12] = 'class testForm extends TPage'.EOL;
+		$expected[12] = 'class testForm extends TPage'.EOL;
+		$expected[15] = ESP.'protected $form; // registration form'.EOL;
+		$expected[16] = ESP.'protected $datagrid; // listing'.EOL;
+		$expected[17] = ESP.'protected $pageNavigation;'.EOL;
 	    
 	    $resultArray = $this->create->show('array');
-	    $this->assertSame($expected[12], $resultArray[12]);
+		$this->assertSame($expected[12], $resultArray[12]);
+		$this->assertSame($expected[15], $resultArray[15]);
+		$this->assertSame($expected[16], $resultArray[16]);
+		$this->assertSame($expected[17], $resultArray[17]);
 	}
 }
