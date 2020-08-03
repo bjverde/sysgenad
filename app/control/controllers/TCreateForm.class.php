@@ -735,11 +735,14 @@ class TCreateForm extends TCreateFileContent
         $this->addBlankLine();        
         $this->addLine(ESP.ESP.'$this->form = $frm->show();');
         $this->addLine(ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
-        $this->addBlankLine();
+        $this->addGrid();
         $this->addLine(ESP.ESP.'// creates the page structure using a table');
         $this->addLine(ESP.ESP.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
         $this->addLine(ESP.ESP.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
         $this->addLine(ESP.ESP.'$vbox->add($this->form);');
+        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
+            $this->addLine('$vbox->add($panelGroupGrid);');
+        }        
         $this->addBlankLine();
         $this->addLine(ESP.ESP.'// add the table inside the page');
         $this->addLine(ESP.ESP.'parent::add($vbox);');
