@@ -709,6 +709,8 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function addMethod_onSave($qtdTab)
     {
+        $this->addBlankLine();
+        $this->addLine();
         $this->addLine($qtdTab.'public function onSave($param)');
         $this->addLine($qtdTab.'{');
         $this->addLine($qtdTab.ESP.'try{');
@@ -726,11 +728,13 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.ESP.ESP.'new TMessage(\'error\', $e->getMessage());');
         $this->addLine($qtdTab.ESP.'}');
         $this->addBlankLine();
-        $this->addLine($qtdTab.'}');
+        $this->addLine($qtdTab.'} //END onSave');
     }    
     //--------------------------------------------------------------------------------------
     public function addMethod_onClear($qtdTab)
     {
+        $this->addBlankLine();
+        $this->addLine();
         $this->addLine($qtdTab.'/**');
         $this->addLine($qtdTab.' * Clear filters');
         $this->addLine($qtdTab.' */');
@@ -738,7 +742,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.'{');
         $this->addLine($qtdTab.ESP.'$this->clearFilters();');
         $this->addLine($qtdTab.ESP.'$this->onReload();');
-        $this->addLine($qtdTab.'}');
+        $this->addLine($qtdTab.'} //END onClear');
     }    
     //--------------------------------------------------------------------------------------
     public function addButtons($qtdTab)
@@ -791,12 +795,10 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.ESP.'new TMessage(\'error\', $e->getMessage());');
         $this->addLine(ESP.ESP.'}');//FIM try-catch construct
         $this->addLine(ESP.'}');//FIM construct
-        $this->addLine("}");//FIM class
-        $this->addBlankLine();
         $this->addMethod_onClear(null);
-        $this->addBlankLine();
         $this->addMethod_onSave(null);
         $this->addBlankLine();
+        $this->addLine("}");//FIM class
         return $this->showContent($print);
     }
 }
