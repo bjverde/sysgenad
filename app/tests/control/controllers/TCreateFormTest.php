@@ -138,11 +138,11 @@ class TCreateFormTest extends TestCase
 	}	
 	
 	public function testShow_Grid_Paginator(){
-	    $expectedQtd = 12;
+	    $expectedQtd = 11;
 	    
 	    $this->create->setGridType(FormDinHelper::GRID_SQL_PAGINATION);
 	    $this->create->setTableType(TableInfo::TB_TYPE_TABLE);
-	    $this->create->addGrid();
+	    $this->create->addGrid(null);
 	    $result = $this->create->getLinesArray();
 	    
 	    $size = CountHelper::count($result);
@@ -215,7 +215,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW(){
-		$expectedQtd = 74;
+		$expectedQtd = 73;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
@@ -235,7 +235,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_TABLE(){
-		$expectedQtd = 95;
+		$expectedQtd = 94;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;

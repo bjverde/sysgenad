@@ -507,8 +507,8 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function addColumnsGrid($qtdTab)
     {
-        $this->addLine($qtdTab.'$gride->addRowNumColumn(); //Mostra Numero da linha');
-        $this->addLine($qtdTab.'$gride->addColumn($primaryKey,\'id\');');
+        //$this->addLine($qtdTab.'$grid->addRowNumColumn(); //Mostra Numero da linha');
+        $this->addLine($qtdTab.'$grid->addColumn($primaryKey,\'id\');');
         if ($this->validateListColumnsName()) {
             foreach ($this->listColumnsName as $key => $value) {
                 /**
@@ -519,7 +519,7 @@ class TCreateForm extends TCreateFileContent
                 $formDinType = self::getColumnsPropertieFormDinType($keyColumns);
                 
                 $fieldLabel = EasyLabel::convertLabel($value, $formDinType);
-                $this->addLine($qtdTab.'$gride->addColumn(\''.$value.'\',\''.$fieldLabel.'\');');
+                $this->addLine($qtdTab.'$grid->addColumn(\''.$value.'\',\''.$fieldLabel.'\');');
             }
         }
     }
@@ -629,15 +629,15 @@ class TCreateForm extends TCreateFileContent
         $this->addLine('</script>');
     }
     //--------------------------------------------------------------------------------------
-    public function addGrid()
+    public function addGrid($qtdTab)
     {   
         $this->addBlankLine();     
-        $this->addLine('$grid = new TFormDinGrid($this,\'grid\',\'Gride\');');
-        $this->addColumnsGrid(ESP);
+        $this->addLine($qtdTab.'$grid = new TFormDinGrid($this,\'grid\',\'Gride\');');
+        $this->addColumnsGrid($qtdTab);
         $this->addBlankLine();
-        $this->addLine('$this->datagrid = $grid->show();');
-        $this->addLine('//$this->pageNavigation = $grid->getPageNavigation();');
-        $this->addLine('$panelGroupGrid = $grid->getPanelGroupGrid();');
+        $this->addLine($qtdTab.'$this->datagrid = $grid->show();');
+        $this->addLine($qtdTab.'//$this->pageNavigation = $grid->getPageNavigation();');
+        $this->addLine($qtdTab.'$panelGroupGrid = $grid->getPanelGroupGrid();');
         $this->addBlankLine();
         $this->addBlankLine();
     }
@@ -726,7 +726,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.'$this->setDefaultOrder(\''.$this->getPrimaryKeyTable().'\', \'asc\'); // define the default order');
         $this->addBlankLine();
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine('$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
+            $this->addLine(ESP.ESP.'$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
         }        
         $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
         $this->addLine(ESP.ESP.'$frm->addHiddenField(\'idxx\'); //POG para evitar problema de noticie');
@@ -735,13 +735,13 @@ class TCreateForm extends TCreateFileContent
         $this->addBlankLine();        
         $this->addLine(ESP.ESP.'$this->form = $frm->show();');
         $this->addLine(ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
-        $this->addGrid();
+        $this->addGrid(ESP.ESP);
         $this->addLine(ESP.ESP.'// creates the page structure using a table');
         $this->addLine(ESP.ESP.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
         $this->addLine(ESP.ESP.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
         $this->addLine(ESP.ESP.'$vbox->add($this->form);');
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine('$vbox->add($panelGroupGrid);');
+            $this->addLine(ESP.ESP.'$vbox->add($panelGroupGrid);');
         }        
         $this->addBlankLine();
         $this->addLine(ESP.ESP.'// add the table inside the page');
