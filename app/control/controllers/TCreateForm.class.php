@@ -707,21 +707,13 @@ class TCreateForm extends TCreateFileContent
         }
     }
     //--------------------------------------------------------------------------------------
-    public function addButtons()
+    public function addButtons($qtdTab)
     {
-        if ($this->getTableType() == TableInfo::TB_TYPE_PROCEDURE) {
-            $this->addLine('$frm->addButton(\'Executar\', null, \'Executar\', null, null, true, false);');
-        }else{
-            if ($this->gridType == FormDinHelper::GRID_SIMPLE) {
-                $this->addLine('$frm->addButton(\'Buscar\', null, \'Buscar\', null, null, true, false);');
-            } else {
-                $this->addLine('$frm->addButton(\'Buscar\', null, \'btnBuscar\', \'buscar()\', null, true, false);');
-            }
-            if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
-                $this->addLine('$frm->addButton(\'Salvar\', null, \'Salvar\', null, null, false, false);');
-            }
-        }
-        $this->addLine('$frm->addButton(\'Limpar\', null, \'Limpar\', null, null, false, false);');
+        $this->addLine($qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve');
+        $this->addLine($qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo');
+        $this->addLine($qtdTab.'//primeiro em ingles e depois traduzindo');
+        $this->addLine($qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );');
+        $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');');
     }
     //--------------------------------------------------------------------------------------
     public function show($print = false)
@@ -754,6 +746,9 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.ESP.'// creates the page structure using a table');
         $this->addLine(ESP.ESP.ESP.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
         $this->addLine(ESP.ESP.ESP.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
+        $this->addBlankLine();
+        $this->addButtons(ESP.ESP.ESP);
+        $this->addBlankLine();
         $this->addLine(ESP.ESP.ESP.'$vbox->add($this->form);');
         $this->addBlankLine();
         $this->addLine(ESP.ESP.ESP.'// add the table inside the page');

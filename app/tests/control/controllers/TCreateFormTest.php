@@ -137,62 +137,23 @@ class TCreateFormTest extends TestCase
 	    $this->assertSame($expected, $result);
 	}
 	
-	public function testAddButtons_GridSimple_View(){
+	public function testAddButtons(){
+		$qtdTab = ESP.ESP.ESP;
 	    $expected = array();
-	    $expected[] = '$frm->addButton(\'Buscar\', null, \'Buscar\', null, null, true, false);'.EOL;
-	    $expected[] = '$frm->addButton(\'Limpar\', null, \'Limpar\', null, null, false, false);'.EOL;
-	    
-	    $this->create->setGridType(FormDinHelper::GRID_SIMPLE);
-	    $this->create->setTableType(TableInfo::TB_TYPE_VIEW);
-	    $this->create->addButtons();
-	    $result = $this->create->getLinesArray();
-	    
-	    $this->assertSame($expected[0], $result[0]);
-	    $this->assertSame($expected[1], $result[1]);
-	}
+	    $expected[] = $qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
+	    $expected[] = $qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo'.EOL;
+		$expected[] = $qtdTab.'//primeiro em ingles e depois traduzindo'.EOL;
+		$expected[] = $qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );'.EOL;
+		$expected[] = $qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');'.EOL;
 	
-	public function testAddButtons_GridSimple_Table(){
-	    $expected = array();
-	    $expected[] = '$frm->addButton(\'Buscar\', null, \'Buscar\', null, null, true, false);'.EOL;
-	    $expected[] = '$frm->addButton(\'Salvar\', null, \'Salvar\', null, null, false, false);'.EOL;
-	    $expected[] = '$frm->addButton(\'Limpar\', null, \'Limpar\', null, null, false, false);'.EOL;
-	    
-	    $this->create->setGridType(FormDinHelper::GRID_SIMPLE);
-	    $this->create->setTableType(TableInfo::TB_TYPE_TABLE);
-	    $this->create->addButtons();
+	    $this->create->addButtons($qtdTab);
 	    $result = $this->create->getLinesArray();
 	    
 	    $this->assertSame($expected[0], $result[0]);
 	    $this->assertSame($expected[1], $result[1]);
-	    $this->assertSame($expected[2], $result[2]);
-	}
-	
-	public function testAddButtons_Grid_View(){
-	    $expected = array();
-	    $expected[] = '$frm->addButton(\'Buscar\', null, \'btnBuscar\', \'buscar()\', null, true, false);'.EOL;
-	    $expected[] = '$frm->addButton(\'Limpar\', null, \'Limpar\', null, null, false, false);'.EOL;
-	    
-	    $this->create->setTableType(TableInfo::TB_TYPE_VIEW);
-	    $this->create->addButtons();
-	    $result = $this->create->getLinesArray();
-	    
-	    $this->assertSame($expected[0], $result[0]);
-	    $this->assertSame($expected[1], $result[1]);
-	}
-	
-	public function testAddButtons_Grid_Table(){
-	    $expected = array();
-	    $expected[] = '$frm->addButton(\'Buscar\', null, \'btnBuscar\', \'buscar()\', null, true, false);'.EOL;
-	    $expected[] = '$frm->addButton(\'Salvar\', null, \'Salvar\', null, null, false, false);'.EOL;
-	    $expected[] = '$frm->addButton(\'Limpar\', null, \'Limpar\', null, null, false, false);'.EOL;
-	    
-	    $this->create->setTableType(TableInfo::TB_TYPE_TABLE);
-	    $this->create->addButtons();
-	    $result = $this->create->getLinesArray();
-	    
-	    $this->assertSame($expected[0], $result[0]);
-	    $this->assertSame($expected[1], $result[1]);
-	    $this->assertSame($expected[2], $result[2]);
+		$this->assertSame($expected[2], $result[2]);
+		$this->assertSame($expected[3], $result[3]);
+		$this->assertSame($expected[4], $result[4]);
 	}
 	
 	public function testShow_GridSimple_numlines(){
@@ -255,37 +216,10 @@ class TCreateFormTest extends TestCase
 	    $this->assertEquals( $expectedQtd, $size);
 	}
 	
-	public function testShow_VIEW_numLines(){
-	    $expectedQtd = 45;
+	public function testShow_numLines(){
+	    $expectedQtd = 52;
 	    
 	    $this->create->setTableType(TableInfo::TB_TYPE_VIEW);
-	    $resultArray = $this->create->show('array');
-	    $size = CountHelper::count($resultArray);
-	    $this->assertEquals( $expectedQtd, $size);
-	}
-	
-	public function testShow_VIEW_GridSqlPagination_numLines(){
-	    $expectedQtd = 45;
-	    
-	    $this->create->setGridType(FormDinHelper::GRID_SQL_PAGINATION);
-	    $this->create->setTableType(TableInfo::TB_TYPE_VIEW);
-	    $resultArray = $this->create->show('array');
-	    $size = CountHelper::count($resultArray);
-	    $this->assertEquals( $expectedQtd, $size);
-	}
-	
-	public function testShow_TABLE_numLines(){
-	    $expectedQtd = 45;	    
-	    
-	    $resultArray = $this->create->show('array');
-	    $size = CountHelper::count($resultArray);
-	    $this->assertEquals( $expectedQtd, $size);
-	}
-	
-	public function testShow_TABLE_GridSqlPagination_numLines(){
-	    $expectedQtd = 45;
-	    
-	    $this->create->setGridType(FormDinHelper::GRID_SQL_PAGINATION);
 	    $resultArray = $this->create->show('array');
 	    $size = CountHelper::count($resultArray);
 	    $this->assertEquals( $expectedQtd, $size);
