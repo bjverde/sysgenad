@@ -494,25 +494,6 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.'break;');
     }    
     //--------------------------------------------------------------------------------------
-    private function addBasicViewController()
-    {
-        $this->addBlankLine();
-        $this->addLine('$acao = isset($acao) ? $acao : null;');
-        $this->addLine('switch( $acao ) {');
-        $this->addBasicaViewController_limpar();
-        if ($this->gridType == FormDinHelper::GRID_SIMPLE) {
-            $this->addBasicaViewController_buscar();
-        }
-        if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
-	        $this->addBasicaViewController_salvar();
-        	$this->addBasicaViewController_gdExcluir();
-        }
-        if ($this->getTableType() == TableInfo::TB_TYPE_PROCEDURE) {
-            $this->addBasicaViewController_exec();
-        }
-        $this->addLine('}');
-    }
-    //--------------------------------------------------------------------------------------
     public function getMixUpdateFields($qtdTab)
     {
         if ($this->validateListColumnsName()) {
@@ -743,7 +724,17 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.ESP.'$this->clearFilters();');
         $this->addLine($qtdTab.ESP.'$this->onReload();');
         $this->addLine($qtdTab.'} //END onClear');
-    }    
+    }
+    //--------------------------------------------------------------------------------------
+    private function addBasicViewController($qtdTab)
+    {
+
+        $this->addMethod_onClear($qtdTab);
+        if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
+            $this->addMethod_onSave($qtdTab);
+        }
+        $this->addBlankLine();
+    }        
     //--------------------------------------------------------------------------------------
     public function addButtons($qtdTab)
     {
@@ -797,9 +788,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.ESP.'new TMessage(\'error\', $e->getMessage());');
         $this->addLine(ESP.ESP.'}');//FIM try-catch construct
         $this->addLine(ESP.'}');//FIM construct
-        $this->addMethod_onClear(null);
-        $this->addMethod_onSave(null);
-        $this->addBlankLine();
+        $this->addBasicViewController(null);
         $this->addLine("}");//FIM class
         return $this->showContent($print);
     }

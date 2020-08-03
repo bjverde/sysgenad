@@ -164,44 +164,6 @@ class TCreateFormTest extends TestCase
 	    $this->assertSame($expected, $size);
 	}
 	
-	public function testAddButtons_VIEW(){
-		$qtdTab = ESP.ESP.ESP;
-	    $expected = array();
-	    $expected[] = $qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
-	    $expected[] = $qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo'.EOL;
-		$expected[] = $qtdTab.'//primeiro em ingles e depois traduzindo'.EOL;
-		$expected[] = $qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');'.EOL;
-	
-		$this->create->setTableType(TableInfo::TB_TYPE_VIEW);
-	    $this->create->addButtons($qtdTab);
-	    $result = $this->create->getLinesArray();
-	    
-	    $this->assertSame($expected[0], $result[0]);
-	    $this->assertSame($expected[1], $result[1]);
-		$this->assertSame($expected[2], $result[2]);
-		$this->assertSame($expected[3], $result[3]);
-	}
-
-	public function testAddButtons_TABLE(){
-		$qtdTab = ESP.ESP.ESP;
-	    $expected = array();
-	    $expected[] = $qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
-	    $expected[] = $qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo'.EOL;
-		$expected[] = $qtdTab.'//primeiro em ingles e depois traduzindo'.EOL;
-		$expected[] = $qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );'.EOL;
-		$expected[] = $qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');'.EOL;
-	
-		$this->create->setTableType(TableInfo::TB_TYPE_TABLE);
-	    $this->create->addButtons($qtdTab);
-	    $result = $this->create->getLinesArray();
-	    
-	    $this->assertSame($expected[0], $result[0]);
-	    $this->assertSame($expected[1], $result[1]);
-		$this->assertSame($expected[2], $result[2]);
-		$this->assertSame($expected[3], $result[3]);
-		$this->assertSame($expected[4], $result[4]);
-	}
-	
 	public function testShow_GridSimple_numlines(){
 	    $expectedQtd = 23;
 	    
@@ -261,9 +223,47 @@ class TCreateFormTest extends TestCase
 	    $size = CountHelper::count($result);
 	    $this->assertEquals( $expectedQtd, $size);
 	}
+
+	public function testAddButtons_VIEW(){
+		$qtdTab = ESP.ESP.ESP;
+	    $expected = array();
+	    $expected[] = $qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
+	    $expected[] = $qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo'.EOL;
+		$expected[] = $qtdTab.'//primeiro em ingles e depois traduzindo'.EOL;
+		$expected[] = $qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');'.EOL;
+	
+		$this->create->setTableType(TableInfo::TB_TYPE_VIEW);
+	    $this->create->addButtons($qtdTab);
+	    $result = $this->create->getLinesArray();
+	    
+	    $this->assertSame($expected[0], $result[0]);
+	    $this->assertSame($expected[1], $result[1]);
+		$this->assertSame($expected[2], $result[2]);
+		$this->assertSame($expected[3], $result[3]);
+	}
+
+	public function testAddButtons_TABLE(){
+		$qtdTab = ESP.ESP.ESP;
+	    $expected = array();
+	    $expected[] = $qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
+	    $expected[] = $qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo'.EOL;
+		$expected[] = $qtdTab.'//primeiro em ingles e depois traduzindo'.EOL;
+		$expected[] = $qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );'.EOL;
+		$expected[] = $qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');'.EOL;
+	
+		$this->create->setTableType(TableInfo::TB_TYPE_TABLE);
+	    $this->create->addButtons($qtdTab);
+	    $result = $this->create->getLinesArray();
+	    
+	    $this->assertSame($expected[0], $result[0]);
+	    $this->assertSame($expected[1], $result[1]);
+		$this->assertSame($expected[2], $result[2]);
+		$this->assertSame($expected[3], $result[3]);
+		$this->assertSame($expected[4], $result[4]);
+	}
 	
 	public function testShow_VIEW(){
-		$expectedQtd = 82;
+		$expectedQtd = 62;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
