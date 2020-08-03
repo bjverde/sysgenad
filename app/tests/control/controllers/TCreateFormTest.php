@@ -150,7 +150,7 @@ class TCreateFormTest extends TestCase
 	}
 
 	public function testAddMethod_onSave(){
-		$expectedSize = 20;
+		$expectedSize = 19;
 		$qtdTab = null;
 		$expected = array();
 		$expected[2] = $qtdTab.'public function onSave($param)'.EOL;
@@ -215,7 +215,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW(){
-		$expectedQtd = 73;
+		$expectedQtd = 75;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
@@ -235,7 +235,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_TABLE(){
-		$expectedQtd = 94;
+		$expectedQtd = 95;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;

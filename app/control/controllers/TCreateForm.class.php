@@ -575,8 +575,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.ESP.ESP.'new TMessage(\'info\', _t(\'Record saved\') );');
         $this->addLine($qtdTab.ESP.'}catch (Exception $e){');
         $this->addLine($qtdTab.ESP.ESP.'new TMessage(\'error\', $e->getMessage());');
-        $this->addLine($qtdTab.ESP.'}');
-        $this->addBlankLine();
+        $this->addLine($qtdTab.ESP.'} //END TryCatch');
         $this->addLine($qtdTab.'} //END onSave');
     }    
     //--------------------------------------------------------------------------------------
@@ -643,7 +642,6 @@ class TCreateForm extends TCreateFileContent
             $this->addLine(ESP.ESP.'$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
         }        
         $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
-        $this->addLine(ESP.ESP.'$frm->addHiddenField(\'idxx\'); //POG para evitar problema de noticie');
         $this->addFields(ESP.ESP);
         $this->addBlankLine();
         $this->addButtons(ESP.ESP);
@@ -662,7 +660,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.'// add the table inside the page');
         $this->addLine(ESP.ESP.'parent::add($vbox);');
         $this->addLine(ESP.'}');//FIM construct
-        $this->addBasicViewController(null);
+        $this->addBasicViewController(ESP);
         $this->addLine("}");//FIM class
         return $this->showContent($print);
     }
