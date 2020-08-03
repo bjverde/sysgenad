@@ -209,14 +209,14 @@ class TCreateForm extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldTypeToolTip($key, $fieldName)
+    private function addFieldTypeToolTip($qtdTab,$key, $fieldName)
     {
         $COLUMN_COMMENT = null;
         if (ArrayHelper::has('COLUMN_COMMENT', $this->listColumnsProperties)) {
             $COLUMN_COMMENT = $this->listColumnsProperties['COLUMN_COMMENT'][$key];
             if (!empty($COLUMN_COMMENT)) {
                 $COLUMN_COMMENT = str_replace("'","",$COLUMN_COMMENT);
-                $this->addLine('$frm->getLabel(\''.$fieldName.'\')->setToolTip(\''.$COLUMN_COMMENT.'\');');
+                $this->addLine($qtdTab.'$frm->getLabel(\''.$fieldName.'\')->setToolTip(\''.$COLUMN_COMMENT.'\');');
             }
         }
     }
@@ -281,14 +281,14 @@ class TCreateForm extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldNumber($key, $fieldName, $REQUIRED)
+    private function addFieldNumber($qtdTab,$key, $fieldName, $REQUIRED)
     {
         $NUM_LENGTH = $this->getColumnsPropertieNumLength($key);
         $NUM_SCALE  = $this->getColumnsPropertieNumScale($key);
         $fieldLabel = EasyLabel::convertLabel($fieldName, self::FORMDIN_TYPE_NUMBER);
         
-        $this->addLine('$frm->addNumberField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$NUM_LENGTH.','.$REQUIRED.','.$NUM_SCALE.');');
-        $this->addFieldTypeToolTip($key, $fieldName);
+        $this->addLine($qtdTab.'$frm->addNumberField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$NUM_LENGTH.','.$REQUIRED.','.$NUM_SCALE.');');
+        $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
     }
     //--------------------------------------------------------------------------------------
     private function addFieldForenAutoComplete($key, $fieldName, $REQUIRED)
@@ -319,7 +319,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine('$frm->closeGroup();');
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldForenKeySelectField($key, $fieldName, $REQUIRED)
+    private function addFieldForenKeySelectField($qtdTab,$key, $fieldName, $REQUIRED)
     {
         $REFERENCED_TABLE_NAME = $this->getColumnsPropertieReferencedTable($key);
         $REFERENCED_TABLE_NAME = $this->getTableRefCC($REFERENCED_TABLE_NAME);
@@ -328,27 +328,30 @@ class TCreateForm extends TCreateFileContent
         $this->addLine('$list'.$REFERENCED_TABLE_NAME.' = $controller'.$REFERENCED_TABLE_NAME.'->selectAll();');
         $fieldLabel = EasyLabel::convertLabel($fieldName, self::FORMDIN_TYPE_NUMBER);
         $this->addLine('$frm->addSelectField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',$list'.$REFERENCED_TABLE_NAME.',null,null,null,null,null,null,\' \',null);');
-        $this->addFieldTypeToolTip($key, $fieldName);
+        $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldNumberOrForeignKey($key, $fieldName, $REQUIRED)
+    private function addFieldNumberOrForeignKey($qtdTab,$key, $fieldName, $REQUIRED)
     {        
         $KEY_TYPE   = $this->getColumnsPropertieKeyType($key);
         if ($KEY_TYPE != TableInfo::KEY_TYPE_FK) {
-            $this->addFieldNumber($key, $fieldName, $REQUIRED);
-        } else {            
+            $this->addFieldNumber($qtdTab,$key, $fieldName, $REQUIRED);
+        } else {
+            $this->addFieldNumber($qtdTab,$key, $fieldName, $REQUIRED);
+            /*
             $fkTypeScreenReferenced = $this->getFkTypeScreenReferenced($key);
             switch ($fkTypeScreenReferenced) {
                 case self::FORM_FKTYPE_AUTOCOMPLETE:
                     $this->addFieldForenAutoComplete($key, $fieldName, $REQUIRED);
                 break;
                 default:
-                    $this->addFieldForenKeySelectField($key, $fieldName, $REQUIRED);
+                    $this->addFieldForenKeySelectField($qtdTab,$key, $fieldName, $REQUIRED);
             }
+            */
         }
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldType($key, $fieldName, $notPK = true)
+    private function addFieldType($qtdTab,$key, $fieldName, $notPK = true)
     {
         /**
          * Esse ajuste do $key acontece em função do setListColunnsName descarta o primeiro
@@ -365,34 +368,34 @@ class TCreateForm extends TCreateFileContent
         switch ($formDinType) {
             case self::FORMDIN_TYPE_DATE:
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
-                $this->addLine('$frm->addDateField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.');');
-                $this->addFieldTypeToolTip($key, $fieldName);
+                $this->addLine($qtdTab.'$frm->addDateField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.');');
+                $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
                 break;
             case self::FORMDIN_TYPE_NUMBER:
-                $this->addFieldNumberOrForeignKey($key, $fieldName, $REQUIRED);
+                $this->addFieldNumberOrForeignKey($qtdTab,$key, $fieldName, $REQUIRED);
                 break;
             default:
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
                 if ($CHAR_MAX < self::CHAR_MAX_TEXT_FIELD) {
-                    $this->addLine('$frm->addTextField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$CHAR_MAX.','.$REQUIRED.','.$CHAR_MAX.');');
+                    $this->addLine($qtdTab.'$frm->addTextField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$CHAR_MAX.','.$REQUIRED.','.$CHAR_MAX.');');
                 } else {
-                    $this->addLine('$frm->addMemoField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$CHAR_MAX.','.$REQUIRED.',80,3);');
+                    $this->addLine($qtdTab.'$frm->addMemoField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$CHAR_MAX.','.$REQUIRED.',80,3);');
                 }
-                $this->addFieldTypeToolTip($key, $fieldName);
+                $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
         }
     }
     
     //--------------------------------------------------------------------------------------
-    private function addFields()
+    private function addFields($qtdTab)
     {
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){            
-            $this->addLine('$frm->addHiddenField( $primaryKey );   // coluna chave da tabela');
+            $this->addLine($qtdTab.'$frm->addHiddenField( $primaryKey );   // coluna chave da tabela');
         }else{
-            $this->addFieldType(0, $this->getPrimaryKeyTable(),false);
+            $this->addFieldType($qtdTab,0, $this->getPrimaryKeyTable(),false);
         }
         if ($this->validateListColumnsName()) {
             foreach ($this->listColumnsName as $key => $value) {
-                $this->addFieldType($key, $value);
+                $this->addFieldType($qtdTab,$key, $value);
             }
         }
     }
@@ -641,6 +644,7 @@ class TCreateForm extends TCreateFileContent
         }        
         $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
         $this->addLine(ESP.ESP.'$frm->addHiddenField(\'idxx\'); //POG para evitar problema de noticie');
+        $this->addFields(ESP.ESP);
         $this->addBlankLine();
         $this->addButtons(ESP.ESP);
         $this->addBlankLine();        
