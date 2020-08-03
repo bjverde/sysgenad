@@ -712,9 +712,20 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.'public function onSave($param)');
         $this->addLine($qtdTab.'{');
         $this->addLine($qtdTab.ESP.'try{');
-        $this->addLine($qtdTab.ESP.'$this->form->validate();');
-        $this->addLine($qtdTab.ESP.'$data = $this->form->getData();');
-        $this->addLine($qtdTab.ESP.'$this->form->setData($data);');        
+        $this->addLine($qtdTab.ESP.ESP.'$this->form->validate();');
+        $this->addLine($qtdTab.ESP.ESP.'$data = $this->form->getData();');
+        $this->addLine($qtdTab.ESP.ESP.'$this->form->setData($data);');
+        $this->addBlankLine();
+        $this->addLine($qtdTab.ESP.ESP.'//Função do FormDin para Debug');
+        $this->addLine($qtdTab.ESP.ESP.'FormDinHelper::d($param,\'$param\');');
+        $this->addLine($qtdTab.ESP.ESP.'FormDinHelper::debug($data,\'$data\');');
+        $this->addLine($qtdTab.ESP.ESP.'FormDinHelper::debug($_REQUEST,\'$_REQUEST\');');
+        $this->addBlankLine();
+        $this->addLine($qtdTab.ESP.ESP.'new TMessage(\'info\', _t(\'Record saved\') );');
+        $this->addLine($qtdTab.ESP.'}catch (Exception $e){');
+        $this->addLine($qtdTab.ESP.ESP.'new TMessage(\'error\', $e->getMessage());');
+        $this->addLine($qtdTab.ESP.'}');
+        $this->addBlankLine();
         $this->addLine($qtdTab.'}');
     }    
     //--------------------------------------------------------------------------------------

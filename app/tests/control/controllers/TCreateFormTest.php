@@ -136,6 +136,33 @@ class TCreateFormTest extends TestCase
 	    $result = TCreateForm::convertDataType2FormDinType('TINYINT');
 	    $this->assertSame($expected, $result);
 	}
+
+	public function testAddMethod_onSave(){
+		$expectedSize = 18;
+		$qtdTab = null;
+		$expected = array();
+		$expected[] = $qtdTab.'public function onSave($param)'.EOL;
+		$expected[] = $qtdTab.'{'.EOL;
+	
+	    $this->create->addMethod_onSave($qtdTab);
+		$result = $this->create->getLinesArray();
+		$size = CountHelper::count($result);
+	    
+		$this->assertSame($expectedSize, $size);
+		$this->assertSame($expected[0], $result[0]);
+		$this->assertSame($expected[1], $result[1]);
+	}	
+
+	public function testAddMethod_onClear(){
+	    $expected = 8;
+		$qtdTab = ESP.ESP.ESP;
+	
+	    $this->create->addMethod_onClear($qtdTab);
+		$result = $this->create->getLinesArray();
+		$size = CountHelper::count($result);
+	    
+	    $this->assertSame($expected, $size);
+	}
 	
 	public function testAddButtons(){
 		$qtdTab = ESP.ESP.ESP;
