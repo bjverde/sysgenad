@@ -40,12 +40,23 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-
- /**
-  * Classe generica de campos do Adianti
-  *
-  * Junta parte das classes FormDin TControl e TElement
-  */
+/**
+ * Classe generica de campos do Adianti
+ *
+ * Junta parte das classes FormDin TControl e TElement
+ * ------------------------------------------------------------------------
+ * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * os parâmetros do metodos foram marcados com:
+ * 
+ * NOT_IMPLEMENTED = Parâmetro não implementados, talvez funcione em 
+ *                   verões futuras do FormDin. Não vai fazer nada
+ * DEPRECATED = Parâmetro que não vai funcionar no Adianti e foi mantido
+ *              para o impacto sobre as migrações. Vai gerar um Warning
+ * FORMDIN5 = Parâmetro novo disponivel apenas na nova versão
+ * ------------------------------------------------------------------------
+ * 
+ * @author Reinaldo A. Barrêto Junior
+ */
 class TFormDinGenericField
 {
     protected $adiantiObj;
@@ -88,13 +99,33 @@ class TFormDinGenericField
         }        
         return $this->adiantiObj=$adiantiObj;
     }
+    /**
+     * Retorna um campo do Adianti
+     * @return object 
+     */    
     public function getAdiantiObj(){
         return $this->adiantiObj;
     }
+    /**
+     * Retorna objeto do tipo campo do Adianti
+     * @return object 
+     */
+    public function getAdiantiField(){
+        return $this->getAdiantiObj();
+    }
 
+    /**
+     * Seta o texto do Label do campo
+     * @param string $label
+     */
     protected function setLabelTxt($label){
         $this->labelTxt = $label;
     }
+
+    /**
+     * Retorna o texto do Label do campo
+     * @return string
+     */
     public function getLabelTxt(){
         return $this->labelTxt;
     }
@@ -107,6 +138,11 @@ class TFormDinGenericField
         }
         $this->labelObj = $label;
     }
+    
+    /**
+     * Retorna objeto do tipo campo do Adianti
+     * @return object
+     */
     public function getLabel(){
         return $this->labelObj;
     }
@@ -129,10 +165,21 @@ class TFormDinGenericField
         }
     }
 
+    public function isRequired(){
+        $this->getAdiantiObj()->isRequired();
+    }
+
+    public function getValidations(){
+        $this->getAdiantiObj()->getValidations();
+    }
+
     public function setValue($value){
         if(!empty($value)){
             $this->getAdiantiObj()->setValue($value);
         }
+    }
+    public function getValue(){
+        return $this->getAdiantiObj()->getValue();
     }
 
     public function setPlaceHolder($placeholder){
@@ -144,33 +191,39 @@ class TFormDinGenericField
     public function getPlaceHolder(){
         return $this->getAdiantiObj()->placeholder;
     }
-
     //------------------------------------------------------------------------------
 	/**
-	 * Set um Toolpit em um determinado campo pode ser usado com
-	 * @param string $strTitle - Titulo
-	 * @param string $strText - Texto que irá aparecer
-	 * @param string $strImagem
+	 * Set um Toolpit do FormDin para funcionar com Adianti 
+     * em um determinado campo pode ser usado com
+	 * @param string $strTitle - 1: Titulo
+	 * @param string $strText  - 2: Texto que irá aparecer
+	 * @param string $strImagem- 3: NOT_IMPLEMENTED
 	 * @return TControl
 	 */
 	public function setTooltip($strTitle=null,$strText=null,$strImagem=null)
 	{
-        $this->tooltip = $strText;
-		$this->getAdiantiObj()->setTip($strText);
+        $text = is_null($strTitle)?$strText:$strTitle;
+        $this->tooltip = $text;
+		$this->getAdiantiObj()->setTip($text);
 	}
 	public function getTooltip()
 	{
 		return $this->tooltip;
     }
     //------------------------------------------------------------------------------
-	public function setExampleText($strNewValue=null)
+    /**
+     * Metodo criado para melhorar a retrocompatibilidade com Formdi4s
+     */
+    public function setExampleText($strNewValue=null)
 	{
-        $this->tooltip = $strNewValue;
 		$this->getAdiantiObj()->setTip($strNewValue);
-	}
+    }
+    /**
+     * Metodo criado para melhorar a retrocompatibilidade com Formdi4s
+     */    
 	public function getExampleText()
 	{
-		return $this->tooltip;
+		return $this->getTooltip();
     }    
 	//------------------------------------------------------------------------------    
 	public function setReadOnly($boolNewValue=null)

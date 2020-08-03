@@ -40,7 +40,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-class TFormDinHiddenField
+class TFormDinHiddenField  extends TFormDinGenericField
 {
     protected $adiantiObj;
     
@@ -58,18 +58,8 @@ class TFormDinHiddenField
                                ,string $strValue=null
                                ,$boolRequired = false)
     {
-        $this->adiantiObj = new THidden($id);
-        $this->adiantiObj->setId($id);
-        if($boolRequired){
-            $this->adiantiObj->addValidation($id, new TRequiredValidator);
-        }
-        if(!empty($strValue)){
-            $this->adiantiObj->setValue($strValue);
-        }
+        $adiantiObj = new THidden($id);
+        parent::__construct($adiantiObj,$id,null,$boolRequired,$strValue,null);
         return $this->getAdiantiObj();
-    }
-
-    public function getAdiantiObj(){
-        return $this->adiantiObj;
     }
 }

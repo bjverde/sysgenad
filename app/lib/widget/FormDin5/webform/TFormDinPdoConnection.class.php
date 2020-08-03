@@ -42,13 +42,13 @@
 
 class TFormDinPdoConnection
 {
-    const DBMS_ACCESS = 'ACCESS';
+    const DBMS_ACCESS   = 'ACCESS';
     const DBMS_FIREBIRD = 'ibase';
     const DBMS_MYSQL    = 'mysql';
     const DBMS_ORACLE   = 'oracle';
     const DBMS_POSTGRES = 'pgsql';
     const DBMS_SQLITE   = 'sqlite';
-    const DBMS_SQLSERVER = 'sqlsrv';
+    const DBMS_SQLSERVER= 'sqlsrv';
 
     private $database = null;
     private $fech = null;
@@ -115,8 +115,8 @@ class TFormDinPdoConnection
     public static function getListDBMS()
     {
         $list = array();
-        //$list[self::DBMS_ACCESS]='Access';
-        //$list[self::DBMS_FIREBIRD]='FIREBIRD';
+        $list[self::DBMS_ACCESS]='Access';
+        $list[self::DBMS_FIREBIRD]='FIREBIRD';
         $list[self::DBMS_MYSQL]='MariaDB ou MySQL';
         $list[self::DBMS_ORACLE]='Oracle';
         $list[self::DBMS_POSTGRES]='PostgreSQL';
@@ -237,6 +237,7 @@ class TFormDinPdoConnection
 	}
 
     /**
+     * @codeCoverageIgnore
      * Executa o comando sql recebido retornando o cursor ou verdadeiro o falso
      * se a operação foi bem sucedida.
      *
@@ -285,6 +286,13 @@ class TFormDinPdoConnection
         return $result;
     }
 
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param TCriteria $criteria
+     * @param string $repositoryName
+     * @return array Adianti
+     */    
     public function selectByTCriteria(TCriteria $criteria, $repositoryName)
     {
         try {
@@ -304,6 +312,13 @@ class TFormDinPdoConnection
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param TCriteria $criteria
+     * @param string $repositoryName
+     * @return array Adianti
+     */
     public function selectCountByTCriteria(TCriteria $criteria, $repositoryName)
     {
         try {

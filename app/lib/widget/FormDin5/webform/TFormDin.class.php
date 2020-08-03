@@ -352,10 +352,10 @@ class TFormDin
     {
         $element = array();
         $element['obj']=$obj;
-        $element['type']=$type;
+        $element['type']=is_null($type)?self::TYPE_FIELD:$type;
         $element['label']=$label;
-        $element['boolNewLine']=$boolNewLine;
-        $element['boolLabelAbove']=$boolLabelAbove;
+        $element['boolNewLine']=is_null($boolNewLine)?true:$boolNewLine;
+        $element['boolLabelAbove']=is_null($boolLabelAbove)?false:$boolLabelAbove;
         $this->listFormElements[]=$element;
     }
 
@@ -520,9 +520,9 @@ class TFormDin
     * saber o que cada marca singinifica.
     * ------------------------------------------------------------------------
     *
-    * @param mixed $actionsLabel- 1: Texto ações.
-    * @param object $actionsName- 2: FORMDIN5 Nome da ação
-    * @param boolean $header    - 3: FORMDIN5 mostrar ação Título. DEFAULT=false, mostra no rodapé. TRUE = mostra no Título
+    * @param mixed $actionsLabel- 1: Label do Botão
+    * @param object $actionsName- 2: FORMDIN5 Nome do metodo da ação
+    * @param boolean $header    - 3: FORMDIN5 mostrar ação no Título (Header). DEFAULT=false, mostra no rodapé. TRUE = mostra no Título
     * @param string $iconImagem - 4: FORMDIN5 icone ou imagem do botão.
     * @param string $color      - 5: FORMDIN5 cor do icone.
     * @param string $methodPost - 6: FORMDIN5 Metodo da ação pode ser POST ou GET. DEFAULT=true, POST. FALSE, GET
@@ -754,17 +754,76 @@ class TFormDin
                                , $boolShowCountChar=true)
     {
         $formField = new TFormDinMemoField( $strName, $strLabel, $intMaxLength
-                                      , $boolRequired, $intColumns, $intRows
-                                      , $boolNewLine, $boolLabelAbove
-                                      , $boolShowCounter, $strValue
+                                      , $boolRequired
+                                      , $intColumns
+                                      , $intRows
+                                      , $boolNewLine
+                                      , $boolLabelAbove
+                                      , $boolShowCounter
+                                      , $strValue
                                       , $boolNoWrapLabel
                                       , $placeholder 
-                                      , $boolShowCountChar);
+                                      , $boolShowCountChar
+                                    );
         $objField = $formField->getFullComponent();
         //$objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
         //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+    	return $formField;
+    }
+
+    /****
+     * Adicona um campo data ou mes/ano ou dia/mes de acordo com o parametro strMaxType
+     * Tipo de máscara: DMY, DM, MY
+     *  
+     * @param string  $strName         - 1: Id do Campo
+     * @param string  $strLabel        - 2: Label do Campo
+     * @param boolean $boolRequired    - 3: DEFAULT = flase não obrigatório
+     * @param boolean $boolNewLine     - 4: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param string  $strValue        - 5: Valor inicial
+     * @param string  $strMinValue     - 6: NOT_IMPLEMENTED Menor data que o campo aceita
+     * @param string  $strMaxValue     - 7: NOT_IMPLEMENTED Maior data que o campo aceita
+     * @param string  $strMaskType     - 8: DEFAULT = dd-mm-yyyy. Tipo de Mascara dd-mm-yyyy (dia/mês/ano), dd-mm (dia/mês), mm-yyyy (mês/ano) 
+     * @param boolean $boolButtonVisible - 9: Exibe ou não o botão do calendario.
+     * @param string  $strExampleText  - 10: Texto de exmplo
+     * @param boolean $boolLabelAbove  - 11: DEFAULT = flase. Label acima do campo = true
+     * @param string  $boolNoWrapLabel - 12: NOT_IMPLEMENTED
+     * @param string  $databaseMask    - 13: FORMDIN5 Mascará usada no banco de dados
+     * @return TDate
+     */
+    public function addDateField( $strName
+                            , $strLabel=null
+                            , $boolRequired=false
+                            , $boolNewLine=null
+                            , $strValue=null
+                            , $strMinValue=null
+                            , $strMaxValue=null
+                            , $strMaskType=null
+                            , $boolButtonVisible=null
+                            , $strExampleText=null
+                            , $boolLabelAbove=null
+                            , $boolNoWrapLabel=null
+                            , $databaseMask=null
+                            )
+    {        
+        $formField = new TFormDinDate( $strName
+                                     , $strLabel
+                                     , $boolRequired
+                                     , $boolNewLine
+                                     , $strValue
+                                     , $strMinValue
+                                     , $strMaxValue
+                                     , $strMaskType
+                                     , $boolButtonVisible
+                                     , $strExampleText
+                                     , $boolLabelAbove
+                                     , $boolNoWrapLabel
+                                     , $databaseMask
+                                    );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+    	$this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
     	return $formField;
     }
 
@@ -1031,13 +1090,16 @@ class TFormDin
      * @param string $strValue           - 7: valor inicial do campo
      * @param string $strMinValue        - 8: valor minimo permitido. Null = não tem limite.
      * @param string $strMaxValue        - 9: valor maxima permitido. Null = não tem limite.
-     * @param boolean $boolFormatInteger -10: Inteiros com ou sem ponto de separação
-     * @param string $strDirection       -11:
-     * @param boolean $boolAllowZero     -12:
-     * @param boolean $boolAllowNull     -13:
-     * @param boolean $boolLabelAbove    -14:
-     * @param boolean $boolNoWrapLabel   -15:
-     * @param string $strHint            -16:
+     * @param boolean $boolFormatInteger -10: Inteiros com ou sem ponto de separação. Recebe: (virgula), (ponto), true = ponto, false = sem nada
+     * @param string $strDirection       -11: NOT_IMPLEMENTED
+     * @param boolean $boolAllowZero     -12: NOT_IMPLEMENTED
+     * @param boolean $boolAllowNull     -13: NOT_IMPLEMENTED
+     * @param boolean $boolLabelAbove    -14: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param boolean $boolNoWrapLabel   -15: NOT_IMPLEMENTED
+     * @param string $tooltip            -16: Texto Tooltip
+     * @param boolean $replaceOnPost     -17: FORMDIN5: TRUE: process mask when editing and saving
+     * @param string $placeholder        -18: FORMDIN5: Texto do Place Holder
+     * @param string $decimalsSeparator  -19: FORMDIN5: separador decimal
      * @return TNumber
      */       
 	public function addNumberField( $strName
@@ -1055,7 +1117,11 @@ class TFormDin
 				           		, $boolAllowNull=null
 				           		, $boolLabelAbove=null
 				           		, $boolNoWrapLabel=null
-				           		, $strHint=null )
+                                , $strHint=null 
+                                , $replaceOnPost=true
+                                , $placeholder=null
+                                , $decimalsSeparator=null
+                                )
 	{
 		$formField = new TFormDinNumericField( $strName
                                             , $strLabel
@@ -1072,7 +1138,11 @@ class TFormDin
                                             , $boolAllowNull
                                             , $boolLabelAbove
                                             , $boolNoWrapLabel
-                                            , $strHint);
+                                            , $strHint
+                                            , $replaceOnPost
+                                            , $placeholder
+                                            , $decimalsSeparator
+                                            );
         $objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
