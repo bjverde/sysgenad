@@ -767,7 +767,11 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'parent::__construct();');
         $this->addBlankLine();
-        $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->tableRef.'\');');
+        $this->addLine(ESP.ESP.'$this->setDatabase(\'maindatabase\'); // define the database');
+        $this->addLine(ESP.ESP.'$this->setActiveRecord(\''.$this->tableRef.'\'); // define the Active Record');
+        $this->addLine(ESP.ESP.'$this->setDefaultOrder(\''.$this->getPrimaryKeyTable().'\', \'asc\'); // define the default order');
+        $this->addBlankLine();
+        $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
         $this->addLine(ESP.ESP.'$frm->addHiddenField(\'idxx\'); //POG para evitar problema de noticie');
         $this->addBlankLine();
         $this->addButtons(ESP.ESP);
