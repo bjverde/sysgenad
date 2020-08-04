@@ -115,10 +115,10 @@ class TFormDinPdoConnection
     public static function getListDBMS()
     {
         $list = array();
-        $list[self::DBMS_ACCESS]='Access';
-        $list[self::DBMS_FIREBIRD]='FIREBIRD';
+        //$list[self::DBMS_ACCESS]='Access';
+        //$list[self::DBMS_FIREBIRD]='FIREBIRD';
         $list[self::DBMS_MYSQL]='MariaDB ou MySQL';
-        $list[self::DBMS_ORACLE]='Oracle';
+        //$list[self::DBMS_ORACLE]='Oracle';
         $list[self::DBMS_POSTGRES]='PostgreSQL';
         $list[self::DBMS_SQLITE]='SqLite';
         $list[self::DBMS_SQLSERVER]='SQL Server';
