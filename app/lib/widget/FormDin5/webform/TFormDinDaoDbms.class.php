@@ -505,7 +505,7 @@ class TFormDinDaoDbms
 	 */
 	public function loadTablesFromDatabase() {
 		$sql    = $this->loadSqlTablesFromDatabase();
-		$result = $this->executeSql($sql);
+		$result = $this->executeSql($sql,ArrayHelper::TYPE_FORMDIN);
 		return $result;
 	}
 	
@@ -609,7 +609,7 @@ class TFormDinDaoDbms
 	    switch( $DbType ) {
 	        case TFormDinPdoConnection::DBMS_MYSQL:
 	        case TFormDinPdoConnection::DBMS_SQLSERVER:
-	            $result = $this->executeSql($sql);
+	            $result = $this->executeSql($sql,ArrayHelper::TYPE_FORMDIN);
 	        break;
 	        //--------------------------------------------------------------------------------
 	        default:
@@ -891,7 +891,7 @@ class TFormDinDaoDbms
 			case TFormDinPdoConnection::DBMS_MYSQL:
 			case TFormDinPdoConnection::DBMS_SQLSERVER:
 			case TFormDinPdoConnection::DBMS_POSTGRES:
-				$result = $this->executeSql($sql);
+				$result = $this->executeSql($sql,ArrayHelper::TYPE_FORMDIN);
 		    break;
 			//--------------------------------------------------------------------------------
 			default:

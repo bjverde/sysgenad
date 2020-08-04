@@ -213,7 +213,6 @@ class TGeneratorHelper
         }else{
             $dao = self::getTDAOConect(null, null);
             $listAllTables = $dao->loadTablesFromDatabase();
-            $listAllTables = ArrayHelper::convertArrayPdo2FormDin($listAllTables);
             if (!is_array($listAllTables)) {
                 throw new InvalidArgumentException(Message::ERRO_LIST_TABLE_NOT_ARRAY);
             }
