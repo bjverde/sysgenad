@@ -240,10 +240,10 @@ class TGeneratorHelper
     public static function getConfigGridMySql($DBMS)
     {
         $dbversion = $_SESSION[APPLICATION_NAME]['DBMS']['VERSION'];
-        $TPGRID = GRID_SQL_PAGINATION;
+        $TPGRID = FormDinHelper::GRID_SQL_PAGINATION;
         $withVersion = TableInfo::getDbmsWithVersion($DBMS);
         if( ($dbversion == TableInfo::DBMS_VERSION_MYSQL_8_LT) && $withVersion ){
-            $TPGRID = GRID_SCREEN_PAGINATION;
+            $TPGRID = FormDinHelper::GRID_SCREEN_PAGINATION;
         }
         return $TPGRID;
     }
@@ -251,10 +251,10 @@ class TGeneratorHelper
     public static function getConfigGridPostgresql($DBMS)
     {
         $dbversion = $_SESSION[APPLICATION_NAME]['DBMS']['VERSION'];
-        $TPGRID = GRID_SQL_PAGINATION;
+        $TPGRID = FormDinHelper::GRID_SQL_PAGINATION;
         $withVersion = TableInfo::getDbmsWithVersion($DBMS);        
         if( ($dbversion == TableInfo::DBMS_VERSION_POSTGRES_95_LT) && $withVersion ){
-            $TPGRID = GRID_SCREEN_PAGINATION;
+            $TPGRID = FormDinHelper::GRID_SCREEN_PAGINATION;
         }
         return $TPGRID;
     }
