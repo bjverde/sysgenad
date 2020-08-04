@@ -49,11 +49,28 @@ class Gen03 extends TPage
 
             $this->form = $frm->show();
 
+            $grid = new TFormDinGrid($this
+                                    ,'gd'               // id do gride
+                                    ,Message::GRID_LIST_FK_TITLE // titulo do gride
+                                );
+            //$grid->setCreateDefaultEditButton(false);
+            //$grid->setCreateDefaultDeleteButton(false);
+            //$grid->addRowNumColumn();
+            $grid->addColumn('TABLE_SCHEMA', 'TABLE_SCHEMA');
+            $grid->addColumn('TABLE_NAME', 'TABLE_NAME');
+            $grid->addColumn('COLUMN_NAME', 'COLUMN_NAME');
+            $grid->addColumn('DATA_TYPE', 'DATA_TYPE');
+            $grid->addColumn('REFERENCED_TABLE_NAME', 'REFERENCED_TABLE_NAME');
+            $grid->addColumn('REFERENCED_COLUMN_NAME', 'REFERENCED_COLUMN_NAME');
+            $this->datagrid = $grid->show();
+            $panelGroupGrid = $grid->getPanelGroupGrid();
+
             // wrap the page content using vertical box
             $vbox = new TVBox;
             $vbox->style = 'width: 100%';
             $vbox->add( $pagestep );
             $vbox->add( $this->form );
+            $vbox->add($panelGroupGrid);
             parent::add($vbox);
         }
         catch (Exception $e)
@@ -94,7 +111,22 @@ class Gen03 extends TPage
      */
     function onReload()
     {
+        $this->datagrid->clear();
 
+        $listFkFieldsTableSelected = TGeneratorHelper::listFKFieldsTablesSelected();
+        $listFkFieldsTableSelected = ArrayHelper::convertArrayFormDin2Adianti($listFkFieldsTableSelected);
+
+        foreach( $listFkFieldsTableSelected as $idRow => $ObjRow ) {
+            // add an regular object to the datagrid
+            $item = new StdClass;
+            $item->TABLE_SCHEMA   = $ObjRow->TABLE_SCHEMA;
+            $item->TABLE_NAME     = $ObjRow->TABLE_NAME;
+            $item->COLUMN_NAME    = $ObjRow->COLUMN_NAME;
+            $item->DATA_TYPE      = $ObjRow->DATA_TYPE;
+            $item->REFERENCED_TABLE_NAME      = $ObjRow->REFERENCED_TABLE_NAME;
+            $item->REFERENCED_COLUMN_NAME     = $ObjRow->REFERENCED_COLUMN_NAME;
+            $this->datagrid->addItem($item);
+        }
     }
 
     /**
