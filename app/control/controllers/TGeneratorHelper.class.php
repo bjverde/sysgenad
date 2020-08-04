@@ -431,7 +431,7 @@ class TGeneratorHelper
 
     public static function loadFieldsTablesSelected()
     {
-        $_SESSION[APLICATIVO]['FieldsTableSelected'] = null;
+        TSysgenSession::setValue('FieldsTableSelected', null);
         $FieldsTableSelected = null;
         $listTables = TGeneratorHelper::loadTablesSelected();
         foreach ($listTables['TABLE_NAME'] as $key => $table) {
@@ -443,9 +443,9 @@ class TGeneratorHelper
             }else{
                 $listFieldsTable = $dao->loadFieldsOneTableFromDatabase();
             }
-            $_SESSION[APLICATIVO]['FieldsTableSelected'][] = $listFieldsTable;
+            $FieldsTableSelected[] = $listFieldsTable;
         }
-        $FieldsTableSelected = $_SESSION[APLICATIVO]['FieldsTableSelected'];
+        TSysgenSession::setValue('FieldsTableSelected', $FieldsTableSelected);
         return $FieldsTableSelected;
     }
     
@@ -475,9 +475,10 @@ class TGeneratorHelper
         if(ArrayHelper::has(TableInfo::KEY_TYPE,$listFieldsTable) && $listFieldsTable[TableInfo::KEY_TYPE][$key] == TableInfo::KEY_TYPE_FK){
             $columnNameTarget = $listFieldsTable[TableInfo::COLUMN_NAME][$key];
             $idColumnTarger = $tableSchema.$table.$columnNameTarget;
-            $listIdColumns = $_SESSION[APLICATIVO][TableInfo::FK_FIELDS_TABLE_SELECTED][TableInfo::ID_COLUMN_FK_SRSELECTED];
+            $FkFieldsTableSelected = TSysgenSession::getValue(TableInfo::FK_FIELDS_TABLE_SELECTED);
+            $listIdColumns = $FkFieldsTableSelected[TableInfo::ID_COLUMN_FK_SRSELECTED];
             $keyFkTypeScreenReferencedSelected = array_search($idColumnTarger, $listIdColumns);
-            $fkTypeScreenReferenced = $_SESSION[APLICATIVO][TableInfo::FK_FIELDS_TABLE_SELECTED][TableInfo::FK_TYPE_SCREEN_REFERENCED][$keyFkTypeScreenReferencedSelected];
+            $fkTypeScreenReferenced = $FkFieldsTableSelected[TableInfo::FK_TYPE_SCREEN_REFERENCED][$keyFkTypeScreenReferencedSelected];
         }
         return $fkTypeScreenReferenced;
     }
@@ -528,7 +529,7 @@ class TGeneratorHelper
                 $FkFieldsTableSelected[TableInfo::FK_TYPE_SCREEN_REFERENCED][] = null;
             }
         }
-        $_SESSION[APLICATIVO][TableInfo::FK_FIELDS_TABLE_SELECTED] = $FkFieldsTableSelected;
+        TSysgenSession::setValue(TableInfo::FK_FIELDS_TABLE_SELECTED,$FkFieldsTableSelected);
         return $FkFieldsTableSelected;
     }    
     //--------------------------------------------------------------------------------------
