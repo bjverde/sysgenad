@@ -265,9 +265,12 @@ class ArrayHelper
      */
     public static function convertArrayFormDin2Adianti($dataArray,$changeCase = false,$upperCase = false) 
     {
-        $result = self::convertArrayFormDin2PdoV2($dataArray,$changeCase,$upperCase);
-        foreach( $result as $keyNumber => $value ) {
-            $result[$keyNumber] = (object)$value;
+        $result = array();
+        if(self::isArrayNotEmpty($dataArray)){
+            $result = self::convertArrayFormDin2PdoV2($dataArray,$changeCase,$upperCase);
+            foreach( $result as $keyNumber => $value ) {
+                $result[$keyNumber] = (object)$value;
+            }
         }
         return $result;
     }
