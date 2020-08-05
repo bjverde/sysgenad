@@ -65,14 +65,24 @@ class Gen01 extends TPage
                         $frm->addHiddenField('SCHEMA');
                         $frm->addHiddenField('VERSION');
                     }elseif($DBMS_TYPE == TFormDinPdoConnection::DBMS_SQLSERVER){
-                        $listSsDbVersion = TableInfo::getListDbmsWithVersion(TFormDinPdoConnection::DBMS_SQLSERVER);
-                        $frm->addSelectField('VERSION', 'Escolha a versão do DBMS:', true, $listSsDbVersion, null, null, null, null, null, null, ' ');
-                        $frm->addTextField('HOST'    , 'Host:'    , $sizeFields, true, 20, '127.0.0.1',true, null, null, true);
+                        $listDbVersion = TableInfo::getListDbmsWithVersion(TFormDinPdoConnection::DBMS_SQLSERVER);
+                        $frm->addSelectField('VERSION', 'Escolha a versão do DBMS:', true, $listDbVersion, null, null, null, null, null, null, ' ');
+                        $frm->addTextField('HOST'    , 'Host:'    , $sizeFields, true, 20, '127.0.0.1', true, null, null, true);
                         $frm->addTextField('DATABASE', 'Database:', $sizeFields, true, 20, 'Northwind',false, null, null, true);                        
                         $frm->addTextField('USER'    , 'User:'    , $sizeFields, true, 20, 'sa'       , true, null, null, true);
                         $frm->addTextField('PASSWORD', 'Password:', $sizeFields, true, 20, '123456'   ,false, null, null, true);
                         $frm->addTextField('PORT'    , 'Porta:'   , 6          ,false, 6 , '1433'     ,false, null, null, true, false);
                         $frm->addHiddenField('SCHEMA');
+                        $frm->addHtmlField('ssGride', '');
+                    }elseif($DBMS_TYPE == TFormDinPdoConnection::DBMS_POSTGRES){
+                        $listDbVersion = TableInfo::getListDbmsWithVersion(TFormDinPdoConnection::DBMS_POSTGRES);
+                        $frm->addSelectField('VERSION', 'Escolha a versão do DBMS:', true, $listDbVersion, null, null, null, null, null, null, ' ');
+                        $frm->addTextField('HOST'    , 'Host:'    , $sizeFields, true, 20, '127.0.0.1', true, null, null, true);
+                        $frm->addTextField('DATABASE', 'Database:', $sizeFields, true, 20, 'test'     ,false, null, null, true);
+                        $frm->addTextField('SCHEMA ' , 'Schema:'  , $sizeFields, true, 20, 'public'   ,false, null, null, true);
+                        $frm->addTextField('USER'    , 'User:'    , $sizeFields, true, 20, 'postgres' , true, null, null, true);
+                        $frm->addTextField('PASSWORD', 'Password:', $sizeFields, true, 20, '123456'   ,false, null, null, true);
+                        $frm->addTextField('PORT'    , 'Porta:'   , 6          ,false, 6 , '5432'     ,false, null, null, true, false);
                         $frm->addHtmlField('ssGride', '');
                     }
                 $frm->closeGroup();
