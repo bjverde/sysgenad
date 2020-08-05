@@ -36,6 +36,7 @@ class Gen01 extends TPage
                     $html->add('<br>'.Message::INFO_CONNECT.'<br>');
                 $frm->closeGroup();
 
+                $sizeFields = 50;
                 $frm->addGroupField('gpx2', Message::GEN01_GPX2_TITLE);
                     $frm->addHiddenField('TYPE', $DBMS_TYPE);
                     $frm->addHiddenField('PREP', 1);
@@ -44,11 +45,11 @@ class Gen01 extends TPage
                                                 ,TableInfo::DBMS_VERSION_MYSQL_8_LT =>TableInfo::DBMS_VERSION_MYSQL_8_LT_LABEL
                                             );
                         //$frm->addSelectField('myDbVersion', 'Escolha a versão do DBMS:', true, $listMyDbVersion, null, null, null, null, null, null, ' ');    
-                        $frm->addTextField('HOST', 'Host:'    , 20, true, 20, '127.0.0.1'   , true, null, null, true);
-                        $frm->addTextField('DATABASE'  , 'Database:', 20, true, 20, 'form_exemplo',false, null, null, true);
+                        $frm->addTextField('HOST', 'Host:'    , $sizeFields, true, 20, '127.0.0.1'   , true, null, null, true);
+                        $frm->addTextField('DATABASE'  , 'Database:', $sizeFields, true, 20, 'form_exemplo',false, null, null, true);
                         
-                        $frm->addTextField('USER', 'User:'    , 40, true, 20, 'form_exemplo', true, null, null, true);
-                        $frm->addTextField('PASSWORD', 'Password:', 40, true, 20, '123456'      ,false, null, null, true);
+                        $frm->addTextField('USER', 'User:'    , $sizeFields, true, 20, 'form_exemplo', true, null, null, true);
+                        $frm->addTextField('PASSWORD', 'Password:', $sizeFields, true, 20, '123456'      ,false, null, null, true);
                         $frm->addTextField('PORT', 'Porta:'   , 6 ,false, 6 , '3306'        ,false, null, null, true, false);
                         $frm->addHiddenField('SCHEMA');
                         $frm->addHiddenField('VERSION');
@@ -63,6 +64,16 @@ class Gen01 extends TPage
                         $frm->addHiddenField('PASSWORD');
                         $frm->addHiddenField('SCHEMA');
                         $frm->addHiddenField('VERSION');
+                    }elseif($DBMS_TYPE == TFormDinPdoConnection::DBMS_SQLSERVER){
+                        $listSsDbVersion = TableInfo::getListDbmsWithVersion(TFormDinPdoConnection::DBMS_SQLSERVER);
+                        $frm->addSelectField('VERSION', 'Escolha a versão do DBMS:', true, $listSsDbVersion, null, null, null, null, null, null, ' ');
+                        $frm->addTextField('HOST'    , 'Host:'    , $sizeFields, true, 20, '127.0.0.1',true, null, null, true);
+                        $frm->addTextField('DATABASE', 'Database:', $sizeFields, true, 20, 'Northwind',false, null, null, true);                        
+                        $frm->addTextField('USER'    , 'User:'    , $sizeFields, true, 20, 'sa'       , true, null, null, true);
+                        $frm->addTextField('PASSWORD', 'Password:', $sizeFields, true, 20, '123456'   ,false, null, null, true);
+                        $frm->addTextField('PORT'    , 'Porta:'   , 6          ,false, 6 , '1433'     ,false, null, null, true, false);
+                        $frm->addHiddenField('SCHEMA');
+                        $frm->addHtmlField('ssGride', '');
                     }
                 $frm->closeGroup();
                 $frm->addGroupField('gpx3');
@@ -114,7 +125,7 @@ class Gen01 extends TPage
             $connectOK = ManualConnection::testConnection($param);
 
             if ($connectOK instanceof PDO) {
-                $_SESSION[APPLICATION_NAME]['DBMS']['USER'] = $param['USER'];
+                $_SESSION[APPLICATION_NAME]['DBMS']['USER']     = $param['USER'];
                 $_SESSION[APPLICATION_NAME]['DBMS']['PASSWORD'] = $param['PASSWORD'];
                 $_SESSION[APPLICATION_NAME]['DBMS']['DATABASE'] = $param['DATABASE'];
                 $_SESSION[APPLICATION_NAME]['DBMS']['HOST']     = $param['HOST'];
@@ -156,21 +167,18 @@ class Gen01 extends TPage
 
     public function next()
     {
-        if (!ArrayHelper::has('USER', $_SESSION[APPLICATION_NAME]['DBMS'])) {
+        $DBMS = TSession::getValue('DBMS');
+        if (!ArrayHelper::has('USER', $DBMS)) {
             $text[] = Message::GEN02_NOT_READY;
             $text = TFormDinMessage::messageTransform($text);
             new TMessage(TFormDinMessage::TYPE_ERROR, $text);
         }else{
-            $dbType   = $_SESSION[APPLICATION_NAME]['DBMS']['TYPE'];
-            if( TableInfo::getDbmsWithVersion($dbType) ){
-                $banco    = TableInfo::getPreDBMS($dbType);
-                $dbversion= PostHelper::get($banco.'DbVersion');
-                if (empty($dbversion)){
+            if( TableInfo::getDbmsWithVersion( $DBMS['TYPE'] ) ){
+                if ( empty($DBMS['VERSION']) ){
                     $text[] = Message::WARNING_NO_DBMS_VER;
                     $text = TFormDinMessage::messageTransform($text);
                     new TMessage(TFormDinMessage::TYPE_WARING, $text);
                 }else{
-                    $_SESSION[APPLICATION_NAME]['DBMS']['VERSION']  =  $dbversion;
                     AdiantiCoreApplication::loadPage('Gen02');
                 }
             } else {

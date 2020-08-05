@@ -53,6 +53,15 @@ class ArrayHelper
         }
         return is_null($array[$atributeName])?null:trim($array[$atributeName]);
     }
+
+    public static function isArrayNotEmpty($array) 
+    {
+        $value = false;
+        if (is_array($array) && !empty($array)) {
+            $value = true;
+        }
+        return $value;
+    }
     
     /**
      * Similar to array_key_exists. But it does not generate an error message
