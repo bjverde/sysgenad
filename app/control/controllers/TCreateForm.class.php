@@ -74,7 +74,7 @@ class TCreateForm extends TCreateFileContent
     public function setPrimaryKeyTable($primaryKeyTable)
     {
         $primaryKeyTable = ( !empty($primaryKeyTable) ) ?$primaryKeyTable : "id";
-        $this->primaryKeyTable    = strtoupper($primaryKeyTable);
+        $this->primaryKeyTable    = $primaryKeyTable;
     }
     //--------------------------------------------------------------------------------------
     public function getPrimaryKeyTable()
@@ -99,7 +99,8 @@ class TCreateForm extends TCreateFileContent
     public function setListColunnsName($listColumnsName)
     {
         array_shift($listColumnsName);
-        $this->listColumnsName = array_map('strtoupper', $listColumnsName);
+        //$this->listColumnsName = array_map('strtoupper', $listColumnsName); //FormDin4
+        $this->listColumnsName = $listColumnsName; //FormDin5, Adianti é case sensitive
     }
     //--------------------------------------------------------------------------------------
     public function validateListColumnsName()

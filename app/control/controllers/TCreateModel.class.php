@@ -34,7 +34,8 @@ class TCreateModel extends TCreateFileContent
     {
         $tableName = strtolower($tableName);
         $this->setTableName($tableName);
-        $this->setFileName(ucfirst($tableName).'.class.php');
+        //$this->setFileName(ucfirst($tableName).'.class.php'); //FormDin4
+        $this->setFileName($tableName.'.class.php'); //FormDin5
         $this->setFilePath($pathFolder);
         $this->setListColumnsProperties($listColumnsProperties);
         $this->configArrayColumns();
@@ -42,8 +43,8 @@ class TCreateModel extends TCreateFileContent
     //-----------------------------------------------------------------------------------
     public function setTableName($strTableName)
     {
-        $strTableName = strtolower($strTableName);
-        $this->tableName=$strTableName;
+        //$strTableName = strtolower($strTableName);  //FormDin4
+        $this->tableName=$strTableName; //FormDin5
     }
     public function getTableName()
     {
@@ -89,7 +90,8 @@ class TCreateModel extends TCreateFileContent
     public function addColumn($strColumnName)
     {
         if (!in_array($strColumnName, $this->aColumns)) {
-            $this->aColumns[] = strtolower($strColumnName);
+            //$this->aColumns[] = strtolower($strColumnName); //FormDin4
+            $this->aColumns[] = $strColumnName; //FormDin5
         }
     }
     //--------------------------------------------------------------------------------------
@@ -123,7 +125,8 @@ class TCreateModel extends TCreateFileContent
     {
         $listColumnsProperties = $this->getListColumnsProperties();
         $listColumns = $listColumnsProperties['COLUMN_NAME'];
-        $this->keyColumnName = strtolower($listColumns[0]);
+        //$this->keyColumnName = strtolower($listColumns[0]); //FormDin4
+        $this->keyColumnName = $listColumns[0]; //FormDin5
         foreach ($listColumns as $v) {
             $this->addColumn($v);
         }
@@ -162,9 +165,9 @@ class TCreateModel extends TCreateFileContent
         $this->lines=null;
         $this->addLine('<?php');
         $this->addSysGenHeaderNote();
-        $this->addLine('class '.ucfirst($this->getTableName()).' extends TRecord');
+        $this->addLine('class '.$this->getTableName().' extends TRecord');
         $this->addLine('{');
-        $this->addLine(ESP.'const TABLENAME = \''.$this->tableName.'\';');
+        $this->addLine(ESP.'const TABLENAME = \''.$this->getTableName().'\';');
         $this->addLine(ESP.'const PRIMARYKEY= \''.$this->keyColumnName.'\';');
         $this->addLine(ESP.'const IDPOLICY  = \'serial\'; //{max, serial}');
         $this->addBlankLine();
