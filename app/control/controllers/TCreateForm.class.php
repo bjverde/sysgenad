@@ -546,8 +546,10 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function addGrid($qtdTab)
     {   
-        $this->addBlankLine();     
+        $this->addBlankLine();
+        $this->getMixUpdateFields($qtdTab);
         $this->addLine($qtdTab.'$grid = new TFormDinGrid($this,\'grid\',\'Gride\');');
+        $this->addLine($qtdTab.'$grid->setUpdateFields($mixUpdateFields);');
         $this->addColumnsGrid($qtdTab);
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
             $this->addLine($qtdTab.'$grid->enableDefaultButtons(false); //Disable Grid Action Edit e Delete');
