@@ -22,7 +22,7 @@ class BuildView extends TPage
         parent::__construct();
         
         TPage::include_css('app/resources/styles.css');
-        $this->html = new THtmlRenderer('app/resources/build.html');
+        $this->html = new THtmlRenderer('app/resources/sysgen-build.html');
 
         // define replacements for the main section
         $replace = array();

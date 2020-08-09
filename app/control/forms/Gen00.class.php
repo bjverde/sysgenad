@@ -17,7 +17,7 @@ class Gen00 extends TPage
             TSession::clear();
             
             // create the HTML Renderer
-            $this->html = new THtmlRenderer('app/resources/gen00.html');
+            $this->html = new THtmlRenderer('app/resources/sysgen-gen00.html');
             $this->html->enableSection('main');
             
             TPage::include_css('app/resources/sysgen.css');
