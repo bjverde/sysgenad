@@ -53,7 +53,6 @@ class Gen04 extends TPage
                 $tableSchema = $listTables['TABLE_SCHEMA'][$key];
                 $tableType   = $listTables['TABLE_TYPE'][$key];
                 $listFieldsTable = TGeneratorHelper::loadFieldsTablesSelectedWithFormDin($table,$tableType,$tableSchema);
-                FormDinHelper::debug($listFieldsTable);
                 
                 $tableType = strtoupper($listTables['TABLE_TYPE'][$key]);
                 $key = $key + 1;
