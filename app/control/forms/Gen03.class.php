@@ -62,6 +62,7 @@ class Gen03 extends TPage
             $grid->addColumn('DATA_TYPE', 'DATA_TYPE');
             $grid->addColumn('REFERENCED_TABLE_NAME', 'REFERENCED_TABLE_NAME');
             $grid->addColumn('REFERENCED_COLUMN_NAME', 'REFERENCED_COLUMN_NAME');
+            $grid->enableDefaultButtons(false);
             $this->datagrid = $grid->show();
             $panelGroupGrid = $grid->getPanelGroupGrid();
 

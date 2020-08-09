@@ -61,6 +61,7 @@ class Gen02 extends TPage
             $grid->addColumn('TABLE_NAME', 'TABLE_NAME');
             $grid->addColumn('COLUMN_QTD', 'COLUMN_QTD');
             $grid->addColumn('TABLE_TYPE', 'TABLE_TYPE');
+            $grid->enableDefaultButtons(false);
             $this->datagrid = $grid->show();
             $panelGrid = $grid->getPanelGroupGrid();
             $this->form->addContent([$panelGrid]);

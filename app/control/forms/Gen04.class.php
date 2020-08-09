@@ -30,8 +30,6 @@ class Gen04 extends TPage
 
             $listTables = TGeneratorHelper::loadTablesSelected();
             $tpSystem   = TSysgenSession::getValue(TableInfo::TP_SYSTEM);
-
-            FormDinHelper::debug($listTables);
             
             if( $tpSystem != TGeneratorHelper::TP_SYSTEM_FORM ){
                 TGeneratorHelper::createApiIndexAndRouter($listTables);
