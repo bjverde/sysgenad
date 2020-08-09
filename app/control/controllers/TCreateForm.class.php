@@ -631,8 +631,13 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.'protected $datagrid; // listing');
         $this->addLine(ESP.'protected $pageNavigation;');
         $this->addBlankLine();
-        $this->addLine(ESP.'// trait com onReload, onSearch, onDelete...');
-        $this->addLine(ESP.'use Adianti\Base\AdiantiStandardListTrait;');
+        if( $this->getTableType() == TableInfo::TB_TYPE_TABLE ){
+            $this->addLine(ESP.'// trait com onReload, onSearch, onDelete, onClear, onEdit, show');
+            $this->addLine(ESP.'use Adianti\Base\AdiantiStandardFormListTrait;');
+        }elseif( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
+            $this->addLine(ESP.'// trait com onReload, onSearch, onDelete...');
+            $this->addLine(ESP.'use Adianti\Base\AdiantiStandardListTrait;');
+        }        
         $this->addBlankLine();
         $this->addLine(ESP.'public function __construct()');
         $this->addLine(ESP.'{');
