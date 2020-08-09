@@ -549,6 +549,9 @@ class TCreateForm extends TCreateFileContent
         $this->addBlankLine();     
         $this->addLine($qtdTab.'$grid = new TFormDinGrid($this,\'grid\',\'Gride\');');
         $this->addColumnsGrid($qtdTab);
+        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
+            $this->addLine($qtdTab.'$grid->enableDefaultButtons(false); //Disable Grid Action Edit e Delete');
+        }
         $this->addBlankLine();
         $this->addLine($qtdTab.'$this->datagrid = $grid->show();');
         $this->addLine($qtdTab.'//$this->pageNavigation = $grid->getPageNavigation();');
