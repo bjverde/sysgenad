@@ -549,7 +549,7 @@ class TCreateForm extends TCreateFileContent
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
             $this->addBlankLine();
             $this->getMixUpdateFields($qtdTab);
-            $this->addLine($qtdTab.'$grid = new TFormDinGrid($this,\'grid\',\'Gride\');');
+            $this->addLine($qtdTab.'$grid = new TFormDinGrid($this,\'gd\',\'Data Grid\');');
             $this->addLine($qtdTab.'$grid->setUpdateFields($mixUpdateFields);');
             $this->addColumnsGrid($qtdTab);
             if( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
@@ -622,6 +622,20 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');');
     }
     //--------------------------------------------------------------------------------------
+    public function addVbox($qtdTab)
+    {
+        $this->addLine($qtdTab.'// creates the page structure using a table');
+        $this->addLine($qtdTab.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
+        $this->addLine($qtdTab.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
+        $this->addLine($qtdTab.'$vbox->add($this->form);');
+        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
+            $this->addLine($qtdTab.'$vbox->add($panelGroupGrid);');
+        }        
+        $this->addBlankLine();
+        $this->addLine($qtdTab.'// add the table inside the page');
+        $this->addLine($qtdTab.'parent::add($vbox);');
+    }
+    //--------------------------------------------------------------------------------------
     public function show($print = false)
     {
         $this->lines=null;
@@ -662,16 +676,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.'$this->form = $frm->show();');
         $this->addLine(ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
         $this->addGrid(ESP.ESP);
-        $this->addLine(ESP.ESP.'// creates the page structure using a table');
-        $this->addLine(ESP.ESP.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
-        $this->addLine(ESP.ESP.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
-        $this->addLine(ESP.ESP.'$vbox->add($this->form);');
-        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine(ESP.ESP.'$vbox->add($panelGroupGrid);');
-        }        
-        $this->addBlankLine();
-        $this->addLine(ESP.ESP.'// add the table inside the page');
-        $this->addLine(ESP.ESP.'parent::add($vbox);');
+        $this->addVbox(ESP.ESP);
         $this->addLine(ESP.'}');//FIM construct
         $this->addBasicViewController(ESP);
         $this->addLine("}");//FIM class
