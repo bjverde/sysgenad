@@ -1,6 +1,6 @@
 <!--[main]-->
 <div class="row" style="font-family:Open Sans">
-    <div class="col-sm-6">
+    <div class="col-sm-12">
         <div class="card panel">
             <div class="card-header panel-heading">
                <div class="card-title panel-title">
@@ -10,79 +10,64 @@
             <div class="card-body panel-body">
                 <div style="margin: auto;text-align: center;">
                     <a href="https://github.com/bjverde/sysgenad" target="newwindow">
-                        <img src="app/images/2-code-gen-database-first.png" width="80%">
+                        <img src="app/images/2-code-gen-database-first.png" width="40%">
                     </a>
                 </div>
                 <div>
-                    <p>SysGen é um gerador de sistemas. Le um banco de dados, usando os metadados gera um sistema para o FrameWork Adinti 7.2.2 usando FormDin5</p>
-                    <p><a href="https://github.com/bjverde/sysgenad" target="newwindow">https://github.com/bjverde/sysgenad</a></p>
+                    <br>
+                    <br>
+                    <p><b>SysGenAd</b> é um gerador de sistemas do tipo Scaffold. Criando um sistema em poucas etapas:</p>
+                    <p>
+                        <li>informe os parametros iniciais</li>
+                        <li>Informa os dados do banco</li>
+                        <li>Teste a conexão</li>
+                        <li>Selecione as tabelas, views e storage procudures</li>
+                        <li>Sistema Pronto</li>
+                    </p>
+                    <p>Scaffold em ingles quer dizer esquelo ou suporte ! O sistema criado pelo <b>SysGenAd</b> é o ponto de partido do sistema, diminuindo o tempo de codifição da versão inicial.</p>
+                    <p>O sistema gerado usado o FrameWork Adianti usando o FormDin 5 como padrão para as telas.</p>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="col-sm-6">
+    <div class="col-sm-12">
         <div class="card panel">
             <div class="card-header panel-heading">
                <div class="card-title panel-title">
-                   <div style="width: 100%"> <i class="far fa-clock gray" aria-hidden="true"></i>Orientações sobre a estrutura de banco de dados</div>
+                   <div style="width: 100%">O FormDin 5!</div>
                 </div>
             </div>
             <div class="card-body panel-body">
-                <br> Sigua as 4 dicas abaixo e será mais feliz ! Essas orientações não são obrigatorias, seguindo o código gerado irá funcionar de forma mais facil. 
-                <a href="https://github.com/bjverde/formDin/wiki/Usando-DAO-e-VO#dicas-para-modelar-o-banco-de-dados" target="_blank">Veja na Wiki do formDin em detalhes cada dica.</a>
-                <ul>
-                    <li>NÃO use chaves primárias composta !! Evite chaves primarias compostas. Procure utilizar sempre a chaves primaria simples com AUTOINCREMENT. Transforme as chaves compostas em chaves candidatas com Unique Key.</li>
-                    <li>Procure criar chaves primárias (PK) com nomes únicos. Nada de toda PK com o nome ID</li>
-                    <li>Use VIEWS e/ou SubSelects</li>
-                    <li>Use tabelas de apoio, para os "tipos"</li>
-                </ul>
-            </div>
-        </div>
-    </div> <!-- FIM CARD -->
-</div>
-
-<!--
-<div class="row" style="font-family:Open Sans">
-    <div class="col-sm-6">
-        <div class="card panel">
-            <div class="card-header panel-heading">
-               <div class="card-title panel-title">
-                   <div style="width: 100%"><i class="fa fa-code gray" aria-hidden="true"></i>Tipo de sistema</div>
-                </div>
-            </div>
-            <div class="card-body panel-body">
-                <b>ATENÇÃO:</b> Para API REST é preciso habilitar a mod_rewrite no Apache. 
-                <a href="https://github.com/bjverde/formDin/wiki/API-REST">Informações sobre no Wiki do FormDin</a> 
+                <blockquote>
+                Existe o FrameWork FormDin 4 ! O FormDin 5 é um meta framework ou adpatiador. São as mesma assinaturas e comportamentos do FormDin4 porém o resultado final sempre será uma tela BootStrap do Adianti.
+                </blockquote>
                 
-                <ul>
-                    <li>Somente tela FormDin: Padrão FormDin com a geração de menus, dao, vo, negocio e tela</li>
-                    <li>Somente API REST: Padrão RESTFull via api Json. Não tem menus e telas. tudo irá responder no SISTEMA/API</li>
-                    <li>FormDin + REST: É descrição completa do nome do sistema ou o que significa a sigla</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-sm-6">
-        <div class="card panel">
-            <div class="card-header panel-heading">
-               <div class="card-title panel-title">
-                <div style="width: 100%"><i class="fa fa-code gray" aria-hidden="true"></i>Tipo de sistema</div>
-                </div>
-            </div>
-            <div class="card-body panel-body">
-                EasyLabel é um recurso que irá alterar a Label dos campos das telas FormDin. Diminuindo seu trabalho de alterar as labels, no momento conta com regras fixas. Se o campo da tabela coincidir com o Tipo e a Regex o label será alterado. Exemplos: 
-                <ul>
-                    <li>Tipo Numerico e nome do campo QTALGO = Quantidade Algo</li>
-                    <li>Tipo Data e nome do campo DTALGO = Data Algo</li>
-                    <li>Tipo Texto e nome do campo MNALGO = Nome Algo</li>
-                    <li>Tipo Texto e nome do campo DSALGO = Descrição Algo</li>
-                </ul>
+                <a href="https://adianti.com.br/framework-template" target="newwindow" style="display:inline-grid">
+                    <img src="app/images/template4.png" width="90%" style="max-width:1000px;margin:auto">
+                </a>
             </div>
         </div>
     </div>
 </div>
--->
 
+<div class="col-sm-12">
+    <div class="card panel">
+        <div class="card-header panel-heading">
+           <div class="card-title panel-title">
+               <div style="width: 100%">O Adianti 7.2</div>
+            </div>
+        </div>
+        <div class="card-body panel-body">
+            <blockquote>
+            Existe o FrameWork FormDin 4 ! O FormDin 5 é um meta framework ou adpatiador. São as mesma assinaturas e comportamentos do FormDin4 porém o resultado final sempre será uma tela BootStrap do Adianti.
+            </blockquote>
+            
+            <a href="https://adianti.com.br/framework-template" target="newwindow" style="display:inline-grid">
+                <img src="app/images/template4.png" width="90%" style="max-width:1000px;margin:auto">
+            </a>
+        </div>
+    </div>
+</div>
+</div>
 <!--[/main]-->

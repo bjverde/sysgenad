@@ -6,7 +6,7 @@
     <menuitem label='Ajuda'>
         <icon>fa:life-ring fa-fw red</icon>
         <menu>
-            <menuitem label='Ajuda'>
+            <menuitem label='SysGen'>
                 <icon>fa:life-ring fa-fw</icon>
                 <action>helpView</action>
             </menuitem>
