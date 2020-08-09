@@ -91,6 +91,8 @@ class TFormDinMessage {
     const ERROR_OBJ_STORED_PROC = 'Stored Procedure Name is empty';
     const ERROR_OBJ_TABLE       = 'Table Name is empty';
 
+    const ERROR_GRID_UPDATEFIELD= 'MixUpdateField não definido para ação: ';
+
     //-----------------------------------------------------------
 
     const MSG_CONTRIB_PROJECT  = 'Contribute to the project https://github.com/bjverde/sysgenad !';

@@ -63,15 +63,21 @@ class TFormDinGrid
 
     private $adiantiObj;
     private $panelGroupGrid;
+    private $pageNavigation;
     private $objForm;
     private $listColumn = array();
 
-    protected $action;
     protected $idGrid;
     protected $title;
+    protected $updateFields;
     protected $key;
 
     protected $data;
+
+    protected $listGridAction = array();
+    protected $createDefaultButtons;
+    protected $createDefaultEditButton;
+    protected $createDefaultDeleteButton;
 
 
     /**
@@ -112,12 +118,12 @@ class TFormDinGrid
      *
      * @param object $objForm             - 1: FORMDIN5 Objeto do Adianti da classe do Form, é só informar $this
      * @param string $strName             - 2: ID da grid
-     * @param string $strTitle            - 3: Titulo da grip
+     * @param string $strTitle            - 3: Titulo da grid
      * @param array $mixData              - 4: Array de dados. Pode ser form formato Adianti, FormDin ou PDO
      * @param mixed $strHeight            - 5: Altura 
      * @param mixed $strWidth             - 6: NOT_IMPLEMENTED Largura
      * @param mixed $strKeyField          - 7: NOT_IMPLEMENTED Chave primaria
-     * @param array $mixUpdateFields      - 8: NOT_IMPLEMENTED Campos do form origem que serão atualizados ao selecionar o item desejado. Separados por virgulas seguindo o padrão <campo_tabela> | <campo_formulario> , <campo_tabela> | <campo_formulario>
+     * @param array $mixUpdateFields      - 8: Campos do form origem que serão atualizados ao selecionar o item desejado. Separados por virgulas seguindo o padrão <campo_tabela> | <campo_formulario> , <campo_tabela> | <campo_formulario>
      * @param mixed $intMaxRows           - 9: NOT_IMPLEMENTED Qtd Max de linhas
      * @param mixed $strRequestUrl        -10: NOT_IMPLEMENTED Url request do form
      * @param mixed $strOnDrawCell        -11: NOT_IMPLEMENTED
@@ -162,8 +168,10 @@ class TFormDinGrid
             $this->setHeight($strHeight);
             //$this->setWidth($strWidth);
             $this->setData($mixData);
+            $this->setUpdateFields( $mixUpdateFields );
 
-            $panel = new TPanelGroup($strTitle);
+            $this->setTitle($strTitle);
+            $panel = new TPanelGroup($this->getTitle());
             $this->setPanelGroupGrid($panel);
         }
     }
@@ -182,7 +190,7 @@ class TFormDinGrid
     public function getObjForm(){
         return $this->objForm;
     }
-
+    //---------------------------------------------------------------
     public function setAdiantiObj( $bootgrid )
     {
         if( !($bootgrid instanceof BootstrapDatagridWrapper) ){
@@ -190,38 +198,31 @@ class TFormDinGrid
         }
         $this->adiantiObj = $bootgrid;
     }
-
     public function getAdiantiObj(){
-        //$title = $this->getTitle();
-        //$panel = new TPanelGroup($title);
-        //$panel->add( $this->adiantiObj );
         return $this->adiantiObj;
     }
-
+    //---------------------------------------------------------------
     public function getId(){
         return $this->idGrid;
     }
-
-    public function setId(string $idGrid){
+    public function setId($idGrid){
         if(empty($idGrid)){
             throw new InvalidArgumentException(TFormDinMessage::ERROR_EMPTY_INPUT);
         }
         $this->getAdiantiObj()->setId($idGrid);
         $this->idGrid = $idGrid;
     }
-
+    //---------------------------------------------------------------
     public function getHeight(){
         return $this->getAdiantiObj()->height;
     }
-
     public function setHeight($height){
         if( !empty($height) ){
             $this->getAdiantiObj()->setHeight($height);
             $this->getAdiantiObj()->makeScrollable();
         }
     }
-
-
+    //---------------------------------------------------------------
     public function getWidth()
     {
         //return $this->getAdiantiObj()->getWidth();
@@ -231,7 +232,7 @@ class TFormDinGrid
     {
         //$this->getAdiantiObj()->setWidth($width);
     }
-
+    //---------------------------------------------------------------
     public function setData( $data )
     {
         if(!empty($data)){
@@ -243,7 +244,7 @@ class TFormDinGrid
     {
         return $this->data;
     }
-
+    //---------------------------------------------------------------
     /**
      * Adciona um Objeto Adianti na lista de objetos que compeen o Formulário.
      * 
@@ -270,70 +271,151 @@ class TFormDinGrid
         $this->listColumn[]=$element;
     }
 
+    public function showGridColumn()
+    {
+        $listColumn = $this->getListColumn();
+        if( ArrayHelper::isArrayNotEmpty($listColumn) ){
+            foreach( $listColumn as $formDinGridColumn ) {
+                $column = $formDinGridColumn->getAdiantiObj();
+                $this->getAdiantiObj()->addColumn($column);
+            }
+        }
+    }
+
+    /**
+     * Monta as ações no grid
+     * @return void
+     */
+    public function showGridAction()
+    {
+        $listGridAction = $this->getListGridAction();
+        if( ArrayHelper::isArrayNotEmpty($listGridAction) ){
+            foreach( $listGridAction as $itemGridAction ) {
+                $this->getAdiantiObj()->addAction($itemGridAction->getAdiantiObj()
+                                                 ,$itemGridAction->getActionLabel()
+                                                 ,$itemGridAction->getImage()
+                                                 );
+            }
+        }else{
+            if( $this->getCreateDefaultButtons() ){
+                if( $this->getCreateDefaultEditButton() ){
+                    $itemGridAction = $this->addButton(_t('Edit'),'onEdit',null,null,null,'far:edit blue');
+                    $this->getAdiantiObj()->addAction($itemGridAction->getAdiantiObj()
+                                                     ,$itemGridAction->getActionLabel()
+                                                     ,$itemGridAction->getImage()
+                                                     );
+                }
+
+                if( $this->getCreateDefaultDeleteButton() ){
+                    $itemGridAction = $this->addButton(_t('Delete'),'onDelete',null,null,null,'far:trash-alt red');
+                    $this->getAdiantiObj()->addAction($itemGridAction->getAdiantiObj()
+                                                     ,$itemGridAction->getActionLabel()
+                                                     ,$itemGridAction->getImage()
+                                                     );
+                }
+            }
+        }
+    }
+
+    /**
+     * Monta o objeto do Grid Adianti com tudo que precisa
+     * @return void
+     */
     public function show()
     {
+        $this->showGridColumn();
+        $this->showGridAction();
+
         $this->getAdiantiObj()->createModel();
         if( !empty($this->getData()) ){
             $this->getAdiantiObj()->addItems( $this->getData() );
         }
         $this->getPanelGroupGrid()->add($this->getAdiantiObj())->style = 'overflow-x:auto';
+
+
+        // the creation of the navigation page must come after createModel
+        $pageNavigation = new TPageNavigation;
+        $pageNavigation->setAction(new TAction(array($this->getObjForm(), 'onReload')));
+        $this->setPageNavigation($pageNavigation);
+        $this->getPanelGroupGrid()->addFooter($pageNavigation);
+
         return $this->getAdiantiObj();
     }
-
-    public function getAction(){
-        return $this->action;
+    //---------------------------------------------------------------
+    public function getListColumn(){
+        return $this->listColumn;
     }
-
-    public function setAction($action){
-        $this->action = $action;
+    public function setListColumn($listColumn){
+        $this->listColumn = $listColumn;
     }
-
-
-
+    public function addListColumn($itemColumn){
+        if ( !($itemColumn instanceof TFormDinGridColumn)) {
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_OBJ_TYPE_WRONG.' use TFormDinGridColumn');
+         }
+        $this->listColumn[$itemColumn->getName()] = $itemColumn;
+    }
+    //---------------------------------------------------------------
     public function getTitle(){
         return $this->title;
     }
-
-    public function setTitle(string $title){
-        $this->getPanelGroupGrid()->setTitle($title);
+    public function setTitle($title){
         $this->title = $title;
     }
-
+    //---------------------------------------------------------------
     public function getKey(){
         return $this->key;
     }
-
     public function setKey(string $key){
         $this->key = $key;
     }
-
+    //---------------------------------------------------------------
+    public function getListGridAction(){
+        return $this->listGridAction;
+    }
+    public function setListGridAction($listGridAction){
+        $this->listGridAction = $listGridAction;
+    }
+    public function addListGridAction($itemGridAction){
+        if ( !($itemGridAction instanceof TFormDinGridAction)) {
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_OBJ_TYPE_WRONG.' use TFormDinGridAction');
+         }
+        $this->listGridAction[$itemGridAction->getActionName()] = $itemGridAction;
+    }
+    //---------------------------------------------------------------
     public function getPanelGroupGrid(){
         return $this->panelGroupGrid;
     }
-
     public function setPanelGroupGrid($panel){
         if( !($panel instanceof TPanelGroup) ){
             throw new InvalidArgumentException(TFormDinMessage::ERROR_OBJ_TYPE_WRONG.' use TPanelGroup');
         }
         $this->panelGroupGrid = $panel;
     }
-
+    //---------------------------------------------------------------
+    public function getPageNavigation(){
+        return $this->pageNavigation ;
+    }
+    public function setPageNavigation($pageNavigation){
+        if( !($pageNavigation instanceof TPageNavigation) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_OBJ_TYPE_WRONG.' use TPanelGroup');
+        }
+        $this->pageNavigation = $pageNavigation;
+    }
+    //---------------------------------------------------------------
     public function getFooter(){
         return $this->getPanelGroupGrid()->getFooter();
     }
-
     public function addFooter($footer){
         return $this->getPanelGroupGrid()->addFooter($footer);
     }
-
+    //---------------------------------------------------------------
     public function enableDataTable(){
         $this->getAdiantiObj()->datatable = 'true';
     }
-
     public function disableDataTable(){
         $this->getAdiantiObj()->datatable = 'false';
     }
-
+    //---------------------------------------------------------------
     /**
      * Coluna do Grid Padronizado em BoorStrap
      * Reconstruido FormDin 4 Sobre o Adianti 7.1
@@ -350,9 +432,11 @@ class TFormDinGrid
                             , string $align='left' )
     {
         $formDinGridColumn = new TFormDinGridColumn( $name,$label,$width,$align);
-        $column = $formDinGridColumn->getAdiantiObj();
-        $this->getAdiantiObj()->addColumn($column);
-        return $column;
+        $this->addListColumn($formDinGridColumn);
+        return $formDinGridColumn;
+        //$column = $formDinGridColumn->getAdiantiObj();
+        //$this->getAdiantiObj()->addColumn($column);
+        //return $column;
     }
 
     //---------------------------------------------------------------------------------------
@@ -384,4 +468,133 @@ class TFormDinGrid
         $this->columns[ strtolower( $strName )] = $col;
         return $col;
     }
+
+    //------------------------------------------------------------------------------------
+    public function getMixUpdateButton($mixUpdateButton){
+        $mixUpdateButton = empty($mixUpdateButton)?$this->getUpdateFields():$mixUpdateButton;
+
+        if( empty($mixUpdateButton) ){
+            $listKeyColumnId = array_keys($this->getListColumn());            
+            $mixUpdateButton = null;
+            if( ArrayHelper::isArrayNotEmpty($listKeyColumnId) ){
+                foreach(  $listKeyColumnId as $id) {
+                    $mixUpdateButton[$id] = $id;
+                }                
+                $mixUpdateButton = TFormDinGridAction::convertArray2OutputFormat($mixUpdateButton);
+            }            
+        }
+        return $mixUpdateButton;
+    }    
+    /**
+     * Adicionar botão na linha do gride. Se o usuário adicionar um botão, 
+     * cancelar a criação dos botões padrão de alterar e excluir
+     *
+     * $boolSubmitAction = adicionar/remover a função fwFazerAcao(). Padrão=true
+     *
+     * @param string $strRotulo         - 1: Nome do Label do Botão ou Hint que irá aparecer na imagem se o Hint estiver em branco
+     * @param string $strAction         - 2: Nome da ação capitura no formDinAcao
+     * @param string $strName           - 3: NOT_IMPLEMENTED Nome
+     * @param string $strOnClick        - 4: NOT_IMPLEMENTED JavaScript que será chamado no evento OnClick
+     * @param string $strConfirmMessage - 5: NOT_IMPLEMENTED Mensagem com caixa de confirmação
+     * @param string $strImage          - 6: Imagem que irá aparecer
+     * @param string $strImageDisabled  - 7: NOT_IMPLEMENTED Imagem quado desabilitado
+     * @param string $strHint           - 8: NOT_IMPLEMENTED
+     * @param boolean $boolSubmitAction - 9: NOT_IMPLEMENTED
+     * @param mixed   $mixUpdateButton  -10: FORMDIN5: MixUpdateFields do Botão 
+     * @param string $classDestiny      -11: FORMDIN5: nome da classe que vai tratar ação. o Valor Defualt é propria classe
+     * @return object TFormDinGridAction
+     */
+    public function addButton( $strRotulo
+                             , $strAction = null
+                             , $strName = null
+                             , $strOnClick = null
+                             , $strConfirmMessage = null
+                             , $strImage = null
+                             , $strImageDisabled = null
+                             , $strHint = null
+                             , $boolSubmitAction = null
+                             , $mixUpdateButton = null
+                             , $classDestiny    = null
+                             ){
+            $mixUpdateButton = $this->getMixUpdateButton($mixUpdateButton);
+            if( empty($mixUpdateButton) ){
+                throw new InvalidArgumentException(TFormDinMessage::ERROR_GRID_UPDATEFIELD.$strAction);
+            }
+            $classDestiny    = empty($classDestiny)?$this->getObjForm():$classDestiny;
+            $itemGridAction = new TFormDinGridAction($classDestiny
+                                                    ,$strRotulo
+                                                    ,$strAction
+                                                    ,$mixUpdateButton
+                                                    ,$strImage
+                                                    );
+            $this->addListGridAction($itemGridAction);
+            return $itemGridAction;
+    }
+
+    //------------------------------------------------------------------------------------
+    /**
+     * Campos do form origem que serão atualizados ao selecionar o item desejado.
+     * Pode receber 3 tipos de entrada
+     *   - FormDin: Separados por pipe e virgulas seguindo o padrão 
+     *      <campo_tabela> | <campo_formulario> , <campo_tabela> | <campo_formulario>
+     *   - PHP array ( <campo_tabela>=><campo_formulario>,  <campo_tabela>=><campo_formulario>)
+     *   - Adianti ['key0'=>'{value0}','key1' => '{value1}']
+     * @param string $mixUpdateFields
+     */
+    public function setUpdateFields( $mixUpdateFields = null )
+    {
+        $mixUpdateFields = TFormDinGridAction::convertArray2OutputFormat($mixUpdateFields);
+        $this->updateFields = $mixUpdateFields;
+    }    
+    //------------------------------------------------------------------------------------
+    /**
+     * Retorna a lista de campos que serão atualizados
+     *
+     * @param const $outputFormat - Formato de saída conforme TFormDinGridAction
+     * @return mix
+     */
+    public function getUpdateFields($outputFormat = TFormDinGridAction::TYPE_ADIANTI)
+    {
+        $mixUpdateFields = TFormDinGridAction::convertArray2OutputFormat($this->updateFields,$outputFormat);
+        return $mixUpdateFields;
+    }    
+    //------------------------------------------------------------------------------------
+    public function clearUpdateFields()
+    {
+        $this->updateFields = null;
+    }
+    //---------------------------------------------------------------------------------------
+    public function getCreateDefaultButtons()
+    {
+        return is_null( $this->createDefaultButtons ) ? true : $this->createDefaultButtons;
+    }
+    /**
+     * Define se os botoes Alterar e Excluir serão exibidos quando não for
+     * adicionado nenhum botão
+     *
+     * @param mixed $boolNewValue
+     */
+    public function enableDefaultButtons( $boolNewValue = null )
+    {
+        $this->createDefaultButtons = is_null( $boolNewValue ) ? true : $boolNewValue;
+    }
+    //------------------------------------------------------------------------------------
+    public function setCreateDefaultEditButton( $boolNewValue = null )
+    {
+        $this->createDefaultEditButton = is_null( $boolNewValue ) ? true : $boolNewValue;
+    }    
+    public function getCreateDefaultEditButton( $boolNewValue = null )
+    {
+        return is_null( $this->createDefaultEditButton ) ? true : $this->createDefaultEditButton;
+    }    
+    //------------------------------------------------------------------------------------
+    public function setCreateDefaultDeleteButton( $boolNewValue = null )
+    {
+        $this->createDefaultDeleteButton = is_null( $boolNewValue ) ? true : $boolNewValue;
+    }
+    
+    public function getCreateDefaultDeleteButton( $boolNewValue = null )
+    {
+        return is_null( $this->createDefaultDeleteButton ) ? true : $this->createDefaultDeleteButton;
+    }    
 }

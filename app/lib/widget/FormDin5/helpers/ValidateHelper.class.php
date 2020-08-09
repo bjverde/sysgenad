@@ -96,19 +96,20 @@ class ValidateHelper
     }    
     //--------------------------------------------------------------------------------
     /**
-     * Validate Object Type is Instance Of TPDOConnectionObj
+     * Validate Object Type is Instance Of TFormDinPdoConnection
      *
-     * @param object $tpdo instanceof TPDOConnectionObj
+     * @param object $tpdo instanceof TFormDinPdoConnection
      * @param string $method __METHOD__
      * @param string $line __LINE__
      * @throws InvalidArgumentException
      * @return void
      */
-    public static function objTypeTPDOConnectionObj($tpdo,$method,$line)
+    public static function objTypeTFormDinPdoConnection($tpdo,$method,$line)
     {
         self::methodLine($method, $line, __METHOD__);
-        $typeObjWrong = !($tpdo instanceof TPDOConnectionObj);
-        if( !is_null($tpdo) && $typeObjWrong ){
+        $typeObjWrong = !($tpdo instanceof TFormDinPdoConnection);
+        $notNull = !is_null($tpdo);
+        if( $notNull && $typeObjWrong ){
             throw new InvalidArgumentException('Informed class is not an instance of TPDOConnectionObj. See the method: '.$method.' in the line: '.$line);
         }
     }

@@ -44,6 +44,7 @@ class TFormDinGridColumn
 {
     protected $adiantiObj;
     protected $action;
+    protected $name;
     
     /**
      * Coluna do Grid Padronizado em BoorStrap
@@ -63,6 +64,7 @@ class TFormDinGridColumn
     {
         $column = new TDataGridColumn($name, $label,$align,$width);
         $this->setAdiantiObj($column);
+        $this->setName($name);
         return $this->getAdiantiObj();
     }
 
@@ -74,5 +76,11 @@ class TFormDinGridColumn
     }
     public function getAdiantiObj(){
         return $this->adiantiObj;
+    }
+    public function setName($name){       
+        return $this->name=$name;
+    }
+    public function getName(){
+        return $this->name;
     }
 }
