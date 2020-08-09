@@ -546,20 +546,22 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function addGrid($qtdTab)
     {   
-        $this->addBlankLine();
-        $this->getMixUpdateFields($qtdTab);
-        $this->addLine($qtdTab.'$grid = new TFormDinGrid($this,\'grid\',\'Gride\');');
-        $this->addLine($qtdTab.'$grid->setUpdateFields($mixUpdateFields);');
-        $this->addColumnsGrid($qtdTab);
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine($qtdTab.'$grid->enableDefaultButtons(false); //Disable Grid Action Edit e Delete');
+            $this->addBlankLine();
+            $this->getMixUpdateFields($qtdTab);
+            $this->addLine($qtdTab.'$grid = new TFormDinGrid($this,\'grid\',\'Gride\');');
+            $this->addLine($qtdTab.'$grid->setUpdateFields($mixUpdateFields);');
+            $this->addColumnsGrid($qtdTab);
+            if( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
+                $this->addLine($qtdTab.'$grid->enableDefaultButtons(false); //Disable Grid Action Edit e Delete');
+            }
+            $this->addBlankLine();
+            $this->addLine($qtdTab.'$this->datagrid = $grid->show();');
+            $this->addLine($qtdTab.'$this->pageNavigation = $grid->getPageNavigation();');
+            $this->addLine($qtdTab.'$panelGroupGrid = $grid->getPanelGroupGrid();');
+            $this->addBlankLine();
+            $this->addBlankLine();
         }
-        $this->addBlankLine();
-        $this->addLine($qtdTab.'$this->datagrid = $grid->show();');
-        $this->addLine($qtdTab.'//$this->pageNavigation = $grid->getPageNavigation();');
-        $this->addLine($qtdTab.'$panelGroupGrid = $grid->getPanelGroupGrid();');
-        $this->addBlankLine();
-        $this->addBlankLine();
     }
     //--------------------------------------------------------------------------------------
     public function addMethod_onSave($qtdTab)
