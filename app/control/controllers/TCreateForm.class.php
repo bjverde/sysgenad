@@ -604,7 +604,7 @@ class TCreateForm extends TCreateFileContent
     private function addBasicViewController($qtdTab)
     {
 
-        if( $this->getTableType() != TableInfo::TB_TYPE_VIEW ){
+        if( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
             $this->addMethod_onClear($qtdTab);
         }
         /*
