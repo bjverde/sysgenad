@@ -25,7 +25,8 @@ class Gen00 extends TPage
             $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP00);
             
             $frm = new TFormDin($this,Message::GEN00_TITLE);
-            
+
+            /*
             $frm->addGroupField('gpxTpSystem', Message::GPX_TYPE_SYSTEM);
                 //$frm->addHtmlField('info', null, 'ajuda/info_gen00_tpsys_pt-br.php')->setClass('htmlInfo', true);
                 //$listTpSystem = TGeneratorHelper::getListTypeSystem();
@@ -39,6 +40,7 @@ class Gen00 extends TPage
                 //$frm->addRadioField('EASYLABEL', Message::FIELD_EASY_LABEL, true, $listTpSystem, null, true, 'Y', 3, null, null, null, false);
                 $frm->addHiddenField('EASYLABEL','Y',true);
             $frm->closeGroup();
+            */
 
             $frm->addGroupField('gpx3', Message::GEN00_GPX3_TITLE);
                 $html = '<h3>Campos:</h3>
