@@ -26,12 +26,15 @@ class Gen00 extends TPage
             
             $frm = new TFormDin($this,Message::GEN00_TITLE);
 
-            //$frm->addGroupField('gpxTpSystem', Message::GPX_TYPE_SYSTEM);
+            $frm->addGroupField('gpxTpSystem', Message::GPX_TYPE_SYSTEM);
                 //$frm->addHtmlField('info', null, 'ajuda/info_gen00_tpsys_pt-br.php')->setClass('htmlInfo', true);
                 //$listTpSystem = TGeneratorHelper::getListTypeSystem();
                 //$frm->addRadioField(TableInfo::TP_SYSTEM, Message::FIELD_TP_SYSTEM, true, $listTpSystem, null, true, TGeneratorHelper::TP_SYSTEM_FORM, 3, null, null, null, false);
                 $frm->addHiddenField(TableInfo::TP_SYSTEM,TGeneratorHelper::TP_SYSTEM_FORM,true);
-            //$frm->closeGroup();
+
+                $listTheme = TGeneratorHelper::getListTheme();
+                $frm->addSelectField(TableInfo::TP_SYSTEM_THEME, 'Escolha o tema do sistema:', true, $listTheme);
+            $frm->closeGroup();
         
             //$frm->addGroupField('gpxEasyLabel', Message::GPX_EASYLABEL);
                 //$frm->addHtmlField('info', null, 'ajuda/info_gen00_easylabel_pt-br.php')->setClass('htmlInfo', true);

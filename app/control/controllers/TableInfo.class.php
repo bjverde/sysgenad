@@ -25,6 +25,7 @@ final class TableInfo
     const LIST_TABLES_DB = 'LIST_TABLES_DB';
     //-----------------------------------------------------------------------------------
     const TP_SYSTEM = 'TP_SYSTEM';
+    const TP_SYSTEM_THEME = 'TP_SYSTEM_THEME';
     
     const TABLE_SCHEMA = 'TABLE_SCHEMA';
     const TABLE_NAME = 'TABLE_NAME';

@@ -17,6 +17,10 @@ class TGeneratorHelper
 
     const GEN_SYSTEM_ACRONYM = 'GEN_SYSTEM_ACRONYM';
 
+    const THEME_FORMDINVB='THEME_FORMDINVB';
+    const THEME_THEME3='THEME_THEME3';
+    const THEME_THEME4='THEME_THEME4';
+
     public static function testar($extensao = null, $html)
     {
         if (extension_loaded($extensao)) {
@@ -551,5 +555,14 @@ class TGeneratorHelper
         if (!is_array($listColumnsProperties)) {
             throw new InvalidArgumentException(Message::ERRO_LIST_COLUMNS_NOT_ARRAY);
         }
+    }
+    //--------------------------------------------------------------------------------------
+    public static function getListTheme()
+    {
+        $list = array();
+        $list[self::THEME_FORMDINVB]='FormDin VB - Vertical BootStrap';
+        $list[self::THEME_THEME3]='Tema 3 Adianti - BootStrap';
+        $list[self::THEME_THEME4]='Tema 4 Adianti - Material';
+        return $list;
     }
 }
