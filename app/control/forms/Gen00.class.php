@@ -122,6 +122,7 @@ class Gen00 extends TPage
             TSession::setValue('GEN_SYSTEM_VERSION',RequestHelper::get('GEN_SYSTEM_VERSION'));
             TSession::setValue('GEN_SYSTEM_NAME',RequestHelper::get('GEN_SYSTEM_NAME'));
             TSession::setValue(TableInfo::TP_SYSTEM,RequestHelper::get(TableInfo::TP_SYSTEM));
+            TSession::setValue(TableInfo::TP_SYSTEM_THEME,RequestHelper::get(TableInfo::TP_SYSTEM_THEME));
             TSession::setValue('EASYLABEL',RequestHelper::get('EASYLABEL'));
             AdiantiCoreApplication::loadPage('Gen01');
         } catch (Exception $e) {

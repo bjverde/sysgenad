@@ -19,6 +19,17 @@ class TCreateConstants extends TCreateFileContent
         $path = TGeneratorHelper::getPathNewSystem().DS.'app'.DS.'config';
         $this->setFilePath($path);
     }
+    public function addTheme($qtdTab)
+    {   
+        $tpSystemTheme = TSysgenSession::getValue('TableInfo::TP_SYSTEM_THEME');
+        if( $tpSystemTheme == TGeneratorHelper::THEME_THEME3 ){
+            $this->addLine('theme = theme3');
+        }elseif( $tpSystemTheme == TGeneratorHelper::THEME_THEME4 ){
+            $this->addLine('theme = theme4');
+        }else{
+            $this->addLine('theme = theme_formdinv');
+        }
+    }    
     //--------------------------------------------------------------------------------------
     public function show($print = false)
     {
@@ -28,7 +39,7 @@ class TCreateConstants extends TCreateFileContent
         $this->addLine('timezone = America/Sao_Paulo');
         $this->addLine('language = pt');
         $this->addLine('application ='.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM'));
-        $this->addLine('theme = theme_formdinv');
+        $this->addTheme(null);
         $this->addLine('seed = ');
         $this->addLine('debug = 1');
         $this->addBlankLine();
