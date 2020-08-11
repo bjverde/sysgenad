@@ -21,7 +21,9 @@ class TCreateConstants extends TCreateFileContent
     }
     public function addTheme($qtdTab)
     {   
-        $tpSystemTheme = TSysgenSession::getValue('TableInfo::TP_SYSTEM_THEME');
+        $tpSystemTheme = TSysgenSession::getValue(TableInfo::TP_SYSTEM_THEME);
+        FormDinHelper::debug($tpSystemTheme);
+        
         if( $tpSystemTheme == TGeneratorHelper::THEME_THEME3 ){
             $this->addLine('theme = theme3');
         }elseif( $tpSystemTheme == TGeneratorHelper::THEME_THEME4 ){
