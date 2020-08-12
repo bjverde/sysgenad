@@ -32,7 +32,7 @@ O gerador de sistemas lê um banco de dados e gera uma sistema CRUD, usando o Ad
 * PostgreSQL
 
 # Videos Sobre
-Abaixo um vídeo sobre o FormDin 5 e está esperado para o Futuro !
+Abaixo um o funcionamento do SysGenAd e o FormDin5
 [![http://img.youtube.com/vi/rlVLS7A_bD8/0.jpg](http://img.youtube.com/vi/rlVLS7A_bD8/0.jpg)](http://www.youtube.com/watch?v=rlVLS7A_bD8 "SysGenAd, um gerador de código para o Adianti 7.2 com FormDin5")
 
 
