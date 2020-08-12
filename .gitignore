@@ -12,7 +12,7 @@
 /.buildpath
 
 # Iginorando arquivos do Adianti
-/tmp/
+/tmp/*
 !/tmp/.htaccess
 /phpunit-code-coverage/
 !/phpunit-code-coverage/phpunit-code-coverage.zip
