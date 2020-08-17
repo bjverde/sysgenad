@@ -43,6 +43,7 @@
 class ArrayHelper
 {
     const TYPE_FORMDIN = 'ARRAY_TYPE_FORMDIN';
+    const TYPE_FORMDIN_STRING = 'STRING_TYPE_FORMDIN';
     const TYPE_PDO     = 'ARRAY_TYPE_PDO';
     const TYPE_ADIANTI = 'ARRAY_TYPE_ADIANTI';
 
@@ -288,6 +289,36 @@ class ArrayHelper
         }
         return $dataArray;
     }
+    //--------------------------------------------------------------------------------
+    /**
+     * Convert String FormDin para Array
+     * @param  string $array   - 1: string ou array de entrada
+     * @return array
+     */
+    public static function convertString2Array($string) 
+    {
+        $result = null;
+        if( self::isArrayNotEmpty($string) ) {
+            $result = $string;
+        }else{
+            if( !is_string($string) ){
+                throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_WRONG);
+            }else{
+                $pos  = strpos($string, '=');
+                if( empty($pos) ){
+                    throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_WRONG);
+                }else{
+                    //'S=SIM,N=Não,T=Talvez'
+                    $string = explode(',',$string);
+                    foreach( $string as $value ) {
+                        $intString = explode('=',$value);
+                        $result[$intString[0]]=$intString[1];
+                    }
+                }
+            }
+        }
+        return $result;
+    }    
     //--------------------------------------------------------------------------------
     /**
      * @deprecated chante to ValidateHelper::isArray

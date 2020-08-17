@@ -40,6 +40,22 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
+
+/**
+ * Classe para criação campo do tipo select
+ * ------------------------------------------------------------------------
+ * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * os parâmetros do metodos foram marcados com:
+ * 
+ * NOT_IMPLEMENTED = Parâmetro não implementados, talvez funcione em 
+ *                   verões futuras do FormDin. Não vai fazer nada
+ * DEPRECATED = Parâmetro que não vai funcionar no Adianti e foi mantido
+ *              para o impacto sobre as migrações. Vai gerar um Warning
+ * FORMDIN5 = Parâmetro novo disponivel apenas na nova versão
+ * ------------------------------------------------------------------------
+ * 
+ * @author Reinaldo A. Barrêto Junior
+ */
 class TFormDinSelectField
 {
     protected $adiantiObj;

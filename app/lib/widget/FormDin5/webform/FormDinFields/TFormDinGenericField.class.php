@@ -157,22 +157,34 @@ class TFormDinGenericField
             $adiantiObj->setId($id);
         }
     }
-
+    //---------------------------------------------------------------
     public function setRequired($boolRequired){
         if($boolRequired){
             $strLabel = $this->getLabel();
             $this->getAdiantiObj()->addValidation($strLabel, new TRequiredValidator);
         }
     }
-
-    public function isRequired(){
-        $this->getAdiantiObj()->isRequired();
+    public function isRequired()
+    {
+        return $this->getAdiantiObj()->isRequired();
     }
-
-    public function getValidations(){
-        $this->getAdiantiObj()->getValidations();
+    //---------------------------------------------------------------
+    public function getValidations()
+    {
+        return $this->getAdiantiObj()->getValidations();
     }
-
+    /**
+     * Add a field validator of the Adianti 
+     * @param $label Field name
+     * @param $validator TFieldValidator object
+     * @param $parameters Aditional parameters
+     * @return void
+     */
+    public function addValidation($label, $validator, $parameters = NULL)
+    {
+        $this->getAdiantiObj()->addValidation($label, $validator, $parameters);
+    }
+    //---------------------------------------------------------------
     public function setValue($value){
         if(!empty($value)){
             $this->getAdiantiObj()->setValue($value);
@@ -216,7 +228,7 @@ class TFormDinGenericField
      */
     public function setExampleText($strNewValue=null)
 	{
-		$this->getAdiantiObj()->setTip($strNewValue);
+		$this->setTooltip($strNewValue);
     }
     /**
      * Metodo criado para melhorar a retrocompatibilidade com Formdi4s

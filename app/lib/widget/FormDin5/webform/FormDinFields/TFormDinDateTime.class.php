@@ -55,10 +55,12 @@
  * 
  * @author Reinaldo A. Barrêto Junior
  */
-class TFormDinDate extends TFormDinGenericField
-{
+class TFormDinDateTime extends TFormDinGenericField
+{    
     private $minValue;
     private $maxValue;
+    private $maskType;
+    private $databaseMask;
     
     /****
      * Adicona um campo data ou mes/ano ou dia/mes de acordo com o parametro strMaxType
@@ -94,7 +96,7 @@ class TFormDinDate extends TFormDinGenericField
                               , $databaseMask=null
                               )
     {
-        $adiantiObj = new TDate($id);
+        $adiantiObj = new TDateTime($id);
         parent::__construct($adiantiObj,$id,$label,$boolRequired,$strValue,$strExampleText);
         $this->setMask($strMaskType);
         $this->setMaxValue($strMaxValue);
@@ -104,20 +106,22 @@ class TFormDinDate extends TFormDinGenericField
     }
 
     public function getMask(){
-        return $this->getAdiantiObj()->getMask();
+        return $this->maskType;
     }
     public function setMask($strMaskType){
         if( is_null($strMaskType) ){
-            $strMaskType = 'dd/mm/yyyy';
+            $strMaskType = 'dd/mm/yyyy hh:ii';
         }
+        $this->maskType = $strMaskType;
         $this->getAdiantiObj()->setMask($strMaskType);
     }
     //--------------------------------------------------------------------------
     public function getDatabaseMask(){
-        return $this->getAdiantiObj()->getDatabaseMask();
+        return $this->databaseMask;
     }    
     public function setDatabaseMask($databaseMask){
         if( !is_null($databaseMask) ){
+            $this->databaseMask = $databaseMask;
             $this->getAdiantiObj()->setDatabaseMask($databaseMask);
         }
     }

@@ -78,5 +78,23 @@ class TFormDinLabelField
 	{
 		return $this->getAdiantiObj()->getProperty('class');
     }
+    //------------------------------------------------------------------------------
+	/**
+	 * Set um Toolpit do FormDin para funcionar com Adianti 
+     * em um determinado campo pode ser usado com
+	 * @param string $strTitle - 1: Titulo
+	 * @param string $strText  - 2: Texto que irá aparecer
+	 * @param string $strImagem- 3: NOT_IMPLEMENTED
+	 */
+	public function setTooltip($strTitle=null,$strText=null,$strImagem=null)
+	{
+        $text = is_null($strTitle)?$strText:$strTitle;
+        $this->tooltip = $text;
+		$this->getAdiantiObj()->setTip($text);
+	}
+	public function getTooltip()
+	{
+		return $this->tooltip;
+    }    
 	//------------------------------------------------------------------------------       
 }

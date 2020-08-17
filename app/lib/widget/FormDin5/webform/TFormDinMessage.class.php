@@ -80,6 +80,7 @@ class TFormDinMessage {
     const ERROR_TYPE_NOT_ARRAY = 'Tipo não é um array! ';
     const ERROR_TYPE_ARRAY_EMP = 'O array está vazio! ';
     const ERROR_TYPE_NOT_SET = 'A variable has not been defined! ';
+    const ERROR_TYPE_WRONG = 'Tipo de dados errado';
 
     const ERROR_FD5_PARAM_MIGRA  = 'Falha na migração do FormDin 4 para 5.';
     const ERROR_FD5_OBJ_ADI  = 'Erro objeto Adianti Fieald não pode ficar em branco.';

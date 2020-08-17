@@ -779,15 +779,15 @@ class TFormDin
      *  
      * @param string  $strName         - 1: Id do Campo
      * @param string  $strLabel        - 2: Label do Campo
-     * @param boolean $boolRequired    - 3: DEFAULT = flase não obrigatório
+     * @param boolean $boolRequired    - 3: DEFAULT = false não obrigatório
      * @param boolean $boolNewLine     - 4: Default TRUE = campo em nova linha, FALSE continua na linha anterior
      * @param string  $strValue        - 5: Valor inicial
-     * @param string  $strMinValue     - 6: NOT_IMPLEMENTED Menor data que o campo aceita
-     * @param string  $strMaxValue     - 7: NOT_IMPLEMENTED Maior data que o campo aceita
+     * @param string  $strMinValue     - 6: Menor data que o campo aceita
+     * @param string  $strMaxValue     - 7: Maior data que o campo aceita
      * @param string  $strMaskType     - 8: DEFAULT = dd-mm-yyyy. Tipo de Mascara dd-mm-yyyy (dia/mês/ano), dd-mm (dia/mês), mm-yyyy (mês/ano) 
      * @param boolean $boolButtonVisible - 9: Exibe ou não o botão do calendario.
-     * @param string  $strExampleText  - 10: Texto de exmplo
-     * @param boolean $boolLabelAbove  - 11: DEFAULT = flase. Label acima do campo = true
+     * @param string  $strExampleText  - 10: Texto de exemplo
+     * @param boolean $boolLabelAbove  - 11: DEFAULT = false. Label acima do campo = true
      * @param string  $boolNoWrapLabel - 12: NOT_IMPLEMENTED
      * @param string  $databaseMask    - 13: FORMDIN5 Mascará usada no banco de dados
      * @return TDate
@@ -808,6 +808,60 @@ class TFormDin
                             )
     {        
         $formField = new TFormDinDate( $strName
+                                     , $strLabel
+                                     , $boolRequired
+                                     , $boolNewLine
+                                     , $strValue
+                                     , $strMinValue
+                                     , $strMaxValue
+                                     , $strMaskType
+                                     , $boolButtonVisible
+                                     , $strExampleText
+                                     , $boolLabelAbove
+                                     , $boolNoWrapLabel
+                                     , $databaseMask
+                                    );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+    	$this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+    	return $formField;
+    }
+
+    /****
+     * Adicona um campo Data Hora  ou mes/ano ou dia/mes de acordo com o parametro strMaxType
+     * Tipo de máscara: DMY, DM, MY
+     *  
+     * @param string  $strName         - 1: Id do Campo
+     * @param string  $strLabel        - 2: Label do Campo
+     * @param boolean $boolRequired    - 3: DEFAULT = false não obrigatório
+     * @param boolean $boolNewLine     - 4: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param string  $strValue        - 5: Valor inicial
+     * @param string  $strMinValue     - 6: Menor data que o campo aceita
+     * @param string  $strMaxValue     - 7: Maior data que o campo aceita
+     * @param string  $strMaskType     - 8: DEFAULT = dd-mm-yyyy. Tipo de Mascara dd-mm-yyyy (dia/mês/ano), dd-mm (dia/mês), mm-yyyy (mês/ano) 
+     * @param boolean $boolButtonVisible - 9: Exibe ou não o botão do calendario.
+     * @param string  $strExampleText  - 10: Texto de exemplo
+     * @param boolean $boolLabelAbove  - 11: DEFAULT = false. Label acima do campo = true
+     * @param string  $boolNoWrapLabel - 12: NOT_IMPLEMENTED
+     * @param string  $databaseMask    - 13: FORMDIN5 Mascará usada no banco de dados
+     * @return TDate
+     */
+    public function addDateTimeField( $strName
+                            , $strLabel=null
+                            , $boolRequired=false
+                            , $boolNewLine=null
+                            , $strValue=null
+                            , $strMinValue=null
+                            , $strMaxValue=null
+                            , $strMaskType=null
+                            , $boolButtonVisible=null
+                            , $strExampleText=null
+                            , $boolLabelAbove=null
+                            , $boolNoWrapLabel=null
+                            , $databaseMask=null
+                            )
+    {        
+        $formField = new TFormDinDateTime( $strName
                                      , $strLabel
                                      , $boolRequired
                                      , $boolNewLine
@@ -960,7 +1014,66 @@ class TFormDin
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
-
+    //-----------------------------------------------------------------------------
+    /**
+     * Adicicionar campo tipo radiobutton
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     * 
+     * @param string $strName         - 1: field ID
+     * @param string $strLabel        - 2: Label field
+     * @param boolean $boolRequired   - 3: TRUE = Required, FALSE = not Required
+     * @param array $arrOptions       - 4: Array Options
+     * @param boolean $boolNewLine    - 5: TRUE = new line, FALSE = no, DEFAULT ou NULL = FALSE
+     * @param boolean $boolLabelAbove - 6: TRUE = Titulo em cima das opções, FALSE = titulo lateral
+     * @param string  $strValue       - 7: Valor DEFUALT, informe do id do array
+     * @param integer $intQtdColumns  - 8: Quantidade de colunas, valor DEFAULT = 1;
+     * @param integer $intWidth       - 9: DEPRECATED
+     * @param integer $intHeight      -10: DEPRECATED
+     * @param integer $intPaddingItems-11: NOT_IMPLEMENTED
+     * @param boolean $boolNoWrapLabel-12: NOT_IMPLEMENTED
+     * @param boolean $boolNowrapText -13: NOT_IMPLEMENTED
+     * @param boolean $useButton      -14: FORMDIN5 Default FALSE = estilo radio comum, TRUE = estilo tipo botões
+     * @return TRadio
+    */
+    public function addRadioField($strName
+    			           		, $strLabel=null
+    			           		, $boolRequired=null
+    			           		, $arrOptions=null
+    			           		, $boolNewLine=null
+    			           		, $boolLabelAbove=null
+    			           		, $strValue=null
+    			           		, $intQtdColumns=null
+    			           		, $intWidth=null
+    			           		, $intHeight=null
+    			           		, $intPaddingItems=null
+    			           		, $boolNoWrapLabel=null
+                                , $boolNowrapText=null
+                                , $useButton=null
+    			           		){
+        $formField = new TFormDinRadio($strName
+                                     , $strLabel
+                                     , $boolRequired
+                                     , $arrOptions
+                                     , $boolNewLine
+                                     , $boolLabelAbove
+                                     , $strValue
+                                     , $intQtdColumns
+                                     , $intWidth
+                                     , $intHeight
+                                     , $intPaddingItems
+                                     , $boolNoWrapLabel
+                                     , $boolNowrapText
+                                     , $useButton
+                                     );
+        $objField = $formField->getAdiantiObj();
+        $label = $this->getLabelField($strLabel,$boolRequired);
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+    }
 
     /**
      * Adiciona campo tipo grupo com legenda na parte superior
@@ -1083,7 +1196,7 @@ class TFormDin
      * 
      * @param string $strName            - 1: ID do campo
      * @param string $strLabel           - 2: Label do campo, que irá aparecer na tela do usuario
-     * @param integer $intMaxLength      - 3: Quantidade maxima de digitos.
+     * @param integer $intMaxLength      - 3: Quantidade maxima de digitos, considerando ponto e virgula
      * @param boolean $boolRequired      - 4: Obrigatorio
      * @param integer $intDecimalPlaces  - 5: Quantidade de casas decimais.
      * @param boolean $boolNewLine       - 6: Campo em nova linha. Default = true = inicia em nova linha, false = continua na linha anterior 
@@ -1099,7 +1212,7 @@ class TFormDin
      * @param string $tooltip            -16: Texto Tooltip
      * @param boolean $replaceOnPost     -17: FORMDIN5: TRUE: process mask when editing and saving
      * @param string $placeholder        -18: FORMDIN5: Texto do Place Holder
-     * @param string $decimalsSeparator  -19: FORMDIN5: separador decimal
+     * @param string $decimalsSeparator  -19: FORMDIN5: separador decimal. Não pode ser chamado por metodo
      * @return TNumber
      */       
 	public function addNumberField( $strName
