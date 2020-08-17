@@ -40,9 +40,9 @@ class Gen00 extends TPage
         
             //$frm->addGroupField('gpxEasyLabel', Message::GPX_EASYLABEL);
                 //$frm->addHtmlField('info', null, 'ajuda/info_gen00_easylabel_pt-br.php')->setClass('htmlInfo', true);
-                //$listTpSystem = array('Y'=>'Sim','N'=>'Não');
-                //$frm->addRadioField('EASYLABEL', Message::FIELD_EASY_LABEL, true, $listTpSystem, null, true, 'Y', 3, null, null, null, false);
-                $frm->addHiddenField('EASYLABEL','Y',true);
+                $listTpSystem = array('Y'=>'Sim','N'=>'Não');
+                $frm->addRadioField('EASYLABEL', Message::FIELD_EASY_LABEL, true, $listTpSystem, null, true, 'Y', 3, null, null, null, false);
+                //$frm->addHiddenField('EASYLABEL','Y',true);
             //$frm->closeGroup();
 
             $frm->addGroupField('gpx3', Message::GEN00_GPX3_TITLE);
