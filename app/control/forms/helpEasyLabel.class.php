@@ -1,5 +1,5 @@
 <?php
-class Gen00 extends TPage
+class helpEasyLabel extends TPage
 {
 
     // trait com onReload, onSearch, onDelete...
@@ -12,20 +12,12 @@ class Gen00 extends TPage
     {
         parent::__construct();
         
+        $this->adianti_target_container = 'adianti_right_panel';
+        
         try
         {
-            TSession::clear();
             
-            // create the HTML Renderer
-            $this->html = new THtmlRenderer('app/resources/sysgen-gen00.html');
-            $this->html->enableSection('main');
-            
-            TPage::include_css('app/resources/sysgen.css');
-
-            $pagestep = GenStepHelper::getStepPage(GenStepHelper::STEP00);
-            
-            //$frm = new TFormDin($this,Message::GEN00_TITLE,null,null,'fomdin',null,null,null,false);
-            $frm = new TFormDin($this,Message::GEN00_TITLE);
+            $frm = new TFormDin($this,'Ajudar com Easy Label');
 
             $frm->addGroupField('gpxTpSystem', Message::GPX_TYPE_SYSTEM);
                 //$frm->addHtmlField('info', null, 'ajuda/info_gen00_tpsys_pt-br.php')->setClass('htmlInfo', true);
@@ -43,7 +35,7 @@ class Gen00 extends TPage
                 //$frm->addHtmlField('info', null, 'ajuda/info_gen00_easylabel_pt-br.php')->setClass('htmlInfo', true);
                 $listTpSystem = array('Y'=>'Sim','N'=>'Não');
                 $frm->addRadioField('EASYLABEL', Message::FIELD_EASY_LABEL, true, $listTpSystem, null, true, 'Y', 3, null, null, null, false);
-                $frm->addButton('Ajuda sobre EasyLabel',null,['helpEasyLabel','onReload'],null,null,true,false,'fa:life-ring fa-fw #f0db4f');
+                //$frm->addHiddenField('EASYLABEL','Y',true);
             //$frm->closeGroup();
 
             $frm->addGroupField('gpx3', Message::GEN00_GPX3_TITLE);
@@ -66,8 +58,8 @@ class Gen00 extends TPage
             //primeiro em ingles e depois traduzindo
             $frm->setActionLink(_t('Clear'),'clear',false,'fa:eraser','red');
             $frm->setAction('Continuar','onSave',false,'fa:chevron-circle-right','green');
-
             
+
             $this->form = $frm->show();
 
             // wrap the page content using vertical box
@@ -113,7 +105,6 @@ class Gen00 extends TPage
     public function onSave($param)
     {
         try {
-            $this->form->validate();
             $data = $this->form->getData();
             $this->form->setData($data);
 
@@ -130,9 +121,7 @@ class Gen00 extends TPage
             TSession::setValue('EASYLABEL',RequestHelper::get('EASYLABEL'));
             AdiantiCoreApplication::loadPage('Gen01');
         } catch (Exception $e) {
-            $text[] = $e->getMessage();
-            $text = TFormDinMessage::messageTransform($text);
-            new TMessage(TFormDinMessage::TYPE_ERROR, $text);
+            $frm->setMessage($e->getMessage());
         }
     }
 }
