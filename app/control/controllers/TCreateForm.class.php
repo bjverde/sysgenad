@@ -585,6 +585,21 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.ESP.ESP.'new TMessage(\'error\', $e->getMessage());');
         $this->addLine($qtdTab.ESP.'} //END TryCatch');
         $this->addLine($qtdTab.'} //END onSave');
+    }
+    //--------------------------------------------------------------------------------------
+    public function addMethod_onClose($qtdTab)
+    {
+        $this->addBlankLine();
+        $this->addLine();
+        $this->addLine($qtdTab.'/**');
+        $this->addLine($qtdTab.' * Close right panel');
+        $this->addLine($qtdTab.' */');
+        $this->addLine($qtdTab.' /*');
+        $this->addLine($qtdTab.'public function onClose()');
+        $this->addLine($qtdTab.'{');
+        $this->addLine($qtdTab.ESP.'TScript::create("Template.closeRightPanel()");');
+        $this->addLine($qtdTab.'} //END onClose');
+        $this->addLine($qtdTab.' */');
     }    
     //--------------------------------------------------------------------------------------
     public function addMethod_onClear($qtdTab)
@@ -604,6 +619,7 @@ class TCreateForm extends TCreateFileContent
     private function addBasicViewController($qtdTab)
     {
 
+        $this->addMethod_onClose($qtdTab);
         if( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
             $this->addMethod_onClear($qtdTab);
         }
@@ -664,6 +680,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.'public function __construct()');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'parent::__construct();');
+        $this->addLine(ESP.ESP.'// $this->adianti_target_container = \'adianti_right_panel\';');
         $this->addBlankLine();
         $this->addLine(ESP.ESP.'$this->setDatabase(\'maindatabase\'); // define the database');
         $this->addLine(ESP.ESP.'$this->setActiveRecord(\''.$this->tableRef.'\'); // define the Active Record');
