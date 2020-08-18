@@ -66,7 +66,7 @@ class TFormDinRadio extends TFormDinGenericField
      * @param string $strName         - 1: field ID
      * @param string $strLabel        - 2: Label field
      * @param boolean $boolRequired   - 3: TRUE = Required, FALSE = not Required
-     * @param array $arrOptions       - 4: Array Options
+     * @param array $arrOptions       - 4: Array Options ou String FormDin 'S=SIM,N=Não'
      * @param boolean $boolNewLine    - 5: TRUE = new line, FALSE = no, DEFAULT ou NULL = FALSE
      * @param boolean $boolLabelAbove - 6: TRUE = Titulo em cima das opções, FALSE = titulo lateral
      * @param string  $strValue       - 7: Valor DEFUALT, informe do id do array

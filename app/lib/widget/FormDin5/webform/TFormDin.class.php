@@ -452,9 +452,9 @@ class TFormDin
     * Para que o botão fique alinhado na frente de um campo com labelAbove=true, basta
     * definir o parametro boolLabelAbove do botão para true tambem.
     *
-    * @param mixed   $mixValue          - 1 : Label do Botão ou array('Gravar', 'Limpar') com nomes
+    * @param string   $mixValue         - 1 : Label do Botão ou array('Gravar', 'Limpar') com nomes
     * @param string  $strAction         - 2 : NOT_IMPLEMENTED Nome da ação, ignorando $strName $strOnClick. Se ficar null será utilizado o valor de mixValue
-    * @param string  $strName           - 3 : Nome da ação com submit
+    * @param mixed  $strName            - 3 : Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
     * @param string  $strOnClick        - 4 : NOT_IMPLEMENTED Nome da função javascript
     * @param string  $strConfirmMessage - 5 : NOT_IMPLEMENTED Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
     * @param boolean $boolNewLine       - 6 : Em nova linha. DEFAULT = true
@@ -520,8 +520,8 @@ class TFormDin
     * saber o que cada marca singinifica.
     * ------------------------------------------------------------------------
     *
-    * @param mixed $actionsLabel- 1: Label do Botão
-    * @param object $actionsName- 2: FORMDIN5 Nome do metodo da ação
+    * @param string $actionsLabel-1: Label do Botão
+    * @param mixed  $actionsName- 2: FORMDIN5 Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
     * @param boolean $header    - 3: FORMDIN5 mostrar ação no Título (Header). DEFAULT=false, mostra no rodapé. TRUE = mostra no Título
     * @param string $iconImagem - 4: FORMDIN5 icone ou imagem do botão.
     * @param string $color      - 5: FORMDIN5 cor do icone.
@@ -551,9 +551,14 @@ class TFormDin
             ValidateHelper::isSet($actionsName,__METHOD__,__LINE__);
             ValidateHelper::isSet($objForm,__METHOD__,__LINE__);
 
-            $action = new TAction(array($objForm, $actionsName));
+            if( is_array($actionsName) ){
+                $action = new TAction(array($actionsName[0], $actionsName[1]));
+            }else{
+                $action = new TAction(array($objForm, $actionsName));
+            }
+            
             $icon = $iconImagem.' '.$color;
-            if($header){
+            if($header===true){
                 if($methodPost){
                     return $this->getAdiantiObj()->addHeaderAction($actionsLabel,$action,$icon);
                 }else{
@@ -580,7 +585,7 @@ class TFormDin
     * ------------------------------------------------------------------------
     *
     * @param mixed $actionsLabel- 1: Texto ações.
-    * @param object $actionsName- 2: FORMDIN5 Nome da ação
+    * @param mixed  $actionsName- 2: FORMDIN5 Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
     * @param boolean $header    - 3: FORMDIN5 mostrar ação Título. DEFAULT=TRUE, mostra no Título. false, mostra no rodapé. 
     * @param string $iconImagem - 4: FORMDIN5 icone ou imagem do botão.
     * @param string $color      - 5: FORMDIN5 cor do icone.
@@ -606,7 +611,7 @@ class TFormDin
     * ------------------------------------------------------------------------
     *
     * @param mixed $actionsLabel- 1: Texto ações.
-    * @param object $actionsName- 2: FORMDIN5 Nome da ação
+    * @param mixed  $actionsName- 2: FORMDIN5 Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
     * @param boolean $header    - 3: FORMDIN5 mostrar ação Título. DEFAULT=false, mostra no rodapé. TRUE = mostra no Título
     * @param string $iconImagem - 4: FORMDIN5 icone ou imagem do botão.
     * @param string $color      - 5: FORMDIN5 cor do icone.
@@ -631,7 +636,7 @@ class TFormDin
     * ------------------------------------------------------------------------
     *
     * @param mixed $actionsLabel- 1: Texto ações.
-    * @param object $actionsName- 2: FORMDIN5 Nome da ação
+    * @param mixed  $actionsName- 2: FORMDIN5 Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
     * @param boolean $header    - 3: FORMDIN5 mostrar ação Título. DEFAULT=TRUE, mostra no Título. false, mostra no rodapé. 
     * @param string $iconImagem - 4: FORMDIN5 icone ou imagem do botão.
     * @param string $color      - 5: FORMDIN5 cor do icone.
@@ -641,6 +646,7 @@ class TFormDin
                                        , $actionsName=null
                                        , $header=true, $iconImagem=null, $color=null)
     {
+        $header = is_null($header)?true:false;
         return $this->setAction($actionsLabel, $actionsName, $header, $iconImagem, $color,false);
     }
 

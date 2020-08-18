@@ -147,6 +147,16 @@ class ArrayHelper
         return self::formDinGetValue($array, $atributeName, $key);
     }
     //--------------------------------------------------------------------------------
+    /**
+     * Determina o tipo  de entrada que pode ser um dos 4 tipos
+     *  - TYPE_FORMDIN = string no formato 'KEY|VALUE,KEY|VALUE'
+     *  - TYPE_FORMDIN_STRING = string no formato 'KEY=VALUE,KEY=VALUE'
+     *  - TYPE_PDO = array no formato 'KEY=ARRAY,KEY=ARRAY'
+     *  - TYPE_ADIANTI = array no formato 'KEY=OBJ,KEY=OBJ'
+     *
+     * @param mix $array
+     * @return void
+     */
     public static function getArrayType($array)
     {
         ValidateHelper::isArray($array, __METHOD__, __LINE__,false);
@@ -291,11 +301,11 @@ class ArrayHelper
     }
     //--------------------------------------------------------------------------------
     /**
-     * Convert String FormDin para Array
+     * Convert String FormDin 'S=SIM,N=Não' para Array PHP
      * @param  string $array   - 1: string ou array de entrada
      * @return array
      */
-    public static function convertString2Array($string) 
+    public static function convertString2Array($string,$showSimpleStringError=true) 
     {
         $result = null;
         if( self::isArrayNotEmpty($string) ) {
@@ -305,8 +315,10 @@ class ArrayHelper
                 throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_WRONG);
             }else{
                 $pos  = strpos($string, '=');
-                if( empty($pos) ){
+                if( empty($pos) && $showSimpleStringError===true){
                     throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_WRONG);
+                }elseif( empty($pos) && $showSimpleStringError===false){
+                    $result = $string;
                 }else{
                     //'S=SIM,N=Não,T=Talvez'
                     $string = explode(',',$string);
