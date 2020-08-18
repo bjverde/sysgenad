@@ -464,9 +464,10 @@ class TGeneratorHelper
             $listFieldsTable = $dao->loadFieldsOneStoredProcedureFromDatabase();
         }else{
             $listFieldsTable = $dao->loadFieldsOneTableFromDatabase();
-        }        
+        }
         foreach ($listFieldsTable['DATA_TYPE'] as $key => $dataType) {
-            $formDinType = TCreateForm::convertDataType2FormDinType($dataType);
+            $DBMS = TSysgenSession::getValue('DBMS');
+            $formDinType = TCreateForm::convertDataType2FormDinType($dataType,$DBMS['TYPE']);
             $listFieldsTable[TCreateForm::FORMDIN_TYPE_COLUMN_NAME][$key] = $formDinType;
             
             if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != self::TP_SYSTEM_REST ){

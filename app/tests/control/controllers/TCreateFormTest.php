@@ -48,10 +48,8 @@ class TCreateFormTest extends TestCase
 	}
 
 	public function testConvertDataType2FormDinType_DATETIME_Mysql(){
-		$DBMS['TYPE'] = TFormDinPdoConnection::DBMS_MYSQL;
-		TSysgenSession::setValue('DBMS',$DBMS);
 	    $expected = TCreateForm::FORMDIN_TYPE_DATETIME;
-	    $result = TCreateForm::convertDataType2FormDinType('DATETIME');
+	    $result = TCreateForm::convertDataType2FormDinType('DATETIME',TFormDinPdoConnection::DBMS_MYSQL);
 	    $this->assertSame($expected, $result);
 	}
 	
@@ -72,6 +70,12 @@ class TCreateFormTest extends TestCase
 	    $result = TCreateForm::convertDataType2FormDinType('TIMESTAMP');
 	    $this->assertSame($expected, $result);
 	}
+
+	public function testConvertDataType2FormDinType_TIMESTAMP_MySQl(){
+	    $expected = TCreateForm::FORMDIN_TYPE_DATETIME;
+	    $result = TCreateForm::convertDataType2FormDinType('TIMESTAMP',TFormDinPdoConnection::DBMS_MYSQL);
+	    $this->assertSame($expected, $result);
+	}	
 	
 	public function testConvertDataType2FormDinType_BIGINT(){
 	    $expected = TCreateForm::FORMDIN_TYPE_NUMBER;
