@@ -46,6 +46,14 @@ class TCreateFormTest extends TestCase
 	    $result = TCreateForm::convertDataType2FormDinType('DATETIME');
 	    $this->assertSame($expected, $result);
 	}
+
+	public function testConvertDataType2FormDinType_DATETIME_Mysql(){
+		$DBMS['TYPE'] = TFormDinPdoConnection::DBMS_MYSQL;
+		TSysgenSession::setValue('DBMS',$DBMS);
+	    $expected = TCreateForm::FORMDIN_TYPE_DATETIME;
+	    $result = TCreateForm::convertDataType2FormDinType('DATETIME');
+	    $this->assertSame($expected, $result);
+	}
 	
 	public function testConvertDataType2FormDinType_DATETIME2(){
 	    $expected = TCreateForm::FORMDIN_TYPE_DATE;
@@ -138,7 +146,7 @@ class TCreateFormTest extends TestCase
 	}	
 	
 	public function testShow_Grid_Paginator(){
-	    $expectedQtd = 11;
+	    $expectedQtd = 16;
 	    
 	    $this->create->setGridType(FormDinHelper::GRID_SQL_PAGINATION);
 	    $this->create->setTableType(TableInfo::TB_TYPE_TABLE);
@@ -215,7 +223,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW(){
-		$expectedQtd = 75;
+		$expectedQtd = 92;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
@@ -235,7 +243,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_TABLE(){
-		$expectedQtd = 95;
+		$expectedQtd = 82;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;

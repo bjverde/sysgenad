@@ -338,9 +338,13 @@ class TGeneratorHelper
     
     public static function createFilesForms($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
+        $DBMS = TSysgenSession::getValue('DBMS');
+        $DBMS_TYPE  = $DBMS['TYPE'];
+
         $configDBMS = self::getConfigByDBMS();
         $pathFolder = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'views'.DS;
         $geradorForm= new TCreateForm($pathFolder ,$tableName ,$listColumnsProperties);
+        $geradorForm->setDatabaseManagementSystem($DBMS_TYPE);
         $geradorForm->setTableType($tableType);
         $geradorForm->setGridType($configDBMS['TPGRID']);
         $geradorForm->saveFile();

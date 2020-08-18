@@ -23,8 +23,10 @@ class TCreateForm extends TCreateFileContent
     private $gridType;
     private $listColumnsProperties;
     private $tableType = null;
+    private $databaseManagementSystem  = null;
     
     const FORMDIN_TYPE_DATE = 'DATE';
+    const FORMDIN_TYPE_DATETIME = 'DATETIME';
     const FORMDIN_TYPE_TEXT = 'TEXT';
     const FORMDIN_TYPE_NUMBER = 'NUMBER';
     const FORMDIN_TYPE_COLUMN_NAME = 'FORMDIN_TYPE';    
@@ -145,21 +147,39 @@ class TCreateForm extends TCreateFileContent
     {
         return $this->tableType;
     }
+    //------------------------------------------------------------------------------------
+    public function setDatabaseManagementSystem($databaseManagementSystem)
+    {
+        return $this->databaseManagementSystem = strtoupper($databaseManagementSystem);
+    }
+    public function getDatabaseManagementSystem()
+    {
+        return $this->databaseManagementSystem;
+    }    
     //--------------------------------------------------------------------------------------
     /***
      * Create variable with string sql basica
      **/
-    public static function convertDataType2FormDinType($dataType)
+    public static function convertDataType2FormDinType($dataType,$DBMS_TYPE=null)
     {
         $dataType = strtoupper($dataType);
         $result = 'TEXT';
         switch ($dataType) {
             case 'DATETIME':
+                if($DBMS_TYPE == TFormDinPdoConnection::DBMS_MYSQL){
+                    $result = self::FORMDIN_TYPE_DATETIME;
+                }else{
+                    $result = self::FORMDIN_TYPE_DATE;
+                }
+            break;
             case 'DATETIME2':
             case 'DATE':
             case 'TIMESTAMP':
-                //case preg_match( '/date|datetime|timestamp/i', $DATA_TYPE ):
-                $result = self::FORMDIN_TYPE_DATE;
+                if($DBMS_TYPE == TFormDinPdoConnection::DBMS_MYSQL){
+                    $result = self::FORMDIN_TYPE_DATETIME;
+                }else{
+                    $result = self::FORMDIN_TYPE_DATE;
+                }
             break;
             case 'BIGINT':
             case 'DECIMAL':
@@ -371,10 +391,15 @@ class TCreateForm extends TCreateFileContent
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
                 $this->addLine($qtdTab.'$frm->addDateField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.');');
                 $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
-                break;
+            break;
+            case self::FORMDIN_TYPE_DATETIME:
+                $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
+                $this->addLine($qtdTab.'$frm->addDateTimeField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.');');
+                $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
+            break;            
             case self::FORMDIN_TYPE_NUMBER:
                 $this->addFieldNumberOrForeignKey($qtdTab,$key, $fieldName, $REQUIRED);
-                break;
+            break;
             default:
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
                 if ($CHAR_MAX < self::CHAR_MAX_TEXT_FIELD) {
