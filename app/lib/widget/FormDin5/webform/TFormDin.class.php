@@ -962,6 +962,58 @@ class TFormDin
         //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
+    }
+
+    /**
+     * Método para criar campo de edição de horas
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     *
+     * @param string  $strName        -  1: id do campo
+     * @param string  $strLabel       -  2: Rotulo do campo que irá aparece na tela
+     * @param boolean $boolRequired   -  3: True = Obrigatorio; False (Defalt) = Não Obrigatorio
+     * @param string  $strMinValue    -  4: Menor Valor
+     * @param string  $strMaxValue    -  5: Maior valor
+     * @param string  $strMaskType    -  6: HM, HMS
+     * @param boolean $boolNewLine    -  7: Em nova linha. DEFAULT = true
+     * @param string  $strValue       -  8:
+     * @param boolean $boolLabelAbove -  9:
+     * @param boolean $boolNoWrapLabel- 10:
+     * @param string $strExampleText  - 11: FORMDIN5: PlaceHolder é um Texto de exemplo
+     * @return TTime
+     */
+    public function addTimeField( $strName
+                                , $strLabel=null
+                                , $boolRequired=null
+                                , $strMinValue=null
+                                , $strMaxValue=null
+                                , $strMaskType=null
+                                , $boolNewLine=null
+                                , $strValue=null
+                                , $boolLabelAbove=null
+                                , $boolNoWrapLabel=null
+                                , $strExampleText=null
+                                )
+    {
+        $formField = new TFormDinTime( $strName
+                                     , $strLabel
+                                     , $boolRequired
+                                     , $strMinValue
+                                     , $strMaxValue
+                                     , $strMaskType
+                                     , $boolNewLine
+                                     , $strValue
+                                     , $boolLabelAbove
+                                     , $boolNoWrapLabel
+                                     , $strExampleText
+                                    );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+    	$this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+    	return $formField;
     }    
 
     /**

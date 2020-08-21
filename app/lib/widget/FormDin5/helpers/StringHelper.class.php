@@ -105,14 +105,15 @@ class StringHelper
     /**
      * Recebe uma string do tipo "olá à mim! ñ" e retona "ola a mim! n"
      * https://pt.stackoverflow.com/questions/49645/remover-acentos-de-uma-string-em-phps
+     * https://pt.stackoverflow.com/questions/858/refatora%c3%a7%c3%a3o-de-fun%c3%a7%c3%a3o-para-remover-pontua%c3%a7%c3%a3o-espa%c3%a7os-e-caracteres-especiais
      * https://stackoverflow.com/questions/13614622/transliterate-any-convertible-utf8-char-into-ascii-equivalent
      * @param string $string
      * @return string
      */
     public static function tirarAcentos($string) 
     {
-        setlocale(LC_ALL, 'en_GB.UTF8');
-        $string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+        $string = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
+        $string = self::removeCaracteresEspeciais($string);
         return $string;
     }
 
@@ -124,7 +125,7 @@ class StringHelper
      */
     public static function removeCaracteresEspeciais($string) 
     {
-        $string = preg_replace('/[^a-zA-Z0-9\sÀÁÃÂÉÊÍÓÕÔÚÜÇÑàáãâéêíóõôúüçñ]/', '', $string);
+        $string = preg_replace('/[^a-zA-Z0-9\sÀÁÃÂÉÊÍÓÕÔÚÜÇÑàáãâéêíóõôúüçñ]/', '', $string);        
         return $string;
     }
 
@@ -149,7 +150,6 @@ class StringHelper
      */
     public static function string2PascalCase($string) 
     {
-        $string = self::removeCaracteresEspeciais($string);
         $string = self::tirarAcentos($string);
         $string = mb_convert_case ( $string, MB_CASE_TITLE );
         $string = self::removeEspacoBranco($string);
@@ -189,8 +189,8 @@ class StringHelper
     }
 
     /**
-     * Recebe uma string "minha string"e converte para o formato KebabCase
-     * "minha-string"
+     * Recebe uma string "minha string"e converte para o formato SnakeCase
+     * "minha_string"
      * https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841
      *
      * @param string $string
