@@ -188,6 +188,26 @@ class EasyLabelTest extends TestCase
 	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
 	    $this->assertEquals($expected, $result);
 	}
+
+	public function testConvertLabelUpper_qt()
+	{
+	    $expected ='Quantidade Dias';
+	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
+	    $stringLabel = 'QTDIAS';
+	    TSysgenSession::setValue('EASYLABEL','Y');
+	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
+	    $this->assertEquals($expected, $result);
+	}
+
+	public function testConvertLabelLower_qt()
+	{
+	    $expected ='Quantidade Dias';
+	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
+	    $stringLabel = 'qtdias';
+	    TSysgenSession::setValue('EASYLABEL','Y');
+	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
+	    $this->assertEquals($expected, $result);
+	}
 	
 	public function testConvertLabelUpper_idPessoa()
 	{
