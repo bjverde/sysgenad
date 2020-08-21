@@ -35,7 +35,7 @@ class EasyLabelTest extends TestCase
 		parent::tearDown ();
 	}
 
-	public function testConvert_dt_ok()
+	public function testConvertUpper_dt_ok()
 	{
 	    $expected ='Data Inclusao';
 	    $typeField = TCreateForm::FORMDIN_TYPE_DATE;
@@ -44,7 +44,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvert_dt_NotMach()
+	public function testConvertUpper_dt_NotMach()
 	{
 	    $expected ='xyz';
 	    $typeField = TCreateForm::FORMDIN_TYPE_DATE;
@@ -53,7 +53,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvert_dt_TypeWrong()
+	public function testConvertUpper_dt_TypeWrong()
 	{
 	    $expected ='xyz';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
@@ -62,7 +62,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 
-	public function testConvert_nm_ok()
+	public function testConvertUpper_nm_ok()
 	{
 	    $expected ='DTINCLUSAO';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
@@ -71,7 +71,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvert_nm_NotMach()
+	public function testConvertUpper_nm_NotMach()
 	{
 	    $expected ='Nome Pessoa';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
@@ -80,7 +80,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvert_nm_TypeWrong()
+	public function testConvertUpper_nm_TypeWrong()
 	{
 	    $expected ='xyz';
 	    $typeField = TCreateForm::FORMDIN_TYPE_DATE;
@@ -89,7 +89,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_NotUse()
+	public function testConvertLabelUpper_NotUse()
 	{
 	    $expected ='DSTIPO';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
@@ -99,7 +99,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_TypeDate_inclusao()
+	public function testConvertLabelUpper_TypeDate_inclusao()
 	{
 	    $expected ='Data Inclusão';
 	    $typeField = TCreateForm::FORMDIN_TYPE_DATE;
@@ -109,7 +109,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_TypeDate_altercao()
+	public function testConvertLabelUpper_TypeDate_altercao()
 	{
 	    $expected ='Data Alteração';
 	    $typeField = TCreateForm::FORMDIN_TYPE_DATE;
@@ -119,7 +119,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_TypeName_inclusao()
+	public function testConvertLabelUpper_TypeName_inclusao()
 	{
 	    $expected ='Nome Pessoa';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
@@ -129,7 +129,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_TypeName_altercao()
+	public function testConvertLabelUpper_TypeName_altercao()
 	{
 	    $expected ='Nome Tipo';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
@@ -139,7 +139,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_TypeText_Descricao()
+	public function testConvertLabelUpper_TypeText_Descricao()
 	{
 	    $expected ='Descrição Tipo';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
@@ -149,7 +149,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_EndSao()
+	public function testConvertLabelUpper_EndSao()
 	{
 	    $expected ='Data Inclusão';
 	    $typeField = TCreateForm::FORMDIN_TYPE_DATE;
@@ -159,7 +159,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_EndCao()
+	public function testConvertLabelUpper_EndCao()
 	{
 	    $expected ='Data Alteração';
 	    $typeField = TCreateForm::FORMDIN_TYPE_DATE;
@@ -169,7 +169,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_EndGao()
+	public function testConvertLabelUpper_EndGao()
 	{
 	    $expected ='ORgão';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
@@ -179,7 +179,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_idPessoa()
+	public function testConvertLabelUpper_idPessoa()
 	{
 	    $expected ='id Pessoa';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
@@ -189,7 +189,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_idAcao()
+	public function testConvertLabelUpper_idAcao()
 	{
 	    $expected ='id Ação';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
@@ -199,7 +199,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_idUnidade()
+	public function testConvertLabelUpper_idUnidade()
 	{
 	    $expected ='id Unidade';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
@@ -209,7 +209,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_st()
+	public function testConvertLabelUpper_st()
 	{
 	    $expected ='Status Ação';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
@@ -219,7 +219,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testConvertLabel_nr()
+	public function testConvertLabelUpper_nr()
 	{
 	    $expected ='Número Otrs';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
@@ -229,7 +229,7 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 	
-	public function testRemoveUnderline_um()
+	public function testRemoveUnderlineUpper_um()
 	{
 	    $expected ='id Ano';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
@@ -238,8 +238,8 @@ class EasyLabelTest extends TestCase
 	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
 	    $this->assertEquals($expected, $result);
 	}
-	
-	public function testRemoveUnderline_varios()
+
+	public function testRemoveUnderlineLower_varios()
 	{
 	    $expected ='DIAS DO ANO';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
