@@ -20,7 +20,7 @@ class EasyLabel
     public static function convert_dt($stringLabel,$typeField)
     {
         $result = $stringLabel;
-        if($typeField == TCreateForm::FORMDIN_TYPE_DATE){
+        if($typeField == TCreateForm::FORMDIN_TYPE_DATE || $typeField == TCreateForm::FORMDIN_TYPE_DATETIME){
             $result = preg_replace('/(^DT)(\s*)(\w+)/', '$3', $stringLabel);
             if($result != $stringLabel){
                 $result = 'Data '.ucfirst(strtolower($result));
@@ -64,6 +64,18 @@ class EasyLabel
         }
         return $result;
     }
+    //--------------------------------------------------------------------------------------
+    public static function convert_tp($stringLabel,$typeField)
+    {
+        $result = $stringLabel;
+        if($typeField == TCreateForm::FORMDIN_TYPE_TEXT || $typeField == TCreateForm::FORMDIN_TYPE_NUMBER){
+            $result = preg_replace('/(^TP)(\s*)(\w+)/', '$3', $stringLabel);
+            if($result != $stringLabel){
+                $result = 'Status '.ucfirst(strtolower($result));
+            }
+        }
+        return $result;
+    }    
     //--------------------------------------------------------------------------------------
     public static function convert_qt($stringLabel,$typeField)
     {

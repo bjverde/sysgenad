@@ -168,6 +168,36 @@ class EasyLabelTest extends TestCase
 	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
 	    $this->assertEquals($expected, $result);
 	}
+
+	public function testConvertLabelLower_EndCao()
+	{
+	    $expected ='Data Alteração';
+	    $typeField = TCreateForm::FORMDIN_TYPE_DATE;
+	    $stringLabel = 'dtalteracao';
+	    TSysgenSession::setValue('EASYLABEL','Y');
+	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
+	    $this->assertEquals($expected, $result);
+	}
+
+	public function testConvertLabelUpper_EndCao_datetime()
+	{
+	    $expected ='Data Alteração';
+	    $typeField = TCreateForm::FORMDIN_TYPE_DATETIME;
+	    $stringLabel = 'DTALTERACAO';
+	    TSysgenSession::setValue('EASYLABEL','Y');
+	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
+	    $this->assertEquals($expected, $result);
+	}
+
+	public function testConvertLabelLower_EndCao_datetime()
+	{
+	    $expected ='Data Alteração';
+	    $typeField = TCreateForm::FORMDIN_TYPE_DATETIME;
+	    $stringLabel = 'dtalteracao';
+	    TSysgenSession::setValue('EASYLABEL','Y');
+	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
+	    $this->assertEquals($expected, $result);
+	}
 	
 	public function testConvertLabelUpper_EndGao()
 	{
