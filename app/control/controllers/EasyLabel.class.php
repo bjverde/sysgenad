@@ -71,7 +71,7 @@ class EasyLabel
         if($typeField == TCreateForm::FORMDIN_TYPE_TEXT || $typeField == TCreateForm::FORMDIN_TYPE_NUMBER){
             $result = preg_replace('/(^TP)(\s*)(\w+)/', '$3', $stringLabel);
             if($result != $stringLabel){
-                $result = 'Status '.ucfirst(strtolower($result));
+                $result = 'Tipo '.ucfirst(strtolower($result));
             }
         }
         return $result;
@@ -152,11 +152,13 @@ class EasyLabel
                     $stringLabel = self::convert_qt($stringLabel,$typeField);
                     $stringLabel = self::convert_id($stringLabel,$typeField);
                     $stringLabel = self::convert_nr($stringLabel,$typeField);
+                    $stringLabel = self::convert_tp($stringLabel,$typeField);
                 break;
                 case TCreateForm::FORMDIN_TYPE_TEXT:
                     $stringLabel = self::convert_nm($stringLabel,$typeField);
                     $stringLabel = self::convert_ds($stringLabel,$typeField);
                     $stringLabel = self::convert_st($stringLabel,$typeField);
+                    $stringLabel = self::convert_tp($stringLabel,$typeField);
                 break;
             }
             $stringLabel = self::convert_sao($stringLabel);

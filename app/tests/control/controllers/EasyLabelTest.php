@@ -238,6 +238,16 @@ class EasyLabelTest extends TestCase
 	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
 	    $this->assertEquals($expected, $result);
 	}
+
+	public function testConvertLabelLower_tp_number()
+	{
+	    $expected ='Tipo Pessoa';
+	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
+	    $stringLabel = 'tppessoa';
+	    TSysgenSession::setValue('EASYLABEL','Y');
+	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
+	    $this->assertEquals($expected, $result);
+	}
 	
 	public function testConvertLabelUpper_idPessoa()
 	{
