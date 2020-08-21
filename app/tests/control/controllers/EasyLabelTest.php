@@ -171,9 +171,19 @@ class EasyLabelTest extends TestCase
 	
 	public function testConvertLabelUpper_EndGao()
 	{
-	    $expected ='ORgão';
+	    $expected ='Orgão';
 	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
 	    $stringLabel = 'ORGAO';
+	    TSysgenSession::setValue('EASYLABEL','Y');
+	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
+	    $this->assertEquals($expected, $result);
+	}
+
+	public function testConvertLabelLower_EndGao()
+	{
+	    $expected ='Orgão';
+	    $typeField = TCreateForm::FORMDIN_TYPE_TEXT;
+	    $stringLabel = 'orgao';
 	    TSysgenSession::setValue('EASYLABEL','Y');
 	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
 	    $this->assertEquals($expected, $result);
@@ -181,7 +191,7 @@ class EasyLabelTest extends TestCase
 	
 	public function testConvertLabelUpper_idPessoa()
 	{
-	    $expected ='id Pessoa';
+	    $expected ='Id Pessoa';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
 	    $stringLabel = 'IDPESSOA';
 	    TSysgenSession::setValue('EASYLABEL','Y');
@@ -191,7 +201,7 @@ class EasyLabelTest extends TestCase
 	
 	public function testConvertLabelUpper_idAcao()
 	{
-	    $expected ='id Ação';
+	    $expected ='Id Ação';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
 	    $stringLabel = 'IDACAO';
 	    TSysgenSession::setValue('EASYLABEL','Y');
@@ -201,7 +211,7 @@ class EasyLabelTest extends TestCase
 	
 	public function testConvertLabelUpper_idUnidade()
 	{
-	    $expected ='id Unidade';
+	    $expected ='Id Unidade';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
 	    $stringLabel = 'IDUNIDADE';
 	    TSysgenSession::setValue('EASYLABEL','Y');
@@ -231,7 +241,7 @@ class EasyLabelTest extends TestCase
 	
 	public function testRemoveUnderlineUpper_um()
 	{
-	    $expected ='id Ano';
+	    $expected ='Id Ano';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
 	    $stringLabel = 'ID_ANO';
 	    TSysgenSession::setValue('EASYLABEL','Y');
@@ -239,11 +249,31 @@ class EasyLabelTest extends TestCase
 	    $this->assertEquals($expected, $result);
 	}
 
-	public function testRemoveUnderlineLower_varios()
+	public function testRemoveUnderlineLower_um()
 	{
-	    $expected ='DIAS DO ANO';
+	    $expected ='Id Ano';
+	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
+	    $stringLabel = 'id_ano';
+	    TSysgenSession::setValue('EASYLABEL','Y');
+	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
+	    $this->assertEquals($expected, $result);
+	}
+
+	public function testRemoveUnderlineUpper_varios()
+	{
+	    $expected ='Dias Do Ano';
 	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
 	    $stringLabel = 'DIAS_DO_ANO';
+	    TSysgenSession::setValue('EASYLABEL','Y');
+	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
+	    $this->assertEquals($expected, $result);
+	}	
+
+	public function testRemoveUnderlineLower_varios()
+	{
+	    $expected ='Dias Do Ano';
+	    $typeField = TCreateForm::FORMDIN_TYPE_NUMBER;
+	    $stringLabel = 'dias_do_ano';
 	    TSysgenSession::setValue('EASYLABEL','Y');
 	    $result = EasyLabel::convertLabel($stringLabel, $typeField);
 	    $this->assertEquals($expected, $result);

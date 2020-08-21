@@ -129,6 +129,7 @@ class EasyLabel
     {
         $useEasyLabe = TSysgenSession::getValue('EASYLABEL');
         if($useEasyLabe == 'Y'){
+            $stringLabel = StringHelper::strtoupper_utf8($stringLabel);
             $stringLabel = self::remove_underline($stringLabel);
             switch ($typeField) {
                 case TCreateForm::FORMDIN_TYPE_DATE:
@@ -149,6 +150,7 @@ class EasyLabel
             $stringLabel = self::convert_sao($stringLabel);
             $stringLabel = self::convert_cao($stringLabel);
             $stringLabel = self::convert_gao($stringLabel);
+            $stringLabel = mb_convert_case ( $stringLabel, MB_CASE_TITLE );
         }
         return $stringLabel;
     }
