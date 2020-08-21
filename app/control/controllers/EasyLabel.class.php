@@ -132,6 +132,7 @@ class EasyLabel
             $stringLabel = self::remove_underline($stringLabel);
             switch ($typeField) {
                 case TCreateForm::FORMDIN_TYPE_DATE:
+                case TCreateForm::FORMDIN_TYPE_DATETIME:
                     $stringLabel = self::convert_dt($stringLabel,$typeField);
                 break;
                 case TCreateForm::FORMDIN_TYPE_NUMBER:
