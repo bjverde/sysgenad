@@ -60,6 +60,7 @@ class TFormDin
     const TYPE_FIELD  = 'feild';
     const TYPE_LAYOUT = 'layout';
     const TYPE_HIDDEN = 'hidden';
+    const TYPE_CHECKLIST = 'check_list';
     const TYPE_ADIANTI_FIELD_NATIVE  = 'adianti_field_native';
     const TYPE_ADIANTI_LAYOUT_NATIVE = 'adianti_layout_native';
     
@@ -307,6 +308,12 @@ class TFormDin
                 $key = $fieldsRowResult['key'];
             }elseif ($element['type']==self::TYPE_HIDDEN){
                 $adiantiObj->addFields( [$element['obj']] );
+            }elseif ($element['type']==self::TYPE_CHECKLIST){
+                $objCheckList = $element['obj'];
+                $title = $objCheckList->showTitle();
+                $boby  = $objCheckList->showBody();
+                $adiantiObj->addContent( [$title] );
+                $adiantiObj->addFields( [$boby] );
             }elseif ($element['type']==self::TYPE_ADIANTI_FIELD_NATIVE){
                 //$adiantiObj->addFields( $element['obj'] );
                 call_user_func_array(array($adiantiObj, "addFields"), $element['obj']);
@@ -1047,11 +1054,11 @@ class TFormDin
      * @param boolean $boolNewLine    - 5: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
      * @param boolean $boolLabelAbove - 6: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @param mixed   $mixValue       - 7: NOT_IMPLEMENTED Valor DEFAULT, informe o ID do array
-     * @param boolean $boolMultiSelect- 8: NOT_IMPLEMENTED Default FALSE = SingleSelect, TRUE = MultiSelect
+     * @param boolean $boolMultiSelect- 8: Default FALSE = SingleSelect, TRUE = MultiSelect
      * @param integer $intSize             - 9: NOT_IMPLEMENTED Default 1. Num itens que irão aparecer. 
      * @param integer $intWidth           - 10: NOT_IMPLEMENTED Largura em Pixels
      * @param string  $strFirstOptionText - 11: NOT_IMPLEMENTED First Key in Display
-     * @param string  $strFirstOptionValue- 12: NOT_IMPLEMENTED Frist Valeu in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
+     * @param string  $strFirstOptionValue- 12: Frist Valeu in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
      * @param string  $strKeyColumn       - 13: NOT_IMPLEMENTED
      * @param string  $strDisplayColumn   - 14: NOT_IMPLEMENTED
      * @param string  $boolNoWrapLabel    - 15: NOT_IMPLEMENTED
@@ -1063,9 +1070,36 @@ class TFormDin
                                   ,$boolRequired = false
                                   ,array $mixOptions
                                   ,$boolNewLine = true
-                                  ,$boolLabelAbove = false)
+                                  ,$boolLabelAbove = false
+                                  ,$mixValue = null
+                                  ,$boolMultiSelect = false
+                                  ,$intSize = null
+                                  ,$intWidth = null
+                                  ,$strFirstOptionText = null
+                                  ,$strFirstOptionValue = null
+                                  ,$strKeyColumn = null
+                                  ,$strDisplayColumn = null
+                                  ,$boolNoWrapLabel = null
+                                  ,$strDataColumns = null
+                                  )
     {
-        $formField = new TFormDinSelectField($id,$strLabel,$boolRequired,$mixOptions);
+        $formField = new TFormDinSelectField($id
+                                            ,$strLabel
+                                            ,$boolRequired
+                                            ,$mixOptions
+                                            ,$boolNewLine
+                                            ,$boolLabelAbove
+                                            ,$mixValue
+                                            ,$boolMultiSelect
+                                            ,$intSize
+                                            ,$intWidth
+                                            ,$strFirstOptionText
+                                            ,$strFirstOptionValue
+                                            ,$strKeyColumn
+                                            ,$strDisplayColumn
+                                            ,$boolNoWrapLabel
+                                            ,$strDataColumns
+                                        );
         $objField = $formField->getAdiantiObj();
         $label = $this->getLabelField($strLabel,$boolRequired);
         //$this->addFields($label ,$objField ,$boolLabelAbove);
@@ -1242,6 +1276,21 @@ class TFormDin
         //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
+    }
+
+    /*****
+     * 
+     */
+    public function addCheckList( $objCheckList,$boolNewLine = true)
+    {
+        if( empty($objCheckList) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }
+        if ( !($objCheckList instanceof TFormDinCheckList) ) {
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_CHECKLIST);
+        }
+        $label = $objCheckList->getLabel();
+        $this->addElementFormList($objCheckList,self::TYPE_CHECKLIST,$label,$boolNewLine,false);
     }
 
     /**
