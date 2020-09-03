@@ -15,7 +15,7 @@ class TCreateConfigDataBase extends TCreateFileContent
 
     public function __construct()
     {
-        $this->setFileName('maindatabase.ini');
+        $this->setFileName('maindatabase.php');
         $path = TGeneratorHelper::getPathNewSystem().DS.'app'.DS.'config';
         $this->setFilePath($path);
     }
@@ -23,14 +23,18 @@ class TCreateConfigDataBase extends TCreateFileContent
     public function show($print = false)
     {
         $this->lines=null;
-        $this->addLine('host = "'.$_SESSION[APPLICATION_NAME]['DBMS']['HOST'].'"');
-        $this->addLine('port = "'.$_SESSION[APPLICATION_NAME]['DBMS']['PORT'].'"');
-        $this->addLine('name = "'.$_SESSION[APPLICATION_NAME]['DBMS']['DATABASE'].'"');
-        $this->addLine('user = "'.$_SESSION[APPLICATION_NAME]['DBMS']['USER'].'"');
-        $this->addLine('pass = "'.$_SESSION[APPLICATION_NAME]['DBMS']['PASSWORD'].'"');
-        $this->addLine('type = "'.$_SESSION[APPLICATION_NAME]['DBMS']['TYPE'].'"');
-        $this->addLine('prep = "1"');
-        $this->addLine('slog = SystemSqlLogService');
+        $this->addLine('<?php');
+        $this->addSysGenHeaderNote();
+        $this->addLine('return [');
+        $this->addLine(ESP.' "host" => "'.$_SESSION[APPLICATION_NAME]['DBMS']['HOST'].'"');
+        $this->addLine(ESP.',"port" => "'.$_SESSION[APPLICATION_NAME]['DBMS']['PORT'].'"');
+        $this->addLine(ESP.',"name" => "'.$_SESSION[APPLICATION_NAME]['DBMS']['DATABASE'].'"');
+        $this->addLine(ESP.',"user" => "'.$_SESSION[APPLICATION_NAME]['DBMS']['USER'].'"');
+        $this->addLine(ESP.',"pass" => "'.$_SESSION[APPLICATION_NAME]['DBMS']['PASSWORD'].'"');
+        $this->addLine(ESP.',"type" => "'.$_SESSION[APPLICATION_NAME]['DBMS']['TYPE'].'"');
+        $this->addLine(ESP.',"prep" => "1"');
+        $this->addLine(ESP.',"slog" => SystemSqlLogService');
+        $this->addLine('];');
         if ($print) {
             echo $this->getLinesString();
         } else {
