@@ -322,6 +322,7 @@ class TGeneratorHelper
 
     public static function createFilesDaoVoFromTable($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
+        $DBMS = TSysgenSession::getValue('DBMS');
         $configDBMS  = self::getConfigByDBMS();
         $folder      = self::getPathNewSystem().DS.'dao'.DS;
 
@@ -341,12 +342,17 @@ class TGeneratorHelper
         $DBMS = TSysgenSession::getValue('DBMS');
         $DBMS_TYPE  = $DBMS['TYPE'];
 
+        $dtView = TSysgenSession::getValue('DT_VIEW');
+        $dtDB   = TSysgenSession::getValue('DT_DB');
+
         $configDBMS = self::getConfigByDBMS();
         $pathFolder = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'views'.DS;
         $geradorForm= new TCreateForm($pathFolder ,$tableName ,$listColumnsProperties);
         $geradorForm->setDatabaseManagementSystem($DBMS_TYPE);
         $geradorForm->setTableType($tableType);
         $geradorForm->setGridType($configDBMS['TPGRID']);
+        $geradorForm->setDtView($dtView);
+        $geradorForm->setDtDb($dtDB);
         $geradorForm->saveFile();
     }
 

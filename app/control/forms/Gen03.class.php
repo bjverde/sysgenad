@@ -32,7 +32,7 @@ class Gen03 extends TPage
                 $frm->addGroupField('gpx2', Message::GPX_TYPE_CONFIG);
                     $html = $frm->addHtmlField('logType', '');
                     $frm->addTextField('DT_VIEW','Data View', 20, true,null,Message::MASK_DT_BR);
-                    $frm->addTextField('DT_BD','Data Banco',  20, true,null,Message::MASK_DT_ISO,false);
+                    $frm->addTextField('DT_DB','Data Banco',  20, true,null,Message::MASK_DT_ISO,false);
                     $frm->addButton('Ajuda sobre EasyLabel',null,['helpEasyLabel','onReload'],null,null,true,false,'fa:life-ring fa-fw #f0db4f');
                 $frm->closeGroup();
 
@@ -103,6 +103,8 @@ class Gen03 extends TPage
         try {
             $data = $this->form->getData(); // optional parameter: active record class
             $this->form->setData($data);    // put the data back to the form
+            TSession::setValue('DT_VIEW',RequestHelper::get('DT_VIEW'));
+            TSession::setValue('DT_DB',RequestHelper::get('DT_DB'));
             AdiantiCoreApplication::loadPage('Gen04'); //POG para recarregar a pagina
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());

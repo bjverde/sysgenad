@@ -24,6 +24,8 @@ class TCreateForm extends TCreateFileContent
     private $listColumnsProperties;
     private $tableType = null;
     private $databaseManagementSystem  = null;
+    private $dtView;
+    private $dtDb;
     
     const FORMDIN_TYPE_DATE = 'DATE';
     const FORMDIN_TYPE_DATETIME = 'DATETIME';
@@ -155,6 +157,26 @@ class TCreateForm extends TCreateFileContent
     public function getDatabaseManagementSystem()
     {
         return $this->databaseManagementSystem;
+    }
+    //------------------------------------------------------------------------------------
+    public function setDtView($dtView)
+    {
+        return $this->dtView = $dtView;
+    }
+    public function getDtView()
+    {
+        $dtView = empty($this->dtView)?Message::MASK_DT_BR:$this->dtView;
+        return $dtView;
+    }
+    //------------------------------------------------------------------------------------
+    public function setDtDb($dtBd)
+    {
+        return $this->dtBd = $dtBd;
+    }
+    public function getDtDb()
+    {
+        $dtView = empty($this->dtBd)?Message::MASK_DT_ISO:$this->dtBd;
+        return $dtView;
     }    
     //--------------------------------------------------------------------------------------
     /***
