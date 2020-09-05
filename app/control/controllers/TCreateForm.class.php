@@ -416,7 +416,7 @@ class TCreateForm extends TCreateFileContent
             break;
             case self::FORMDIN_TYPE_DATETIME:
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
-                $this->addLine($qtdTab.'$frm->addDateTimeField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',null,null,null,null,\''.$this->getDtView().'\',null,null,null,null,\''.$this->getDtDb().'\');');
+                $this->addLine($qtdTab.'$frm->addDateTimeField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',null,null,null,null,\''.$this->getDtView().' hh:ii\',null,null,null,null,\''.$this->getDtDb().' hh:ii\');');
                 $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
             break;            
             case self::FORMDIN_TYPE_NUMBER:
