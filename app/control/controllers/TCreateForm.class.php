@@ -411,12 +411,12 @@ class TCreateForm extends TCreateFileContent
         switch ($formDinType) {
             case self::FORMDIN_TYPE_DATE:
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
-                $this->addLine($qtdTab.'$frm->addDateField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.');');
+                $this->addLine($qtdTab.'$frm->addDateField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',null,null,null,null,'.$this->getDtView().',null,null,null,null,'.$this->getDtDb().');');
                 $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
             break;
             case self::FORMDIN_TYPE_DATETIME:
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
-                $this->addLine($qtdTab.'$frm->addDateTimeField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.');');
+                $this->addLine($qtdTab.'$frm->addDateTimeField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',null,null,null,null,'.$this->getDtView().',null,null,null,null,'.$this->getDtDb().');');
                 $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
             break;            
             case self::FORMDIN_TYPE_NUMBER:
