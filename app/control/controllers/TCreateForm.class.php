@@ -411,12 +411,12 @@ class TCreateForm extends TCreateFileContent
         switch ($formDinType) {
             case self::FORMDIN_TYPE_DATE:
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
-                $this->addLine($qtdTab.'$frm->addDateField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',null,null,null,null,'.$this->getDtView().',null,null,null,null,'.$this->getDtDb().');');
+                $this->addLine($qtdTab.'$frm->addDateField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',null,null,null,null,\''.$this->getDtView().'\',null,null,null,null,\''.$this->getDtDb().'\');');
                 $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
             break;
             case self::FORMDIN_TYPE_DATETIME:
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
-                $this->addLine($qtdTab.'$frm->addDateTimeField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',null,null,null,null,'.$this->getDtView().',null,null,null,null,'.$this->getDtDb().');');
+                $this->addLine($qtdTab.'$frm->addDateTimeField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',null,null,null,null,\''.$this->getDtView().'\',null,null,null,null,\''.$this->getDtDb().'\');');
                 $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
             break;            
             case self::FORMDIN_TYPE_NUMBER:
@@ -567,12 +567,19 @@ class TCreateForm extends TCreateFileContent
                  * registro que assume ser a chave primaria.
                  */
                 $keyColumns = $key+1;
-                $formDinType = self::getColumnsPropertieFormDinType($keyColumns);
-                
+                $formDinType = $this->getColumnsPropertieFormDinType($keyColumns);               
                 $fieldLabel = EasyLabel::convertLabel($value, $formDinType);
-                $this->addLine($qtdTab.'$grid->addColumn(\''.$value.'\',\''.$fieldLabel.'\');');
-            }
-        }
+
+                switch ($formDinType) {
+                    case self::FORMDIN_TYPE_DATE:
+                    case self::FORMDIN_TYPE_DATETIME:
+                        $this->addLine($qtdTab.'$grid->addColumnFormatDate(\''.$value.'\',\''.$fieldLabel.'\',null,null,\''.$this->getDtView.'\');');
+                    break;                    
+                    default:
+                        $this->addLine($qtdTab.'$grid->addColumn(\''.$value.'\',\''.$fieldLabel.'\');');
+                }
+            }//end foreach
+        }//end if
     }
     //--------------------------------------------------------------------------------------
     public function addGetWhereGridParameters_fied($primeira, $campo, $qtdTabs)
