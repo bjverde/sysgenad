@@ -4,7 +4,7 @@ class GenStepHelper
     const STEP00 = 'Welcome';
     const STEP01 = 'Config DataBase';
     const STEP02 = 'Select Tables';
-    const STEP03 = 'Select Fields and Log';
+    const STEP03 = 'Config Fields and Log';
     const STEP04 = 'Result';
 
     public static function getStepPage($stepPage)

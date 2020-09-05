@@ -35,7 +35,7 @@ final class Message
     
     const SEL_TABLES_GENERATE = 'Selecione as tabelas que deseja gerar, depois clique em: '.self::BUTTON_LABEL_CONF;
     
-    const GEN03_TITLE         = 'Etapa 03 de '.self::LAST_STEP;
+    const GEN03_TITLE         = 'Etapa 03 de '.self::LAST_STEP.' - '.GenStepHelper::STEP03;
     
 
     const NEW_SYSTEM_OK       = 'Sistema Criado com Sucesso';
@@ -82,4 +82,8 @@ final class Message
     const ERRO_LIST_COLUMNS_NOT_ARRAY = 'List of Columns Properties not is a array';
 
     const ERRO_EMPTY_TP_SYSTEM = 'Empty Type System';
+
+
+    const MASK_DT_BR = 'dd/mm/yyyy';
+    const MASK_DT_ISO= 'yyyy-mm-dd';
 }
