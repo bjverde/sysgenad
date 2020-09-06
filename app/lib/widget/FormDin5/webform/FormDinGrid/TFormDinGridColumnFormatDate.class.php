@@ -52,7 +52,7 @@ class TFormDinGridColumnFormatDate extends TFormDinGridColumn
      * @param  string $label  - 2: Text label that will be shown in the header
      * @param  string $width  - 3: Column Width (pixels)
      * @param  string $align  - 4: Column align (left|right|center|justify)
-     * @param  string $format - 5: Date Format. DEFAULT = d/m/Y (Brazil) , United States = m/d/Y
+     * @param  string $format - 5: Date Format. DEFAULT = d/m/Y (Brazil). Exemplo: United States = m/d/Y. Aceita o formato Adianti dd/mm/yyyy ou DateTime do PHP d/m/Y. 
      * @return BootstrapFormBuilder
      */
     public function __construct(string $name
@@ -85,6 +85,7 @@ class TFormDinGridColumnFormatDate extends TFormDinGridColumn
         //$date = new DateTime($object->$name);
         $date = new DateTime($fieldValue);
         $format = $this->getFormat();
+        $format = str_replace( ['dd','mm', 'yyyy', 'hh', 'ii', 'ss'], ['d','m','Y', 'H', 'i', 's'], $format);
         $dateFormat = $date->format($format);
         return $dateFormat;
     }
