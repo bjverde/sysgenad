@@ -572,9 +572,11 @@ class TCreateForm extends TCreateFileContent
 
                 switch ($formDinType) {
                     case self::FORMDIN_TYPE_DATE:
-                    case self::FORMDIN_TYPE_DATETIME:
                         $this->addLine($qtdTab.'$grid->addColumnFormatDate(\''.$value.'\',\''.$fieldLabel.'\',null,\'left\',\''.$this->getDtView().'\');');
-                    break;                    
+                    break;
+                    case self::FORMDIN_TYPE_DATETIME:
+                        $this->addLine($qtdTab.'$grid->addColumnFormatDate(\''.$value.'\',\''.$fieldLabel.'\',null,\'left\',\''.$this->getDtView().' hh:ii\');');
+                    break;
                     default:
                         $this->addLine($qtdTab.'$grid->addColumn(\''.$value.'\',\''.$fieldLabel.'\');');
                 }
