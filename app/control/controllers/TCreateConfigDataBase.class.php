@@ -33,7 +33,7 @@ class TCreateConfigDataBase extends TCreateFileContent
         $this->addLine(ESP.',"pass" => "'.$_SESSION[APPLICATION_NAME]['DBMS']['PASSWORD'].'"');
         $this->addLine(ESP.',"type" => "'.$_SESSION[APPLICATION_NAME]['DBMS']['TYPE'].'"');
         $this->addLine(ESP.',"prep" => "1"');
-        $this->addLine(ESP.',"slog" => SystemSqlLogService');
+        $this->addLine(ESP.',"slog" => "SystemSqlLogService"');
         $this->addLine('];');
         if ($print) {
             echo $this->getLinesString();
