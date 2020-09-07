@@ -18,7 +18,7 @@ class helpDateFormat extends TPage
         $replace = array(); // define replacements for the main section        
         $this->html->enableSection('main', $replace); // replace the main section variables
 
-        $frm = new TFormDin($this,'Ajudar com Easy Label');
+        $frm = new TFormDin($this,Message::BUTTON_LABEL_HELP_DATEFORMAT);
         $frm->addHiddenField('id'); //POG para evitar problema de noticie
 
         // O Adianti permite a Internacionalização - A função _t('string') serve
