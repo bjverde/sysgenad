@@ -29,11 +29,11 @@ class Gen03 extends TPage
                     $html = $frm->addHtmlField('conf', '');
                 $frm->closeGroup();
 
-                $frm->addGroupField('gpx2', Message::GPX_TYPE_CONFIG);
+                $frm->addGroupField('gpx2', Message::GPX_DATEFORMAT);
                     $html = $frm->addHtmlField('logType', '');
                     $frm->addTextField('DT_VIEW','Data View', 20, true,null,Message::MASK_DT_BR);
                     $frm->addTextField('DT_DB','Data Banco',  20, true,null,Message::MASK_DT_ISO,false);
-                    $frm->addButton('Ajuda sobre EasyLabel',null,['helpEasyLabel','onReload'],null,null,true,false,'fa:life-ring fa-fw #f0db4f');
+                    $frm->addButton(Message::BUTTON_LABEL_HELP_DATEFORMAT,null,['helpEasyLabel','onReload'],null,null,true,false,'fa:life-ring fa-fw #f0db4f');
                 $frm->closeGroup();
 
                 /*

@@ -50,12 +50,13 @@ final class Message
     const GPX_TYPE_CONFIG     = 'Opções de Avançada';
     const GPX_TYPE_SYSTEM     = 'Tipo de sistema';
     const GPX_EASYLABEL       = 'EasyLabel';
+    const GPX_DATEFORMAT      = 'Formatação geral dos campos Date e DateTime';
     const FIELD_EASY_LABEL    = 'Deseja usar o Easy Label ?';
     const FIELD_TP_SYSTEM     = 'Qual tipo de sistema deseja gerar ?';
     const FIELD_LOGFILE_LABEL = 'Qual tipo de Log em arquivo (php_error.log) quer para o sistema?';
-    const FIELD_LOGFILE_OPT00  = 'Nada será gravado no Log !!';
-    const FIELD_LOGFILE_OPT01  = 'Quero tudo mesmo! até DomainException !';
-    const FIELD_LOGFILE_OPT02  = 'Calma ! Quero log, SEM o DomainException!';
+    const FIELD_LOGFILE_OPT00 = 'Nada será gravado no Log !!';
+    const FIELD_LOGFILE_OPT01 = 'Quero tudo mesmo! até DomainException !';
+    const FIELD_LOGFILE_OPT02 = 'Calma ! Quero log, SEM o DomainException!';
     
     const GEN03_BTN_NEXT4_LABEL = 'Seguir Etapa 04 ->';
     const GEN03_BTN_NEXT4_ACT   = 'next4';
@@ -67,6 +68,7 @@ final class Message
     const BUTTON_LABEL_CONF  = 'Gerar Config';
     const BUTTON_LABEL_GEN_STRUCTURE = 'Gerar estrutura';
     const BUTTON_LABEL_TEST_CONNECT  = 'Testar Conexão';
+    const BUTTON_LABEL_HELP_DATEFORMAT = 'Ajudar com Date Format';
     const MSG_TEST_CONNECT  = 'Conexão OK! Pode clicar em "Gerar"';
 
     const INFO_CONNECT    = 'Informe os parâmetros de conexão no banco e click no botão: '.self::BUTTON_LABEL_TEST_CONNECT
