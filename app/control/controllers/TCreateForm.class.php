@@ -748,7 +748,7 @@ class TCreateForm extends TCreateFileContent
             $this->addLine(ESP.ESP.'$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
         }        
         $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
-        $this->addLine(ESP.ESP.'$frm->enableCSRFProtection(); ');
+        $this->addLine(ESP.ESP.'$frm->enableCSRFProtection(); // Protection cross-site request forgery ');
         $this->addFields(ESP.ESP);
         $this->addBlankLine();
         $this->addButtons(ESP.ESP);
