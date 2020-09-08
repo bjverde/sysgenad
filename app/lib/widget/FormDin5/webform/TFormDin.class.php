@@ -396,6 +396,14 @@ class TFormDin
         return $label;
     }
 
+    /**
+     * Enable CSRF Protection
+     */
+    public function enableCSRFProtection()
+    {
+        $this->getAdiantiObj()->enableCSRFProtection();
+    }
+
 
    /**
     * Define as mensagens que serão exibidas na tela via alert() em javascript
