@@ -404,7 +404,6 @@ class TFormDin
         $this->getAdiantiObj()->enableCSRFProtection();
     }
 
-
    /**
     * Define as mensagens que serão exibidas na tela via alert() em javascript
     *

@@ -157,12 +157,29 @@ class TFormDinCheckList {
     }
     //--------------------------------------------------------------------
     /**
+     * Add list column Hidden, usado para não mostrar a id ou PK na lista de colunas
+     * @param  $name  = Name of the column in the database
+     * @param  $label = Text label that will be shown in the header
+     * @param  $align = Column align (left, center, right)
+     * @param  $width = Column Width (pixels)
+     * @param  $enableSearch = include field on search
+     * @return TDataGridColumn
+     */
+    public function addColumnHidden($name, $label, $align, $width, $enableSearch=false)
+    {
+        $objColumn = $this->addColumn($name, $label, $align, $width, $enableSearch);
+        $objColumn->setVisibility(false);
+        return $objColumn;
+    }
+    //--------------------------------------------------------------------
+    /**
      * Add list column
      * @param  $name  = Name of the column in the database
      * @param  $label = Text label that will be shown in the header
      * @param  $align = Column align (left, center, right)
      * @param  $width = Column Width (pixels)
      * @param  $enableSearch = include field on search
+     * @return TDataGridColumn
      */
     public function addColumn($name, $label, $align, $width, $enableSearch=true)
     {
@@ -173,6 +190,8 @@ class TFormDinCheckList {
         $column->width = $width;
         $column->enableSearch = $enableSearch;
         $this->listColumn[] = $column;
+        $objColumn = $this->getObjCheck()->addColumn($column->name, $column->label,$column->align,$column->width);
+        return $objColumn;
     }
     //--------------------------------------------------------------------
     public function getStringSearch()
@@ -214,9 +233,6 @@ class TFormDinCheckList {
     //--------------------------------------------------------------------
     public function showBody()
     {
-        foreach( $this->listColumn as $column) {
-            $this->getObjCheck()->addColumn($column->name, $column->label,$column->align,$column->width);
-        }
         $this->getObjCheck()->addItems( $this->listItems );
         return $this->getObjCheck();
     }
