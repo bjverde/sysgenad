@@ -44,6 +44,20 @@ class Gen02 extends TPage
                 $html->add('<br>');
                 $html->add(Message::SEL_TABLES_GENERATE);              
             $frm->closeGroup();
+
+
+            $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();            
+            $listTablesAll = ArrayHelper::convertArrayFormDin2Adianti($listTablesAll);
+            FormDinHelper::debug($listTablesAll);
+            $checkList = new TFormDinCheckList('gd','Lista de Tabelas',false,$listTablesAll,null);
+            $checkList->addColumnHidden('idSelected','TABLE_SCHEMA','left','20%');
+            $checkList->addColumn('TABLE_SCHEMA','TABLE_SCHEMA','left','20%');
+            $checkList->addColumn('TABLE_NAME','TABLE_NAME','left','60%');
+            $checkList->addColumn('COLUMN_QTD','COLUMN_QTD','center','10%');
+            $checkList->addColumn('TABLE_TYPE','TABLE_TYPE','left','10%');
+    
+            $frm->addCheckList($checkList,false);
+
     
             $frm->setActionLink(Message::BUTTON_LABEL_BACK,'back',false,'fa:chevron-circle-left','green');
             $frm->setActionLink(_t('Clear'),'clear',false,'fa:eraser','red');
@@ -51,6 +65,7 @@ class Gen02 extends TPage
 
             $this->form = $frm->show();
 
+            /*
             $grid = new TFormDinGrid($this
                                     ,'gd'               // id do gride
                                     ,'Lista de Tabelas' // titulo do gride
@@ -65,6 +80,7 @@ class Gen02 extends TPage
             $this->datagrid = $grid->show();
             $panelGrid = $grid->getPanelGroupGrid();
             $this->form->addContent([$panelGrid]);
+            */
 
             // wrap the page content using vertical box
             $vbox = new TVBox;
@@ -98,8 +114,10 @@ class Gen02 extends TPage
     {
         try {
             $data = $this->form->getData(); // optional parameter: active record class
-            $this->form->setData($data);    // put the data back to the form
-    
+                
+            FormDinHelper::debug($param,'$param');
+            FormDinHelper::debug($data,'$data');
+/*
             $listTableSelected = null;
             foreach( $param as $key => $valey ) {
                 if(strpos($key, 'idTableSelected') !== false){
@@ -112,6 +130,8 @@ class Gen02 extends TPage
                 TSysgenSession::setValue('idTableSelected',$listTableSelected);
                 AdiantiCoreApplication::loadPage('Gen03'); //POG para recarregar a pagina
             }
+*/
+            //$this->form->setData($data);    // put the data back to the form
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
@@ -120,7 +140,6 @@ class Gen02 extends TPage
     
     /**
      * Load the data into the datagrid
-     */
     function onReload()
     {
         $this->datagrid->clear();
@@ -142,6 +161,7 @@ class Gen02 extends TPage
         }
 
     }
+    */
 
     /**
      * shows the page
