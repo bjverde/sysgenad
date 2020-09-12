@@ -48,7 +48,6 @@ class Gen02 extends TPage
 
             $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();            
             $listTablesAll = ArrayHelper::convertArrayFormDin2Adianti($listTablesAll);
-            FormDinHelper::debug($listTablesAll);
             $checkList = new TFormDinCheckList('gd','Lista de Tabelas',false,$listTablesAll,null);
             $checkList->addColumnHidden('idSelected','TABLE_SCHEMA','left','20%');
             $checkList->addColumn('TABLE_SCHEMA','TABLE_SCHEMA','left','20%');
@@ -64,23 +63,6 @@ class Gen02 extends TPage
             $frm->setAction(Message::BUTTON_LABEL_GEN_STRUCTURE,'next',false,'fa:chevron-circle-right','green');
 
             $this->form = $frm->show();
-
-            /*
-            $grid = new TFormDinGrid($this
-                                    ,'gd'               // id do gride
-                                    ,'Lista de Tabelas' // titulo do gride
-                                );    
-            //$grid->setHeight(2500);
-            $grid->addColumn('idSelected',  'Code', null, 'center');
-            $grid->addColumn('TABLE_SCHEMA', 'TABLE_SCHEMA');
-            $grid->addColumn('TABLE_NAME', 'TABLE_NAME');
-            $grid->addColumn('COLUMN_QTD', 'COLUMN_QTD');
-            $grid->addColumn('TABLE_TYPE', 'TABLE_TYPE');
-            $grid->enableDefaultButtons(false);
-            $this->datagrid = $grid->show();
-            $panelGrid = $grid->getPanelGroupGrid();
-            $this->form->addContent([$panelGrid]);
-            */
 
             // wrap the page content using vertical box
             $vbox = new TVBox;
@@ -113,55 +95,20 @@ class Gen02 extends TPage
     public function next($param)
     {
         try {
-            $data = $this->form->getData(); // optional parameter: active record class
-                
-            FormDinHelper::debug($param,'$param');
-            FormDinHelper::debug($data,'$data');
-/*
-            $listTableSelected = null;
-            foreach( $param as $key => $valey ) {
-                if(strpos($key, 'idTableSelected') !== false){
-                    $listTableSelected[]=$valey;
-                }
-            }
+            $data = $this->form->getData(); // optional parameter: active record class                            
+            //FormDinHelper::debug($data,'$data');
+            $listTableSelected = $data->gd;
             if( CountHelper::count($listTableSelected) == 0 ){
                 new TMessage('error', Message::WARNING_NO_TABLE);
             } else {
                 TSysgenSession::setValue('idTableSelected',$listTableSelected);
                 AdiantiCoreApplication::loadPage('Gen03'); //POG para recarregar a pagina
             }
-*/
             //$this->form->setData($data);    // put the data back to the form
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
     }
-
-    
-    /**
-     * Load the data into the datagrid
-    function onReload()
-    {
-        $this->datagrid->clear();
-
-        $listTablesAll = TGeneratorHelper::loadTablesFromDatabase();            
-        $listTablesAll = ArrayHelper::convertArrayFormDin2Adianti($listTablesAll);
-
-        foreach( $listTablesAll as $idRow => $ObjRow ) {
-            // add an regular object to the datagrid
-            $item = new StdClass;
-            $item->idSelected  = new TCheckButton('idTableSelected'.$idRow);
-            $item->idSelected->setIndexValue($ObjRow->idSelected);
-            $item->TABLE_SCHEMA   = $ObjRow->TABLE_SCHEMA;
-            $item->TABLE_NAME     = $ObjRow->TABLE_NAME;
-            $item->COLUMN_QTD     = $ObjRow->COLUMN_QTD;
-            $item->TABLE_TYPE     = $ObjRow->TABLE_TYPE;
-            $this->datagrid->addItem($item);
-            $this->form->addField($item->idSelected); // important!
-        }
-
-    }
-    */
 
     /**
      * shows the page
