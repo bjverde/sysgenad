@@ -324,17 +324,19 @@ class TGeneratorHelper
     {
         $DBMS = TSysgenSession::getValue('DBMS');
         $configDBMS  = self::getConfigByDBMS();
-        $folder      = self::getPathNewSystem().DS.'dao'.DS;
+        $folder      = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'dao'.DS;        
 
         $generatorVo = new TCreateVO($folder,$tableName, $listColumnsProperties,$DBMS);
         $generatorVo->saveFile();
-               
+        
+        /*               
         $generatorDao = new TCreateDAO($folder,$tableName, $listColumnsProperties);
         $generatorDao->setTableType($tableType);
         $generatorDao->setDatabaseManagementSystem($DBMS);
         $generatorDao->setWithSqlPagination($configDBMS['TPGRID']);
         $generatorDao->setTableSchema($tableSchema);
         $generatorDao->saveFile();
+        */
     }
     
     public static function createFilesForms($tableName, $listColumnsProperties, $tableSchema, $tableType)
@@ -370,7 +372,7 @@ class TGeneratorHelper
     public static function createFilesFormControllerModelFromTable($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
         self::createFilesModel($tableName, $listColumnsProperties,$tableSchema,$tableType);
-        //self::createFilesDaoVoFromTable($tableName, $listColumnsProperties,$tableSchema,$tableType);
+        self::createFilesDaoVoFromTable($tableName, $listColumnsProperties,$tableSchema,$tableType);
         //self::createFilesControllers($tableName, $listColumnsProperties, $tableSchema, $tableType);
         //self::createFilesTests($tableName, $listColumnsProperties, $tableSchema, $tableType);
 
