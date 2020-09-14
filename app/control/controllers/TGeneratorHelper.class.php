@@ -312,7 +312,7 @@ class TGeneratorHelper
     
     public static function createFilesModel($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
-        $folder      = self::getPathNewSystem().DS.'app'.DS.'model'.DS.'maindatabase'.DS;
+        $folder      = self::getPathNewSystem().DS.'app'.DS.'model'.DS.'maindatabase';
                
         $generatorDao = new TCreateModel($folder,$tableName, $listColumnsProperties);
         $generatorDao->setTableType($tableType);
@@ -324,9 +324,9 @@ class TGeneratorHelper
     {
         $DBMS = TSysgenSession::getValue('DBMS');
         $configDBMS  = self::getConfigByDBMS();
-        $folder      = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'dao'.DS;        
+        $pathFolder  = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'dao';        
 
-        $generatorVo = new TCreateVO($folder,$tableName, $listColumnsProperties,$DBMS);
+        $generatorVo = new TCreateVO($pathFolder,$tableName, $listColumnsProperties,$DBMS);
         $generatorVo->saveFile();
         
         /*               
@@ -348,7 +348,7 @@ class TGeneratorHelper
         $dtDB   = TSysgenSession::getValue('DT_DB');
 
         $configDBMS = self::getConfigByDBMS();
-        $pathFolder = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'views'.DS;
+        $pathFolder = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'views';
         $geradorForm= new TCreateForm($pathFolder ,$tableName ,$listColumnsProperties);
         $geradorForm->setDatabaseManagementSystem($DBMS_TYPE);
         $geradorForm->setTableType($tableType);
