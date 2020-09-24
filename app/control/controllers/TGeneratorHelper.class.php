@@ -301,6 +301,9 @@ class TGeneratorHelper
         $generator->setListColumnsProperties($listColumnsProperties);
         $generator->setListColunnsName($listColumnsProperties['COLUMN_NAME']);
         $generator->setWithSqlPagination($configDBMS['TPGRID']);
+        //$pathFolder = TGeneratorHelper::getPathNewSystem().DS.'controllers'.DS;
+        $pathFolder = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'controllers';
+        $generator->setFilePath( $pathFolder );
         $generator->saveFile();
     }
     
@@ -324,7 +327,7 @@ class TGeneratorHelper
     {
         $DBMS = TSysgenSession::getValue('DBMS');
         $configDBMS  = self::getConfigByDBMS();
-        $pathFolder  = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'dao';        
+        $pathFolder  = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'dao';
 
         $generatorVo = new TCreateVO($pathFolder,$tableName, $listColumnsProperties,$DBMS);
         $generatorVo->saveFile();
@@ -373,7 +376,7 @@ class TGeneratorHelper
     {
         self::createFilesModel($tableName, $listColumnsProperties,$tableSchema,$tableType);
         self::createFilesDaoVoFromTable($tableName, $listColumnsProperties,$tableSchema,$tableType);
-        //self::createFilesControllers($tableName, $listColumnsProperties, $tableSchema, $tableType);
+        self::createFilesControllers($tableName, $listColumnsProperties, $tableSchema, $tableType);
         //self::createFilesTests($tableName, $listColumnsProperties, $tableSchema, $tableType);
 
         if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_REST ){

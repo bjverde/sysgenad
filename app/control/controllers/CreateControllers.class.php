@@ -27,8 +27,6 @@ class CreateControllers extends TCreateFileContent
         $this->tableRefDAO= $tableRef.'DAO';
         $this->tableRefVO = $tableRef.'VO';
         $this->setFileName($tableRef.'.class.php');
-        $path = TGeneratorHelper::getPathNewSystem().DS.'controllers'.DS;
-        $this->setFilePath($path);
     }
     //------------------------------------------------------------------------------------
     public function setWithSqlPagination($withSqlPagination)
@@ -190,7 +188,7 @@ class CreateControllers extends TCreateFileContent
             $this->addLine();
             $this->addSelectCount();
             
-            if ($this->getWithSqlPagination() == GRID_SQL_PAGINATION) {
+            if ($this->getWithSqlPagination() == FormDinHelper::GRID_SQL_PAGINATION) {
                 $this->addLine();
                 $this->addSelectAllPagination();
             }

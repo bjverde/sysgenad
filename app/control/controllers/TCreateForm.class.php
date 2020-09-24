@@ -626,14 +626,14 @@ class TCreateForm extends TCreateFileContent
         $this->addLine();
         $this->addLine($qtdTab.'public function onSave($param)');
         $this->addLine($qtdTab.'{');
+        $this->addLine($qtdTab.ESP.'$data = $this->form->getData();');
         $this->addLine($qtdTab.ESP.'//Função do FormDin para Debug');
         $this->addLine($qtdTab.ESP.'FormDinHelper::d($param,\'$param\');');
         $this->addLine($qtdTab.ESP.'FormDinHelper::debug($data,\'$data\');');
         $this->addLine($qtdTab.ESP.'FormDinHelper::debug($_REQUEST,\'$_REQUEST\');');
         $this->addBlankLine();
         $this->addLine($qtdTab.ESP.'try{');
-        $this->addLine($qtdTab.ESP.ESP.'if ( $this->form->validate() ) {');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'$data = $this->form->getData();');
+        $this->addLine($qtdTab.ESP.ESP.'if ( $this->form->validate() ) {');        
         $this->addLine($qtdTab.ESP.ESP.ESP.'$this->form->setData($data);');
         $this->addLine($qtdTab.ESP.ESP.ESP.'$vo = new '.$this->tableRefVO.'();');
         $this->addLine($qtdTab.ESP.ESP.ESP.'$frm->setVo( $vo );');
