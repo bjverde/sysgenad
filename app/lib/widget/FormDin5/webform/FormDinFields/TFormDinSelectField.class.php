@@ -132,7 +132,7 @@ class TFormDinSelectField  extends TFormDinGenericField
         }else{
             $adiantiObj = new TCombo($id);            
         }
-        $value = is_null($strFirstOptionValue)?$strKeyColumn:$strFirstOptionValue;
+        $value = is_null($mixValue)?$strFirstOptionValue:$mixValue;
         parent::__construct($adiantiObj,$id,$label,$boolRequired,$value,null);
         $this->addItems($mixOptions);
         return $this->getAdiantiObj();
