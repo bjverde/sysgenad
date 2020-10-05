@@ -330,11 +330,11 @@ class TGeneratorHelper
         $pathFolder  = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'dao';
 
         $generatorVo = new TCreateVO($pathFolder,$tableName, $listColumnsProperties,$DBMS);
-        $generatorVo->saveFile();        
+        $generatorVo->saveFile();
         
         $generatorDao = new TCreateDAO($pathFolder,$tableName, $listColumnsProperties);
         $generatorDao->setTableType($tableType);
-        $generatorDao->setDatabaseManagementSystem($DBMS);
+        $generatorDao->setDatabaseManagementSystem($DBMS['TYPE']);
         $generatorDao->setWithSqlPagination($configDBMS['TPGRID']);
         $generatorDao->setTableSchema($tableSchema);
         $generatorDao->saveFile();
