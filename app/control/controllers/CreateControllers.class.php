@@ -23,10 +23,10 @@ class CreateControllers extends TCreateFileContent
     public function __construct($tableRef)
     {
         $tableRef = ucfirst(strtolower($tableRef));
-        $this->tableRef   = $tableRef;
+        $this->tableRef   = $tableRef.'Controller';
         $this->tableRefDAO= $tableRef.'DAO';
         $this->tableRefVO = $tableRef.'VO';
-        $this->setFileName($tableRef.'.class.php');
+        $this->setFileName($tableRef.'Controller.class.php');
     }
     //------------------------------------------------------------------------------------
     public function setWithSqlPagination($withSqlPagination)

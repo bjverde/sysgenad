@@ -367,10 +367,10 @@ class TCreateForm extends TCreateFileContent
         $REFERENCED_TABLE_NAME = $this->getColumnsPropertieReferencedTable($key);
         $REFERENCED_TABLE_NAME = $this->getTableRefCC($REFERENCED_TABLE_NAME);
         
-        $this->addLine('$controller'.$REFERENCED_TABLE_NAME.' = new '.$REFERENCED_TABLE_NAME.'();');
-        $this->addLine('$list'.$REFERENCED_TABLE_NAME.' = $controller'.$REFERENCED_TABLE_NAME.'->selectAll();');
+        $this->addLine($qtdTab.'$controller'.$REFERENCED_TABLE_NAME.' = new '.$REFERENCED_TABLE_NAME.'Controller();');
+        $this->addLine($qtdTab.'$list'.$REFERENCED_TABLE_NAME.' = $controller'.$REFERENCED_TABLE_NAME.'->selectAll();');
         $fieldLabel = EasyLabel::convertLabel($fieldName, self::FORMDIN_TYPE_NUMBER);
-        $this->addLine('$frm->addSelectField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',$list'.$REFERENCED_TABLE_NAME.',null,null,null,null,null,null,\' \',null);');
+        $this->addLine($qtdTab.'$frm->addSelectField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',$list'.$REFERENCED_TABLE_NAME.',null,null,null,null,null,null,\' \',null);');
         $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
     }
     //--------------------------------------------------------------------------------------
@@ -381,7 +381,6 @@ class TCreateForm extends TCreateFileContent
             $this->addFieldNumber($qtdTab,$key, $fieldName, $REQUIRED);
         } else {
             $this->addFieldNumber($qtdTab,$key, $fieldName, $REQUIRED);
-            /*
             $fkTypeScreenReferenced = $this->getFkTypeScreenReferenced($key);
             switch ($fkTypeScreenReferenced) {
                 case self::FORM_FKTYPE_AUTOCOMPLETE:
@@ -390,7 +389,6 @@ class TCreateForm extends TCreateFileContent
                 default:
                     $this->addFieldForenKeySelectField($qtdTab,$key, $fieldName, $REQUIRED);
             }
-            */
         }
     }
     //--------------------------------------------------------------------------------------
