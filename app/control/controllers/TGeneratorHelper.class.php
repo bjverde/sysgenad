@@ -373,8 +373,8 @@ class TGeneratorHelper
     public static function createFilesFormControllerModelFromTable($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
         self::createFilesModel($tableName, $listColumnsProperties,$tableSchema,$tableType);
-        //self::createFilesDaoVoFromTable($tableName, $listColumnsProperties,$tableSchema,$tableType);
-        //self::createFilesControllers($tableName, $listColumnsProperties, $tableSchema, $tableType);
+        self::createFilesDaoVoFromTable($tableName, $listColumnsProperties,$tableSchema,$tableType);
+        self::createFilesControllers($tableName, $listColumnsProperties, $tableSchema, $tableType);
         //self::createFilesTests($tableName, $listColumnsProperties, $tableSchema, $tableType);
 
         if( TSysgenSession::getValue(TableInfo::TP_SYSTEM) != TGeneratorHelper::TP_SYSTEM_REST ){
