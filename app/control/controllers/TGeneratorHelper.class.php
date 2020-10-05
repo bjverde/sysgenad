@@ -326,15 +326,16 @@ class TGeneratorHelper
     public static function createFilesDaoVoFromTable($tableName, $listColumnsProperties, $tableSchema, $tableType)
     {
         $DBMS = TSysgenSession::getValue('DBMS');
+        $DBMS_TYPE  = $DBMS['TYPE'];
         $configDBMS  = self::getConfigByDBMS();
         $pathFolder  = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'dao';
 
-        $generatorVo = new TCreateVO($pathFolder,$tableName, $listColumnsProperties,$DBMS);
+        $generatorVo = new TCreateVO($pathFolder,$tableName, $listColumnsProperties,$DBMS_TYPE);
         $generatorVo->saveFile();
         
         $generatorDao = new TCreateDAO($pathFolder,$tableName, $listColumnsProperties);
         $generatorDao->setTableType($tableType);
-        $generatorDao->setDatabaseManagementSystem($DBMS['TYPE']);
+        $generatorDao->setDatabaseManagementSystem($DBMS_TYPE);
         $generatorDao->setWithSqlPagination($configDBMS['TPGRID']);
         $generatorDao->setTableSchema($tableSchema);
         $generatorDao->saveFile();
