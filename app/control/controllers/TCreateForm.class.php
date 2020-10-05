@@ -152,7 +152,7 @@ class TCreateForm extends TCreateFileContent
     //------------------------------------------------------------------------------------
     public function setDatabaseManagementSystem($databaseManagementSystem)
     {
-        return $this->databaseManagementSystem = strtoupper($databaseManagementSystem);
+        return $this->databaseManagementSystem = $databaseManagementSystem;
     }
     public function getDatabaseManagementSystem()
     {

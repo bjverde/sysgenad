@@ -58,7 +58,7 @@ class TCreateDAO extends TCreateFileContent
     //------------------------------------------------------------------------------------
     public function setDatabaseManagementSystem($databaseManagementSystem)
     {
-        return $this->databaseManagementSystem = strtoupper($databaseManagementSystem);
+        return $this->databaseManagementSystem = $databaseManagementSystem;
     }
     public function getDatabaseManagementSystem()
     {
@@ -271,6 +271,9 @@ class TCreateDAO extends TCreateFileContent
      **/
     public function addSqlSelectAllPagination()
     {
+
+        FormDinHelper::debug($this->getDatabaseManagementSystem());
+
         $this->addLine(ESP.'public function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$rowStart = SqlHelper::getRowStart($page,$rowsPerPage);');
