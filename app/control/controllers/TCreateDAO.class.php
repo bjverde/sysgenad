@@ -271,9 +271,6 @@ class TCreateDAO extends TCreateFileContent
      **/
     public function addSqlSelectAllPagination()
     {
-
-        FormDinHelper::debug($this->getDatabaseManagementSystem());
-
         $this->addLine(ESP.'public function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$rowStart = SqlHelper::getRowStart($page,$rowsPerPage);');
@@ -444,7 +441,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addBlankLine();
         $this->addLine(ESP.'public function __construct($tpdo=null)');
         $this->addLine(ESP.'{');
-        $this->addLine(ESP.ESP.'FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);');
+        $this->addLine(ESP.ESP.'//FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);');
         $this->addLine(ESP.ESP.'if( empty($tpdo) ){');
         $this->addLine(ESP.ESP.ESP.'$tpdo = New TPDOConnectionObj();');
         $this->addLine(ESP.ESP.'}');
@@ -456,7 +453,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'}');
         $this->addLine(ESP.'public function setTPDOConnection($tpdo)');
         $this->addLine(ESP.'{');
-        $this->addLine(ESP.ESP.'FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);');
+        $this->addLine(ESP.ESP.'//FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);');
         $this->addLine(ESP.ESP.'$this->tpdo = $tpdo;');
         $this->addLine(ESP.'}');        
     }
