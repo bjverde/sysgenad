@@ -380,7 +380,6 @@ class TCreateForm extends TCreateFileContent
         if ($KEY_TYPE != TableInfo::KEY_TYPE_FK) {
             $this->addFieldNumber($qtdTab,$key, $fieldName, $REQUIRED);
         } else {
-            $this->addFieldNumber($qtdTab,$key, $fieldName, $REQUIRED);
             $fkTypeScreenReferenced = $this->getFkTypeScreenReferenced($key);
             switch ($fkTypeScreenReferenced) {
                 case self::FORM_FKTYPE_AUTOCOMPLETE:
