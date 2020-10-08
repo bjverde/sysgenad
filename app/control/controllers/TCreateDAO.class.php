@@ -443,7 +443,8 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'//FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);');
         $this->addLine(ESP.ESP.'if( empty($tpdo) ){');
-        $this->addLine(ESP.ESP.ESP.'$tpdo = New TPDOConnectionObj();');
+        $this->addLine(ESP.ESP.ESP.'//$tpdo = New TPDOConnectionObj(); //FomDin4');
+        $this->addLine(ESP.ESP.ESP.'$tpdo = New TFormDinPdoConnection(\'maindatabase\');');
         $this->addLine(ESP.ESP.'}');
         $this->addLine(ESP.ESP.'$this->setTPDOConnection($tpdo);');
         $this->addLine(ESP.'}');
