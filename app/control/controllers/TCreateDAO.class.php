@@ -271,6 +271,12 @@ class TCreateDAO extends TCreateFileContent
      **/
     public function addSqlSelectAllPagination()
     {
+        $this->addLine(ESP.'/**');
+        $this->addLine(ESP.' * Faz um Select SQL, COM paginação do banco');
+        $this->addLine(ESP.' * @param string $orderBy - 01: criterio de ordenação');
+        $this->addLine(ESP.' * @param array  $where   - 02: array PHP "NOME_COLUNA1=>VALOR,NOME_COLUNA1=>VALOR" que será usado na consulta no metodo processWhereGridParameters');
+        $this->addLine(ESP.' * @return array Adianti');
+        $this->addLine(ESP.' */');
         $this->addLine(ESP.'public function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$rowStart = SqlHelper::getRowStart($page,$rowsPerPage);');
@@ -301,6 +307,12 @@ class TCreateDAO extends TCreateFileContent
      **/
     public function addSqlSelectAll()
     {
+        $this->addLine(ESP.'/**');
+        $this->addLine(ESP.' * Faz um Select SQL, sem paginação');
+        $this->addLine(ESP.' * @param string $orderBy - 01: criterio de ordenação');
+        $this->addLine(ESP.' * @param array  $where   - 02: array PHP "NOME_COLUNA1=>VALOR,NOME_COLUNA1=>VALOR" que será usado na consulta no metodo processWhereGridParameters');
+        $this->addLine(ESP.' * @return array Adianti');
+        $this->addLine(ESP.' */');
         $this->addLine(ESP.'public function selectAll( $orderBy=null, $where=null )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$where = $this->processWhereGridParameters($where);');
@@ -311,6 +323,23 @@ class TCreateDAO extends TCreateFileContent
         $this->addExecuteSql();
         $this->addLine(ESP.'}');
     }
+    //--------------------------------------------------------------------------------------
+    /***
+     * Create function for sql select all
+     **/
+    public function addSqlSelectByTCriteria()
+    {
+        $this->addLine(ESP.'/**');
+        $this->addLine(ESP.' * Faz um Select usando o TCriteria');
+        $this->addLine(ESP.' * @param TCriteria $criteria    - 01: Obj TCriteria');
+        $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
+        $this->addLine(ESP.' * @return array Adianti');
+        $this->addLine(ESP.' */');
+        $this->addLine(ESP.'public function selectByTCriteria( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'{');
+        $this->addLine(ESP.ESP.'$result = $this->tpdo->selectByTCriteria($criteria,$repositoryName);');
+        $this->addLine(ESP.'}');
+    }    
     //--------------------------------------------------------------------------------------
     /***
      * Create function for sql insert
