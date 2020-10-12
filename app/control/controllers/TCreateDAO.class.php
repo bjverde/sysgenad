@@ -497,7 +497,7 @@ class TCreateDAO extends TCreateFileContent
     public function addConstruct()
     {
         $this->addLine(ESP.'private $tpdo = null;');
-        $this->addLine(ESP.'private $repositoryName ='.$this->getTableName().'; //Nome da Classe do tipo Active Record no diretorio /app/model/maindatabase');
+        $this->addLine(ESP.'private $repositoryName = \''.$this->getTableName().'\'; //Nome da Classe do tipo Active Record no diretorio /app/model/maindatabase');
         $this->addBlankLine();
         $this->addLine(ESP.'public function __construct($tpdo=null)');
         $this->addLine(ESP.'{');
