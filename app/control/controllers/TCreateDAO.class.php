@@ -355,7 +355,7 @@ class TCreateDAO extends TCreateFileContent
     /***
      * Create function for sql select all
      **/
-    public function addSqlSelectCountByTCriteria()
+    public function addSqlSelectByTCriteriaCount()
     {
         $this->addLine();
         $this->addLine(ESP.'/**');
@@ -364,9 +364,9 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
         $this->addLine(ESP.' * @return array Adianti');
         $this->addLine(ESP.' */');
-        $this->addLine(ESP.'public function selectCountByTCriteria( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'public function selectByTCriteriaCount( TCriteria $criteria, $repositoryName )');
         $this->addLine(ESP.'{');
-        $this->addLine(ESP.ESP.'$result = $this->tpdo->selectCountByTCriteria($criteria,$repositoryName);');
+        $this->addLine(ESP.ESP.'$result = $this->tpdo->selectByTCriteriaCount($criteria,$repositoryName);');
         $this->addLine(ESP.ESP.'return $result;');
         $this->addLine(ESP.'}');
     }    
@@ -547,7 +547,7 @@ class TCreateDAO extends TCreateFileContent
             
             $this->addSqlSelectAll();
             $this->addSqlSelectByTCriteria();
-            $this->addSqlSelectCountByTCriteria();
+            $this->addSqlSelectByTCriteriaCount();
 
             if($this->getTableType() == TableInfo::TB_TYPE_TABLE){        
                 // insert
