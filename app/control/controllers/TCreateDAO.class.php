@@ -345,9 +345,9 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
         $this->addLine(ESP.' * @return array Adianti');
         $this->addLine(ESP.' */');
-        $this->addLine(ESP.'public function selectByTCriteria( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'public function selectByTCriteria( TCriteria $criteria=null )');
         $this->addLine(ESP.'{');
-        $this->addLine(ESP.ESP.'$result = $this->tpdo->selectByTCriteria($criteria,$repositoryName);');
+        $this->addLine(ESP.ESP.'$result = $this->tpdo->selectByTCriteria($criteria,$this->repositoryName);');
         $this->addLine(ESP.ESP.'return $result;');
         $this->addLine(ESP.'}');
     }
@@ -364,9 +364,9 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
         $this->addLine(ESP.' * @return array Adianti');
         $this->addLine(ESP.' */');
-        $this->addLine(ESP.'public function selectByTCriteriaCount( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'public function selectByTCriteriaCount( TCriteria $criteria=null )');
         $this->addLine(ESP.'{');
-        $this->addLine(ESP.ESP.'$result = $this->tpdo->selectByTCriteriaCount($criteria,$repositoryName);');
+        $this->addLine(ESP.ESP.'$result = $this->tpdo->selectByTCriteriaCount($criteria,$this->repositoryName);');
         $this->addLine(ESP.ESP.'return $result;');
         $this->addLine(ESP.'}');
     }    
@@ -497,6 +497,7 @@ class TCreateDAO extends TCreateFileContent
     public function addConstruct()
     {
         $this->addLine(ESP.'private $tpdo = null;');
+        $this->addLine(ESP.'private $repositoryName ='.$this->getTableName().'; //Nome da Classe do tipo Active Record no diretorio /app/model/maindatabase');
         $this->addBlankLine();
         $this->addLine(ESP.'public function __construct($tpdo=null)');
         $this->addLine(ESP.'{');

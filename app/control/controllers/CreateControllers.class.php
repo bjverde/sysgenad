@@ -145,9 +145,9 @@ class CreateControllers extends TCreateFileContent
         $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
         $this->addLine(ESP.' * @return array Adianti');
         $this->addLine(ESP.' */');
-        $this->addLine(ESP.'public function selectByTCriteria( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'public function selectByTCriteria( TCriteria $criteria=null)');
         $this->addLine(ESP.'{');
-        $this->addLine(ESP.ESP.'$result = $this->dao->selectByTCriteria($criteria,$repositoryName);');
+        $this->addLine(ESP.ESP.'$result = $this->dao->selectByTCriteria($criteria);');
         $this->addLine(ESP.ESP.'return $result;');
         $this->addLine(ESP.'}');
     }
@@ -161,9 +161,9 @@ class CreateControllers extends TCreateFileContent
         $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
         $this->addLine(ESP.' * @return array Adianti');
         $this->addLine(ESP.' */');
-        $this->addLine(ESP.'public function selectByTCriteriaCount( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'public function selectByTCriteriaCount( TCriteria $criteria=null)');
         $this->addLine(ESP.'{');
-        $this->addLine(ESP.ESP.'$result = $this->dao->selectByTCriteriaCount($criteria,$repositoryName);');
+        $this->addLine(ESP.ESP.'$result = $this->dao->selectByTCriteriaCount($criteria);');
         $this->addLine(ESP.ESP.'return $result;');
         $this->addLine(ESP.'}');
     }    
