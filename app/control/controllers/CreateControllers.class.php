@@ -89,6 +89,7 @@ class CreateControllers extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     private function addSelectById()
     {
+        $this->addLine();
         $this->addLine(ESP.'public function selectById( $id )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $this->dao->selectById( $id );');
@@ -107,6 +108,7 @@ class CreateControllers extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     private function addSelectCount()
     {
+        $this->addLine();
         $this->addLine(ESP.'public function selectCount( $where=null )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $this->dao->selectCount( $where );');
@@ -116,6 +118,7 @@ class CreateControllers extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     private function addSelectAllPagination()
     {
+        $this->addLine();
         $this->addLine(ESP.'public function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null)');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $this->dao->selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );');
@@ -125,12 +128,45 @@ class CreateControllers extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     private function addSelectAll()
     {
+        $this->addLine();
         $this->addLine(ESP.'public function selectAll( $orderBy=null, $where=null )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $this->dao->selectAll( $orderBy, $where );');
         $this->addLine(ESP.ESP.'return $result;');
         $this->addLine(ESP.'}');
     }
+    //--------------------------------------------------------------------------------------
+    private function addSqlSelectByTCriteria()
+    {
+        $this->addLine();
+        $this->addLine(ESP.'/**');
+        $this->addLine(ESP.' * Faz um Select usando o TCriteria');
+        $this->addLine(ESP.' * @param TCriteria $criteria    - 01: Obj TCriteria');
+        $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
+        $this->addLine(ESP.' * @return array Adianti');
+        $this->addLine(ESP.' */');
+        $this->addLine(ESP.'public function selectCountByTCriteria( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'{');
+        $this->addLine(ESP.ESP.'$result = $this->dao->selectByTCriteria($criteria,$repositoryName);');
+        $this->addLine(ESP.ESP.'return $result;');
+        $this->addLine(ESP.'}');
+    }
+    //--------------------------------------------------------------------------------------
+    private function addSqlSelectCountByTCriteria()
+    {
+        $this->addLine();
+        $this->addLine(ESP.'/**');
+        $this->addLine(ESP.' * Faz um Select Count usando o TCriteria');
+        $this->addLine(ESP.' * @param TCriteria $criteria    - 01: Obj TCriteria');
+        $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
+        $this->addLine(ESP.' * @return array Adianti');
+        $this->addLine(ESP.' */');
+        $this->addLine(ESP.'public function selectCountByTCriteria( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'{');
+        $this->addLine(ESP.ESP.'$result = $this->dao->selectCountByTCriteria($criteria,$repositoryName);');
+        $this->addLine(ESP.ESP.'return $result;');
+        $this->addLine(ESP.'}');
+    }    
     //--------------------------------------------------------------------------------------
     private function addSave()
     {
@@ -181,20 +217,17 @@ class CreateControllers extends TCreateFileContent
         
         if( $this->getTableType()== TableInfo::TB_TYPE_PROCEDURE){
             $this->addExecProcedure();
-        }else{
-            $this->addLine();
+        }else{            
             $this->addSelectById();
-
-            $this->addLine();
             $this->addSelectCount();
             
             if ($this->getWithSqlPagination() == FormDinHelper::GRID_SQL_PAGINATION) {
-                $this->addLine();
                 $this->addSelectAllPagination();
             }
             
-            $this->addLine();
             $this->addSelectAll();
+            $this->addSqlSelectByTCriteria();
+            $this->addSqlSelectCountByTCriteria();            
 
             if( $this->getTableType()==TableInfo::TB_TYPE_TABLE){
                 $this->addSave();
