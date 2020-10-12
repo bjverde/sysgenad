@@ -221,6 +221,7 @@ class TCreateDAO extends TCreateFileContent
      **/
     public function addSqlSelectById()
     {
+        $this->addLine();
         $this->addLine(ESP.'public function selectById( $id )');
         $this->addLine(ESP.'{');
         $this->addValidateTypeInt(ESP.ESP);
@@ -256,6 +257,7 @@ class TCreateDAO extends TCreateFileContent
      **/
     public function addSqlSelectCount()
     {
+        $this->addLine();
         $this->addLine(ESP.'public function selectCount( $where=null )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$where = $this->processWhereGridParameters($where);');
@@ -271,6 +273,7 @@ class TCreateDAO extends TCreateFileContent
      **/
     public function addSqlSelectAllPagination()
     {
+        $this->addLine();
         $this->addLine(ESP.'/**');
         $this->addLine(ESP.' * Faz um Select SQL, COM paginação do banco');
         $this->addLine(ESP.' * @param string $orderBy - 01: criterio de ordenação');
@@ -307,6 +310,7 @@ class TCreateDAO extends TCreateFileContent
      **/
     public function addSqlSelectAll()
     {
+        $this->addLine();
         $this->addLine(ESP.'/**');
         $this->addLine(ESP.' * Faz um Select SQL, sem paginação');
         $this->addLine(ESP.' * @param string $orderBy - 01: criterio de ordenação');
@@ -329,6 +333,7 @@ class TCreateDAO extends TCreateFileContent
      **/
     public function addSqlSelectByTCriteria()
     {
+        $this->addLine();
         $this->addLine(ESP.'/**');
         $this->addLine(ESP.' * Faz um Select usando o TCriteria');
         $this->addLine(ESP.' * @param TCriteria $criteria    - 01: Obj TCriteria');
@@ -338,6 +343,24 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'public function selectByTCriteria( TCriteria $criteria, $repositoryName )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $this->tpdo->selectByTCriteria($criteria,$repositoryName);');
+        $this->addLine(ESP.'}');
+    }
+    //--------------------------------------------------------------------------------------
+    /***
+     * Create function for sql select all
+     **/
+    public function addSqlSelectCountByTCriteria()
+    {
+        $this->addLine();
+        $this->addLine(ESP.'/**');
+        $this->addLine(ESP.' * Faz um Select usando o TCriteria');
+        $this->addLine(ESP.' * @param TCriteria $criteria    - 01: Obj TCriteria');
+        $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
+        $this->addLine(ESP.' * @return array Adianti');
+        $this->addLine(ESP.' */');
+        $this->addLine(ESP.'public function selectCountByTCriteria( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'{');
+        $this->addLine(ESP.ESP.'$result = $this->tpdo->selectCountByTCriteria($criteria,$repositoryName);');
         $this->addLine(ESP.'}');
     }    
     //--------------------------------------------------------------------------------------
@@ -508,25 +531,16 @@ class TCreateDAO extends TCreateFileContent
         }else{
             $this->addProcessWhereGridParameters();
             
-            // select by Id
-            $this->addLine();
             $this->addSqlSelectById();
-            // fim select
-            
-            // Select Count
-            $this->addLine();
             $this->addSqlSelectCount();
-            // fim Select Count
             
             if ($this->getWithSqlPagination() == FormDinHelper::GRID_SQL_PAGINATION) {
-                $this->addLine();
                 $this->addSqlSelectAllPagination();
             }
             
-            // select where
-            $this->addLine();
             $this->addSqlSelectAll();
-            // fim select
+            $this->addSqlSelectByTCriteria();
+            $this->addSqlSelectCountByTCriteria();
 
             if($this->getTableType() == TableInfo::TB_TYPE_TABLE){        
                 // insert
