@@ -145,7 +145,7 @@ class CreateControllers extends TCreateFileContent
         $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
         $this->addLine(ESP.' * @return array Adianti');
         $this->addLine(ESP.' */');
-        $this->addLine(ESP.'public function selectCountByTCriteria( TCriteria $criteria, $repositoryName )');
+        $this->addLine(ESP.'public function selectByTCriteria( TCriteria $criteria, $repositoryName )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $this->dao->selectByTCriteria($criteria,$repositoryName);');
         $this->addLine(ESP.ESP.'return $result;');
