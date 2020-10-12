@@ -227,7 +227,7 @@ class CreateControllers extends TCreateFileContent
             
             $this->addSelectAll();
             $this->addSqlSelectByTCriteria();
-            $this->addSqlSelectCountByTCriteria();            
+            $this->addSqlSelectByTCriteriaCount();            
 
             if( $this->getTableType()==TableInfo::TB_TYPE_TABLE){
                 $this->addSave();
