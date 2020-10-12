@@ -258,6 +258,11 @@ class TCreateDAO extends TCreateFileContent
     public function addSqlSelectCount()
     {
         $this->addLine();
+        $this->addLine(ESP.'/**');
+        $this->addLine(ESP.' * Faz um Select SQL nativo count');
+        $this->addLine(ESP.' * @param array  $where   - 01: array PHP "NOME_COLUNA1=>VALOR,NOME_COLUNA1=>VALOR" que será usado na consulta no metodo processWhereGridParameters');
+        $this->addLine(ESP.' * @return array Adianti');
+        $this->addLine(ESP.' */');        
         $this->addLine(ESP.'public function selectCount( $where=null )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$where = $this->processWhereGridParameters($where);');
@@ -275,7 +280,7 @@ class TCreateDAO extends TCreateFileContent
     {
         $this->addLine();
         $this->addLine(ESP.'/**');
-        $this->addLine(ESP.' * Faz um Select SQL, COM paginação do banco');
+        $this->addLine(ESP.' * Faz um Select SQL nativo, COM paginação do banco');
         $this->addLine(ESP.' * @param string $orderBy - 01: criterio de ordenação');
         $this->addLine(ESP.' * @param array  $where   - 02: array PHP "NOME_COLUNA1=>VALOR,NOME_COLUNA1=>VALOR" que será usado na consulta no metodo processWhereGridParameters');
         $this->addLine(ESP.' * @return array Adianti');
@@ -312,7 +317,7 @@ class TCreateDAO extends TCreateFileContent
     {
         $this->addLine();
         $this->addLine(ESP.'/**');
-        $this->addLine(ESP.' * Faz um Select SQL, sem paginação');
+        $this->addLine(ESP.' * Faz um Select SQL nativo, sem paginação');
         $this->addLine(ESP.' * @param string $orderBy - 01: criterio de ordenação');
         $this->addLine(ESP.' * @param array  $where   - 02: array PHP "NOME_COLUNA1=>VALOR,NOME_COLUNA1=>VALOR" que será usado na consulta no metodo processWhereGridParameters');
         $this->addLine(ESP.' * @return array Adianti');
@@ -343,6 +348,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'public function selectByTCriteria( TCriteria $criteria, $repositoryName )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $this->tpdo->selectByTCriteria($criteria,$repositoryName);');
+        $this->addLine(ESP.ESP.'return $result;');
         $this->addLine(ESP.'}');
     }
     //--------------------------------------------------------------------------------------
@@ -353,7 +359,7 @@ class TCreateDAO extends TCreateFileContent
     {
         $this->addLine();
         $this->addLine(ESP.'/**');
-        $this->addLine(ESP.' * Faz um Select usando o TCriteria');
+        $this->addLine(ESP.' * Faz um Select Count usando o TCriteria');
         $this->addLine(ESP.' * @param TCriteria $criteria    - 01: Obj TCriteria');
         $this->addLine(ESP.' * @param string $repositoryName - 02: nome de classe');
         $this->addLine(ESP.' * @return array Adianti');
@@ -361,6 +367,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'public function selectCountByTCriteria( TCriteria $criteria, $repositoryName )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $this->tpdo->selectCountByTCriteria($criteria,$repositoryName);');
+        $this->addLine(ESP.ESP.'return $result;');
         $this->addLine(ESP.'}');
     }    
     //--------------------------------------------------------------------------------------
