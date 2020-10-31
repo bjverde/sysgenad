@@ -50,6 +50,7 @@ class DateTimeHelper
     const DEFAULT_TIME_ZONE = 'America/Sao_Paulo';
     
     /**
+     * @codeCoverageIgnore
      * Getter para criar uma instância de um objeto do tipo DateTime.
      *
      * @return DateTime
@@ -62,6 +63,9 @@ class DateTimeHelper
         return $dateTime;
     }
     
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getNowFormat($format) 
     {
         $dateTime = self::getCurrentDateTime();
@@ -70,6 +74,7 @@ class DateTimeHelper
     }
     
     /**
+     *  @codeCoverageIgnore
      *  Retorn Data e hora no formato 'Y-m-d H:i:s'
      *
      * @return string 'Y-m-d H:i:s'
@@ -80,6 +85,9 @@ class DateTimeHelper
         return $retorno;
     }
     
+    /**
+     * @codeCoverageIgnore
+     */    
     public static function getNowYYYYMMDD() 
     {
         $retorno = self::getNowFormat('Y-m-d');

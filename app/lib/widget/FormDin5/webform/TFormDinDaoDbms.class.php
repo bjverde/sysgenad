@@ -166,15 +166,12 @@ class TFormDinDaoDbms
 	 *
 	 * @return void
 	 */
-	public function executeSql($sql,$arrayTypeReturn = ArrayHelper::TYPE_PDO)
+	public function executeSql($sql,$outputFormat = ArrayHelper::TYPE_PDO,$case = PDO::CASE_UPPER)
 	{
 		//O result vem no padrão PDO
+		$this->getConnection()->setCase($case);
+		$this->getConnection()->setOutputFormat($outputFormat);
 		$result  = $this->getConnection()->executeSql($sql);
-		if($arrayTypeReturn == ArrayHelper::TYPE_FORMDIN){
-			$result = ArrayHelper::convertArrayPdo2FormDin($result,TRUE);
-		}else if($arrayTypeReturn == ArrayHelper::TYPE_ADIANTI){
-			$result = ArrayHelper::convertArray2Adianti($result);
-		}
 		return $result;
 	}
 

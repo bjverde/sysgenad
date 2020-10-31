@@ -53,6 +53,9 @@ class TFormDinPdoConnection
     private $database = null;
     private $fech = null;
     private $case = null;
+    private $outputFormat = null;
+    private $outputFormatDefault = ArrayHelper::TYPE_ADIANTI;
+    private $caseDefault = PDO::CASE_NATURAL;
 
 
     private $host;
@@ -62,11 +65,20 @@ class TFormDinPdoConnection
     private $pass;
     private $type;
 
-    public function __construct($database = null,$fech = null,$case = null)
+    /**
+     * Facilitardor de conexão com o banco de dados
+     *
+     * @param string $database : nome da conexão
+     * @param const $outputMode: Default = ArrayHelper::TYPE_PDO. ArrayHelper::TYPE_FORMDIN, ArrayHelper::TYPE_ADIANTI
+     * @param const $fech
+     * @param const $case use PDO case. DEFAULT = CASE_NATURAL.  https://www.php.net/manual/pt_BR/pdo.prepare.php
+     */
+    public function __construct($database = null,$outputFormat = null,$fech = null,$case = null)
     {
         if(!empty($database)){
             $this->setDatabase($database);
         }
+        $this->setOutputFormat($outputFormat);
         $this->setFech($fech);
         $this->setCase($case);
     }
@@ -83,10 +95,20 @@ class TFormDinPdoConnection
         return $this->database;
     }
 
+    /**
+     * Defini ao case do array de retorno. Veja 
+     * https://www.php.net/manual/pt_BR/pdostatement.fetch.php
+     * 
+     * PDO::FETCH_ASSOC - array simples
+     * PDO::FETCH_OBJ   - array de Objeto
+     *
+     * @param @param const $case. DEFAULT = PDO::FETCH_OBJ
+     * @return void
+     */    
     public function setFech($fech)
     {
         if(empty($fech)){
-            $fech = PDO::FETCH_ASSOC;
+            $fech = PDO::FETCH_OBJ;
         }
         $this->fech = $fech;
     }
@@ -95,16 +117,43 @@ class TFormDinPdoConnection
         return $this->fech;
     }
 
+    /**
+     * Defini ao case do array de retorno. Veja 
+     * https://www.php.net/manual/pt_BR/pdo.setattribute.php
+     * 
+     * PDO::CASE_LOWER
+     * PDO::CASE_NATURAL
+     * PDO::CASE_UPPER
+     *
+     * @param @param const $case. DEFAULT = PDO::CASE_NATURAL
+     * @return void
+     */
     public function setCase($case)
     {
         if(empty($case)){
-            $case = PDO::CASE_UPPER;
+            $case = $this->caseDefault;
         }
         $this->case = $case;
     }
     public function getCase()
     {
         return $this->case;
+    }
+
+    /**
+     * Determina o tipo array das consultas
+     * @param const $outputMode: Default = ArrayHelper::TYPE_ADIANTI. ArrayHelper::TYPE_PDO, ArrayHelper::TYPE_FORMDIN
+     */
+    public function setOutputFormat($outputFormat)
+    {
+        if(empty($outputFormat)){
+            $outputFormat = $this->outputFormatDefault;
+        }
+        $this->outputFormat = $outputFormat;
+    }
+    public function getOutputFormat()
+    {
+        return $this->outputFormat;
     }
 
     /**
@@ -227,17 +276,28 @@ class TFormDinPdoConnection
                 $result = '3306';
             break;
             case self::DBMS_SQLSERVER:
-                $$result = '1433';
+                $result = '1433';
             break;
             case self::DBMS_ORACLE:
                 $result = '1521';
             break;
         }
 		return $result;
-	}
+    }
+    
+    public function convertArrayResult($arrayData)
+    {
+        $outputFormat = $this->getOutputFormat();
+        if( $outputFormat != $this->outputFormatDefault ){
+            $case = $this->getCase();
+            $result = ArrayHelper::convertArray2OutputFormat($arrayData,$outputFormat,$case);
+        }else{
+            $result = $arrayData;
+        }        
+        return $result;
+    }
 
     /**
-     * @codeCoverageIgnore
      * Executa o comando sql recebido retornando o cursor ou verdadeiro o falso
      * se a operação foi bem sucedida.
      *
@@ -261,6 +321,7 @@ class TFormDinPdoConnection
             $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $fech);
             $stmt = $conn->query($sql);    // realiza a consulta
             $result = $stmt->fetchall();
+            $result = $this->convertArrayResult($result);
             TTransaction::close();         // fecha a transação.
             return $result;
         }
@@ -288,12 +349,12 @@ class TFormDinPdoConnection
 
     /**
      * @codeCoverageIgnore
-     *
-     * @param TCriteria $criteria
-     * @param string $repositoryName
+     * Faz um Select usando o TCriteria
+     * @param TCriteria $criteria    - 01: Obj TCriteria
+     * @param string $repositoryName - 02: nome de classe em app/model
      * @return array Adianti
      */    
-    public function selectByTCriteria(TCriteria $criteria, $repositoryName)
+    public function selectByTCriteria(TCriteria $criteria=null, $repositoryName=null)
     {
         try {
             $configConnect = $this->getConfigConnect();
@@ -303,6 +364,7 @@ class TFormDinPdoConnection
             TTransaction::open($database,$db); // abre uma transação
             $repository = new TRepository($repositoryName);
             $collections = $repository->load($criteria);
+            $collections = $this->convertArrayResult($collections);
             TTransaction::close();         // fecha a transação.
             return $collections;
         }
@@ -314,12 +376,12 @@ class TFormDinPdoConnection
 
     /**
      * @codeCoverageIgnore
-     *
-     * @param TCriteria $criteria
-     * @param string $repositoryName
+     * Faz um Select Count usando o TCriteria
+     * @param TCriteria $criteria    - 01: Obj TCriteria
+     * @param string $repositoryName - 02: nome de classe
      * @return array Adianti
      */
-    public function selectCountByTCriteria(TCriteria $criteria, $repositoryName)
+    public function selectByTCriteriaCount(TCriteria $criteria=null, $repositoryName=null)
     {
         try {
             $configConnect = $this->getConfigConnect();

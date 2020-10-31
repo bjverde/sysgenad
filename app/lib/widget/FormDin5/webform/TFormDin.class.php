@@ -1056,20 +1056,20 @@ class TFormDin
      *
      * @param string  $strName        - 1: ID do campo
      * @param string  $strLabel       - 2: Label do campo
-     * @param boolean $boolRequired   - 3: Obrigatorio. Default FALSE
-     * @param mixed   $mixOptions     - 4: array dos valores. no formato "key=>value". No FormDin 5 só permite array PHP
+     * @param boolean $boolRequired   - 3: Obrigatorio. Default FALSE = não obrigatori, TRUE = obrigatorio
+     * @param mixed   $mixOptions     - 4: String "S=SIM,N=NAO,..." ou Array dos valores. Nos formatos: PHP "id=>value", FormDin ou Adianti
      * @param boolean $boolNewLine    - 5: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
      * @param boolean $boolLabelAbove - 6: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
-     * @param mixed   $mixValue       - 7: NOT_IMPLEMENTED Valor DEFAULT, informe o ID do array
+     * @param mixed   $mixValue       - 7: Valor DEFAULT, informe o ID do array
      * @param boolean $boolMultiSelect- 8: Default FALSE = SingleSelect, TRUE = MultiSelect
-     * @param integer $intSize             - 9: NOT_IMPLEMENTED Default 1. Num itens que irão aparecer. 
+     * @param integer $intSize            - 09: NOT_IMPLEMENTED Default 1. Num itens que irão aparecer. 
      * @param integer $intWidth           - 10: NOT_IMPLEMENTED Largura em Pixels
      * @param string  $strFirstOptionText - 11: NOT_IMPLEMENTED First Key in Display
      * @param string  $strFirstOptionValue- 12: Frist Valeu in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
-     * @param string  $strKeyColumn       - 13: NOT_IMPLEMENTED
-     * @param string  $strDisplayColumn   - 14: NOT_IMPLEMENTED
+     * @param string  $strKeyColumn       - 13: NOT_IMPLEMENTED Nome da coluna que será utilizada para preencher os valores das opções
+     * @param string  $strDisplayColumn   - 14: NOT_IMPLEMENTED Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
      * @param string  $boolNoWrapLabel    - 15: NOT_IMPLEMENTED
-     * @param string  $strDataColumns     - 16: NOT_IMPLEMENTED
+     * @param string  $strDataColumns     - 16: NOT_IMPLEMENTED Informações extras do banco de dados que deverão ser adicionadas na tag option do campo select
      * @return TCombo
      */
     public function addSelectField(string $id

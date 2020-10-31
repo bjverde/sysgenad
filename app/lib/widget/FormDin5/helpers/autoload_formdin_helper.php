@@ -39,7 +39,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-
+// @codeCoverageIgnoreStart
 if(!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
 
 if ( !function_exists( 'formdin_helper_autoload') ) {
@@ -54,3 +54,4 @@ if ( !function_exists( 'formdin_helper_autoload') ) {
     }
 spl_autoload_register('formdin_helper_autoload');
 }
+// @codeCoverageIgnoreEnd
