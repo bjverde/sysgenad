@@ -16,7 +16,7 @@ final class Message
     const GEN00_TITLE = 'Configurações do PHP e informações iniciais';
     const GEN00_GPX3_TITLE = 'Configurações';
     
-    const LAST_STEP = '04';
+    const LAST_STEP = '05';
     
     const GEN01_TITLE      = 'Etapa 01 de '.self::LAST_STEP;
     const GEN01_GPX1_TITLE = 'Requisito do PHP';
@@ -61,7 +61,7 @@ final class Message
     const GEN03_BTN_NEXT4_LABEL = 'Seguir Etapa 04 ->';
     const GEN03_BTN_NEXT4_ACT   = 'next4';
 
-    const GEN04_TITLE        = 'Etapa 04 de '.self::LAST_STEP;
+    const GEN04_TITLE        = 'Result - 05 de '.self::LAST_STEP;
 
     const BUTTON_LABEL_BACK  = 'Voltar';
     const BUTTON_LABEL_CLEAN = 'Limpar';    
@@ -72,7 +72,7 @@ final class Message
     const MSG_TEST_CONNECT  = 'Conexão OK! Pode clicar em "Gerar"';
 
     const INFO_CONNECT    = 'Informe os parâmetros de conexão no banco e click no botão: '.self::BUTTON_LABEL_TEST_CONNECT
-    .'. Só depois poderá clicar em : '.self::BUTTON_LABEL_GEN_STRUCTURE;
+                           .'. Só depois poderá clicar em : '.self::BUTTON_LABEL_GEN_STRUCTURE;
 
     const WARNING_NO_TABLE    = 'Selecione as tabelas para gerar!';
     const WARNING_NO_DBMS_VER = 'Selecione a versão do banco!';    
