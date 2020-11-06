@@ -633,16 +633,16 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.ESP.ESP.'if ( $this->form->validate() ) {');        
         $this->addLine($qtdTab.ESP.ESP.ESP.'$this->form->setData($data);');
         $this->addLine($qtdTab.ESP.ESP.ESP.'$vo = new '.$this->tableRefVO.'();');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'$frm->setVo( $vo );');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'$controller = new '.$this->tableRefClass.'();');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'$this->frm->setVo( $vo );');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'$controller = new '.$this->tableRefClass.'Controller();');
         $this->addLine($qtdTab.ESP.ESP.ESP.'$resultado = $controller->save( $vo );');
         $this->addLine($qtdTab.ESP.ESP.ESP.'if( is_int($resultado) && $resultado!=0 ) {');
         $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'//$text = TFormDinMessage::messageTransform($text); //Tranform Array in Msg Adianti');
         $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'new TMessage(TFormDinMessage::TYPE_INFO, _t(\'Record saved\') );');            
-        $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'$frm->addMessage(Message::GENERIC_SAVE);');
-        $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'$frm->clearFields();');
+        $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'$this->frm->addMessage(Message::GENERIC_SAVE);');
+        $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'$this->frm->clearFields();');
         $this->addLine($qtdTab.ESP.ESP.ESP.'}else{');
-        $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'$frm->addMessage($resultado);');
+        $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'$this->frm->addMessage($resultado);');
         $this->addLine($qtdTab.ESP.ESP.ESP.'}');
         $this->addLine($qtdTab.ESP.ESP.'} //END Validate');
         $this->addLine($qtdTab.ESP.'}catch (Exception $e){');
@@ -727,8 +727,9 @@ class TCreateForm extends TCreateFileContent
         $this->addLine("class ".$this->tableRef."Form extends TPage");
         $this->addLine("{");
         $this->addBlankLine();
-        $this->addLine(ESP.'protected $form; // registration form');
-        $this->addLine(ESP.'protected $datagrid; // listing');
+        $this->addLine(ESP.'protected $form; //Registration form Adianti');
+        $this->addLine(ESP.'protected $frm;  //Registration component FormDin 5');
+        $this->addLine(ESP.'protected $datagrid; //Listing');
         $this->addLine(ESP.'protected $pageNavigation;');
         $this->addBlankLine();
         if( $this->getTableType() == TableInfo::TB_TYPE_TABLE ){
@@ -753,7 +754,8 @@ class TCreateForm extends TCreateFileContent
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
             $this->addLine(ESP.ESP.'$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
         }        
-        $this->addLine(ESP.ESP.'$frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
+        $this->addLine(ESP.ESP.'$this->frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
+        $this->addLine(ESP.ESP.'$frm = $this->frm;');
         $this->addLine(ESP.ESP.'$frm->enableCSRFProtection(); // Protection cross-site request forgery ');
         $this->addFields(ESP.ESP);
         $this->addBlankLine();
