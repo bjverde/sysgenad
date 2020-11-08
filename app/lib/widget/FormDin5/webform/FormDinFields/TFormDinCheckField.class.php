@@ -40,8 +40,9 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
- /**
- * Classe para criação campo do tipo Radio
+
+/**
+ * Classe para criação campo do tipo select
  * ------------------------------------------------------------------------
  * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
  * os parâmetros do metodos foram marcados com:
@@ -55,55 +56,75 @@
  * 
  * @author Reinaldo A. Barrêto Junior
  */
-class TFormDinRadio extends TFormDinOption
+class TFormDinCheckField  extends TFormDinOption
 {
     protected $adiantiObj;
     
     /**
-     * Cria um RadioGroup com efeito visual de Switch
-     * Reconstruido FormDin 4 Sobre o Adianti 7
-     * 
-     * @param string $strName         - 1: field ID
-     * @param string $strLabel        - 2: Label field
-     * @param boolean $boolRequired   - 3: TRUE = Required, FALSE = not Required
-     * @param array   $mixOptions     - 4: Array Options ou String FormDin 'S=SIM,N=Não'
-     * @param boolean $boolNewLine    - 5: TRUE = new line, FALSE = no, DEFAULT ou NULL = FALSE
-     * @param boolean $boolLabelAbove - 6: TRUE = Titulo em cima das opções, FALSE = titulo lateral
-     * @param string  $mixValue       - 7: Informe o ID do array. Array no formato "key=>key" para identificar a(s) opção(ões) selecionada(s)
-     * @param integer $intQtdColumns  - 8: Quantidade de colunas, valor DEFAULT = 1;
-     * @param integer $intWidth       - 9: DEPRECATED. Informe NULL para evitar o warning. Largura em Pixels
+     * Adicionar campo tipo combobox ou menu select
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     *
+     * $mixOptions = array no formato "key=>value". No FormDin 5 só permite array PHP
+     * $strKeyColumn = nome da coluna que será utilizada para preencher os valores das opções
+     * $strDisplayColumn = nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
+     * $strDataColumns = informações extras do banco de dados que deverão ser adicionadas na tag option do campo select
+     *
+     * <code>
+     * 	// exemplos
+     * 	$frm->addSelectField('tipo','Tipo:',false,'1=Tipo 1,2=Tipo 2');
+     * 	$frm->addSelectField('tipo','Tipo:',false,'tipo');
+     * 	$frm->addSelectField('tipo','Tipo:',false,'select * from tipo order by descricao');
+     * 	$frm->addSelectField('tipo','Tipo:',false,'tipo|descricao like "F%"');
+     *
+     *  //Exemplo espcial - Campo obrigatorio e sem senhum elemento pre selecionado.
+     *  $frm->addSelectField('tipo','Tipo',true,$tiposDocumentos,null,null,null,null,null,null,' ','');
+     * </code>
+     *
+     * @param string  $id             -01: ID do campo
+     * @param string  $strLabel       -02: Label do campo
+     * @param boolean $boolRequired   -03: Campo obrigatório. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param mixed   $mixOptions     -04: String "S=SIM,N=NAO,..." ou Array dos valores nos formatos: PHP "id=>value", FormDin, PDO ou Adianti
+     * @param boolean $boolNewLine    -05: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
+     * @param boolean $boolLabelAbove -06: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param mixed   $mixValue       -07: Informe o ID do array ou array com a lista de ID's no formato "key=>id" para identificar a(s) opção(ões) selecionada(s)
+     * @param integer $intQtdColumns  -08: Quantidade de colunas
+     * @param integer $intWidth       -09: DEPRECATED. Informe NULL para evitar o warning. Largura em Pixels
      * @param integer $intHeight      -10: DEPRECATED. Informe NULL para evitar o warning. Altura em Pixels
-     * @param integer $intPaddingItems-11: EPRECATED. Informe NULL para evitar o warning. 
-     * @param boolean $boolNoWrapLabel-12: NOT_IMPLEMENTED
+     * @param integer $intPaddingItems-11: DEPRECATED. Informe NULL para evitar o warning. 
+     * @param boolean $boolNoWrapLabel-12: NOT_IMPLEMENTED 
      * @param boolean $boolNowrapText -13: NOT_IMPLEMENTED
      * @param boolean $useButton      -14: FORMDIN5 Default FALSE = estilo radio comum, TRUE = estilo tipo botões
      * @param mixed   $strKeyColumn   -15: FORMDIN5 Nome da coluna que será utilizada para preencher os valores das opções
      * @param mixed   $strDisplayColumn-16: FORMDIN5 Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário 
-     * @return mixed TRadioGroup
+     * @return TCheckGroup
      */
-    public function __construct($id
-                               ,$label=null
-                               ,$boolRequired=null
+    public function __construct(string $id
+                               ,string $label
+                               ,$boolRequired = false
                                ,$mixOptions=null
-                               ,$boolNewLine=null
-                               ,$boolLabelAbove=null
+                               ,$boolNewLine = true
+                               ,$boolLabelAbove = false
                                ,$mixValue=null
                                ,$intQtdColumns=null
                                ,$intWidth=null
                                ,$intHeight=null
                                ,$intPaddingItems=null
-                               ,$boolNoWrapLabel=null
+                               ,$boolNoWrapLabel=null 
                                ,$boolNowrapText=null
-                               ,$useButton = null
-                               ,$strKeyColumn = null
-                               ,$strDisplayColumn = null
+                               ,$useButton = false
+                               ,$strKeyColumn=null
+                               ,$strDisplayColumn=null
                                )
     {
         $this->setWidth( $intWidth );
         $this->setHeight( $intHeight );
         $this->setPaddingItems( $intPaddingItems );
+        $adiantiObj = new TCheckGroup($id);
 
-        $adiantiObj = new TRadioGroup($id);
         parent::__construct($adiantiObj            //01: Objeto de campo do Adianti
                            ,$id                    //02: ID do campo
                            ,$label                 //03: Label do campo
@@ -149,5 +170,4 @@ class TFormDinRadio extends TFormDinOption
                                      ,ValidateHelper::MSG_DECREP
                                      ,__CLASS__,__METHOD__,__LINE__);
 	}
-
 }

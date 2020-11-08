@@ -94,6 +94,7 @@ class TFormDinMessage {
     const ERROR_OBJ_TABLE       = 'Table Name is empty';
 
     const ERROR_GRID_UPDATEFIELD= 'MixUpdateField não definido para ação: ';
+    const ERROR_OBJ_OPTION      = Self::ERROR_OBJ_TYPE_WRONG.' use only to TFormDinCheckField or TFormDinRadio';
 
     //-----------------------------------------------------------
 

@@ -121,13 +121,14 @@ class TFormDinOption  extends TFormDinGenericField
                         	   , $strDataColumns=null 
                         	   )
 	{
-		$value = is_null($mixValue)?$strFirstOptionValue:$mixValue;        
+		$value = is_null($mixValue)?$strFirstOptionValue:$mixValue;
+		$this->setFieldType( ($strInputType == null) ? self::SELECT : $strInputType );
+
 		parent::__construct($adiantiObj,$id,$label,$boolRequired,$value,null);
 		//parent::setValue( $value );
 
 		$this->setQtdColumns( $intQtdColumns );
-		$this->setFieldType( ($strInputType == null) ? self::SELECT : $strInputType );		
-
+	
 		$this->setMixOptions( $mixOptions );
 		$this->setDisplayField( $strDisplayField );
 		$this->setKeyField( $strKeyField );
@@ -146,7 +147,44 @@ class TFormDinOption  extends TFormDinGenericField
     public function getItems()
     {
         return $this->getAdiantiObj()->getItems();
+	}
+	
+    public function setUseButton($useButton){
+		if($this->getFieldType() == self::SELECT){
+			throw new InvalidArgumentException(TFormDinMessage::ERROR_OBJ_OPTION);
+		}
+        if( !empty($useButton) ){
+            $this->getAdiantiObj()->setUseButton();
+        }
+	}
+    public function getButtons()
+    {
+        return $this->getAdiantiObj()->getButtons();
+    }	
+
+    public function setLayout($dir)
+    {
+		if($this->getFieldType() == self::SELECT){
+			throw new InvalidArgumentException(TFormDinMessage::ERROR_OBJ_OPTION);
+		}
+        $this->getAdiantiObj()->setLayout($dir);
     }
+    public function getLayout()
+    {
+        return $this->getAdiantiObj()->getLayout();
+    }
+    public function setBreakItems($breakItems)
+    {
+		if($this->getFieldType() == self::SELECT){
+			throw new InvalidArgumentException(TFormDinMessage::ERROR_OBJ_OPTION);
+		}
+        $this->getAdiantiObj()->setBreakItems($breakItems);
+    }
+    public function getLabels()
+    {
+        return $this->getAdiantiObj()->getLabels();
+    }
+
 	//-----------------------------------------------------------------------
 	/**
 	 * Define a quantidade de colunas para distribuição dos checkbox ou radios na tela
@@ -251,81 +289,83 @@ class TFormDinOption  extends TFormDinGenericField
 		$mixSearchFields = $this->getSearchFields();
 		$strDataColumns  = $this->getDataColumns();
 
-		if( isset( $mixOptions ) ) {
+		if( empty( $mixOptions ) ) {
+			$mixOptions = array('S'=>'');
+		}
 
-			if( !is_null($strDataColumns) && trim( $strDataColumns) != '' ) {
-				$arrDataColumns	= explode(',',$strDataColumns);
-				$strDataColumns	= ','.$strDataColumns.' ';
-			}
+		if( !is_null($strDataColumns) && trim( $strDataColumns) != '' ) {
+			$arrDataColumns	= explode(',',$strDataColumns);
+			$strDataColumns	= ','.$strDataColumns.' ';
+		}
 
-			if( is_string( $mixOptions ) ) {
-				$mixOptions = ArrayHelper::convertString2Array($mixOptions);
-			}
+		if( is_string( $mixOptions ) ) {
+			$mixOptions = ArrayHelper::convertString2Array($mixOptions);
+		}
 
-			$this->arrOptions = null;
-			if( is_array( $mixOptions ) ) {
-				$mixOptions = ArrayHelper::convertArray2OutputFormat($mixOptions,ArrayHelper::TYPE_FORMDIN);
-				// verificar se o array está no formato oracle
-				if( key( $mixOptions ) && is_array( $mixOptions[ key( $mixOptions ) ] ) )
-				{
-					// assumir a primeira e segunda coluna para popular as opções caso não tenha sido informadas
-					if( !isset( $strKeyField ) ){
-						if( !$this->getKeyField() ){
-							list($strKeyField) = array_keys( $mixOptions );
-						}else{
-							$strKeyField = $this->getKeyField();
-						}
+		$this->arrOptions = null;
+		if( is_array( $mixOptions ) ) {
+			$mixOptions = ArrayHelper::convertArray2OutputFormat($mixOptions,ArrayHelper::TYPE_FORMDIN);
+			// verificar se o array está no formato oracle
+			if( key( $mixOptions ) && is_array( $mixOptions[ key( $mixOptions ) ] ) )
+			{
+				// assumir a primeira e segunda coluna para popular as opções caso não tenha sido informadas
+				if( !isset( $strKeyField ) ){
+					if( !$this->getKeyField() ){
+						list($strKeyField) = array_keys( $mixOptions );
+					}else{
+						$strKeyField = $this->getKeyField();
+					}
+				}
+
+				if( !isset( $strDisplayField ) ) {
+
+					if( !$this->getDisplayField() ){
+						list(, $strDisplayField) = array_keys( $mixOptions );
+					} else {
+						$strDisplayField = $this->getDisplayField();
 					}
 
 					if( !isset( $strDisplayField ) ) {
-
-						if( !$this->getDisplayField() ){
-							list(, $strDisplayField) = array_keys( $mixOptions );
-						} else {
-							$strDisplayField = $this->getDisplayField();
-						}
-
-						if( !isset( $strDisplayField ) ) {
-							$strDisplayField = $strKeyField;
-						}
+						$strDisplayField = $strKeyField;
 					}
-
-					if( $strKeyField && $strDisplayField ) {
-						// reconhecer nome da columa em caixa baixa ou alta
-						if( !array_key_exists( $strKeyField, $mixOptions ) ){
-							$strKeyField = strtoupper( $strKeyField );
-							$strDisplayField = strtoupper( $strDisplayField );
-						}
-						if( !array_key_exists( $strKeyField, $mixOptions ) ){
-							$strKeyField = strtolower( $strKeyField );
-							$strDisplayField = strtolower( $strDisplayField );
-						}
-						if( is_array( $mixOptions[ $strKeyField ] ) ){
-							foreach( $mixOptions[ $strKeyField ] as $k=>$v ) {
-								$this->arrOptions[ $v ] = $mixOptions[ $strDisplayField ][ $k ];
-								if( isset( $arrDataColumns ) && is_array( $arrDataColumns ) ){
-									foreach($arrDataColumns as $colName ){
-										$value='';
-										if( isset( $mixOptions[$colName][$k] ) ){
-											$value = $mixOptions[$colName][$k];
-										} elseif( isset( $mixOptions[strtoupper($colName) ][$k] ) ){
-											$value = $mixOptions[strtoupper($colName) ][$k];
-										} elseif( isset( $mixOptions[strtolower($colName) ][$k] ) ){
-											$value = $mixOptions[strtolower($colName)][$k];
-										}
-										//$value = $this->specialChars2htmlEntities( $value );
-										$value = preg_replace("/\n/",' ',$value);
-										$this->arrOptionsData[$v]['data-'.strtolower($colName)] = $value;
-									}
-								}
-							}//Fim ForEach
-						}
-					}
-				} else {
-					$this->arrOptions = $mixOptions;
 				}
+
+				if( $strKeyField && $strDisplayField ) {
+					// reconhecer nome da columa em caixa baixa ou alta
+					if( !array_key_exists( $strKeyField, $mixOptions ) ){
+						$strKeyField = strtoupper( $strKeyField );
+						$strDisplayField = strtoupper( $strDisplayField );
+					}
+					if( !array_key_exists( $strKeyField, $mixOptions ) ){
+						$strKeyField = strtolower( $strKeyField );
+						$strDisplayField = strtolower( $strDisplayField );
+					}
+					if( is_array( $mixOptions[ $strKeyField ] ) ){
+						foreach( $mixOptions[ $strKeyField ] as $k=>$v ) {
+							$this->arrOptions[ $v ] = $mixOptions[ $strDisplayField ][ $k ];
+							if( isset( $arrDataColumns ) && is_array( $arrDataColumns ) ){
+								foreach($arrDataColumns as $colName ){
+									$value='';
+									if( isset( $mixOptions[$colName][$k] ) ){
+										$value = $mixOptions[$colName][$k];
+									} elseif( isset( $mixOptions[strtoupper($colName) ][$k] ) ){
+										$value = $mixOptions[strtoupper($colName) ][$k];
+									} elseif( isset( $mixOptions[strtolower($colName) ][$k] ) ){
+										$value = $mixOptions[strtolower($colName)][$k];
+									}
+									//$value = $this->specialChars2htmlEntities( $value );
+									$value = preg_replace("/\n/",' ',$value);
+									$this->arrOptionsData[$v]['data-'.strtolower($colName)] = $value;
+								}
+							}
+						}//Fim ForEach
+					}
+				}
+			} else {
+				$this->arrOptions = $mixOptions;
 			}
 		}
+
 		return $this;
 	}
 

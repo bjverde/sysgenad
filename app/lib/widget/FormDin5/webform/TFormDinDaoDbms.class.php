@@ -163,7 +163,8 @@ class TFormDinDaoDbms
 	/**
 	 * @codeCoverageIgnore
 	 * Retorna um array com os dados
-	 *
+     * @param const $outputFormat - 2: Type OutPut Format. Default = ArrayHelper::TYPE_ADIANTI, ArrayHelper::TYPE_PDO, ArrayHelper::TYPE_FORMDIN
+     * @param const $typeCase     - 3: Type Case. Default = PDO::CASE_NATURAL, PDO::CASE_UPPER, PDO::CASE_LOWER
 	 * @return void
 	 */
 	public function executeSql($sql,$outputFormat = ArrayHelper::TYPE_PDO,$case = PDO::CASE_UPPER)

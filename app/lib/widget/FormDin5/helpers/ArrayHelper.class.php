@@ -547,7 +547,11 @@ class ArrayHelper
                 $string = preg_replace('/\=\>/','=',$string);
                 $pos  = strpos($string, '=');
                 if( empty($pos) && $showSimpleStringError===true){
-                    throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_WRONG);
+                    if(strlen($string)==1){
+                        $result[$string]='';
+                    }else{
+                        throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_WRONG);
+                    }                    
                 }elseif( empty($pos) && $showSimpleStringError===false){
                     $result = $string;
                 }else{
