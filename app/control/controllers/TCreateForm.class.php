@@ -630,7 +630,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.ESP.'FormDinHelper::debug($_REQUEST,\'$_REQUEST\');');
         $this->addBlankLine();
         $this->addLine($qtdTab.ESP.'try{');
-        $this->addLine($qtdTab.ESP.ESP.'$this->form->validate()');        
+        $this->addLine($qtdTab.ESP.ESP.'$this->form->validate();');        
         $this->addLine($qtdTab.ESP.ESP.'$this->form->setData($data);');
         $this->addLine($qtdTab.ESP.ESP.'$vo = new '.$this->tableRefVO.'();');
         $this->addLine($qtdTab.ESP.ESP.'$this->frm->setVo( $vo ,$data ,$param );');
