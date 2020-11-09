@@ -396,8 +396,8 @@ class TCreateDAO extends TCreateFileContent
         //$this->addLine(ESP.ESP.ESP.ESP.ESP.ESP.ESP.ESP.') values (?'.str_repeat(',?',count($this->getColumns())-1 ).')\', $values );');
         $this->addLine(ESP.ESP.ESP.ESP.ESP.ESP.ESP.ESP.') values ('.$this->getParams().')\';');
         //$this->addExecuteSql(true);
-        $this->addLine(ESP.ESP.'$result = $this->tpdo->executeSql($sql, $values);');
-        $this->addLine(ESP.ESP.'$result = $this->tpdo->getLastInsertId();');
+        $this->addLine(ESP.ESP.'$result = $this->tpdo->executeSql($sql, $values); //Insert return de LastID');
+        //$this->addLine(ESP.ESP.'$result = $this->tpdo->getLastInsertId();');
         $this->addLine(ESP.ESP.'return intval($result);');
         $this->addLine(ESP.'}');
     }
