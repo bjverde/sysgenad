@@ -672,69 +672,20 @@ class TFormDin
      * os parâmetros do metodos foram marcados veja documentação da classe para
      * saber o que cada marca singinifica.
      * ------------------------------------------------------------------------
-     *    
-     * @param object $vo
+     *
+     * @param object $vo    - 1: objecto Vo
+     * @param object $data  - 2: FORMDIN5 $data $this->form->getData();
+     * @param array  $param - 3: FORMDIN5 $param da entrada de metodo
      */
-    public function setVO( $vo )
+    public function setVO( object $vo, object $data = null, array $param = null)
     {
-        foreach( $this->displayControls as $name=>$dc ) {
-            if( $dc->getField()->getFieldType() == 'pagecontrol' )
-            {
-                $dc->getField()->setVo( $vo );
-            }
-            else if( $dc->getField()->getFieldType() == 'group' )
-            {
-                $dc->getField()->setVo( $vo );
-            } else {
-                $dc = new TDAOCreate();
-                if( method_exists( $vo, $method = 'set' . ucfirst( $name ) )
-                    || method_exists($vo, $method = 'set' . ucfirst( $dc->removeUnderline($name) )) )
-                {
-                    $field = $this->getField( $name );
-                    if( $field ) {
-                        if( ! is_array($field->getValue() ) ) {
-                            if( $field->getFieldType()=='fileasync') {
-                                $value = $field->getContent();
-                            } else {
-                                $value = $field->getValue();
-                            }
-                        } else {
-                            $value = $field->getValue();
-                            //print $name.' = '.print_r($field->getValue(),true).'<br>';
-                            if( $field->getFieldType()=='check') {
-                                if(!isset($value[0])) {
-                                    $value=null;
-                                }elseif ( CountHelper::count($value)==1 ){
-                                    $value = $value[0];
-                                }
-                            }else{
-                                if(isset($value[0])) {
-                                    $value = $value[0];
-                                } else {
-                                    $value=null;
-                                } 
-                            }                               
-                        }
-                        if( !is_array($value) ){
-                            $method = '$vo->' . $method . '(\'' . addslashes($value) . '\');';
-                        }else{
-                            $method = '$vo->' . $method . '( array(';
-                            $stringArray = null;
-                            foreach( $value as $key=>$valeuItem ) {
-                                $stringItem = '\''.addslashes($key).'\'=>\''.addslashes($valeuItem).'\'';
-                                if($key > 0){
-                                    $stringArray = $stringArray.','.$stringItem;
-                                }else{
-                                    $stringArray = $stringItem;
-                                }                                   
-                            }
-                            $method = $method.$stringArray.') );';
-                        }
-                        eval( $method );
-                    }
-                }
-            }
+        //FormDinHelper::d($param,'$param');
+        //FormDinHelper::debug($data,'$data');
+        //FormDinHelper::debug($_REQUEST,'$_REQUEST');
+        if( empty($param) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_PARAM);
         }
+        FormDinHelper::setPropertyVo($param,$vo);
     }
 
 

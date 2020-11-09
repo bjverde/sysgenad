@@ -111,15 +111,22 @@ class FormDinHelper
 
     //--------------------------------------------------------------------------------
     /**
-     * Recebe o corpo de um request e um objeto VO. Quando o id do array bodyRequest for
+     * Recebe um array PHP que pode ser o corpo de um request e um objeto VO. Quando o id do array bodyRequest for
      * igual ao nome de um atributo no objeto Vo esse deverá ser setado.
      *
-     * @param array $bodyRequest - Array com corpo do request
+     * @param array $bodyRequest - Array TYPE_PHP = array no formato '[KEY_NAME]=Value,[KEY_NAME]=Value' 
      * @param object $vo - objeto VO para setar os valores
      * @return object
      */
     public static function setPropertyVo($bodyRequest,$vo)
     {
+        //convert case do bodyRequest para Lower
+        $arrayTmp = array();
+        foreach ($bodyRequest as $key => $value) {
+            $arrayTmp[strtolower($key)] = $value;
+        }
+        $bodyRequest = $arrayTmp;
+
         $class = new \ReflectionClass($vo);
         $properties   = $class->getProperties();        
         foreach ($properties as $attribut) {

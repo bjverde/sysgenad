@@ -86,7 +86,10 @@ class TFormDinPdoConnection
     public function setDatabase($database)
     {
         if( empty($database) ){
-            throw new InvalidArgumentException('Database Not Object .class:');
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_EMPTY_INPUT);
+        }
+        if( !is_string($database) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_WRONG.' o nome data base dever ser uma string');
         }
         $this->database = $database;
     }
@@ -298,16 +301,44 @@ class TFormDinPdoConnection
     }
 
     /**
+     * Verifica se quantidade de parametros está correta
+     * @param string $sql
+     * @param array $arrParams
+     * @return void
+     */
+    public function validarQtdParametros($sql,$arrParams)
+    {   
+        if( empty($sql) || !is_string($sql) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_SQL_NULL);
+        }
+        if ( strpos( $sql, '?' ) > 0 && !is_array( $arrParams ) ) {
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_SQL_PARAM);
+        }        
+        if ( strpos( $sql, '?' ) > 0 && is_array( $arrParams ) && count( $arrParams ) == 0 ) {
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_SQL_PARAM);
+        }
+        if ( strpos( $sql, '?' ) > 0 && is_array( $arrParams ) && count( $arrParams ) > 0 ) {
+            $qtd1 = substr_count( $sql, '?' );
+            $qtd2 = count( $arrParams );
+            
+            if ( $qtd1 != $qtd2 ) {
+                throw new InvalidArgumentException(TFormDinMessage::ERROR_SQL_PARAM);
+            }
+        }
+    }
+
+    /**
      * Executa o comando sql recebido retornando o cursor ou verdadeiro o falso
      * se a operação foi bem sucedida.
      *
      * @param string $sql
-     * @param array $values
+     * @param array $arrParams
      * @return mixed
      */
-    public function executeSql($sql, $values = null)
+    public function executeSql($sql, $arrParams = null)
     {
         try {
+            $this->validarQtdParametros($sql, $arrParams);
             $configConnect = $this->getConfigConnect();
             $database = $configConnect['database'];
             $db = $configConnect['db'];
@@ -319,9 +350,30 @@ class TFormDinPdoConnection
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $conn->setAttribute(PDO::ATTR_CASE, $case);
             $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $fech);
-            $stmt = $conn->query($sql);    // realiza a consulta
-            $result = $stmt->fetchall();
-            $result = $this->convertArrayResult($result);
+            
+            //$stmt = $conn->query($sql);    // realiza a consulta
+            $stmt = $conn->prepare( $sql );
+            $result = $stmt->execute( $arrParams );
+
+            if ( $result ) {                
+                if ( preg_match( '/^select/i', $sql ) > 0  ) {
+                    $result = $stmt->fetchall();
+                    $result = $this->convertArrayResult($result);
+                }else if( preg_match( '/^exec/i', $sql ) > 0  ){ // Para stored procedure do MS SQL Server                                        
+                    $res = array();
+                    //https://github.com/bjverde/formDin/issues/164
+                    while($stmt->columnCount()) {
+                        $result = $stmt->fetchall();
+                        $result = $this->convertArrayResult($result);
+                        $res[] = $result;
+                        $stmt->nextRowset();
+                    }
+                    $result = $res;
+                }else if( preg_match( '/^call/i', $sql ) > 0  ){ // Para stored procedure do MySQL
+                    $result = $stmt->fetchall();
+                    $result = $this->convertArrayResult($result);
+                }
+            }
             TTransaction::close();         // fecha a transação.
             return $result;
         }
