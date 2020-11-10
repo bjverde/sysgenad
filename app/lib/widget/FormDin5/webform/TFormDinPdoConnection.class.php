@@ -360,7 +360,7 @@ class TFormDinPdoConnection
                     $result = $stmt->fetchall();
                     $result = $this->convertArrayResult($result);
                 }else if( preg_match( '/^insert/i', $sql ) > 0  ){
-                    $result = $stmt->lastInsertId();                    
+                    $result = $conn->lastInsertId();                    
                 }else if( preg_match( '/^exec/i', $sql ) > 0  ){ // Para stored procedure do MS SQL Server                                        
                     $res = array();
                     //https://github.com/bjverde/formDin/issues/164
