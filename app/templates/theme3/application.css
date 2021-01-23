@@ -46,6 +46,11 @@ label, input, button, select, textarea
     top: initial !important;
 }
 
+.display-flex
+{
+    display:flex;
+}
+
 /** Jquery Widgets **/
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button
 {
@@ -535,6 +540,10 @@ blockquote .small, blockquote footer, blockquote small {
 
 .layout-boxed {
     background: #e0e0e0 !important;
+}
+
+.main-header {
+    z-index: 999 !important;
 }
 
 /** Profile **/
@@ -1033,4 +1042,11 @@ div[form=form_login] .fb-inline-field-container
     float:left;
     margin-left:44px;
     height:35px;
+}
+
+@media (max-width: 400px) {
+    .login-avatar
+    {
+        margin-left:15px;
+    }
 }
