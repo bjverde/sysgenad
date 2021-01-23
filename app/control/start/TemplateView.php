@@ -22,7 +22,7 @@ class TemplateView extends TPage
         parent::__construct();
         
         TPage::include_css('app/resources/styles.css');
-        $this->html = new THtmlRenderer('app/resources/sysgen-template.html');
+        $this->html = new THtmlRenderer('app/resources/template.html');
 
         // define replacements for the main section
         $replace = array();

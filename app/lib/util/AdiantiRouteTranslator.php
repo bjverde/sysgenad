@@ -67,7 +67,10 @@ class AdiantiRouteTranslator
         if (strpos($url, $pattern) !== FALSE)
         {
             $url = str_replace($pattern.'&', $short.'?', $url);
-            $url = str_replace($pattern, $short, $url);
+            if (strlen($url) == strlen($pattern))
+            {
+                $url = str_replace($pattern, $short, $url);
+            }
         }
         return $url;
     }
