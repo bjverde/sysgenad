@@ -162,7 +162,7 @@ class TCreateFormTest extends TestCase
 	}
 
 	public function testAddMethod_onSave(){
-		$expectedSize = 19;
+		$expectedSize = 28;
 		$qtdTab = null;
 		$expected = array();
 		$expected[2] = $qtdTab.'public function onSave($param)'.EOL;
@@ -227,13 +227,13 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW(){
-		$expectedQtd = 92;
+		$expectedQtd = 96;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
-		$expected[15] = ESP.'protected $form; // registration form'.EOL;
-		$expected[16] = ESP.'protected $datagrid; // listing'.EOL;
-		$expected[17] = ESP.'protected $pageNavigation;'.EOL;
+		$expected[15] = ESP.'protected $form; //Registration form Adianti'.EOL;
+		$expected[16] = ESP.'protected $frm;  //Registration component FormDin 5'.EOL;
+		$expected[17] = ESP.'protected $datagrid; //Listing'.EOL;
 	    
 		$this->create->setTableType(TableInfo::TB_TYPE_VIEW);
 		$resultArray = $this->create->show('array');
@@ -247,13 +247,13 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_TABLE(){
-		$expectedQtd = 82;
+		$expectedQtd = 116;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
-		$expected[15] = ESP.'protected $form; // registration form'.EOL;
-		$expected[16] = ESP.'protected $datagrid; // listing'.EOL;
-		$expected[17] = ESP.'protected $pageNavigation;'.EOL;
+		$expected[15] = ESP.'protected $form; //Registration form Adianti'.EOL;
+		$expected[16] = ESP.'protected $frm;  //Registration component FormDin 5'.EOL;
+		$expected[17] = ESP.'protected $datagrid; //Listing'.EOL;
 		
 		$this->create->setTableType(TableInfo::TB_TYPE_TABLE);
 		$resultArray = $this->create->show('array');
