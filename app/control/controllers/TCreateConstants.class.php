@@ -30,16 +30,17 @@ class TCreateConstants extends TCreateFileContent
         }else{
             $this->addLine('theme = theme_formdinv');
         }
-    }    
+    }
     //--------------------------------------------------------------------------------------
     public function show($print = false)
     {
+        $systemAcronym = TGeneratorHelper::getSystemAcronym();
         $this->lines=null;
         $this->addBlankLine();
         $this->addLine('[general]');
         $this->addLine('timezone = America/Sao_Paulo');
         $this->addLine('language = pt');
-        $this->addLine('application ='.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM'));
+        $this->addLine('application ='.$systemAcronym);
         $this->addTheme(null);
         $this->addLine('seed = ');
         $this->addLine('debug = 1');
@@ -51,10 +52,10 @@ class TCreateConstants extends TCreateFileContent
         $this->addLine('system_name='.TSysgenSession::getValue('GEN_SYSTEM_NAME'));
         $this->addLine('system_name_sub=\'Subtítulo do sistema\'');
         $this->addLine('login = \'login\'');
-        $this->addLine('logo-lg='.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM'));
+        $this->addLine('logo-lg='.$systemAcronym);
         $this->addLine('logo-mini = /images/icon.png');
         $this->addLine('logo-link-class = \'index.php?class=Gen00\'');
-        $this->addLine('login-link = https://localhost/'.TSysgenSession::getValue('GEN_SYSTEM_ACRONYM'));
+        $this->addLine('login-link = https://localhost/'.$systemAcronym);
         if ($print) {
             echo $this->getLinesString();
         } else {

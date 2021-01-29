@@ -21,6 +21,14 @@ class TGeneratorHelper
     const THEME_THEME3='THEME_THEME3';
     const THEME_THEME4='THEME_THEME4';
 
+
+    //--------------------------------------------------------------------------------------
+    public static function getSystemAcronym()
+    {
+        $genSystemAcronym = TSysgenSession::getValue(TGeneratorHelper::GEN_SYSTEM_ACRONYM);
+        $genSystemAcronym = strtolower ( $genSystemAcronym );
+        return $genSystemAcronym;
+    }
     public static function testar($extensao = null, $html)
     {
         if (extension_loaded($extensao)) {
@@ -143,7 +151,7 @@ class TGeneratorHelper
     }
     public static function getPathNewSystem()
     {
-        return ROOT_PATH.TSysgenSession::getValue(self::GEN_SYSTEM_ACRONYM);
+        return ROOT_PATH.self::getSystemAcronym();
     }
     
     public static function createFileConstants()
@@ -405,7 +413,7 @@ class TGeneratorHelper
             $dirSysGen = array_pop($dir);
         }
         $url    = explode($dirSysGen, $url);
-        $result = $url[0].TSysgenSession::getValue(self::GEN_SYSTEM_ACRONYM);
+        $result = $url[0].self::getSystemAcronym();
         return $result;
     }
     

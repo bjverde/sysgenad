@@ -38,7 +38,7 @@ class TCreateMenuTest extends TestCase
         if (!defined('APLICATIVO')) {
             define('APLICATIVO', 'PHPUnit');
         }
-        $_SESSION[APLICATIVO]['GEN_SYSTEM_ACRONYM']='test';
+        $_SESSION[APLICATIVO][TGeneratorHelper::GEN_SYSTEM_ACRONYM]='test';
         
         //$listTableNames   = $this->generateTablesSelected();
         $this->createMenu = new TCreateMenu(null);

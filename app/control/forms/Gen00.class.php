@@ -117,7 +117,7 @@ class Gen00 extends TPage
             $data = $this->form->getData();
             $this->form->setData($data);
 
-            $GEN_SYSTEM_ACRONYM = RequestHelper::get('GEN_SYSTEM_ACRONYM') ;
+            $GEN_SYSTEM_ACRONYM = RequestHelper::get(TGeneratorHelper::GEN_SYSTEM_ACRONYM) ;
             TGeneratorHelper::validateFolderName($GEN_SYSTEM_ACRONYM);
 
             TSession::clear();
