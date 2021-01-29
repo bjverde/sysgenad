@@ -23,7 +23,7 @@ class TGeneratorHelper
 
 
     //--------------------------------------------------------------------------------------
-    public static function getSystemAcronym()
+    public static function getGenSystemAcronym()
     {
         $genSystemAcronym = TSysgenSession::getValue(TGeneratorHelper::GEN_SYSTEM_ACRONYM);
         $genSystemAcronym = strtolower ( $genSystemAcronym );
@@ -151,7 +151,7 @@ class TGeneratorHelper
     }
     public static function getPathNewSystem()
     {
-        return ROOT_PATH.self::getSystemAcronym();
+        return ROOT_PATH.self::getGenSystemAcronym();
     }
     
     public static function createFileConstants()
@@ -413,7 +413,7 @@ class TGeneratorHelper
             $dirSysGen = array_pop($dir);
         }
         $url    = explode($dirSysGen, $url);
-        $result = $url[0].self::getSystemAcronym();
+        $result = $url[0].self::getGenSystemAcronym();
         return $result;
     }
     

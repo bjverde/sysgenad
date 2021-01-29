@@ -34,7 +34,7 @@ class TCreateConstants extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function show($print = false)
     {
-        $systemAcronym = TGeneratorHelper::getSystemAcronym();
+        $systemAcronym = TGeneratorHelper::getGenSystemAcronym();
         $this->lines=null;
         $this->addBlankLine();
         $this->addLine('[general]');

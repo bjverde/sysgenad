@@ -84,7 +84,7 @@ class TCreateFileContent
         $headerNote[] = ' * SysGen  Version: '.SYSTEM_VERSION.EOL;
         $headerNote[] = ' * FormDin Version: '.FORMDIN_VERSION.EOL;
         $headerNote[] = ' * '.EOL;
-        $headerNote[] = ' * System '.TGeneratorHelper::getSystemAcronym().' created in: '.DateTimeHelper::getNow().EOL;
+        $headerNote[] = ' * System '.TGeneratorHelper::getGenSystemAcronym().' created in: '.DateTimeHelper::getNow().EOL;
         $headerNote[] = ' */'.EOL;
         $this->lines = array_merge($this->lines, $headerNote);
     }
