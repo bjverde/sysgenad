@@ -44,12 +44,6 @@ class TCreateFileContentTest extends TestCase
         parent::tearDown();
     }
     
-    public function testGetGenSystemAcronym(){
-        $expected = 'test';        
-        $result = $this->create->getGenSystemAcronym();
-        $this->assertEquals( $expected, $result);
-    }
-    
     public function testAddSysGenHeaderNote_numLines(){
         $expectedQtd = 10;
 

@@ -24,6 +24,7 @@ class TGeneratorHelperTest extends TestCase
      * Prepares the environment before running a test.
      */
     protected function setUp(): void {
+        TSysgenSession::setValue(TGeneratorHelper::GEN_SYSTEM_ACRONYM, 'test');
         parent::setUp();
         $this->mockDatabase = new mockDatabase();
     }
@@ -33,6 +34,12 @@ class TGeneratorHelperTest extends TestCase
      */
     protected function tearDown(): void {
         parent::tearDown();
+    }
+    
+    public function testGetGenSystemAcronym(){
+        $expected = 'test';        
+        $result = TGeneratorHelper::getGenSystemAcronym();
+        $this->assertEquals( $expected, $result);
     }
     
     public function testGetConfigGridSqlServer_ScreenPagination()
