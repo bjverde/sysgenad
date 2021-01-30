@@ -31,31 +31,39 @@ class TCreateConstants extends TCreateFileContent
             $this->addLine('theme = theme_formdinv');
         }
     }
-    //--------------------------------------------------------------------------------------
-    public function show($print = false)
+    public function addGeneral($systemAcronym)
     {
-        $systemAcronym = TGeneratorHelper::getGenSystemAcronym();
-        $this->lines=null;
         $this->addBlankLine();
         $this->addLine('[general]');
         $this->addLine('timezone = America/Sao_Paulo');
         $this->addLine('language = pt');
-        $this->addLine('application ='.$systemAcronym);
+        $this->addLine('application = '.$systemAcronym);
         $this->addTheme(null);
         $this->addLine('seed = ');
         $this->addLine('debug = 1');
         $this->addBlankLine();
         $this->addBlankLine();
+    }
+    public function addSystem($systemAcronym)
+    {
         $this->addLine('[system]');
         $this->addLine('formdin_min_version='.FORMDIN_VERSION);
         $this->addLine('version='.TSysgenSession::getValue('GEN_SYSTEM_VERSION'));
-        $this->addLine('system_name='.TSysgenSession::getValue('GEN_SYSTEM_NAME'));
+        $this->addLine('system_name= "'.TSysgenSession::getValue('GEN_SYSTEM_NAME').'"' );
         $this->addLine('system_name_sub=\'Subtítulo do sistema\'');
         $this->addLine('login = \'login\'');
         $this->addLine('logo-lg='.$systemAcronym);
         $this->addLine('logo-mini = /images/icon.png');
         $this->addLine('logo-link-class = \'index.php?class=Gen00\'');
         $this->addLine('login-link = https://localhost/'.$systemAcronym);
+    }    
+    //--------------------------------------------------------------------------------------
+    public function show($print = false)
+    {
+        $systemAcronym = TGeneratorHelper::getGenSystemAcronym();
+        $this->lines=null;
+        $this->addGeneral($systemAcronym);
+        $this->addSystem($systemAcronym);
         if ($print) {
             echo $this->getLinesString();
         } else {
