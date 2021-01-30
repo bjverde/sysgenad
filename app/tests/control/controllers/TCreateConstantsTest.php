@@ -85,6 +85,7 @@ class TCreateConstantsTest extends TestCase
 		$expected[0] = '[system]'.EOL;
         $expected[1] = 'formdin_min_version='.FORMDIN_VERSION.EOL;
         $expected[2] = 'version=1.2.3'.EOL;
+        $expected[3] = 'system_name= "Mock Test"'.EOL;
 
         $this->create->addSystem($systemAcronym);
         $result = $this->create->getLinesArray();
@@ -95,5 +96,6 @@ class TCreateConstantsTest extends TestCase
         $this->assertSame($expected[0], $result[0]);
         $this->assertSame($expected[1], $result[1]);
         $this->assertSame($expected[2], $result[2]);
+        $this->assertSame($expected[3], $result[3]);
     }
 }
