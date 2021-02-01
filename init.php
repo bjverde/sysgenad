@@ -26,6 +26,15 @@ define('OS', strtoupper(substr(PHP_OS, 0, 3)));
 define('PATH', dirname(__FILE__));
 define('LANG', $ini['general']['language']);
 
+
+//---FORMDIN 5 -------------------------
+define('DS', DIRECTORY_SEPARATOR);
+define('EOL', "\n");
+define('ESP', chr(32).chr(32).chr(32).chr(32) );
+define('TAB', chr(9));
+//---FIM FORMDIN 5 -----------------------
+
+
 // ============= SysGen For Adianti  =================//
 define('FORMDIN_VERSION', $ini['system']['formdin_min_version']);
 define('SYSTEM_VERSION', $ini['system']['version']);
@@ -37,21 +46,6 @@ if(!defined('ROWS_PER_PAGE') ) {
 if(!defined('ENCODINGS') ) { 
     define('ENCODINGS', 'UTF-8'); 
 }
-if(!defined('DS')) { 
-    define('DS', DIRECTORY_SEPARATOR); 
-}
-if (!defined('EOL')) {
-    define('EOL', "\n");
-}
-if (!defined('ESP')) {
-    $esp = chr(32).chr(32).chr(32).chr(32);
-    //define('ESP', '    ');
-    define('ESP', $esp);
-}
-if (!defined('TAB')) {
-    define('TAB', chr(9));
-}
-
 // ============================================//
 
 // custom session name

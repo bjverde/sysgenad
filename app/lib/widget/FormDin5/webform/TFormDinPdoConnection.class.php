@@ -68,9 +68,9 @@ class TFormDinPdoConnection
     /**
      * Facilitardor de conexão com o banco de dados
      *
-     * @param string $database : nome da conexão
-     * @param const $outputMode: Default = ArrayHelper::TYPE_PDO. ArrayHelper::TYPE_FORMDIN, ArrayHelper::TYPE_ADIANTI
-     * @param const $fech
+     * @param string $database : nome da conexão. É o nome do arquivo INI de configuração do banco
+     * @param const $outputMode: DEFAULT = ArrayHelper::TYPE_PDO. ArrayHelper::TYPE_FORMDIN, ArrayHelper::TYPE_ADIANTI
+     * @param const $fech: DEFAULT = PDO::FETCH_OBJ  array de Objet, PDO::FETCH_ASSOC - array simples
      * @param const $case use PDO case. DEFAULT = CASE_NATURAL.  https://www.php.net/manual/pt_BR/pdo.prepare.php
      */
     public function __construct($database = null,$outputFormat = null,$fech = null,$case = null)
@@ -302,8 +302,8 @@ class TFormDinPdoConnection
 
     /**
      * Verifica se quantidade de parametros está correta
-     * @param string $sql
-     * @param array $arrParams
+     * @param string $sql      -1: string sql do comando
+     * @param array $arrParams -2: array com o valores para bind do sql
      * @return void
      */
     public function validarQtdParametros($sql,$arrParams)
@@ -331,8 +331,8 @@ class TFormDinPdoConnection
      * Executa o comando sql recebido retornando o cursor ou verdadeiro o falso
      * se a operação foi bem sucedida.
      *
-     * @param string $sql
-     * @param array $arrParams
+     * @param string $sql      -1: string sql do comando
+     * @param array $arrParams -2: array com o valores para bind do sql
      * @return mixed
      */
     public function executeSql($sql, $arrParams = null)
@@ -360,7 +360,7 @@ class TFormDinPdoConnection
                     $result = $stmt->fetchall();
                     $result = $this->convertArrayResult($result);
                 }else if( preg_match( '/^insert/i', $sql ) > 0  ){
-                    $result = $conn->lastInsertId();                    
+                    $result = $conn->lastInsertId();
                 }else if( preg_match( '/^exec/i', $sql ) > 0  ){ // Para stored procedure do MS SQL Server                                        
                     $res = array();
                     //https://github.com/bjverde/formDin/issues/164
