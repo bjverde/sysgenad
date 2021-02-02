@@ -629,7 +629,8 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.ESP.ESP.ESP.'$this->frm->addMessage( _t(\'Record saved\') );');
         $this->addLine($qtdTab.ESP.ESP.ESP.'//$this->frm->clearFields();');
         $this->addLine($qtdTab.ESP.ESP.'}else{');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'$this->frm->addMessage($resultado);');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'//$this->frm->addMessage($resultado);');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'FormDinHelper::debug($resultado,\'$resultado\');');
         $this->addLine($qtdTab.ESP.ESP.'}');
         $this->addLine($qtdTab.ESP.'}catch (Exception $e){');
         $this->addLine($qtdTab.ESP.ESP.'new TMessage(TFormDinMessage::TYPE_ERROR, $e->getMessage());');
