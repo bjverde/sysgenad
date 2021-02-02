@@ -108,7 +108,14 @@ class TCreateDAOTest extends TestCase
 	}
 	
 	public function testAddSqlSelectAll(){
-	    $expected = array();
+		$expected = array();
+		$expected[] = ESP.'//--------------------------------------------------------------------------------'.EOL;
+        $expected[] = ESP.'/**'.EOL;
+        $expected[] = ESP.' * Faz um Select SQL nativo, sem paginação'.EOL;
+        $expected[] = ESP.' * @param string $orderBy - 01: criterio de ordenação'.EOL;
+        $expected[] = ESP.' * @param array  $where   - 02: array PHP "NOME_COLUNA1=>VALOR,NOME_COLUNA1=>VALOR" que será usado na consulta no metodo processWhereGridParameters'.EOL;
+        $expected[] = ESP.' * @return array Adianti'.EOL;
+        $expected[] = ESP.' */'.EOL;
 	    $expected[] = ESP.'public function selectAll( $orderBy=null, $where=null )'.EOL;
 	    $expected[] = ESP.'{'.EOL;
 	    $expected[] = ESP.ESP.'$where = $this->processWhereGridParameters($where);'.EOL;
@@ -118,12 +125,12 @@ class TCreateDAOTest extends TestCase
 	    
 	    $this->create->addSqlSelectAll();
 	    $result = $this->create->getLinesArray();
-	    $this->assertSame($expected[0], $result[0]);
-	    $this->assertSame($expected[1], $result[1]);
-	    $this->assertSame($expected[2], $result[2]);
-	    $this->assertSame($expected[3], $result[3]);
-	    $this->assertSame($expected[4], $result[4]);
-	    $this->assertSame($expected[5], $result[5]);
+	    $this->assertSame($expected[7], $result[7]);
+	    $this->assertSame($expected[8], $result[8]);
+	    $this->assertSame($expected[9], $result[9]);
+	    $this->assertSame($expected[10], $result[10]);
+	    $this->assertSame($expected[11], $result[11]);
+	    $this->assertSame($expected[12], $result[12]);
 	}
 	
 	public function testAddSqlInsert_numLines(){
