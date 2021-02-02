@@ -459,16 +459,16 @@ class TCreateDAO extends TCreateFileContent
                     $vPHP = '$'.$v;
                     $this->addBlankLine();
                     $this->addLine(ESP.ESP.$vPHP.' = $objVo->get'.ucfirst($v).'();');
-                    $this->addLine(ESP.ESP.$vPHP.' = SqlHelper::attributeIsset('.$vPHP.',\' , '.$v.' =\'.'.$vPHP.',\'\');');
+                    $this->addLine(ESP.ESP.$vPHP.' = SqlHelper::attributeIsset('.$vPHP.', '.$vPHP.',\'\');');
                     $this->addLine(ESP.ESP.'$parameters = $parameters.'.$vPHP.';');
                 }else{
                     $vPHP = '$'.$v;
                     $this->addBlankLine();
                     $this->addLine(ESP.ESP.$vPHP.' = $objVo->get'.ucfirst($v).'();');
-                    $this->addLine(ESP.ESP.$vPHP.' = SqlHelper::attributeIsset('.$vPHP.',\' '.$v.' =\'.'.$vPHP.',\'\');');
+                    $this->addLine(ESP.ESP.$vPHP.' = SqlHelper::attributeIsset('.$vPHP.', '.$vPHP.',\'\');');
                     $this->addLine(ESP.ESP.'$parameters = $parameters.'.$vPHP.';');
                 }
-            }            
+            }
             $this->addLine(ESP.ESP.'$sql = \'CALL '.$this->hasSchema().$this->getTableName().'(\'.$parameters.\')\';');
         }
         if ($this->getDatabaseManagementSystem() == TFormDinPdoConnection::DBMS_SQLSERVER) {
