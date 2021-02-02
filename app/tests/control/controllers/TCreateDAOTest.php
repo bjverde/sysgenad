@@ -198,13 +198,15 @@ class TCreateDAOTest extends TestCase
 
 	public function testAddConstruct(){
 	    $expected = array();
-	    $expected[] = ESP.'private $tpdo = null;'.EOL;
+		$expected[] = ESP.'private $tpdo = null;'.EOL;
+		$expected[] = ESP.'private $repositoryName = \'test\'; //Nome da Classe do tipo Active Record no diretorio /app/model/maindatabase'.EOL;
 		$expected[] = EOL;
 		$expected[] = ESP.'public function __construct($tpdo=null)'.EOL;
 		$expected[] = ESP.'{'.EOL;
-		$expected[] = ESP.ESP.'FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);'.EOL;
+		$expected[] = ESP.ESP.'//FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);'.EOL;
 		$expected[] = ESP.ESP.'if( empty($tpdo) ){'.EOL;
-		$expected[] = ESP.ESP.ESP.'$tpdo = New TPDOConnectionObj();'.EOL;
+		$expected[] = ESP.ESP.ESP.'//$tpdo = New TPDOConnectionObj();  //FomDin4'.EOL;
+		$expected[] = ESP.ESP.ESP.'$tpdo = New TFormDinPdoConnection(\'maindatabase\');'.EOL;
 		$expected[] = ESP.ESP.'}'.EOL;
 		$expected[] = ESP.ESP.'$this->setTPDOConnection($tpdo);'.EOL;
 		$expected[] = ESP.'}'.EOL;
