@@ -200,6 +200,7 @@ class CreateControllers extends TCreateFileContent
         $this->addLine(ESP.'public function execProcedure( '.$this->tableRefVO.' $objVo )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $this->dao->execProcedure( $objVo );');
+        $this->addLine(ESP.ESP.'FormDinHelper::debug($result);');
         $this->addLine(ESP.ESP.'return $result;');
         $this->addLine(ESP.'}');
     }
