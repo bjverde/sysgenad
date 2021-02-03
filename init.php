@@ -27,18 +27,17 @@ define('PATH', dirname(__FILE__));
 define('LANG', $ini['general']['language']);
 
 
-//---FORMDIN 5 -------------------------
+// ---FORMDIN 5 -------------------------
 define('DS', DIRECTORY_SEPARATOR);
 define('EOL', "\n");
 define('ESP', chr(32).chr(32).chr(32).chr(32) );
 define('TAB', chr(9));
-//---FIM FORMDIN 5 -----------------------
 
+define('SYSTEM_VERSION', $ini['system']['version']);
+define('SYSTEM_NAME', $ini['system']['system_name']);
+// ---FIM FORMDIN 5 -----------------------
 
 // ============= SysGen For Adianti  =================//
-define('FORMDIN_VERSION', $ini['system']['formdin_min_version']);
-define('SYSTEM_VERSION', $ini['system']['version']);
-
 define('ROOT_PATH', '../');
 if(!defined('ROWS_PER_PAGE') ) { 
     define('ROWS_PER_PAGE', 20); 
@@ -50,8 +49,3 @@ if(!defined('ENCODINGS') ) {
 
 // custom session name
 session_name('PHPSESSID_'.$ini['general']['application']);
-
-if (version_compare(PHP_VERSION, '7.0.0') == -1)
-{
-    die(AdiantiCoreTranslator::translate('The minimum version required for PHP is ^1', '7.0.0'));
-}
