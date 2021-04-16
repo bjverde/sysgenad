@@ -115,7 +115,7 @@ class TFormDinRadio extends TFormDinOption
                            ,null                   //09: Default FALSE = SingleSelect, TRUE = MultiSelect
                            ,$intQtdColumns         //10: Default 1. Num itens que irão aparecer no MultiSelect
                            ,TFormDinOption::CHECK  //11: Define o tipo de input a ser gerado. Ex: select, radio ou check
-                           ,null                   //12: Frist Valeu in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
+                           ,null                   //12: Frist Value in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
                            ,$strKeyColumn          //13: Nome da coluna que será utilizada para preencher os valores das opções
                            ,$strDisplayColumn      //14: Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
                            ,null

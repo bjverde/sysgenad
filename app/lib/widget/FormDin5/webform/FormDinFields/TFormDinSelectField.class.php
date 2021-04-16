@@ -96,7 +96,7 @@ class TFormDinSelectField  extends TFormDinOption
      * @param integer $intQtdColumns      - 09: NOT_IMPLEMENTED Default 1. Num itens que irão aparecer no MultiSelect
      * @param integer $intWidth           - 10: DEPRECATED. Informe NULL para evitar o warning. Largura em Pixels
      * @param string  $strFirstOptionText - 11: NOT_IMPLEMENTED First Key in Display. Informe um valor diferente de '' ou null para mostrar um Label.
-     * @param string  $strFirstOptionValue- 12: Frist Valeu in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
+     * @param string  $strFirstOptionValue- 12: Frist Value in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
      * @param string  $strKeyColumn       - 13: Nome da coluna que será utilizada para preencher os valores das opções
      * @param string  $strDisplayColumn   - 14: Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
      * @param string  $boolNoWrapLabel    - 15: NOT_IMPLEMENTED
@@ -146,7 +146,7 @@ class TFormDinSelectField  extends TFormDinOption
                            ,$boolMultiSelect       //09: Default FALSE = SingleSelect, TRUE = MultiSelect
                            ,$intQtdColumns         //10: Default 1. Num itens que irão aparecer no MultiSelect
                            ,TFormDinOption::SELECT //11: Define o tipo de input a ser gerado. Ex: select, radio ou check
-                           ,$strFirstOptionValue   //12: Frist Valeu in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
+                           ,$strFirstOptionValue   //12: Frist Value in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
                            ,$strKeyColumn          //13: Nome da coluna que será utilizada para preencher os valores das opções
                            ,$strDisplayColumn      //14: Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
                            ,null

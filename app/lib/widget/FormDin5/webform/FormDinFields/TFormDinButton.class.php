@@ -88,7 +88,7 @@ class TFormDinButton {
     * @param string  $strVerticalAlign  -12 : NOT_IMPLEMENTED
     * @param boolean $boolLabelAbove    -13 : NOT_IMPLEMENTED Position text label. DEFAULT is false. NULL = false. 
     * @param string  $strLabel          -14 : NOT_IMPLEMENTED Text label 
-    * @param string  $strHorizontalAlign-15 : NOT_IMPLEMENTED Text Horizontal align. DEFAULT = center. Valeus center, left, right
+    * @param string  $strHorizontalAlign-15 : NOT_IMPLEMENTED Text Horizontal align. DEFAULT = center. Values center, left, right
     * @return TButton|string|array
     */
     public function __construct($objForm

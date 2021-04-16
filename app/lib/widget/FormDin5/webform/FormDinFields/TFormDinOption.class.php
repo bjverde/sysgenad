@@ -96,7 +96,7 @@ class TFormDinOption  extends TFormDinGenericField
 	 * @param boolean $boolMultiSelect -09: Default FALSE = SingleSelect, TRUE = MultiSelect
 	 * @param integer $intQtdColumns   -10: Default 1. Num itens que irão aparecer no MultiSelect
 	 * @param string  $strInputType    -11: Define o tipo de input a ser gerado. Ex: select, radio ou check
-	 * @param string  $strFirstOptionValue- 12: Frist Valeu in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
+	 * @param string  $strFirstOptionValue- 12: Frist Value in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
 	 * @param string  $strKeyField     -13: Nome da coluna que será utilizada para preencher os valores das opções
 	 * @param string  $strDisplayField -14: Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
 	 * @param boolean $boolNowrapText  -15:

@@ -69,7 +69,7 @@ class TFormDin
     private $listFormElements = array();
 
     /**
-     * Método construtor da classe do Formulario Padronizado em BoorStrap
+     * Método construtor da classe do Formulario Padronizado em BootStrap
      * ------------------------------------------------------------------------
      * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
      * os parâmetros do metodos foram marcados veja documentação da classe para
@@ -342,10 +342,10 @@ class TFormDin
     }
 
     /**
-     * Adciona um Objeto Adianti na lista de objetos que compeen o Formulário.
+     * Adciona um Objeto Adianti na lista de objetos que compõem o Formulário.
      * 
      * @param object $obj  -  1: objeto Adianti
-     * @param string $type -  2: Typo confirmo constante
+     * @param string $type -  2: Type conforme constante. TFormDin::TYPE_FIELD, TYPE_LAYOUT, TYPE_ADIANTI_FIELD_NATIVE
      * @param object $label - 3: objeto do tipo Label do $obj
      * @param boolean $boolNewLine    - 4: DEFAULT = True = campo em nova linha. FALSE = mesma linha
      * @param boolean $boolLabelAbove - 5: DEFAULT = FALSE = Label na frente do campo. TRUE = Label sobre o campo
@@ -479,7 +479,7 @@ class TFormDin
     * @param string  $strVerticalAlign  -11 : NOT_IMPLEMENTED
     * @param boolean $boolLabelAbove    -12 : NOT_IMPLEMENTED Position text label. DEFAULT is false. NULL = false. 
     * @param string  $strLabel          -13 : NOT_IMPLEMENTED Text label 
-    * @param string  $strHorizontalAlign-14 : NOT_IMPLEMENTED Text Horizontal align. DEFAULT = center. Valeus center, left, right
+    * @param string  $strHorizontalAlign-14 : NOT_IMPLEMENTED Text Horizontal align. DEFAULT = center. Values center, left, right
     * @return TButton|string|array
     */
     public function addButton( $mixValue
@@ -771,7 +771,7 @@ class TFormDin
      * @param string  $strName         - 1: ID do campo
      * @param string  $strLabel        - 2: Label
      * @param integer $intMaxLength    - 3: Tamanho maximos
-     * @param boolean $boolRequired    - 4: Obrigatorio
+     * @param boolean $boolRequired    - 4: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
      * @param integer $intColumns      - 5: Largura use px ou %, valores inteiros serão multiplicados 1.5 e apresentado em px
      * @param integer $intRows         - 6: Altura use px ou %, valores inteiros serão multiplicados 4 e apresentado em px
      * @param boolean $boolNewLine     - 7: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
@@ -779,7 +779,7 @@ class TFormDin
      * @param boolean $boolShowCounter - 9: NOT_IMPLEMENTED Contador de caracteres ! Só funciona em campos não RichText
      * @param string  $strValue       - 10: texto preenchido
      * @param string $boolNoWrapLabel - 11: NOT_IMPLEMENTED
-     * @param string $placeholder     - 12: FORMDIN5 PlaceHolder é um Texto de exemplo
+     * @param string $placeholder     - 12: FORMDIN5 PlaceHolder é um Texto de exemplo`. DEFAULT = true
      * @param string $boolShowCountChar 13: FORMDIN5 Mostra o contador de caractes.  Default TRUE = mostra, FASE = não mostra
      * @return TFormDinMemoField
      */
@@ -809,10 +809,8 @@ class TFormDin
                                       , $placeholder 
                                       , $boolShowCountChar
                                     );
-        $objField = $formField->getFullComponent();
-        //$objField = $formField->getAdiantiObj();
+        $objField = $formField->getAdiantiObjFull();
         $label = $formField->getLabel();
-        //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
     	return $formField;
     }
@@ -823,7 +821,7 @@ class TFormDin
      *  
      * @param string  $strName         - 1: Id do Campo
      * @param string  $strLabel        - 2: Label do Campo
-     * @param boolean $boolRequired    - 3: DEFAULT = false não obrigatório
+     * @param boolean $boolRequired    - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
      * @param boolean $boolNewLine     - 4: Default TRUE = campo em nova linha, FALSE continua na linha anterior
      * @param string  $strValue        - 5: Valor inicial
      * @param string  $strMinValue     - 6: Menor data que o campo aceita
@@ -877,7 +875,7 @@ class TFormDin
      *  
      * @param string  $strName         - 1: Id do Campo
      * @param string  $strLabel        - 2: Label do Campo
-     * @param boolean $boolRequired    - 3: DEFAULT = false não obrigatório
+     * @param boolean $boolRequired    - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
      * @param boolean $boolNewLine     - 4: Default TRUE = campo em nova linha, FALSE continua na linha anterior
      * @param string  $strValue        - 5: Valor inicial
      * @param string  $strMinValue     - 6: Menor data que o campo aceita
@@ -935,7 +933,7 @@ class TFormDin
      * 
      * @param string $id             - 1: ID do campo
      * @param string $strLabel       - 2: Label do campo
-     * @param boolean $boolRequired  - 3: Obrigatorio
+     * @param boolean $boolRequired  - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
      * @param array $itens           - 4: Informe um array do tipo "chave=>valor", com maximo de 2 elementos
      * @param boolean $boolNewLine   - 5: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
      * @param boolean $boolLabelAbove- 6: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
@@ -958,6 +956,71 @@ class TFormDin
     }
 
     /**
+     * Campos para anexar arquivo. Pode ser um carregamento sincrono ou assincrono via ajax.
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     *
+     * Será incluido no $_POST 4 elementos com os nomes:
+     * <code>
+     *   $_POST['strName_temp'] - caminho temporario;
+     *   $_POST['strName_type'] - mime type;
+     *   $_POST['strName_size'] - tamanho em kb;
+     *   $_POST['strName_name'] - nome arquivo;
+     * </code>
+     * 
+     * @param string  $id              - 01: id do campo
+     * @param string  $strLabel        - 02: Rotulo do campo que irá aparece na tela
+     * @param boolean $boolRequired    - 03: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param mixed   $strAllowedFileTypes - 04: Tipos de arquivos. String separado por virgular ou array
+     * @param string  $strMaxFileSize  - 05: Input the max size file with K, M for Megabit (Mb) or G for Gigabit (Gb). Example 2M = 2 Mb = 2048Kb.
+     * @param integer $intFieldSize    - 06: NOT_IMPLEMENTED
+     * @param boolean $boolAsync       - 07: NOT_IMPLEMENTED
+     * @param boolean $boolNewLine     - 08: NOT_IMPLEMENTED
+     * @param string  $strJsCallBack   - 09: NOT_IMPLEMENTED
+     * @param boolean $boolLabelAbove  - 10: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param boolean $boolNoWrapLabel - 11: NOT_IMPLEMENTED
+     * @param string  $strMessageInvalidFileType - 12: NOT_IMPLEMENTED
+     * @param boolean $enableFileHandling -13: FORMDIN5 Habilita barra de progresso
+     * @param boolean $enablePopover      -14: FORMDIN5 Habilita o preview
+     * @return TFile|TFileAsync
+     */
+    public function addFileField(string $id
+                               , string $strLabel
+                               , $boolRequired = false
+                               , $strAllowedFileTypes=null
+                               , $strMaxFileSize=null
+                               , $intFieldSize=null
+                               , $boolAsync=null
+                               , $boolNewLine=null
+                               , $strJsCallBack=null
+                               , $boolLabelAbove=true
+                               , $boolNoWrapLabel=null
+                               , $strMessageInvalidFileType=null 
+                               , $enableFileHandling=false
+                               , $enablePopover=false
+                               )
+    {
+        $formField = new TFormDinFileField($id
+                                          ,$strLabel
+                                          ,$boolRequired
+                                          ,$strAllowedFileTypes
+                                          ,$intFieldSize
+                                          ,$strMaxFileSize
+                                          ,$enableFileHandling
+                                          ,$enablePopover
+                                        );
+        $objField  = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+
+        return $formField;
+    }    
+
+    /**
      * Adicionar campo entrada de dados texto com mascara
      * ------------------------------------------------------------------------
      * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
@@ -971,7 +1034,7 @@ class TFormDin
      *
      * @param string $id              - 1: id do campo
      * @param string $strLabel        - 2: Rotulo do campo que irá aparece na tela
-     * @param boolean $boolRequired   - 3: Obrigatorio
+     * @param boolean $boolRequired   - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
      * @param string $strMask         - 4: A mascara
      * @param boolean $boolNewLine    - 5: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
      * @param string $strValue        - 6: texto preenchido
@@ -1013,7 +1076,7 @@ class TFormDin
      *
      * @param string  $strName        -  1: id do campo
      * @param string  $strLabel       -  2: Rotulo do campo que irá aparece na tela
-     * @param boolean $boolRequired   -  3: True = Obrigatorio; False (Defalt) = Não Obrigatorio
+     * @param boolean $boolRequired   -  3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
      * @param string  $strMinValue    -  4: Menor Valor
      * @param string  $strMaxValue    -  5: Maior valor
      * @param string  $strMaskType    -  6: HM, HMS
@@ -1090,9 +1153,9 @@ class TFormDin
      * @param integer $intSize            - 09: NOT_IMPLEMENTED Default 1. Num itens que irão aparecer. 
      * @param integer $intWidth           - 10: DEPRECATED. Informe NULL para evitar o warning. Largura em Pixels
      * @param string  $strFirstOptionText - 11: NOT_IMPLEMENTED First Key in Display
-     * @param string  $strFirstOptionValue- 12: Frist Valeu in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
-     * @param string  $strKeyColumn       - 13: NOT_IMPLEMENTED Nome da coluna que será utilizada para preencher os valores das opções
-     * @param string  $strDisplayColumn   - 14: NOT_IMPLEMENTED Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
+     * @param string  $strFirstOptionValue- 12: Frist Value in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
+     * @param string  $strKeyColumn       - 13: Nome da coluna que será utilizada para preencher os valores das opções
+     * @param string  $strDisplayColumn   - 14: Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
      * @param string  $boolNoWrapLabel    - 15: NOT_IMPLEMENTED
      * @param string  $strDataColumns     - 16: NOT_IMPLEMENTED Informações extras do banco de dados que deverão ser adicionadas na tag option do campo select
      * @return TCombo
@@ -1473,16 +1536,64 @@ class TFormDin
     //----------------------------------------------------------------
     //----------------------------------------------------------------
     //----------------------------------------------------------------
+    /**
+     * @deprecated mantido apenas para diminir o impacto na migração do FormDin 4 para FormDin 5 sobre Adianti 7.1
+     * @return void
+     */
+    public function setColumns(){
+        $arrBacktrace = debug_backtrace();
+        ValidateHelper::validadeMethod(ValidateHelper::WARNING
+                                      ,ValidateHelper::MSG_DECREP
+                                      ,__METHOD__
+                                      ,null
+                                      ,$arrBacktrace[0]['file']
+                                      ,$arrBacktrace[0]['line']
+                                      );
+    }
+
+    /**
+     * @deprecated mantido apenas para diminir o impacto na migração do FormDin 4 para FormDin 5 sobre Adianti 7.1
+     * @return void
+     */
+    public function getColumns(){
+        $arrBacktrace = debug_backtrace();
+        ValidateHelper::validadeMethod(ValidateHelper::WARNING
+                                      ,ValidateHelper::MSG_DECREP
+                                      ,__METHOD__
+                                      ,null
+                                      ,$arrBacktrace[0]['file']
+                                      ,$arrBacktrace[0]['line']
+                                      );
+    }
+
+    /**
+     * @deprecated mantido apenas para diminir o impacto na migração do FormDin 4 para FormDin 5 sobre Adianti 7.1
+     * @return void
+     */
+    public function getcolumnWidth(){
+        $arrBacktrace = debug_backtrace();
+        ValidateHelper::validadeMethod(ValidateHelper::WARNING
+                                      ,ValidateHelper::MSG_DECREP
+                                      ,__METHOD__
+                                      ,null
+                                      ,$arrBacktrace[0]['file']
+                                      ,$arrBacktrace[0]['line']
+                                      );
+    }      
 
     /**
      * @deprecated mantido apenas para diminir o impacto na migração do FormDin 4 para FormDin 5 sobre Adianti 7.1
      * @return void
      */
     public function setShowCloseButton( $boolNewValue=null ){
-        ValidateHelper::validadeParam('$boolNewValue',$boolNewValue
-                                    ,ValidateHelper::WARNING
-                                    ,ValidateHelper::MSG_DECREP
-                                    ,__CLASS__,__METHOD__,__LINE__); 
+        $arrBacktrace = debug_backtrace();
+        ValidateHelper::validadeMethod(ValidateHelper::WARNING
+                                      ,ValidateHelper::MSG_DECREP
+                                      ,__METHOD__
+                                      ,null
+                                      ,$arrBacktrace[0]['file']
+                                      ,$arrBacktrace[0]['line']
+                                      );
     }
 
     /**
@@ -1490,10 +1601,14 @@ class TFormDin
      * @return void
      */
     public function setFlat($boolNewValue=null){
-        ValidateHelper::validadeParam('$boolNewValue',$boolNewValue
-                                    ,ValidateHelper::WARNING
-                                    ,ValidateHelper::MSG_DECREP
-                                    ,__CLASS__,__METHOD__,__LINE__); 
+        $arrBacktrace = debug_backtrace();
+        ValidateHelper::validadeMethod(ValidateHelper::WARNING
+                                      ,ValidateHelper::MSG_DECREP
+                                      ,__METHOD__
+                                      ,null
+                                      ,$arrBacktrace[0]['file']
+                                      ,$arrBacktrace[0]['line']
+                                      );
     }
 
     /**
@@ -1501,10 +1616,14 @@ class TFormDin
      * @return void
      */
     public function setMaximize($boolNewValue = null){
-        ValidateHelper::validadeParam('$boolNewValue',$boolNewValue
-                                    ,ValidateHelper::WARNING
-                                    ,ValidateHelper::MSG_DECREP
-                                    ,__CLASS__,__METHOD__,__LINE__); 
+        $arrBacktrace = debug_backtrace();
+        ValidateHelper::validadeMethod(ValidateHelper::WARNING
+                                      ,ValidateHelper::MSG_DECREP
+                                      ,__METHOD__
+                                      ,null
+                                      ,$arrBacktrace[0]['file']
+                                      ,$arrBacktrace[0]['line']
+                                      );
     }
 
     /**
@@ -1512,9 +1631,13 @@ class TFormDin
      * @return void
      */
     public function setHelpOnLine(){
-        ValidateHelper::validadeParam('$setHelpOnLine',null
-                                ,ValidateHelper::WARNING
-                                ,ValidateHelper::MSG_DECREP
-                                ,__CLASS__,__METHOD__,__LINE__); 
+        $arrBacktrace = debug_backtrace();
+        ValidateHelper::validadeMethod(ValidateHelper::WARNING
+                                      ,ValidateHelper::MSG_DECREP
+                                      ,__METHOD__
+                                      ,null
+                                      ,$arrBacktrace[0]['file']
+                                      ,$arrBacktrace[0]['line']
+                                      );
     }
 }

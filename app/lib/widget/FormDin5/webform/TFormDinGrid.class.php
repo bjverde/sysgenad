@@ -572,7 +572,28 @@ class TFormDinGrid
             $this->addListGridAction($itemGridAction);
             return $itemGridAction;
     }
-
+    //------------------------------------------------------------------------------------
+    /**
+     * Seta o nome de uma função que será usada para desenhar os botões de uma linha da gride.
+     * Um exemplo tipico é desabilitar determinado botão se o Registro estiver no estado X
+     * 
+     * Parametros do evento onDrawActionButton
+     * 	1) $rowNum 		- número da linha corrente
+     * 	2) $button 		- objeto TButton
+     * 	3) $objColumn	- objeto TGrideColum
+     * 	4) $aData		- o array de dados da linha ex: $res[''][n]
+     *   Ex: function tratarBotoes($rowNum,$button,$objColumn,$aData);
+     * 
+     * @param string $newValue
+     */
+    public function setOnDrawActionButton( $newValue = null )
+    {
+        $this->onDrawActionButton = $newValue;
+    }
+    public function getOnDrawActionButton()
+    {
+        return $this->onDrawActionButton;
+    }    
     //------------------------------------------------------------------------------------
     /**
      * Campos do form origem que serão atualizados ao selecionar o item desejado.
@@ -587,8 +608,7 @@ class TFormDinGrid
     {
         $mixUpdateFields = ArrayHelper::convertArrayMixUpdate2OutputFormat($mixUpdateFields);
         $this->updateFields = $mixUpdateFields;
-    }    
-    //------------------------------------------------------------------------------------
+    }
     /**
      * Retorna a lista de campos que serão atualizados
      *

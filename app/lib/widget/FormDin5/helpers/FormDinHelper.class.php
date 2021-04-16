@@ -58,7 +58,7 @@
 class FormDinHelper
 {
 
-    const FORMDIN_VERSION = '5.0.0-alpha20';
+    const FORMDIN_VERSION = '5.0.0-alpha22';
     const GRID_SIMPLE = 'GRID_SIMPLE';
     const GRID_SCREEN_PAGINATION = 'GRID_SCREEN_PAGINATION';
     const GRID_SQL_PAGINATION    = 'GRID_SQL_PAGINATION';
@@ -234,6 +234,15 @@ class FormDinHelper
 
     /**
      * @codeCoverageIgnore
+     * Alias da função debug.
+     * Para depuração. Exibe o modulo a linha e a variável/objeto solicitado
+     * Retirado do FormDin 4.9.0
+     * https://github.com/bjverde/formDin/blob/master/base/includes/funcoes.inc
+     *
+     * @param [type] $mixExpression váriavel que irá mostrar o resultado
+     * @param string $strComentario Titulo que irá aparecer
+     * @param boolean $boolExit
+     * @return void
      */
     public static function d( $mixExpression,$strComentario='Debug', $boolExit=FALSE )
     {        
@@ -245,6 +254,11 @@ class FormDinHelper
      * função para depuração. Exibe o modulo a linha e a variável/objeto solicitado
      * Retirado do FormDin 4.9.0
      * https://github.com/bjverde/formDin/blob/master/base/includes/funcoes.inc
+     *
+     * @param [type] $mixExpression váriavel que irá mostrar o resultado
+     * @param string $strComentario Titulo que irá aparecer
+     * @param boolean $boolExit
+     * @return void
      */
     public static function debug( $mixExpression,$strComentario='Debug', $boolExit=FALSE ) {
         ini_set ( 'xdebug.max_nesting_level', 150 );
@@ -265,17 +279,21 @@ class FormDinHelper
             echo '</pre>';
             echo '</div>';
         } else {
+            echo '<hr />';
             echo '<div class="formDinDebug">';
             echo "<script>try{fwUnblockUI();}catch(e){try{top.app_unblockUI();}catch(e){}}</script>";
             echo "<fieldset style='text-align:left;'><legend><font color=\"#007000\">".$strComentario."</font></legend><pre>" ;
+            echo "<b>file</b>: ".$arrBacktrace[0]['file']."\n";
+            echo "<b>line</b>: ".$arrBacktrace[0]['line']."\n";
+            /*
             foreach ( $arrBacktrace[0] as $strAttribute => $mixValue ) {
                 if( !is_array($mixValue) ) {
                     echo "<b>" . $strAttribute . "</b> ". $mixValue ."\n";
                 }
             }
-            echo "</pre><hr />";
-            echo '<span style="color:red;"><blink>'.$strComentario.'</blink></span>'."\n";;
-            echo '<pre>';
+            */
+            echo "<br>";
+            echo "<br>";
             if( is_object($mixExpression) ) {
                 var_dump( $mixExpression );
             } else {

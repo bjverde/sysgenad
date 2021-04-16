@@ -60,6 +60,14 @@ class ValidateHelper
         }
     }
     
+    public static function isString($string,$method,$line)
+    {
+        self::methodLine($method, $line, __METHOD__);
+        if( empty($string) || !is_string($string) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_NOT_STRING.'See the method: '.$method.' in the line: '.$line);
+        }
+    }
+
     public static function isNumeric($id,$method,$line)
     {
         self::methodLine($method, $line, __METHOD__);
@@ -140,6 +148,18 @@ class ValidateHelper
         return $complemento;
     }    
     //--------------------------------------------------------------------------------
+    /**
+     * Usado para fazer a validação de um parametro do metodo da migração do FormDin4 para o FormDin5
+     *
+     * @param string $paramName  nome do parametro
+     * @param [type] $paramValue valor informado
+     * @param const $typeErro ValidateHelper::NOTICIE, ValidateHelper::WARNING e ValidateHelper::ERROR
+     * @param const $typeErroMsg
+     * @param [type] $class
+     * @param [type] $method
+     * @param string $line
+     * @return void
+     */
     public static function validadeParam($paramName,$paramValue,$typeErro,$typeErroMsg,$class,$method,$line)
     {
         $test = isset($paramValue) && !empty($paramValue);
@@ -156,6 +176,30 @@ class ValidateHelper
             self::triggerError($msg,$typeErro);
         }
     }
+    //--------------------------------------------------------------------------------
+    /**
+     * Usado para fazer a validação de um metodo da migração do FormDin4 para o FormDin5
+     *
+     * @param const $typeErro ValidateHelper::NOTICIE, ValidateHelper::WARNING e ValidateHelper::ERROR
+     * @param const $typeErroMsg
+     * @param const $method 
+     * @param string $complementoMsg
+     * @param string $file
+     * @param string $line
+     */
+    public static function validadeMethod($typeErro,$typeErroMsg,$method,$complementoMsg,$file,$line)
+    {
+        $complemento = self::typeErrorMsg($typeErroMsg);
+        $complemento = !empty($complementoMsg)?$complemento.' '.$complementoMsg:$complemento;
+
+        $msg = TFormDinMessage::ERROR_FD5_PARAM_MIGRA
+            .' O metodo: '.$method
+            .$complemento
+            .', no arquivo: '.$file
+            .', na linha: '.$line
+            ;
+        self::triggerError($msg,$typeErro);
+    }    
     //--------------------------------------------------------------------------------
     public static function migrarMensage($mensagem,$typeErro,$typeErroMsg,$class,$method,$line,$arquivo=null)
     {

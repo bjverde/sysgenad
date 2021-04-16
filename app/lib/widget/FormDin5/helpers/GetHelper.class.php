@@ -49,7 +49,7 @@ class GetHelper
         return is_null($_GET[$atributeName])?"":trim($_GET[$atributeName]);
     }
     
-    public static function getDefaultValeu($atributeName,$DefaultValue) 
+    public static function getDefaultValue($atributeName,$DefaultValue) 
     {
         $value = null;
         if(isset($_GET[$atributeName]) && ($_GET[$atributeName]<>'') ) {

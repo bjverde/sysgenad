@@ -203,6 +203,58 @@ class TFormDinGenericField
     public function getPlaceHolder(){
         return $this->getAdiantiObj()->placeholder;
     }
+    //-----------------------------------------------------------------------------
+    /**
+    * Método para criar ajuda on-line.
+    * O parametro $strHelpFile recebe o nome de um arquivo com conteudo html/php para ser exibido.
+    * O arquivo deverá estar no diretório app/resources/
+    *  
+    * Poder ser informada tambem o endereço (url) da pagina de help
+    * 
+    * <code> 
+    * Exemplo01: $nom->setHelpFile('Nome da Pessoa',200,500,'ajuda_form01.html');
+    * Exemplo02: $nom->setHelpFile('Nome da Pessoa',200,500,'http://localhost/sistema/texto_ajuda.html');
+    * Exemplo03: $nom->setHelpFile('Nome da Pessoa',200,500,'Meu texto de ajuda', null, null, false);
+    * </code>
+    * 
+    * @param mixed $strWindowHeader- 01:
+    * @param mixed $intShowHeight  - 02: DEPRECATED: INFORME NULL para remover o Warning
+    * @param mixed $intShowWidth   - 03: DEPRECATED: INFORME NULL para remover o Warning
+    * @param mixed $strHelpFile    - 04: nome do arquivo que será carregado dentro do box
+    * @param mixed $strButtonImage - 05: imagem que aparecerá na frente do label
+    * @param boolean $boolReadOnly
+    * @param boolean $showFile     - true mostra o conteudo de um arquivo, FALSE mostra a mensagem de texto informada no $strHelpFile
+    */
+    public function setHelpOnLine( $strWindowHeader = null
+    							 , $intShowHeight = null
+    		                     , $intShowWidth = null
+    		                     , $strHelpFile = null
+    		                     , $strButtonImage = null
+    		                     , $boolReadOnly = null
+    							 , $showFile = true)
+    {
+        /*
+        $strHelpFile      =is_null( $strHelpFile ) ? $this->getId() : $strHelpFile;
+        $this->helpFile[0]=$strHelpFile;
+
+        if ( $strHelpFile )
+        {
+            $this->helpFile[1]=is_null( $strWindowHeader ) ? "Ajuda on-line" : $strWindowHeader;
+            $this->helpFile[2]=is_null( $intShowHeight ) ? 600 : $intShowHeight;
+            $this->helpFile[3]=is_null( $intShowWidth ) ? 800 : $intShowWidth;
+            $this->helpFile[4]=is_null( $strButtonImage ) ? $this->getBase().'imagens/icon_help-16x16.png' : $strButtonImage;
+            $this->helpFile[5]=is_null( $boolReadOnly ) ? false : $boolReadOnly;
+           	$this->helpFile[6]='';
+           	$this->helpFile[7]=is_null( $showFile ) ? true : $showFile;
+            if( preg_match('/\.\.\//',$this->getBase()) > 0 ) {
+            	$this->helpFile[6]=APLICATIVO;
+			}
+            if ( strpos( $this->helpFile[4], '/' ) === false ) {
+            	$this->helpFile[4] = $this->getBase().'imagens/'.$this->helpFile[4];
+            }
+        }
+        */
+    }    
     //------------------------------------------------------------------------------
 	/**
 	 * Set um Toolpit do FormDin para funcionar com Adianti 
@@ -262,5 +314,28 @@ class TFormDinGenericField
 	{
 		return $this->getAdiantiObj()->getProperty('class');
     }
-	//------------------------------------------------------------------------------     
+    //------------------------------------------------------------------------------     
+    /**
+     * DEPRECADED - change to setClass.
+     *
+     * @deprecated
+     * @codeCoverageIgnore
+     *
+     * @param mixed $mixProperty
+     * @param string $newValue
+     */
+    public function setCss( $mixProperty, $newValue = null )
+    {
+        if( !empty($mixProperty) ){
+            $arrBacktrace = debug_backtrace();
+            ValidateHelper::validadeMethod(ValidateHelper::WARNING
+                                          ,ValidateHelper::MSG_DECREP
+                                          ,'setCss'
+                                          ,'use o metodo setClass'
+                                          ,$arrBacktrace[0]['file']
+                                          ,$arrBacktrace[0]['line']
+                                        );
+        }
+
+    }
 }

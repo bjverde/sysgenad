@@ -113,7 +113,7 @@ class ArrayHelper
      * @param mixed  $DefaultValue
      * @return mixed
      */
-    public static function getDefaultValeu($array,$atributeName,$DefaultValue) 
+    public static function getDefaultValue($array,$atributeName,$DefaultValue) 
     {
         $value = $DefaultValue;
         if(self::has($atributeName, $array) ) {
@@ -126,7 +126,7 @@ class ArrayHelper
     
     public static function get($array,$atributeName) 
     {
-        $result = self::getDefaultValeu($array, $atributeName, null);
+        $result = self::getDefaultValue($array, $atributeName, null);
         return $result;
     }
     
@@ -833,6 +833,34 @@ class ArrayHelper
             }
         }
         return $result;
+    }
+    //--------------------------------------------------------------------------------
+    /**
+     * Recebe um array do tipo ArrayHelper::TYPE_ADIANTI, ArrayHelper::TYPE_PDO, ArrayHelper::TYPE_FORMDIN
+     * para um array TYPE_PHP no formato 'KEY=VALUE,KEY=VALUE'
+     *
+     * @param array  $arrayData   - 1: Array de entrada
+     * @param string $keyColumn   - 2: String nome da coluna chave
+     * @param string $valueColumn - 3: String nome da coluna valor
+     * @param const  $typeCase    - 4: Type Case. Default = PDO::CASE_NATURAL, PDO::CASE_UPPER, PDO::CASE_LOWER
+     * @return array
+     */
+    public static function convertArray2PhpKeyValue($arrayData,$keyColumn,$valueColumn,$typeCase = PDO::CASE_NATURAL)
+    {
+        ValidateHelper::isString($keyColumn,__METHOD__,__LINE__);
+        ValidateHelper::isString($valueColumn,__METHOD__,__LINE__);
+        $arrayData   = ArrayHelper::convertArray2OutputFormat($arrayData,ArrayHelper::TYPE_PDO,$typeCase);
+        if( !array_key_exists($keyColumn, $arrayData[0]) ) {
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_WRONG);
+        }
+        if( !array_key_exists($valueColumn, $arrayData[0]) ) {
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_TYPE_WRONG);
+        }
+        $arrayResult = array();
+        foreach( $arrayData as $key => $arrayInterno ) {
+            $arrayResult[ $arrayInterno[$keyColumn] ] = $arrayInterno[$valueColumn];
+        }
+        return $arrayResult;
     }
 
 }

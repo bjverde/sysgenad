@@ -53,9 +53,9 @@ class PostHelper
         return $result;
     }
     
-    public static function getDefaultValeu($atributeName,$DefaultValue) 
+    public static function getDefaultValue($atributeName,$DefaultValue) 
     {        
-        $result = ArrayHelper::getDefaultValeu($_POST, $atributeName, $DefaultValue);
+        $result = ArrayHelper::getDefaultValue($_POST, $atributeName, $DefaultValue);
         return $result;
     }
 

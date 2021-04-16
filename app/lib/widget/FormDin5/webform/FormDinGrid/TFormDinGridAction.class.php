@@ -107,4 +107,16 @@ class TFormDinGridAction
     public function setImage($image){
         $this->image = $image;
     }
+    //-------------------------------------------------------------------------
+    public function setDisplayCondition( /*Callable*/ $displayCondition )
+    {
+        $this->getAdiantiObj()->setDisplayCondition($displayCondition);
+    }        
+    /**
+     * Returns the action display condition
+     */
+    public function getDisplayCondition()
+    {
+        return $this->getAdiantiObj()->getDisplayCondition();
+    }
 }

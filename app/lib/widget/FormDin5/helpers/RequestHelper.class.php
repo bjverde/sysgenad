@@ -48,9 +48,9 @@ class RequestHelper
         return $result;
     }
     
-    public static function getDefaultValeu($atributeName,$DefaultValue) 
+    public static function getDefaultValue($atributeName,$DefaultValue) 
     {
-        $result = ArrayHelper::getDefaultValeu($_REQUEST, $atributeName, $DefaultValue);
+        $result = ArrayHelper::getDefaultValue($_REQUEST, $atributeName, $DefaultValue);
         return $result;
     }
 }

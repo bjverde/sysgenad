@@ -61,6 +61,9 @@ class TFormDinMemoField extends TFormDinGenericField
     private $showCountChar;
     private $intMaxLength;
 
+    private $adiantiObjTText; //Somente obj Adianti TText
+    private $adiantiObjFull;  //obj Adianti completo com todos os elementos para fazer o memo
+
     /**
      * Adicionar campo de entrada de texto com multiplas linhas ( memo ) equivalente ao html textarea
      * ------------------------------------------------------------------------
@@ -88,8 +91,8 @@ class TFormDinMemoField extends TFormDinGenericField
                               , $label=null
                               , $intMaxLength
                               , $boolRequired=null
-                              , $intColumns='20px'
-                              , $intRows='5px'
+                              , $intColumns='100%'
+                              , $intRows='100%'
                               , $boolNewLine=null
                               , $boolLabelAbove=null
                               , $boolShowCounter=null
@@ -98,22 +101,30 @@ class TFormDinMemoField extends TFormDinGenericField
                               , $placeholder=null
                               , $boolShowCountChar=true)
     {
-        $adiantiObj = new TText($id);
-        parent::__construct($adiantiObj,$id,$label,$boolRequired,$value,$placeholder);
-        $this->setMaxLength($label,$intMaxLength);
+        $this->setAdiantiObjTText($id);
+        parent::__construct($this->getAdiantiObjTText(),$id,$label,$boolRequired,$value,$placeholder);
         $this->setSize($intColumns, $intRows);
+        $this->setMaxLength($label,$intMaxLength);
         $this->setShowCountChar($boolShowCountChar);
+        $this->setAdiantiObjTFull($id,$boolShowCountChar,$intMaxLength);
         return $this->getAdiantiObj();
     }
 
-    public function getFullComponent()
+    public function setAdiantiObjTText($id){
+        $this->adiantiObjTText = new TText($id);
+    }
+    public function getAdiantiObjTText(){
+        return $this->adiantiObjTText;
+    }
+
+    private function setAdiantiObjTFull( $idField, $boolShowCountChar,$intMaxLength )
     {
-        $adiantiObj = parent::getAdiantiObj();
-        $intMaxLength = $this->getMaxLength();
-        if( $this->getShowCountChar() && ($intMaxLength>=1) ){
-            $adiantiObj = parent::getAdiantiObj();
-            $adiantiObj->setProperty('onkeyup', 'fwCheckNumChar(this,'.$intMaxLength.');');
-            $idField = $adiantiObj->getId();
+        $adiantiObjTText = $this->getAdiantiObjTText();
+        $adiantiObj = null;
+        if( $boolShowCountChar && ($intMaxLength>=1) ){
+            $adiantiObjTText->maxlength = $intMaxLength;
+            $adiantiObjTText->setId($idField);
+            $adiantiObjTText->setProperty('onkeyup', 'fwCheckNumChar(this,'.$intMaxLength.');');
 
             $charsText  = new TElement('span');
             $charsText->setProperty('id',$idField.'_counter');
@@ -125,13 +136,17 @@ class TFormDinMemoField extends TFormDinGenericField
             $script->setProperty('src', 'app/lib/include/FormDin5.js');
 
             $div = new TElement('div');
-            $div->add($adiantiObj);
+            $div->add($adiantiObjTText);
             $div->add('<br>');
             $div->add($charsText);
             $div->add($script);
             $adiantiObj = $div;
         }
-        return $adiantiObj;
+        $adiantiObj = empty($adiantiObj)?$adiantiObjTText:$adiantiObj;
+        $this->adiantiObjFull = $adiantiObj;
+    }
+    public function getAdiantiObjFull(){
+        return $this->adiantiObjFull;
     }
 
     public function setMaxLength($label,$intMaxLength)
@@ -147,17 +162,19 @@ class TFormDinMemoField extends TFormDinGenericField
         return $this->intMaxLength;
     }
 
-    protected function testSize($valeu)
+    public function testSize($value)
     {
-        if(preg_match(self::REGEX, $valeu,$output)){
-            //FormDinHelper::debug($output);
-            if($output[2]=='px'){
-                $valeu = $output[1];
+        if( !empty($value) ){
+            if(  preg_match(self::REGEX, $value,$output) ){
+                //FormDinHelper::debug($output);
+                if($output[2]=='px'){
+                    $value = $output[1];
+                }
+            }else{
+                throw new InvalidArgumentException('use % ou px');
             }
-        }else{
-            throw new InvalidArgumentException('use % ou px');
         }
-        return $valeu;
+        return $value;
     }
 
     public function setSize($intColumns, $intRows)

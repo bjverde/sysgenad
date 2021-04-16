@@ -76,6 +76,7 @@ class TFormDinMessage {
     const ERROR_HTML_COLOR_HEXA = 'Informe uma cor HTML no formato hexadecimal. Exemplo #efefef !';
 
     const ERROR_EMPTY_INPUT    = 'O Parametro não pode ficar em branco';
+    const ERROR_TYPE_NOT_STRING= 'Tipo não é string! ';
     const ERROR_TYPE_NOT_INT   = 'Tipo não númerico! ';
     const ERROR_TYPE_NOT_ARRAY = 'Tipo não é um array! ';
     const ERROR_TYPE_ARRAY_EMP = 'O array está vazio! ';
@@ -85,7 +86,7 @@ class TFormDinMessage {
     const ERROR_SQL_PARAM      = 'Quantidade de parametros diferente da quantidade utilizada na instrução sql!';
 
     const ERROR_FD5  = 'ERRO FormDin5: ';
-    const ERROR_FD5_PARAM_MIGRA  = Self::ERROR_FD5.' Falha na migração do FormDin 4 para 5.';
+    const ERROR_FD5_PARAM_MIGRA  = 'Falha na migração do FormDin 4 para 5.';
     const ERROR_FD5_OBJ_ADI      = Self::ERROR_FD5.' objeto Adianti Fieald não pode ficar em branco.';
     const ERROR_FD5_OBJ_BUILDER  = Self::ERROR_FD5.' objeto não é um Adianti BootstrapFormBuilder.';
     const ERROR_FD5_OBJ_BOOTGRID = Self::ERROR_FD5.' objeto não é um Adianti BootstrapDatagridWrapper.';
@@ -121,7 +122,7 @@ class TFormDinMessage {
      * ------------------------------------------------------------------------
      *
      * @param string $message   - 1: Texto da mensagem pode ser HTML
-     * @param string $type      - 2: 2: FORMDIN5 Type mensagem: DEFAULT=info, error, warning. Use TFormDinMessage::TYPE_
+     * @param string $type      - 2: FORMDIN5 Type mensagem: DEFAULT=info, error, warning. Use TFormDinMessage::TYPE_
      * @param TAction $action   - 3: FORMDIN5 Classe TAction do Adianti
      * @param string $title_msg - 4: FORMDIN5 titulo da mensagem
      */
@@ -158,14 +159,14 @@ class TFormDinMessage {
 
     public static function logRecord(Exception $exception)
     {
-        $app = $_SESSION[APLICATIVO];
+        $app = $_SESSION[APPLICATION_NAME];
         $login = null;
         $grupo = null;
-        if( ArrayHelper::has('USER',$_SESSION[APLICATIVO]) ) {
-            $login = ( ArrayHelper::has('LOGIN', $_SESSION[APLICATIVO]['USER']) ? $_SESSION[APLICATIVO]['USER']['LOGIN']:null );
-            $grupo = ( ArrayHelper::has('GRUPO_NOME', $_SESSION[APLICATIVO]['USER']) ? $_SESSION[APLICATIVO]['USER']['GRUPO_NOME']:null );
+        if( ArrayHelper::has('USER',$_SESSION[APPLICATION_NAME]) ) {
+            $login = ( ArrayHelper::has('LOGIN', $_SESSION[APPLICATION_NAME]['USER']) ? $_SESSION[APPLICATION_NAME]['USER']['LOGIN']:null );
+            $grupo = ( ArrayHelper::has('GRUPO_NOME', $_SESSION[APPLICATION_NAME]['USER']) ? $_SESSION[APPLICATION_NAME]['USER']['GRUPO_NOME']:null );
         }
-        $log = 'formDin: '.FORMDIN_VERSION.' ,sistem: '.SYSTEM_ACRONYM.' v:'.SYSTEM_VERSION.' ,usuario: '.$login
+        $log = 'formDin: '.FormDinHelper::version().' ,sistem: '.APPLICATION_NAME.' v:'.SYSTEM_VERSION.' ,usuario: '.$login
         .PHP_EOL.'type: '.get_class($exception).' ,Code: '.$exception->getCode().' ,file: '.$exception->getFile().' ,line: '.$exception->getLine()
         .PHP_EOL.'mensagem: '.$exception->getMessage()
         .PHP_EOL."Stack trace:"
@@ -176,7 +177,7 @@ class TFormDinMessage {
     
     public static function logRecordSimple($message)
     {
-        $log = 'formDin: '.FORMDIN_VERSION.' ,sistem: '.SYSTEM_ACRONYM.' v:'.SYSTEM_VERSION
+        $log = 'formDin: '.FormDinHelper::version().' ,sistem: '.APPLICATION_NAME.' v:'.SYSTEM_VERSION
         .PHP_EOL.TAB.'mensagem: '.$message;
         error_log($log);
     }
