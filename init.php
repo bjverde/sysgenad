@@ -33,6 +33,7 @@ define('EOL', "\n");
 define('ESP', chr(32).chr(32).chr(32).chr(32) );
 define('TAB', chr(9));
 
+define('FORMDIN_VERSION', $ini['system']['formdin_min_version']);
 define('SYSTEM_VERSION', $ini['system']['version']);
 define('SYSTEM_NAME', $ini['system']['system_name']);
 // ---FIM FORMDIN 5 -----------------------
