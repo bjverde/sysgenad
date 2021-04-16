@@ -374,6 +374,9 @@ class TFormDinPdoConnection
                 }else if( preg_match( '/^call/i', $sql ) > 0  ){ // Para stored procedure do MySQL
                     $result = $stmt->fetchall();
                     $result = $this->convertArrayResult($result);
+                }else{
+                    $result = $stmt->fetchall();
+                    $result = $this->convertArrayResult($result);
                 }
             }
             TTransaction::close();         // fecha a transação.
