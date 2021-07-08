@@ -6,6 +6,10 @@
  * @author Reinaldo A. Barrêto Junior
  * 
  * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -60,6 +64,7 @@ class TFormDinGrid
 
     const TYPE_SIMPLE   = 'simple';
     const TYPE_CHECKOUT = 'checkout';
+    const ROWS_PER_PAGE = 20;
 
     private $adiantiObj;
     private $panelGroupGrid;
@@ -72,6 +77,8 @@ class TFormDinGrid
     protected $updateFields;
     protected $key;
     protected $width;
+    private $maxRows;
+    private $realTotalRowsSqlPaginator;    
 
     protected $data;
 
@@ -247,6 +254,38 @@ class TFormDinGrid
         $element['width']=$width;
         $this->listColumn[]=$element;
     }
+    //------------------------------------------------------------------------------------
+    /**
+     * Retorna o numero de regristros quando for usar uma pagina de banco e não apenas paginação de tela
+     *
+     * @return int
+     */
+    public function getRealTotalRowsSqlPaginator(){
+        return $this->realTotalRowsSqlPaginator;
+    }
+    
+    //------------------------------------------------------------------------------------
+    /**
+     * Numero real de registros, deve ser utilizando somento com paginação de banco
+     * está relacionado com setMaxRows
+     *
+     * @param int $realTotalRowsSqlPaginator
+     * @return void
+     */
+    public function setRealTotalRowsSqlPaginator($realTotalRowsSqlPaginator){
+        $this->realTotalRowsSqlPaginator = $realTotalRowsSqlPaginator;
+    }
+    
+    //------------------------------------------------------------------------------------
+    public function getQtdColumns(){
+        return $this->qtdColumns;
+    }
+    
+    //------------------------------------------------------------------------------------
+    public function setQtdColumns($qtdColumns){
+        $this->qtdColumns = $qtdColumns;
+    }
+
 
     public function showGridColumn()
     {
@@ -355,6 +394,7 @@ class TFormDinGrid
         $pageNavigation = new TPageNavigation;
         $pageNavigation->setAction(new TAction(array($this->getObjForm(), 'onReload')));
         $pageNavigation->enableCounters();
+        $pageNavigation->setLimit($this->getMaxRows()); // número máximo de itens por página
         $this->setPageNavigation($pageNavigation);
         $this->getPanelGroupGrid()->addFooter($pageNavigation);
 
@@ -625,6 +665,29 @@ class TFormDinGrid
     {
         $this->updateFields = null;
     }
+    //---------------------------------------------------------------------------------------
+    /**
+     * Qtd Max de linhas
+     *
+     * @param int $intNewValue
+     * @return void
+     */
+    public function setMaxRows( $intNewValue = null ) {
+        $this->maxRows = $intNewValue;
+    }
+    /**
+     * Qtd Max de linhas, nome no padrão Adianti
+     *
+     * @param int $intNewValue
+     * @return void
+     */
+    public function setLimit( $intNewValue = null ) {
+        $this->setMaxRows($intNewValue);
+    }
+    public function getMaxRows() {
+        $maxRows =  empty($this->maxRows)?self::ROWS_PER_PAGE:$this->maxRows;
+        return ( int ) $maxRows;
+    }    
     //---------------------------------------------------------------------------------------
     public function getCreateDefaultButtons()
     {

@@ -6,6 +6,10 @@
  * @author Reinaldo A. Barrêto Junior
  * 
  * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -58,7 +62,7 @@
 class FormDinHelper
 {
 
-    const FORMDIN_VERSION = '5.0.0-alpha22';
+    const FORMDIN_VERSION = '5.0.0-alpha23';
     const GRID_SIMPLE = 'GRID_SIMPLE';
     const GRID_SCREEN_PAGINATION = 'GRID_SCREEN_PAGINATION';
     const GRID_SQL_PAGINATION    = 'GRID_SQL_PAGINATION';
@@ -261,7 +265,10 @@ class FormDinHelper
      * @return void
      */
     public static function debug( $mixExpression,$strComentario='Debug', $boolExit=FALSE ) {
-        ini_set ( 'xdebug.max_nesting_level', 150 );
+        ini_set("xdebug.var_display_max_children", -1);
+        ini_set("xdebug.var_display_max_data", -1);
+        ini_set("xdebug.var_display_max_depth", -1);
+        //ini_set ( 'xdebug.max_nesting_level', 150 );
         if (defined('DEBUGAR') && !DEBUGAR){
             return;
         }
@@ -306,6 +313,44 @@ class FormDinHelper
                 exit();
             }
         }
+    }
+
+    /**
+     * Recebe um valor e testa se pode ser usado como unidades CSS para width ou height
+     * https://desenvolvimentoparaweb.com/css/unidades-css-rem-vh-vw-vmin-vmax-ex-ch/
+     * @param string $value
+     * @return void
+     */
+    public static function validateSizeWidthAndHeight($value,$enablePx=false)
+    {
+        $value = trim($value);
+        if( !empty($value) ){
+            if( $enablePx==true ){
+                $regexWithPx = '/\d+(px|\%|em|rem|vh|vw)/';
+                if(  !preg_match($regexWithPx, $value,$output) ){
+                    throw new InvalidArgumentException('use px ou % ou em ou rem ou vh ou vw');
+                }
+            }else{
+                $regex = '/\d+(\%|em|rem|vh|vw)/';
+                if(  !preg_match($regex, $value,$output) ){
+                    throw new InvalidArgumentException('use % ou em ou rem ou vh ou vw');
+                }
+            }
+        }
+    }
+
+    public static function sizeWidthInPercent($value)
+    {
+        $value = trim($value);
+        if( is_numeric($value) ){
+            if( $value>=100 ){
+                $value = '100%';
+            }else{
+                $value = $value.'%';
+            }
+        }
+        FormDinHelper::validateSizeWidthAndHeight($value);
+        return $value;
     }
 
 }

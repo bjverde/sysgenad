@@ -6,6 +6,10 @@
  * @author Reinaldo A. Barrêto Junior
  * 
  * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -55,7 +59,7 @@ class TFormDinPdoConnection
     private $case = null;
     private $outputFormat = null;
     private $outputFormatDefault = ArrayHelper::TYPE_ADIANTI;
-    private $caseDefault = PDO::CASE_NATURAL;
+    private $caseDefault = PDO::CASE_UPPER;
 
 
     private $host;
@@ -355,8 +359,9 @@ class TFormDinPdoConnection
             $stmt = $conn->prepare( $sql );
             $result = $stmt->execute( $arrParams );
 
-            if ( $result ) {                
-                if ( preg_match( '/^select/i', $sql ) > 0  ) {
+            if ( $result ) {
+                
+                if ( preg_match( '/^select/i', $sql ) > 0 || preg_match( '/returning/i', $sql ) > 0 || preg_match( '/^with/i', $sql ) > 0  ) {
                     $result = $stmt->fetchall();
                     $result = $this->convertArrayResult($result);
                 }else if( preg_match( '/^insert/i', $sql ) > 0  ){
@@ -372,9 +377,6 @@ class TFormDinPdoConnection
                     }
                     $result = $res;
                 }else if( preg_match( '/^call/i', $sql ) > 0  ){ // Para stored procedure do MySQL
-                    $result = $stmt->fetchall();
-                    $result = $this->convertArrayResult($result);
-                }else{
                     $result = $stmt->fetchall();
                     $result = $this->convertArrayResult($result);
                 }

@@ -6,6 +6,10 @@
  * @author Reinaldo A. Barrêto Junior
  * 
  * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -373,6 +377,7 @@ class TFormDin
 
     /**
      * Inclusão de campos no Form, usando elementos nativos do Adianti
+     * recebe um ou vários arrays
      */
     public function addFields()
     {
@@ -382,6 +387,7 @@ class TFormDin
 
     /**
      * Inclusão de um conteudo no Form, usando um elementos nativos do Adianti
+     * recebe um ou vários arrays
      */
     public function addContent()
     {
@@ -466,14 +472,14 @@ class TFormDin
     * Para que o botão fique alinhado na frente de um campo com labelAbove=true, basta
     * definir o parametro boolLabelAbove do botão para true tambem.
     *
-    * @param string   $mixValue         - 1 : Label do Botão ou array('Gravar', 'Limpar') com nomes
-    * @param string  $strAction         - 2 : NOT_IMPLEMENTED Nome da ação, ignorando $strName $strOnClick. Se ficar null será utilizado o valor de mixValue
-    * @param mixed  $strName            - 3 : Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
+    * @param string  $mixValue          - 1 : Label do Botão. No FormDin5 não aceita array('Gravar', 'Limpar')
+    * @param string  $strNameId         - 2 : Id do Botão. Se ficar null será utilizado o $strName
+    * @param mixed   $strAction         - 2 : Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
     * @param string  $strOnClick        - 4 : NOT_IMPLEMENTED Nome da função javascript
-    * @param string  $strConfirmMessage - 5 : NOT_IMPLEMENTED Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
+    * @param string  $strConfirmMessage - 5 : Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
     * @param boolean $boolNewLine       - 6 : Em nova linha. DEFAULT = true
     * @param boolean $boolFooter        - 7 : Mostrar o botão no rodapé do form. DEFAULT = true
-    * @param string  $strImage          - 8 : Imagem no botão. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
+    * @param string  $strImage          - 8 : Imagem no botão. Pode ser o caminho completo para uma imagem app/images/icon-key-yellow.png ou fontawesome exemplo: "fas:question fa-question-circle #40a2dd" ou pode setar uma classe css com setClass.
     * @param string  $strImageDisabled  - 9 : NOT_IMPLEMENTED Imagem no desativado. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
     * @param string  $strHint           -10 : NOT_IMPLEMENTED Texto hint para explicar
     * @param string  $strVerticalAlign  -11 : NOT_IMPLEMENTED
@@ -483,8 +489,8 @@ class TFormDin
     * @return TButton|string|array
     */
     public function addButton( $mixValue
-				       		, $strAction=null
-				       		, $strName=null
+				       		, $strNameId=null
+				       		, $strAction
 				       		, $strOnClick=null
 				       		, $strConfirmMessage=null
 				       		, $boolNewLine=null
@@ -499,12 +505,12 @@ class TFormDin
     {
         $objForm =  $this->getObjForm();
         if($boolFooter){
-            return $this->setAction($mixValue,$strName,false,$strImage);
+            return $this->setAction($mixValue,$strAction,false,$strImage);
         }else{
             $formField = new TFormDinButton($objForm
                                             , $mixValue
+                                            , $strNameId
                                             , $strAction
-                                            , $strName
                                             , $strOnClick
                                             , $strConfirmMessage
                                             , $boolNewLine
@@ -731,7 +737,7 @@ class TFormDin
      * @param string $strHint         -  8: NOT_IMPLEMENTED
      * @param string $strExampleText  -  9: PlaceHolder é um Texto de exemplo
      * @param boolean $boolLabelAbove - 10: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
-     * @param boolean $boolNoWrapLabel- 11: NOT_IMPLEMENTED
+     * @param boolean $boolNoWrapLabel- 11: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @return TFormDinTextField
      */
     public function addTextField(string $id
@@ -772,20 +778,20 @@ class TFormDin
      * @param string  $strLabel        - 2: Label
      * @param integer $intMaxLength    - 3: Tamanho maximos
      * @param boolean $boolRequired    - 4: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
-     * @param integer $intColumns      - 5: Largura use px ou %, valores inteiros serão multiplicados 1.5 e apresentado em px
+     * @param integer $intColumns      - 5: Largura use unidades responsivas % ou em ou rem ou vh ou vw. Valores inteiros até 100 serão convertidos para % , acima disso será 100%
      * @param integer $intRows         - 6: Altura use px ou %, valores inteiros serão multiplicados 4 e apresentado em px
      * @param boolean $boolNewLine     - 7: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
      * @param boolean $boolLabelAbove  - 8: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @param boolean $boolShowCounter - 9: NOT_IMPLEMENTED Contador de caracteres ! Só funciona em campos não RichText
      * @param string  $strValue       - 10: texto preenchido
-     * @param string $boolNoWrapLabel - 11: NOT_IMPLEMENTED
+     * @param string $boolNoWrapLabel - 11: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param string $placeholder     - 12: FORMDIN5 PlaceHolder é um Texto de exemplo`. DEFAULT = true
      * @param string $boolShowCountChar 13: FORMDIN5 Mostra o contador de caractes.  Default TRUE = mostra, FASE = não mostra
      * @return TFormDinMemoField
      */
-    public function addMemoField( $strName
-   		                       , $strLabel=null
-   		                       , $intMaxLength
+    public function addMemoField(string $strName
+   		                       , string $strLabel
+   		                       , int $intMaxLength
    		                       , $boolRequired=null
    		                       , $intColumns=null
    		                       , $intRows=null
@@ -816,9 +822,15 @@ class TFormDin
     }
 
     /**
-     * Adicona um campo data ou mes/ano ou dia/mes de acordo com o parametro strMaxType
-     * Tipo de máscara: DMY, DM, MY
-     *  
+     * Adicona um campo Data, comm limite minimo e maximo da intervalo da data e de acordo com o parametro strMaskType
+     * Aceita máscara FormDin4 : DMY (dia/mês/ano), DM (dia/mês), MY (mês/ano) 
+     * Aceita máscara Adianit  : dd-mm-yyyy (dia/mês/ano), dd-mm (dia/mês), mm-yyyy (mês/ano) 
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     *   
      * @param string  $strName         - 1: Id do Campo
      * @param string  $strLabel        - 2: Label do Campo
      * @param boolean $boolRequired    - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
@@ -830,7 +842,7 @@ class TFormDin
      * @param boolean $boolButtonVisible - 9: Exibe ou não o botão do calendario.
      * @param string  $strExampleText  - 10: Texto de exemplo
      * @param boolean $boolLabelAbove  - 11: DEFAULT = false. Label acima do campo = true
-     * @param string  $boolNoWrapLabel - 12: NOT_IMPLEMENTED
+     * @param string  $boolNoWrapLabel - 12: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param string  $databaseMask    - 13: FORMDIN5 Mascará usada no banco de dados
      * @return TDate
      */
@@ -870,21 +882,26 @@ class TFormDin
     }
 
     /**
-     * Adicona um campo Data Hora  ou mes/ano ou dia/mes de acordo com o parametro strMaxType
-     * Tipo de máscara: DMY, DM, MY
-     *  
-     * @param string  $strName         - 1: Id do Campo
-     * @param string  $strLabel        - 2: Label do Campo
-     * @param boolean $boolRequired    - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
-     * @param boolean $boolNewLine     - 4: Default TRUE = campo em nova linha, FALSE continua na linha anterior
-     * @param string  $strValue        - 5: Valor inicial
-     * @param string  $strMinValue     - 6: Menor data que o campo aceita
-     * @param string  $strMaxValue     - 7: Maior data que o campo aceita
-     * @param string  $strMaskType     - 8: DEFAULT = dd-mm-yyyy. Tipo de Mascara dd-mm-yyyy (dia/mês/ano), dd-mm (dia/mês), mm-yyyy (mês/ano) 
-     * @param boolean $boolButtonVisible - 9: Exibe ou não o botão do calendario.
+     * Adicona um campo Data e Hora, comm limite minimo e maximo da intervalo da data e de acordo com o parametro strMaskType
+     * Aceita máscara Adianit  : dd-mm-yyyy (dia/mês/ano), dd-mm (dia/mês), mm-yyyy (mês/ano) 
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     * 
+     * @param string  $strName         - 01: Id do Campo
+     * @param string  $strLabel        - 02: Label do Campo
+     * @param boolean $boolRequired    - 03: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param boolean $boolNewLine     - 04: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param string  $strValue        - 05: Valor inicial
+     * @param string  $strMinValue     - 06: Menor data que o campo aceita
+     * @param string  $strMaxValue     - 07: Maior data que o campo aceita
+     * @param string  $strMaskType     - 08: Aceita máscara no formatao Adianti. DEFAULT = dd-mm-yyyy. Adianti: dd-mm-yyyy (dia/mês/ano), dd-mm (dia/mês), mm-yyyy (mês/ano). FormDin4:  DMY (dia/mês/ano), DM (dia/mês), MY (mês/ano) 
+     * @param boolean $boolButtonVisible-09: Exibe ou não o botão do calendario.
      * @param string  $strExampleText  - 10: Texto de exemplo
      * @param boolean $boolLabelAbove  - 11: DEFAULT = false. Label acima do campo = true
-     * @param string  $boolNoWrapLabel - 12: NOT_IMPLEMENTED
+     * @param string  $boolNoWrapLabel - 12: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param string  $databaseMask    - 13: FORMDIN5 Mascará usada no banco de dados
      * @return TDate
      */
@@ -956,6 +973,50 @@ class TFormDin
     }
 
     /**
+     * Campo para entrada de senhas
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------    
+     *
+     * @param string $strName             - 1: id do campo
+     * @param string $strLabel            - 2: Rotulo do campo que irá aparece na tela
+     * @param boolean $boolRequired       - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param boolean $boolNewLine        - 4: Em nova linha, DEFALUT is TRUE não obrigatorio.
+     * @param integer $intmaxLength       - 5: Tamanho maximo
+     * @param string $strValue            - 6: Valor inicial
+     * @param boolean $boolLabelAbove     - 7: Label acima, DEFAULT is FALSE na mesma linha
+     * @param boolean $boolNoWrapLabel    - 8: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
+     * @param integer $intSize            - 9: NOT_IMPLEMENTED quantidade de caracteres visíveis
+     * @param boolean $boolUseVirtualKeyboard
+     * @param boolean $boolShowVirtualKeyboardImage
+     * @param boolean $boolReadOnly
+     * @return TFormDinPassword
+     */
+    public function addPasswordField( string $strName
+                                    , string $strLabel=null
+                                    , $boolRequired=null
+                                    , $boolNewLine=null
+                                    , $intmaxLength=null
+                                    , $strValue=null
+                                    , $boolLabelAbove=null
+                                    , $boolNoWrapLabel=null
+                                    , $intSize=null
+                                    , $boolUseVirtualKeyboard=null
+                                    , $boolShowVirtualKeyboardImage=null
+                                    , $boolReadOnly=null )
+    {
+        $formField = new TFormDinSwitch($id,$strLabel,$boolRequired,$itens);
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+
+        return $formField;
+    }    
+
+    /**
      * Campos para anexar arquivo. Pode ser um carregamento sincrono ou assincrono via ajax.
      * ------------------------------------------------------------------------
      * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
@@ -981,7 +1042,7 @@ class TFormDin
      * @param boolean $boolNewLine     - 08: NOT_IMPLEMENTED
      * @param string  $strJsCallBack   - 09: NOT_IMPLEMENTED
      * @param boolean $boolLabelAbove  - 10: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
-     * @param boolean $boolNoWrapLabel - 11: NOT_IMPLEMENTED
+     * @param boolean $boolNoWrapLabel - 11: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param string  $strMessageInvalidFileType - 12: NOT_IMPLEMENTED
      * @param boolean $enableFileHandling -13: FORMDIN5 Habilita barra de progresso
      * @param boolean $enablePopover      -14: FORMDIN5 Habilita o preview
@@ -1032,15 +1093,15 @@ class TFormDin
      * 9 - Represents a numeric character (0-9)
      * A - Represents an alphanumeric character (A-Z,a-z,0-9)
      *
-     * @param string $id              - 1: id do campo
-     * @param string $strLabel        - 2: Rotulo do campo que irá aparece na tela
+     * @param string  $id             - 1: id do campo
+     * @param string  $strLabel       - 2: Rotulo do campo que irá aparece na tela
      * @param boolean $boolRequired   - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
-     * @param string $strMask         - 4: A mascara
+     * @param string  $strMask        - 4: A mascara
      * @param boolean $boolNewLine    - 5: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
-     * @param string $strValue        - 6: texto preenchido
+     * @param string  $strValue       - 6: Valor inicial
      * @param boolean $boolLabelAbove - 7: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @param boolean $boolNoWrapLabel- 8: NOT_IMPLEMENTED
-     * @param string $strExampleText  - 9: PlaceHolder é um Texto de exemplo
+     * @param string  $strExampleText - 9: PlaceHolder é um Texto de exemplo
      * @param boolean $boolSendMask   -10: FORMDIN5: Se as mascara deve ser enviada ou não para o post. DEFAULT = False.
      * @return void
      */
@@ -1074,16 +1135,16 @@ class TFormDin
      * saber o que cada marca singinifica.
      * ------------------------------------------------------------------------
      *
-     * @param string  $strName        -  1: id do campo
-     * @param string  $strLabel       -  2: Rotulo do campo que irá aparece na tela
-     * @param boolean $boolRequired   -  3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
-     * @param string  $strMinValue    -  4: Menor Valor
-     * @param string  $strMaxValue    -  5: Maior valor
-     * @param string  $strMaskType    -  6: HM, HMS
-     * @param boolean $boolNewLine    -  7: Em nova linha. DEFAULT = true
-     * @param string  $strValue       -  8:
-     * @param boolean $boolLabelAbove -  9:
-     * @param boolean $boolNoWrapLabel- 10:
+     * @param string  $strName        - 01: id do campo
+     * @param string  $strLabel       - 02: Rotulo do campo que irá aparece na tela
+     * @param boolean $boolRequired   - 03: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param string  $strMinValue    - 04: Menor Valor
+     * @param string  $strMaxValue    - 05: Maior valor
+     * @param string  $strMaskType    - 06: HM, HMS
+     * @param boolean $boolNewLine    - 07: Em nova linha. DEFAULT = true
+     * @param string  $strValue       - 08: Valor inicial 
+     * @param boolean $boolLabelAbove - 09: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param boolean $boolNoWrapLabel- 10: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param string $strExampleText  - 11: FORMDIN5: PlaceHolder é um Texto de exemplo
      * @return TTime
      */
@@ -1156,7 +1217,7 @@ class TFormDin
      * @param string  $strFirstOptionValue- 12: Frist Value in Display, use value NULL for required. Para o valor DEFAULT informe o ID do $mixOptions e $strFirstOptionText = '' e não pode ser null
      * @param string  $strKeyColumn       - 13: Nome da coluna que será utilizada para preencher os valores das opções
      * @param string  $strDisplayColumn   - 14: Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
-     * @param string  $boolNoWrapLabel    - 15: NOT_IMPLEMENTED
+     * @param string  $boolNoWrapLabel    - 15: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param string  $strDataColumns     - 16: NOT_IMPLEMENTED Informações extras do banco de dados que deverão ser adicionadas na tag option do campo select
      * @return TCombo
      */
@@ -1221,7 +1282,7 @@ class TFormDin
      * @param integer $intWidth       - 9: DEPRECATED
      * @param integer $intHeight      -10: DEPRECATED
      * @param integer $intPaddingItems-11: NOT_IMPLEMENTED
-     * @param boolean $boolNoWrapLabel-12: NOT_IMPLEMENTED
+     * @param boolean $boolNoWrapLabel-12: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param boolean $boolNowrapText -13: NOT_IMPLEMENTED
      * @param boolean $useButton      -14: FORMDIN5 Default FALSE = estilo radio comum, TRUE = estilo tipo botões
      * @return TRadio
@@ -1281,7 +1342,7 @@ class TFormDin
      * @param integer $intWidth        - 09: DEPRECATED. Informe NULL para evitar o warning. Largura em Pixels
      * @param integer $intHeight       - 10: DEPRECATED. Informe NULL para evitar o warning. Altura em Pixels
      * @param integer $intPaddingItems - 11: DEPRECATED.
-     * @param boolean $boolNoWrapLabel - 12: NOT_IMPLEMENTED 
+     * @param boolean $boolNoWrapLabel - 12: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param boolean $boolNowrapText  - 13: NOT_IMPLEMENTED 
      * @param mixed   $strKeyColumn    - 14: FORMDIN5 Nome da coluna que será utilizada para preencher os valores das opções
      * @param mixed   $strDisplayColumn- 15: FORMDIN5 Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
@@ -1352,7 +1413,7 @@ class TFormDin
      * @param integer $intHeight       - 03: NOT_IMPLEMENTED altura do grupo. NULL = auto height
      * @param integer $intWidth        - 04: NOT_IMPLEMENTED largura do grupo. NULL = largura do form
      * @param boolean $boolNewLine     - 05: NOT_IMPLEMENTED Default TRUE = campo em nova linha, FALSE continua na linha anterior
-     * @param boolean $boolNoWrapLabel - 06: NOT_IMPLEMENTED
+     * @param boolean $boolNoWrapLabel - 06: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param boolean $boolCloseble    - 07: NOT_IMPLEMENTED pode fechar ou não
      * @param string  $strAccordionId  - 08: NOT_IMPLEMENTED
      * @param boolean $boolOpened      - 09: NOT_IMPLEMENTED inicia aberto
@@ -1405,18 +1466,19 @@ class TFormDin
      * saber o que cada marca singinifica.
      * ------------------------------------------------------------------------
      *
-      * Se o label for null, não será criado o espaço referente a ele no formulário, para criar
+     * Se o label for null, não será criado o espaço referente a ele no formulário, para criar
      * um label invisível defina como "" o seu valor
      *
      * criado o espaço
      * @param string $strName        - 1: ID do campo
-     * @param string $strValue       - 2: Texto HTML que irá aparece dentro
-     * @param string $strIncludeFile - 3: NOT_IMPLEMENTED Arquivo que será incluido
+     * @param string $strValue       - 2: Texto puro ou HTML que irá aparece dentro
+     * @param string $strIncludeFile - 3: Arquivo que será incluido, o arquivo prevalece sobre o valor. Pode ser HTML, HTM, PHP, TXT.
      * @param string $strLabel       - 4: Label do campo
-     * @param string $strWidth       - 5: NOT_IMPLEMENTED
-     * @param string $strHeight      - 6: NOT_IMPLEMENTED
+     * @param string $strWidth       - 5: Largura em %
+     * @param string $strHeight      - 6: Altura  em % ou px
      * @param boolean $boolNewLine   - 7: Default TRUE = campo em nova linha, FALSE continua na linha anterior
      * @param boolean $boolLabelAbove  8: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param boolean $boolNoWrapLabel   - 7: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @return THtml Field
      */
     public function addHtmlField( string $id
@@ -1440,6 +1502,117 @@ class TFormDin
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
+
+   /**
+    * Adicionar campo CPF
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     * @param string  $strName           - 1: ID do campo
+     * @param string  $strLabel          - 2: Label do campo, que irá aparecer na tela do usuario
+     * @param boolean $boolRequired      - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param string  $strValue          - 4: Valor inicial do campo
+     * @param boolean $boolNewLine       - 5: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param boolean $boolLabelAbove    - 6: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param boolean $boolNoWrapLabel   - 7: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
+     * @param string  $strInvalidMessage - 8: Mensagem que vai aparece em caso de CPF inválido
+     * @param boolean $boolAlwaysValidate- 9: sempre faz validação do campo
+     * @param string  $strJsCallback     -10: NOT_IMPLEMENTED Js Callback
+     * @param string  $strExampleText    -11: FORMDIN5: PlaceHolder é um Texto de exemplo
+     * @param boolean $boolSendMask      -12: FORMDIN5: Se as mascara deve ser enviada ou não para o post. DEFAULT = False.    
+     *
+     * @return TFormDinCpfField Field
+     */
+    public function addCpfField( $strName
+                                , $strLabel=null
+                                , $boolRequired=false
+                                , $strValue=null
+                                , $boolNewLine=true
+                                , $boolLabelAbove=null
+                                , $boolNoWrapLabel=null
+                                , $strInvalidMessage=null
+                                , $boolAlwaysValidate=null
+                                , $strJsCallback=null
+                                , $strExampleText=null
+                                , $boolSendMask=false
+                                )
+    {
+		$formField = new TFormDinCpfField( $strName
+                                            , $strLabel
+                                            , $boolRequired
+                                            , $strValue
+                                            , $boolNewLine
+                                            , $boolLabelAbove
+                                            , $boolNoWrapLabel
+                                            , $strInvalidMessage
+                                            , $boolAlwaysValidate
+                                            , $strJsCallback
+                                            , $strExampleText
+                                            , $boolSendMask
+                                            );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+    }
+
+   /**
+    * Adicionar campo CPF
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     * @param string  $strName           - 1: ID do campo
+     * @param string  $strLabel          - 2: Label do campo, que irá aparecer na tela do usuario
+     * @param boolean $boolRequired      - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param string  $strValue          - 4: Valor inicial do campo
+     * @param boolean $boolNewLine       - 5: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param boolean $boolLabelAbove    - 6: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param boolean $boolNoWrapLabel   - 7: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
+     * @param string  $strInvalidMessage - 8: Mensagem que vai aparece em caso de CPF inválido
+     * @param boolean $boolAlwaysValidate- 9: sempre faz validação do campo
+     * @param string  $strJsCallback     -10: NOT_IMPLEMENTED Js Callback
+     * @param string  $strExampleText    -11: FORMDIN5: PlaceHolder é um Texto de exemplo
+     * @param boolean $boolSendMask      -12: FORMDIN5: Se as mascara deve ser enviada ou não para o post. DEFAULT = False.    
+     *
+     * @return TFormDinCnpjField Field
+     */
+    public function addCnpjField( $strName
+                                , $strLabel=null
+                                , $boolRequired=false
+                                , $strValue=null
+                                , $boolNewLine=true
+                                , $boolLabelAbove=null
+                                , $boolNoWrapLabel=null
+                                , $strInvalidMessage=null
+                                , $boolAlwaysValidate=null
+                                , $strJsCallback=null
+                                , $strExampleText=null
+                                , $boolSendMask=false
+                                )
+    {
+		$formField = new TFormDinCnpjField( $strName
+                                            , $strLabel
+                                            , $boolRequired
+                                            , $strValue
+                                            , $boolNewLine
+                                            , $boolLabelAbove
+                                            , $boolNoWrapLabel
+                                            , $strInvalidMessage
+                                            , $boolAlwaysValidate
+                                            , $strJsCallback
+                                            , $strExampleText
+                                            , $boolSendMask
+                                            );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+    }
+
 
     /*****
      * 
@@ -1478,7 +1651,7 @@ class TFormDin
      * @param boolean $boolAllowZero     -12: NOT_IMPLEMENTED
      * @param boolean $boolAllowNull     -13: NOT_IMPLEMENTED
      * @param boolean $boolLabelAbove    -14: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
-     * @param boolean $boolNoWrapLabel   -15: NOT_IMPLEMENTED
+     * @param boolean $boolNoWrapLabel   -15: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param string $tooltip            -16: Texto Tooltip
      * @param boolean $replaceOnPost     -17: FORMDIN5: TRUE: process mask when editing and saving
      * @param string $placeholder        -18: FORMDIN5: Texto do Place Holder

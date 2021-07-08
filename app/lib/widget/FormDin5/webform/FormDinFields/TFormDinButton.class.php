@@ -6,6 +6,10 @@
  * @author Reinaldo A. Barrêto Junior
  * 
  * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -61,6 +65,7 @@ class TFormDinButton {
     protected $objForm;
     protected $objAction;
     protected $label;
+    protected $confirmMessage;
 
     /**
     * Adicionar botão no layout
@@ -75,11 +80,11 @@ class TFormDinButton {
     * definir o parametro boolLabelAbove do botão para true tambem.
     *
     * @param object  $objForm           - 1 : FORMDIN5 Objeto do Form, é só informar $this
-    * @param string  $mixValue          - 2 : Label do Botão
-    * @param string  $strAction         - 3 : NOT_IMPLEMENTED Nome da ação, ignorando $strName $strOnClick. Se ficar null será utilizado o valor de mixValue
-    * @param mixed   $strName           - 4 : Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
+    * @param string  $mixValue          - 2 : Label do Botão. No FormDin5 não aceita array('Gravar', 'Limpar')
+    * @param string  $strNameId         - 3 : Id do Botão. Se ficar null será utilizado o $strAction
+    * @param mixed   $strAction         - 4 : Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
     * @param string  $strOnClick        - 5 : NOT_IMPLEMENTED Nome da função javascript
-    * @param string  $strConfirmMessage - 6 : NOT_IMPLEMENTED Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
+    * @param string  $strConfirmMessage - 6 : Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
     * @param boolean $boolNewLine       - 7 : Em nova linha. DEFAULT = true
     * @param boolean $boolFooter        - 8 : Mostrar o botão no rodapé do form. DEFAULT = true
     * @param string  $strImage          - 9 : Imagem no botão. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
@@ -93,8 +98,8 @@ class TFormDinButton {
     */
     public function __construct($objForm
                                 , $label
-                                , $strAction=null
-                                , $strName=null
+                                , $strNameId=null
+                                , $strAction
                                 , $strOnClick=null
                                 , $strConfirmMessage=null
                                 , $boolNewLine=null
@@ -108,16 +113,18 @@ class TFormDinButton {
                                 , $strHorizontalAlign=null)
     {
         $adiantiObj = null;
-        if( is_array($strName) ){
-            $adiantiObj = new TButton('btn'.$strName[0].$strName[1]);
+        if( is_array($strAction) ){
+            $strNameId = empty($strNameId)?$strAction[0].$strAction[1]:$strNameId;
         }else{
-            $adiantiObj = new TButton('btn'.$strName);
+            $strNameId = empty($strNameId)?$strAction:$strNameId;
         }
+        $adiantiObj = new TButton('btn'.$strNameId);
         $this->setObjForm($objForm);
         $this->setAdiantiObj($adiantiObj);
         $this->setLabel($label);
-        $this->setAction($strName);
+        $this->setAction($strAction);
         $this->setImage($strImage);
+        $this->setConfirmMessage($strConfirmMessage);
         return $this->getAdiantiObj();
     }
 
@@ -170,20 +177,24 @@ class TFormDinButton {
         return $this->adiantiObj;
     }
 
-    public function setAction($strName)
+    public function setAction($strAction)
     {
-        if( empty($strName) ){
-            throw new InvalidArgumentException(TFormDinMessage::ERROR_EMPTY_INPUT.': strName');
+        if( empty($strAction) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_EMPTY_INPUT.': strAction');
         }
         $action = null;
-        if( is_array($strName) ){
-            $action = new TAction(array($strName[0], $strName[1]));
+        if( is_array($strAction) ){
+            $action = new TAction(array($strAction[0],$strAction[1]));
         }else{
             $objForm = $this->getObjForm();
-            $action = new TAction(array($objForm, $strName));
+            $action = new TAction(array($objForm, $strAction));
         }        
         $label = $this->getLabel();
         $this->getAdiantiObj()->setAction($action,$label);
+    }
+    public function getAction()
+    {
+        $this->getAdiantiObj()->getAction();
     }
 
     public function setImage($strImage)
@@ -192,6 +203,69 @@ class TFormDinButton {
             $this->getAdiantiObj()->setImage($strImage);
         }
     }
+
+    /**
+     * Define um PopOver
+     *
+     * @param string $title = título que irá aparecer
+     * @param string $side  = top, bottom, left, right
+     * @param string $content = conteudo em HTML
+     * @return void
+     */
+    public function setPopover($title,$side='top',$content=null)
+    {
+        $this->getAdiantiObj()->popover  = 'true';
+        $this->getAdiantiObj()->popside  = $side;
+        $this->getAdiantiObj()->poptitle = $title;
+        if( !empty($content) ){
+            $this->getAdiantiObj()->popcontent = $content;
+        }
+    }
+
+    /**
+     * Adds a parameter to the action
+     * @param  $param = parameter name
+     * @param  $value = parameter value
+     */    
+    public function setParameter($param,$value)
+    {
+        $action = $this->getAdiantiObj()->getAction();
+        $action->setParameter($param,$value);
+    }
+
+    /**
+     * Returns a parameter
+     * @param  $param = parameter name
+     */
+    public function getParameter($param)
+    {
+        $action = $this->getAdiantiObj()->getAction();
+        return $action->getParameter($param);
+    }
+
+    /**
+     * Return the Action Parameters
+     */
+    public function getParameters()
+    {
+        $action = $this->getAdiantiObj()->getAction();
+        return $action->getParameters();
+    }
+
+    public function setConfirmMessage($confirmMessage)
+    {
+        if( !empty($confirmMessage) ){
+            $this->confirmMessage=$confirmMessage;
+            $class = get_class ( $this->getObjForm() );
+            $stringJs = 'if (confirm(\''.$confirmMessage.'\') == true) { __adianti_load_page(\'index.php?class='.$class.'\'); }';
+            $this->getAdiantiObj()->addFunction($stringJs);
+        }
+    }
+    public function getConfirmMessage()
+    {
+        return $this->confirmMessage;
+    }
+
 
 }
 ?>

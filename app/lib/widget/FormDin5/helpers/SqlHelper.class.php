@@ -1,10 +1,15 @@
 <?php
 /*
- * Formdin Framework
- * Copyright (C) 2012 Ministério do Planejamento
- * Criado por Luís Eugênio Barbosa
- * Essa versão é um Fork https://github.com/bjverde/formDin
- *
+ * ----------------------------------------------------------------------------
+ * Formdin 5 Framework
+ * SourceCode https://github.com/bjverde/formDin5
+ * @author Reinaldo A. Barrêto Junior
+ * 
+ * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -235,6 +240,7 @@ class SqlHelper
                                        , $type
                                        )
     {
+       $connector = empty($connector)?self::SQL_CONNECTOR_AND:$connector;
        If(is_array($value)){
            $qtdElement = CountHelper::count($value);
            if( $qtdElement == 1 ){
@@ -245,11 +251,11 @@ class SqlHelper
            } else if( $qtdElement > 1 ) {
                if($type == self::SQL_TYPE_IN_NUMERIC){
                    $value = implode(",",$value);
-                   $isTrue = EOL.' AND '.$attribute.' in ('.$value.') ';
+                   $isTrue = EOL.$connector.$attribute.' in ('.$value.') ';
                    $stringWhere = $stringWhere.$isTrue;
                }else{
                    $value = implode("','",$value);
-                   $isTrue = EOL.' AND '.$attribute.' in (\''.$value.'\') ';
+                   $isTrue = EOL.$connector.$attribute.' in (\''.$value.'\') ';
                    $stringWhere = $stringWhere.$isTrue;
                }
            }

@@ -1,10 +1,15 @@
 <?php
 /*
- * Formdin Framework
- * Copyright (C) 2012 Ministério do Planejamento
- * Criado por Luís Eugênio Barbosa
- * Essa versão é um Fork https://github.com/bjverde/formDin
- *
+ * ----------------------------------------------------------------------------
+ * Formdin 5 Framework
+ * SourceCode https://github.com/bjverde/formDin5
+ * @author Reinaldo A. Barrêto Junior
+ * 
+ * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -41,27 +46,21 @@
 
 class UrlHelper
 {
-    
+
+    /**
+     * @deprecated use ServerHelper::getCurrentUrl()
+     */    
     static public function curPageURL() 
     {
-        $pageURL = 'http';        
-        $https = ServerHelper::get('HTTPS');
-        if ($https == "on") {$pageURL .= "s";
-        }
-        $pageURL .= "://";
-        if ($_SERVER["SERVER_PORT"] != "80") {
-            $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-        } else {
-            $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-        }
-        return $pageURL;
+        return ServerHelper::getCurrentUrl();
     }
     
-    static public function homeUrl() 
+    /**
+     * @deprecated use ServerHelper::homeUrl()
+     */
+    public static function homeUrl() 
     {
-        $curPageURL = self::curPageURL();
-        $res = explode('index.php', $curPageURL);
-        return $res[0];
+        return ServerHelper::homeUrl();
     }
 
 }

@@ -1,10 +1,15 @@
 <?php
 /*
- * Formdin Framework
- * Copyright (C) 2012 Ministério do Planejamento
- * Criado por Luís Eugênio Barbosa
- * Essa versão é um Fork https://github.com/bjverde/formDin
- *
+ * ----------------------------------------------------------------------------
+ * Formdin 5 Framework
+ * SourceCode https://github.com/bjverde/formDin5
+ * @author Reinaldo A. Barrêto Junior
+ * 
+ * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -43,32 +48,17 @@ class GetHelper
 {
     public static function get($atributeName) 
     {
-        if(!isset($_GET[$atributeName])) {
-            $_GET[$atributeName]="";
-        }
-        return is_null($_GET[$atributeName])?"":trim($_GET[$atributeName]);
+        return ArrayHelper::get($_GET,$atributeName);
     }
     
     public static function getDefaultValue($atributeName,$DefaultValue) 
     {
-        $value = null;
-        if(isset($_GET[$atributeName]) && ($_GET[$atributeName]<>'') ) {
-            $value = $_GET[$atributeName];
-        }else{
-            $value = $DefaultValue;
-        }
-        return $value;
+        return ArrayHelper::getDefaultValue($_GET,$atributeName,$DefaultValue);
     }
     
     public static function has($atributeName) 
     {
-        $value = null;
-        if(isset($_GET[$atributeName])) {
-            $value = true;
-        }else{
-            $value = false;
-        }
-        return $value;
+        return ArrayHelper::has($atributeName,$_GET);
     }
 }
 ?>

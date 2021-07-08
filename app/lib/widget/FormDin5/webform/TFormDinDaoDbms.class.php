@@ -6,6 +6,10 @@
  * @author Reinaldo A. Barrêto Junior
  * 
  * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -831,36 +835,34 @@ class TFormDinDaoDbms
 			$res  = $this->executeSql($sql);
 			$data = null;
 			$sql  = null;
-			if(is_array($res)){
-				foreach($res as $rownum => $row)
+			foreach($res as $rownum => $row)
+			{
+				$data[$rownum]['COLUMN_NAME'] 	= $row['NAME'];
+				$data[$rownum]['COLUMN_DEFAULT']= $row['DFLT_VALUE'];
+				$data[$rownum]['AUTOINCREMENT'] = $row['PK'];
+				$data[$rownum]['REQUIRED'] 		= ( $row['NOTNULL'] == 0 ? 'FALSE' : 'TRUE' );
+				$data[$rownum]['DATA_TYPE'] 	= strtoupper($row['TYPE']);
+				$data[$rownum]['CHAR_MAX'] 	= null;
+				$data[$rownum]['NUM_LENGTH']= 0;
+				$data[$rownum]['NUM_SCALE']	= 0;
+				$data[$rownum]['PRIMARYKEY']	= $row['PK'];
+				if( preg_match('/\(/',$row['TYPE']) == 1 )
 				{
-					$data[$rownum]['COLUMN_NAME'] 	= $row['NAME'];
-					$data[$rownum]['COLUMN_DEFAULT']= $row['DFLT_VALUE'];
-					$data[$rownum]['AUTOINCREMENT'] = $row['PK'];
-					$data[$rownum]['REQUIRED'] 		= ( $row['NOTNULL'] == 0 ? 'FALSE' : 'TRUE' );
-					$data[$rownum]['DATA_TYPE'] 	= strtoupper($row['TYPE']);
-					$data[$rownum]['CHAR_MAX'] 	= null;
-					$data[$rownum]['NUM_LENGTH']= 0;
-					$data[$rownum]['NUM_SCALE']	= 0;
-					$data[$rownum]['PRIMARYKEY']	= $row['PK'];
-					if( preg_match('/\(/',$row['TYPE']) == 1 )
-					{
-						$aTemp = explode('(',$row['TYPE']);
-						$data[$rownum]['DATA_TYPE'] = $aTemp[0];
-						$type= substr($row['TYPE'],strpos($row['TYPE'],'('));
-						$type = preg_replace('/(\(|\))/','',$type);
-						@list($length,$precision) = explode(',',$type);
-						
-						if( preg_match('/varchar/i',$aTemp[0]==1) ) {
-							$data[$rownum]['DATA_LENGTH'] = $length;
-						}
-						else {
-							$data[$rownum]['CHAR_MAX'] 	  = 0;
-							$data[$rownum]['NUM_LENGTH']  = $length;
-							$data[$rownum]['NUM_SCALE']   = $precision;
-						}
+					$aTemp = explode('(',$row['TYPE']);
+					$data[$rownum]['DATA_TYPE'] = $aTemp[0];
+					$type= substr($row['TYPE'],strpos($row['TYPE'],'('));
+					$type = preg_replace('/(\(|\))/','',$type);
+					@list($length,$precision) = explode(',',$type);
+					
+					if( preg_match('/varchar/i',$aTemp[0]==1) ) {
+						$data[$rownum]['DATA_LENGTH'] = $length;
 					}
-				}//Fim foreach
+					else {
+						$data[$rownum]['CHAR_MAX'] 	  = 0;
+						$data[$rownum]['NUM_LENGTH']  = $length;
+						$data[$rownum]['NUM_SCALE']   = $precision;
+					}
+				}
 			}
 		}
 		$result = array();

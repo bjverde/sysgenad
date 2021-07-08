@@ -6,6 +6,10 @@
  * @author Reinaldo A. Barrêto Junior
  * 
  * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -57,7 +61,6 @@
  */
 class TFormDinMemoField extends TFormDinGenericField
 {
-    const REGEX = '/(\d+)((px?)|(\%?))/';
     private $showCountChar;
     private $intMaxLength;
 
@@ -75,8 +78,8 @@ class TFormDinMemoField extends TFormDinGenericField
      * @param string  $strName         - 1: ID do campo
      * @param string  $strLabel        - 2: Label
      * @param integer $intMaxLength    - 3: Tamanho maximos
-     * @param boolean $boolRequired    - 4: Obrigatorio
-     * @param integer $intColumns      - 5: Largura use px ou %, valores inteiros serão multiplicados 1.5 e apresentado em px
+     * @param boolean $boolRequired    - 4: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param integer $intColumns      - 5: Largura use unidades responsivas % ou em ou rem ou vh ou vw. Valores inteiros até 100 serão convertidos para % , acima disso será 100%
      * @param integer $intRows         - 6: Altura use px ou %, valores inteiros serão multiplicados 4 e apresentado em px
      * @param boolean $boolNewLine     - 7: NOT_IMPLEMENTED nova linha
      * @param boolean $boolLabelAbove  - 8: NOT_IMPLEMENTED Label sobre o campo
@@ -162,33 +165,14 @@ class TFormDinMemoField extends TFormDinGenericField
         return $this->intMaxLength;
     }
 
-    public function testSize($value)
-    {
-        if( !empty($value) ){
-            if(  preg_match(self::REGEX, $value,$output) ){
-                //FormDinHelper::debug($output);
-                if($output[2]=='px'){
-                    $value = $output[1];
-                }
-            }else{
-                throw new InvalidArgumentException('use % ou px');
-            }
-        }
-        return $value;
-    }
-
     public function setSize($intColumns, $intRows)
     {
         if(is_numeric($intRows)){
             $intRows = $intRows * 4;
         }else{
-            $intRows = $this->testSize($intRows);
+            FormDinHelper::validateSizeWidthAndHeight($intRows,true);
         }
-        if(is_numeric($intColumns)){
-            $intColumns = $intColumns * 1.5;
-        }else{
-            $intColumns = $this->testSize($intColumns);
-        }
+        $intColumns = FormDinHelper::sizeWidthInPercent($intColumns);
         $this->getAdiantiObj()->setSize($intColumns, $intRows);
     }
 

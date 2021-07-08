@@ -1,10 +1,15 @@
 <?php
 /*
- * Formdin Framework
- * Copyright (C) 2012 Ministério do Planejamento
- * Criado por Luís Eugênio Barbosa
- * Essa versão é um Fork https://github.com/bjverde/formDin
- *
+ * ----------------------------------------------------------------------------
+ * Formdin 5 Framework
+ * SourceCode https://github.com/bjverde/formDin5
+ * @author Reinaldo A. Barrêto Junior
+ * 
+ * É uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+ * @author Luís Eugênio Barbosa do FormDin 4
+ * 
+ * Adianti Framework é uma criação Adianti Solutions Ltd
+ * @author Pablo Dall'Oglio
  * ----------------------------------------------------------------------------
  * This file is part of Formdin Framework.
  *
@@ -73,6 +78,23 @@ class ServerHelper
             return $url[0];
         }
     }
+
+    public static function getQueryString() 
+    {
+        $pageURL = self::getCurrentUrl(true);
+        $url = explode('?', $pageURL);
+        return $url[0];
+    }
+
+    public static function getHomeUrl() 
+    {
+        $pageURL = self::getCurrentUrl();
+        $url = explode('engine.php', $pageURL);
+        $url =  $url[0];
+        $url = explode('index.php', $url);
+        return $url[0];
+    }
+
     /**
      * Return string with IP client
      * https://pt.stackoverflow.com/questions/179389/como-pegar-ip-de-um-usuario-usando-php/179455
