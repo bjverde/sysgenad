@@ -404,6 +404,7 @@ class TCreateForm extends TCreateFileContent
         $REQUIRED    = $this->getColumnsPropertieRequired($key);
         //$DATA_TYPE   = self::getColumnsPropertieDataType($key);
         $formDinType = $this->getColumnsPropertieFormDinType($key);
+        $fieldName   = strtoupper($fieldName);
 
         switch ($formDinType) {
             case self::FORMDIN_TYPE_DATE:
