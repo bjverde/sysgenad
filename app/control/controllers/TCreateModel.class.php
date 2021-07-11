@@ -156,6 +156,7 @@ class TCreateModel extends TCreateFileContent
     public function addFieldRecord($esp)
     {
         foreach ($this->getColumnsWithOutPkTable() as $v) {
+            $v = strtoupper($v);
             $this->addLine($esp."parent::addAttribute('".$v."');");
         }
     }
@@ -168,7 +169,7 @@ class TCreateModel extends TCreateFileContent
         $this->addLine('class '.$this->getTableName().' extends TRecord');
         $this->addLine('{');
         $this->addLine(ESP.'const TABLENAME = \''.$this->getTableName().'\';');
-        $this->addLine(ESP.'const PRIMARYKEY= \''.$this->keyColumnName.'\';');
+        $this->addLine(ESP.'const PRIMARYKEY= \''.strtoupper($this->keyColumnName).'\';');
         $this->addLine(ESP.'const IDPOLICY  = \'serial\'; //{max, serial}');
         $this->addBlankLine();
         $this->addLine(ESP.'public function __construct($id = NULL, $callObjectLoad = TRUE)');
