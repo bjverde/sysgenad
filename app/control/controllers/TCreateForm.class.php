@@ -83,7 +83,7 @@ class TCreateForm extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function getPrimaryKeyTable()
     {
-        return $this->primaryKeyTable;
+        return strtoupper($this->primaryKeyTable);
     }
     //--------------------------------------------------------------------------------------
     public function getTableRefCC($tableRef)
@@ -504,6 +504,7 @@ class TCreateForm extends TCreateFileContent
         if ($this->validateListColumnsName()) {
             $this->addLine($qtdTab.'$mixUpdateFields = $primaryKey.\'|\'.$primaryKey');
             foreach ($this->listColumnsName as $value) {
+                $value   = strtoupper($value);
                 $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'.\','.$value.'|'.$value.'\'');
             }
             $this->addLine($qtdTab.ESP.ESP.ESP.ESP.';');
@@ -523,6 +524,7 @@ class TCreateForm extends TCreateFileContent
                 $keyColumns = $key+1;
                 $formDinType = $this->getColumnsPropertieFormDinType($keyColumns);               
                 $fieldLabel = EasyLabel::convertLabel($value, $formDinType);
+                $value      = strtoupper($value);
 
                 switch ($formDinType) {
                     case self::FORMDIN_TYPE_DATE:
