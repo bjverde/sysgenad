@@ -443,10 +443,10 @@ class TFormDin
     *
     * <code>
     * 	$frm->setMessage('Nova mensagem'); // limpa e define uma nova mensagem
-    * 	$frm->setMessage(array('Mensagem linha 1','mensagem linha 2');
+    * 	$frm->setMessage(array('Mensagem linha 1','mensagem linha 2'));
     * </code>
     *
-    * @param string $message   - 1: Texto da mensagem ser HTML
+    * @param string $message   - 1: Texto da mensagem pode ser TXT, HTML ou array cada elemento é uma linha
     * @param string $type      - 2: FORMDIN5 Type mensagem: DEFAULT=info, error, warning. Use TFormDinMessage::TYPE_
     * @param TAction $action   - 3: FORMDIN5 Classe TAction do Adianti
     * @param string $title_msg - 4: FORMDIN5 titulo da mensagem
@@ -1704,6 +1704,54 @@ class TFormDin
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
 	}
+
+	/**
+	 * Adiciona campo para entrada de endereço eletrônico - e-mail
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+	 * @param string  $strName       -01: ID do campo
+	 * @param string  $strLabel      -02: Label do campo, que irá aparecer na tela do usuario
+	 * @param integer $intMaxLength  -03: Tamanho maximo de caracteres
+	 * @param boolean $boolRequired  -04: Obrigatorio
+	 * @param integer $intSize       -05: Tamanho do campo na tela
+	 * @param boolean $boolNewLine   -06: Campo em nova linha
+	 * @param string  $strValue      -07: valor inicial do campo
+	 * @param boolean $boolLabelAbove-08: Label acima, DEFAULT is FALSE na mesma linha
+     * @param string $placeholder    -09: FORMDIN5: Texto do Place Holder
+	 * @return TFormDinEmailField
+	 */
+	public function addEmailField( $strName
+                                 , $strLabel=null
+                                 , $intMaxLength
+                                 , $boolRequired=null
+                                 , $intSize=null
+                                 , $boolNewLine=null
+                                 , $strValue=null
+                                 , $boolLabelAbove=null
+                                 , $boolNoWrapLabel=null 
+                                 , $placeholder=null
+                                 )
+	{
+        $formField = new TFormDinEmailField( $strName
+                                            , $strLabel
+                                            , $intMaxLength
+                                            , $boolRequired
+                                            , $intSize
+                                            , $boolNewLine
+                                            , $strValue
+                                            , $boolLabelAbove
+                                            , $boolNoWrapLabel
+                                            , $placeholder
+                                            );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+	}
+
 
     //----------------------------------------------------------------
     //----------------------------------------------------------------
