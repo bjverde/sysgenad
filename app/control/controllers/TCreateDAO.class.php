@@ -261,7 +261,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'/**');
         $this->addLine(ESP.' * Faz um Select SQL nativo count');
         $this->addLine(ESP.' * @param array  $where   - 01: array PHP "NOME_COLUNA1=>VALOR,NOME_COLUNA1=>VALOR" que será usado na consulta no metodo processWhereGridParameters');
-        $this->addLine(ESP.' * @return array Adianti');
+        $this->addLine(ESP.' * @return int Qtd');
         $this->addLine(ESP.' */');        
         $this->addLine(ESP.'public function selectCount( $where=null )');
         $this->addLine(ESP.'{');
@@ -269,7 +269,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.ESP.'$sql = \'select count('.$this->getKeyColumnName().') as qtd from '.$this->hasSchema().$this->getTableName().'\';');
         $this->addLine(ESP.ESP.'$sql = $sql.( ($where)? \' where \'.$where:\'\');');
         $this->addLine(ESP.ESP.'$result = $this->tpdo->executeSql($sql);');
-        $this->addLine(ESP.ESP.'return $result[\'QTD\'][0];');
+        $this->addLine(ESP.ESP.'return $result[0]->QTD;');
         $this->addLine(ESP.'}');
     }
     //--------------------------------------------------------------------------------------
