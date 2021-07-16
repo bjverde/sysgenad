@@ -26,6 +26,8 @@ define('OS', strtoupper(substr(PHP_OS, 0, 3)));
 define('PATH', dirname(__FILE__));
 define('LANG', $ini['general']['language']);
 
+// custom session name
+session_name('PHPSESSID_'.$ini['general']['application']);
 
 //--- FORMDIN 5 START ---------------------------------------------------------
 define('DS', DIRECTORY_SEPARATOR);
@@ -47,6 +49,3 @@ if(!defined('ENCODINGS') ) {
     define('ENCODINGS', 'UTF-8'); 
 }
 //--- SysGen For Adianti END --------------------------------------------------
-
-// custom session name
-session_name('PHPSESSID_'.$ini['general']['application']);
