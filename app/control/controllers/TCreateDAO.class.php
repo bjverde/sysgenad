@@ -238,12 +238,14 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.ESP.'$result = $whereGrid;');
         $this->addLine(ESP.ESP.'if ( is_array($whereGrid) ){');
         $this->addLine(ESP.ESP.ESP.'$where = \' 1=1 \';');
+        $this->addLine(ESP.ESP.ESP.'$connetor = SqlHelper::SQL_CONNECTOR_AND;');
+        $this->addLine(ESP.ESP.ESP.'$dbms = $this->tpdo->getDbms();');
         foreach ($this->getColumns() as $key => $v) {
             $formDinType = self::getColumnsPropertieFormDinType($key);
             if ($formDinType == TCreateForm::FORMDIN_TYPE_NUMBER) {
-                $this->addLine(ESP.ESP.ESP.'$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, \''.strtoupper($v).'\', SqlHelper::SQL_TYPE_NUMERIC);');
+                $this->addLine(ESP.ESP.ESP.'$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, \''.strtoupper($v).'\', SqlHelper::SQL_TYPE_NUMERIC,true,$connetor,$dbms);');
             } else {
-                $this->addLine(ESP.ESP.ESP.'$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, \''.strtoupper($v).'\', SqlHelper::SQL_TYPE_TEXT_LIKE);');
+                $this->addLine(ESP.ESP.ESP.'$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, \''.strtoupper($v).'\', SqlHelper::SQL_TYPE_TEXT_LIKE,true,$connetor,$dbms);');
             }
         }
         $this->addLine(ESP.ESP.ESP.'$result = $where;');
