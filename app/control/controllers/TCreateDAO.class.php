@@ -184,7 +184,7 @@ class TCreateDAO extends TCreateFileContent
         foreach ($this->getColumns() as $k => $v) {
             $this->addLine($indent.( $k==0 ? ' ' : ',').$v);
         }
-        $this->addLine($indent.'from '.$this->hasSchema().$this->getTableName().' \';');
+        $this->addLine($indent.'from '.$this->getTableName().' \';');
     }
     //--------------------------------------------------------------------------------------
     /***
@@ -268,7 +268,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'public function selectCount( $where=null )');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$where = $this->processWhereGridParameters($where);');
-        $this->addLine(ESP.ESP.'$sql = \'select count('.$this->getKeyColumnName().') as qtd from '.$this->hasSchema().$this->getTableName().'\';');
+        $this->addLine(ESP.ESP.'$sql = \'select count('.$this->getKeyColumnName().') as qtd from '.$this->getTableName().'\';');
         $this->addLine(ESP.ESP.'$sql = $sql.( ($where)? \' where \'.$where:\'\');');
         $this->addLine(ESP.ESP.'$result = $this->tpdo->executeSql($sql);');
         $this->addLine(ESP.ESP.'return $result[0]->QTD;');
@@ -388,7 +388,7 @@ class TCreateDAO extends TCreateFileContent
             }
         }
         $this->addLine(ESP.ESP.ESP.ESP.ESP.ESP.');');
-        $this->addLine(ESP.ESP.'$sql = \'insert into '.$this->hasSchema().$this->getTableName().'(');
+        $this->addLine(ESP.ESP.'$sql = \'insert into '.$this->getTableName().'(');
         $cnt=0;
         foreach ($this->getColumns() as $v) {
             if ($v != strtolower($this->keyColumnName)) {
@@ -420,7 +420,7 @@ class TCreateDAO extends TCreateFileContent
             }
         }
         $this->addline(ESP.ESP.ESP.ESP.ESP.ESP.',$objVo->get'.ucfirst($this->keyColumnName).'() );');
-        $this->addLine(ESP.ESP.'$sql = \'update '.$this->hasSchema().$this->getTableName().' set ');
+        $this->addLine(ESP.ESP.'$sql = \'update '.$this->getTableName().' set ');
         $count=0;
         foreach ($this->getColumns() as $v) {
             if (strtolower($v) != strtolower($this->keyColumnName)) {
@@ -446,7 +446,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'{');
         $this->addValidateTypeInt(ESP.ESP);
         $this->addLine(ESP.ESP.'$values = array($id);');
-        $this->addLine(ESP.ESP.'$sql = \'delete from '.$this->hasSchema().$this->getTableName().' where '.$this->keyColumnName.' = '.$this->charParam.'\';');
+        $this->addLine(ESP.ESP.'$sql = \'delete from '.$this->getTableName().' where '.$this->keyColumnName.' = '.$this->charParam.'\';');
         $this->addExecuteSql(true);
         $this->addLine(ESP.'}');
     }
