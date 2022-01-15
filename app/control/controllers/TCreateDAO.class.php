@@ -237,6 +237,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'$result = $whereGrid;');
         $this->addLine(ESP.ESP.'if ( is_array($whereGrid) ){');
+        $this->addLine(ESP.ESP.ESP.'SqlHelper::setDbms($this->tpdo->getType());');
         $this->addLine(ESP.ESP.ESP.'$where = \' 1=1 \';');
         foreach ($this->getColumns() as $key => $v) {
             $formDinType = self::getColumnsPropertieFormDinType($key);
