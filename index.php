@@ -18,15 +18,18 @@ $css         = TPage::getLoadedCSS();
 $js          = TPage::getLoadedJS();
 $content     = str_replace('{HEAD}', $css.$js, $content);
 
-$content     = str_replace('{head_title}', $ini['general']['application'], $content);
-$content     = str_replace('{system_name}', $ini['system']['system_name'], $content);
+//--- FORMDIN 5 START ---------------------------------------------------------
+$content     = str_replace('{head_title}'     , $ini['general']['application'], $content);
+$content     = str_replace('{formdin_version}', FormDinHelper::version(), $content);
+$content     = str_replace('{system_version}' , $ini['system']['version'], $content);
+$content     = str_replace('{system_name}'    , $ini['system']['system_name'], $content);
 $content     = str_replace('{system_name_sub}', $ini['system']['system_name_sub'], $content);
-$content     = str_replace('{system_version}', $ini['system']['version'], $content);
+$content     = str_replace('{logo-mini}', $ini['system']['logo-mini'], $content);
 $content     = str_replace('{logo-lg}', $ini['system']['logo-lg'], $content);
 $content     = str_replace('{logo-link-class}', $ini['system']['logo-link-class'], $content);
 $content     = str_replace('{login-link}', $ini['system']['login-link'], $content);
-
 $content     = str_replace('{login}', $ini['system']['login'], $content);
+//--- FORMDIN 5 END -----------------------------------------------------------
 
 echo $content;
 

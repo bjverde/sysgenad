@@ -597,6 +597,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.ESP.ESP.'$resultado = $controller->save( $vo );');
         $this->addLine($qtdTab.ESP.ESP.'if( is_int($resultado) && $resultado!=0 ) {');
         $this->addLine($qtdTab.ESP.ESP.ESP.'//$text = TFormDinMessage::messageTransform($text); //Tranform Array in Msg Adianti');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'$this->onReload();');
         $this->addLine($qtdTab.ESP.ESP.ESP.'$this->frm->addMessage( _t(\'Record saved\') );');
         $this->addLine($qtdTab.ESP.ESP.ESP.'//$this->frm->clearFields();');
         $this->addLine($qtdTab.ESP.ESP.'}else{');

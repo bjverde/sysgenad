@@ -26,8 +26,10 @@ define('OS', strtoupper(substr(PHP_OS, 0, 3)));
 define('PATH', dirname(__FILE__));
 define('LANG', $ini['general']['language']);
 
+// custom session name
+session_name('PHPSESSID_'.$ini['general']['application']);
 
-// ---FORMDIN 5 -------------------------
+//--- FORMDIN 5 START ---------------------------------------------------------
 define('DS', DIRECTORY_SEPARATOR);
 define('EOL', "\n");
 define('ESP', chr(32).chr(32).chr(32).chr(32) );
@@ -36,9 +38,9 @@ define('TAB', chr(9));
 define('FORMDIN_VERSION', $ini['system']['formdin_min_version']);
 define('SYSTEM_VERSION', $ini['system']['version']);
 define('SYSTEM_NAME', $ini['system']['system_name']);
-// ---FIM FORMDIN 5 -----------------------
+//--- FORMDIN 5 END -----------------------------------------------------------
 
-// ============= SysGen For Adianti  =================//
+//--- SysGen For Adianti START ------------------------------------------------
 define('ROOT_PATH', '../');
 if(!defined('ROWS_PER_PAGE') ) { 
     define('ROWS_PER_PAGE', 20); 
@@ -46,7 +48,4 @@ if(!defined('ROWS_PER_PAGE') ) {
 if(!defined('ENCODINGS') ) { 
     define('ENCODINGS', 'UTF-8'); 
 }
-// ============================================//
-
-// custom session name
-session_name('PHPSESSID_'.$ini['general']['application']);
+//--- SysGen For Adianti END --------------------------------------------------
