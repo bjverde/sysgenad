@@ -62,7 +62,7 @@
 class FormDinHelper
 {
 
-    const FORMDIN_VERSION = '5.0.0-alpha24';
+    const FORMDIN_VERSION = '5.0.0-alpha27';
     const GRID_SIMPLE = 'GRID_SIMPLE';
     const GRID_SCREEN_PAGINATION = 'GRID_SCREEN_PAGINATION';
     const GRID_SQL_PAGINATION    = 'GRID_SQL_PAGINATION';
@@ -323,7 +323,7 @@ class FormDinHelper
      */
     public static function validateSizeWidthAndHeight($value,$enablePx=false)
     {
-        $value = trim($value);
+        $value = is_null($value)?$value:trim($value);
         if( !empty($value) ){
             if( $enablePx==true ){
                 $regexWithPx = '/\d+(px|\%|em|rem|vh|vw)/';
@@ -341,7 +341,7 @@ class FormDinHelper
 
     public static function sizeWidthInPercent($value)
     {
-        $value = trim($value);
+        $value = is_null($value)?$value:trim($value);
         if( is_numeric($value) ){
             if( $value>=100 ){
                 $value = '100%';

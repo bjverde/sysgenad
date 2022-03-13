@@ -128,6 +128,7 @@ class ValidateHelper
     //--------------------------------------------------------------------------------
     public static function triggerError($msg,$typeErro)
     {
+        $msg = is_null($msg)?'':$msg;
         if($typeErro == self::EXECEPTION){
             throw new InvalidArgumentException($msg);
         }else if($typeErro == self::ERROR){

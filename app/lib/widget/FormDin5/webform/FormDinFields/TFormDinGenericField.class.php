@@ -188,6 +188,32 @@ class TFormDinGenericField
     {
         $this->getAdiantiObj()->addValidation($label, $validator, $parameters);
     }
+    //---------------------------------------------------------------    
+    /**
+     * Remove a field validator of the Adianti 
+     * @param $validator TFieldValidator object
+     * @return void
+     */
+    public function removeValidation($validator)
+    {
+        //$this->validations[] = array($label, $validator, $parameters);
+        $listValidation = $this->getAdiantiObj()->getValidations();
+        if(CountHelper::count($listValidation)>0){
+            $newListValidation = array();
+            foreach ($listValidation as $validation){
+                if( $validation[1] != $validator ){
+                    $newListValidation[]=$validation;
+                }
+            }
+        }
+
+        print_r($this->getAdiantiObj());
+        $refObject = new ReflectionObject( $this->getAdiantiObj() );
+        $props     = $refObject->getProperties(ReflectionProperty::IS_PRIVATE);
+        //$refProperty = $refObject->getProperty( 'validations' );
+        //$refProperty->setAccessible( true );
+        //$refProperty->setValue($this->getAdiantiObj(), $newListValidation);   
+    }
     //---------------------------------------------------------------
     public function setValue($value){
         if(!empty($value)){

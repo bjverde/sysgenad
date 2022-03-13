@@ -111,8 +111,13 @@ class SqlHelper
      * @param boolean $testZero   5: the zero must be forehead or not. True = attribute must be diverge from zero
      * @return string
      */
-    public static function attributeIssetOrNotZero($whereGrid,$attribute,$isTrue,$isFalse,$testZero=true)
+    public static function attributeIssetOrNotZero($whereGrid
+                                                  ,$attribute
+                                                  ,$isTrue
+                                                  ,$isFalse
+                                                  ,$testZero=true)
     {
+        $testZero  = empty($testZero)?true:$testZero;
         $retorno = $isFalse;
         $has = ArrayHelper::has($attribute, $whereGrid);
         if($has ) {
@@ -129,8 +134,9 @@ class SqlHelper
         return $retorno;
     }
     //----------------------------------------
-    public static function transformValidateString( $string , $dbms)
-    {        
+    public static function transformValidateString( $string )
+    {
+        $dbms = SqlHelper::getDbms();
         if ( $dbms == TFormDinPdoConnection::DBMS_MYSQL ) {
             //$string = addslashes($string);
             //$patterns = '/(%)/';
@@ -154,8 +160,9 @@ class SqlHelper
      * @param string $string
      * @return string`
      */
-    public static function explodeTextString( $string, $dbms )
+    public static function explodeTextString( $string )
     {
+        $dbms = SqlHelper::getDbms();
         $dataBaseWithLike = ($dbms == TFormDinPdoConnection::DBMS_MYSQL) 
                          || ($dbms == TFormDinPdoConnection::DBMS_POSTGRES)
                          || ($dbms == TFormDinPdoConnection::DBMS_SQLITE)
@@ -167,13 +174,13 @@ class SqlHelper
         return $string;
     }
     
-    /***
-     * Return string sql for query with numeric
-     * @param string $stringWhere
-     * @param array $arrayWhereGrid
-     * @param string $atribute
-     * @param string $type
-     * @param boolean $testZero
+    /**
+     * Return string SQL for query with numeric
+     *
+     * @param string $stringWhere     1: Existing SQL String that will be concatenated
+     * @param mixed  $arrayWhereGrid  2: array with all attributes and values
+     * @param string $attribute       3: name of the attribute to be verified
+     * @param mixed  $testZero
      * @param string $value
      * @param string $connector
      * @return string
@@ -181,24 +188,40 @@ class SqlHelper
     public static function getSqlTypeNumeric( $stringWhere
                                             , $arrayWhereGrid
                                             , $attribute
-                                            , $testZero=true
+                                            , $testZero
                                             , $value
-                                            , $connector=self::SQL_CONNECTOR_AND
+                                            , $connector
                                             ) {
+        $testZero = empty($testZero)?true:$testZero;
+        $connector = empty($connector)?self::SQL_CONNECTOR_AND:$connector;
         $isTrue = EOL.' AND '.$attribute.' = '.$value.'  ';
         $attribute = self::attributeIssetOrNotZero($arrayWhereGrid,$attribute,$isTrue,null,$testZero);
         $stringWhere = $stringWhere.$attribute;
         return $stringWhere;
     }
     //--------------------------------------------------------------------------
+    /**
+     * Return string SQL for query with text like
+     *
+     * @param string $stringWhere     1: Existing SQL String that will be concatenated
+     * @param mixed  $arrayWhereGrid  2: array with all attributes and values
+     * @param string $attribute       3: name of the attribute to be verified
+     * @param mixed  $testZero        4: test string with ZERO, Default is TRUE
+     * @param string $value
+     * @param string $connector
+     * @return string
+     */    
     public static function getSqlTypeTextLike( $stringWhere
                                              , $arrayWhereGrid
                                              , $attribute
-                                             , $testZero=true
+                                             , $testZero
                                              , $value
-                                             , $connector=self::SQL_CONNECTOR_AND
+                                             , $connector
                                              , $dbms
-                                             ) {
+                                             )
+    {
+        $testZero = empty($testZero)?true:$testZero;
+        $connector = empty($connector)?self::SQL_CONNECTOR_AND:$connector;
         $value = self::explodeTextString($value, $dbms);
         $isTrue = EOL.' AND '.$attribute.' like \'%'.$value.'%\' ';
         $attribute = self::attributeIssetOrNotZero($arrayWhereGrid,$attribute,$isTrue,null,$testZero);
@@ -206,13 +229,27 @@ class SqlHelper
         return $stringWhere;
     }
     //--------------------------------------------------------------------------
+    /**
+     * Return string SQL for query with text
+     *
+     * @param string $stringWhere     1: Existing SQL String that will be concatenated
+     * @param mixed  $arrayWhereGrid  2: array with all attributes and values
+     * @param string $attribute       3: name of the attribute to be verified
+     * @param mixed  $testZero        4: test string with ZERO, Default is TRUE
+     * @param string $value
+     * @param string $connector
+     * @return string
+     */ 
     public static function getSqlTypeText( $stringWhere
                                          , $arrayWhereGrid
                                          , $attribute
-                                         , $testZero=true
+                                         , $testZero
                                          , $value
-                                         , $connector=self::SQL_CONNECTOR_AND
-                                         ) {
+                                         , $connector
+                                         )
+    {
+        $testZero = empty($testZero)?true:$testZero;
+        $connector = empty($connector)?self::SQL_CONNECTOR_AND:$connector;
         $isTrue = EOL.' AND '.$attribute.' = \''.$value.'\'  ';
         $attribute = self::attributeIssetOrNotZero($arrayWhereGrid,$attribute,$isTrue,null,$testZero);
         $stringWhere = $stringWhere.$attribute;
@@ -222,12 +259,14 @@ class SqlHelper
     public static function getSqlTypeNotIn( $stringWhere
                                           , $arrayWhereGrid
                                           , $attribute
-                                          , $testZero=true
+                                          , $testZero
                                           , $value
-                                          , $connector=self::SQL_CONNECTOR_AND
+                                          , $connector
                                           , $type
                                           )
     {
+        $testZero = empty($testZero)?true:$testZero;
+        $connector = empty($connector)?self::SQL_CONNECTOR_AND:$connector;
         if($type == self::SQL_TYPE_IN_NUMERIC){
             $stringWhere = self::getSqlTypeNumeric($stringWhere, $arrayWhereGrid, $attribute, $testZero ,$value, $connector);
         }else{
@@ -235,17 +274,31 @@ class SqlHelper
         }
         return $stringWhere;
     }
+
+    /**
+     * Retorna o SQL da clausula IN do SQL
+     *
+     * @param string $stringWhere     1: Existing SQL String that will be concatenated
+     * @param mixed  $arrayWhereGrid  2: array with all attributes and values
+     * @param string $attribute       3: name of the attribute to be verified
+     * @param mixed  $testZero
+     * @param string $value
+     * @param string $connector
+     * @param string $type
+     * @return string
+     */
     public static function getSqlTypeIn( $stringWhere
                                        , $arrayWhereGrid
                                        , $attribute
-                                       , $testZero=true
+                                       , $testZero
                                        , $value
-                                       , $connector=self::SQL_CONNECTOR_AND
+                                       , $connector
                                        , $type
                                        )
     {
+       $testZero  = empty($testZero)?true:$testZero;
        $connector = empty($connector)?self::SQL_CONNECTOR_AND:$connector;
-       If(is_array($value)){
+       if(is_array($value)){
            $qtdElement = CountHelper::count($value);
            if( $qtdElement == 1 ){
                $value = $value[0];
@@ -280,18 +333,20 @@ class SqlHelper
      * @param string  $type            4: Type of clauses
      * @param boolean $testZero        5: 
      * @param string  $connector       6: Connector self::SQL_CONNECTOR_AND or self::SQL_CONNECTOR_OR
-     * @param string  $dbms            7: Type of Database management system, see const of TFormDinPdoConnection
      * @return string
      */
     public static function getAtributeWhereGridParameters( $stringWhere
                                                          , $arrayWhereGrid
                                                          , $attribute
                                                          , $type 
-                                                         , $testZero=true
-                                                         , $connector=self::SQL_CONNECTOR_AND 
-                                                         , $dbms
-                                                         ) {
+                                                         , $testZero=null
+                                                         , $connector=null
+                                                         )
+    {
+        $testZero  = empty($testZero)?true:$testZero;
+        $connector = empty($connector)?self::SQL_CONNECTOR_AND:$connector;
         if( ArrayHelper::has($attribute, $arrayWhereGrid) ){
+            $dbms = SqlHelper::getDbms();
             if( empty($dbms) ){
                 throw new InvalidArgumentException(TFormDinMessage::ERROR_SQL_NULL_DBMA);
             }

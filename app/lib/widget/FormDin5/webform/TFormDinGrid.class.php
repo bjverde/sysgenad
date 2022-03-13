@@ -239,13 +239,14 @@ class TFormDinGrid
      * @param string $align   - 5: 
      * @return void
      */
-    public function addElementColumnList($type = self::TYPE_SIMPLE
-                                        , string $idcolumn
-                                        , string $label
-                                        , string $width = NULL
-                                        , string $align = 'left'                                        
+    public function addElementColumnList(string $type
+                                        ,string $idcolumn
+                                        ,string $label
+                                        ,string $width = NULL
+                                        ,string $align = 'left'
                                         )
     {
+        $type = empty($type)?self::TYPE_SIMPLE:$type;
         $element = array();
         $element['type']=$type;
         $element['idcolumn']=$idcolumn;
@@ -362,7 +363,7 @@ class TFormDinGrid
             }
             if( $this->getExportPdf() ){
                 $taction = new TAction([$this->getObjForm(), 'onExportPDF'], ['register_state' => 'false', 'static'=>'1']);
-                $this->getPanelGroupGrid()->addHeaderActionLink( 'Save as CSV', $taction, 'far:file-pdf fa-fw red' );
+                $this->getPanelGroupGrid()->addHeaderActionLink( 'Save as PDF', $taction, 'far:file-pdf fa-fw red' );
             }
             if( $this->getExportXml() ){
                 $taction = new TAction([$this->getObjForm(), 'onExportXML'], ['register_state' => 'false', 'static'=>'1']);
@@ -490,7 +491,7 @@ class TFormDinGrid
                             , string $width = NULL
                             , string $align='left' )
     {
-        $formDinGridColumn = new TFormDinGridColumn( $name,$label,$width,$align);
+        $formDinGridColumn = new TFormDinGridColumn( $this->getObjForm(), $name,$label,$width,$align);
         $this->addListColumn($formDinGridColumn);
         return $formDinGridColumn;
         //$column = $formDinGridColumn->getAdiantiObj();
@@ -535,12 +536,12 @@ class TFormDinGrid
      * @param boolean $boolAllowCheckAll  - TRUE = pode selecionar todos , FALSE = não permite multiplas seleções
      * @return TGridCheckColumn
      */
-    public function addCheckColumn( $strName
-                                , $strTitle = null
-                                , $strKeyField
-                                , $strDescField = null
-                                , $boolReadOnly = null
-                                , $boolAllowCheckAll = null )
+    public function addCheckColumn( string $strName
+                                  , string $strTitle = null
+                                  , string $strKeyField
+                                  , string $strDescField = null
+                                  , mixed $boolReadOnly = null
+                                  , mixed $boolAllowCheckAll = null )
     {
         if ( !$strKeyField ){
             $strKeyField = strtoupper( $strName );
@@ -586,17 +587,17 @@ class TFormDinGrid
      * @param string $classDestiny      -11: FORMDIN5: nome da classe que vai tratar ação. o Valor Defualt é propria classe
      * @return object TFormDinGridAction
      */
-    public function addButton( $strRotulo
-                             , $strAction = null
-                             , $strName = null
-                             , $strOnClick = null
-                             , $strConfirmMessage = null
-                             , $strImage = null
-                             , $strImageDisabled = null
-                             , $strHint = null
-                             , $boolSubmitAction = null
-                             , $mixUpdateButton = null
-                             , $classDestiny    = null
+    public function addButton( string $strRotulo
+                             , string $strAction = null
+                             , string $strName = null
+                             , string $strOnClick = null
+                             , string $strConfirmMessage = null
+                             , string $strImage = null
+                             , string $strImageDisabled = null
+                             , string $strHint = null
+                             , mixed $boolSubmitAction = null
+                             , mixed $mixUpdateButton = null
+                             , $classDestiny   = null
                              ){
             $mixUpdateButton = $this->getMixUpdateButton($mixUpdateButton);
             if( empty($mixUpdateButton) ){

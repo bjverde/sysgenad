@@ -52,19 +52,21 @@
 class StringHelper
 {
     
-    public static function strtolower_utf8($inputString) 
+    public static function strtolower_utf8($string) 
     {
-        $outputString    = utf8_decode($inputString);
-        $outputString    = strtolower($outputString);
-        $outputString    = utf8_encode($outputString);
-        return $outputString;
+        //$string = utf8_decode($string);
+        //$string = strtolower($string);
+        //$string = utf8_encode($string);
+        $string = mb_strtolower($string, 'UTF-8');
+        return $string;
     }
     
     public static function strtoupper_utf8($string)
     {
-        $string = utf8_decode($string);
-        $string = strtoupper($string);
-        $string = utf8_encode($string);
+        //$string = utf8_decode($string);
+        //$string = strtoupper($string);
+        //$string = utf8_encode($string);
+        $string = mb_strtoupper($string, 'UTF-8');
         return $string;
     }
     
@@ -137,6 +139,36 @@ class StringHelper
         }
         return $value;
     }
+
+    public static function numeroBrasil($value,$decimals=2)
+    {
+        if(is_numeric($value)){
+            $value=number_format($value, $decimals,',','.');
+        }else{
+            if (is_string($value) && str_contains($value,',')) {
+                $value=str_replace(',','.', $value);
+                $value=number_format($value, $decimals,',','.');
+            }else{
+                $value = null;
+            }
+        }
+        return $value;
+    }
+
+    public static function numeroEua($value,$decimals=2)
+    {
+        if(is_numeric($value)){
+            $value=number_format($value, $decimals,'.',',');
+        }else{
+            if (is_string($value) && str_contains($value,',')) {
+                $value=str_replace(',','.', $value);
+                $value=number_format($value, $decimals,'.',',');
+            }else{
+                $value = null;
+            }
+        }
+        return $value;
+    }     
     
     /**
      * Recebe uma string do tipo "olá à mim! ñ" e retona "ola a mim! n"
@@ -237,6 +269,25 @@ class StringHelper
         $string = self::string2KebabCase($string);
         $string = preg_replace('/[-]/', '_', $string);
         return $string;
+    }
+
+    /**
+     * Gera um link para API do WhatsApp
+     *
+     * @param string $numeroTelefone - formatado ou não
+     * @param string $msg - mensagem que vai aparecer
+     * @param boolean $iconeVerde - default é o icone verde
+     * @return void
+     */
+    public static function linkApiWhatsApp($numeroTelefone,$msg,$iconeVerde=true) 
+    {
+        $numeroLimpo = str_replace([' ','-','(',')'],['','','',''], $numeroTelefone);
+        $icon = "<i class='fab fa-whatsapp green' aria-hidden='true'></i>";
+        if($iconeVerde==false){
+            $icon = "<i class='fab fa-whatsapp' aria-hidden='true'></i>";
+        }
+        $link =  "{$icon} <a target='newwindow' href='https://api.whatsapp.com/send?phone=55{$numeroLimpo}&text={$msg}'> {$numeroTelefone} </a>";
+        return $link;
     }
 
 }

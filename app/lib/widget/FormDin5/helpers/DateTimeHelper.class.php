@@ -98,6 +98,43 @@ class DateTimeHelper
         return $retorno;
     }    
     
+    public static function getListMesesExtenso($strarWithZero=true) 
+    {
+        $listMeses = null;
+        if($strarWithZero==true){
+            $listMeses = array(
+                '01' => 'Janeiro'
+               ,'02' => 'Fevereiro'
+               ,'03' => 'Março'
+               ,'04' => 'Abril'
+               ,'05' => 'Maio'
+               ,'06' => 'Junho'
+               ,'07' => 'Julho'
+               ,'08' => 'Agosto'
+               ,'09' => 'Setembro'
+               ,'10' => 'Outubro'
+               ,'11' => 'Novembro'
+               ,'12' => 'Dezembro'
+           );
+        }else{
+            $listMeses = array(
+                '1' => 'Janeiro'
+               ,'2' => 'Fevereiro'
+               ,'3' => 'Março'
+               ,'4' => 'Abril'
+               ,'5' => 'Maio'
+               ,'6' => 'Junho'
+               ,'7' => 'Julho'
+               ,'8' => 'Agosto'
+               ,'9' => 'Setembro'
+               ,'10' => 'Outubro'
+               ,'11' => 'Novembro'
+               ,'12' => 'Dezembro'
+           );
+        }
+        return $listMeses;
+    }
+
     public static function mesExtenso($numeroMes) 
     {
         $numeroMes = intval($numeroMes);
@@ -165,7 +202,7 @@ class DateTimeHelper
     public static function date2Mysql($dateSql,$showTime=false)
     {
         $retorno = null;
-        $dateSql = trim($dateSql);
+        $dateSql = is_null($dateSql)?'':trim($dateSql);
         if($showTime){
             
             if( preg_match('/\d{4}-\d{2}-\d{2}/', $dateSql) ){
@@ -196,7 +233,8 @@ class DateTimeHelper
                 }
             }
         }else{
-            $dateSql = explode(' ', $dateSql);
+            $arrayVazio = array(0=>'');//POG para evitar problema problema com PHP 8.1
+            $dateSql = is_null($dateSql)?$arrayVazio:explode(' ', $dateSql);
             $dateSql = $dateSql[0];
             
             if( preg_match('/\d{4}-\d{2}-\d{2}$/', $dateSql) ){

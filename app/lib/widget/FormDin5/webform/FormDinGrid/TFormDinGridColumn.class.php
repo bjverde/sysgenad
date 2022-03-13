@@ -46,32 +46,71 @@
 
 class TFormDinGridColumn
 {
+    private   $objForm;
     protected $adiantiObj;
     protected $action;
     protected $name;
+    protected $sortable;
     
     /**
      * Coluna do Grid Padronizado em BoorStrap
      * Reconstruido FormDin 4 Sobre o Adianti 7.1
      *
-     * @param  string $name      - 1: Name of the column in the database
-     * @param  string $label     - 2: Text label that will be shown in the header
-     * @param  string $width     - 3: Column Width (pixels)
-     * @param  string $align     - 4: Column align (left|right|center|justify)
+     * @param object $objForm    - 1: FORMDIN5 Objeto do Adianti da classe do Form, é repassado pela classe TFormDinGrid
+     * @param string $name       - 2: Name of the column in the database
+     * @param string $label      - 3: Text label that will be shown in the header
+     * @param string $width      - 4: Column Width (pixels)
+     * @param string $align      - 5: Column align (left|right|center|justify)
+     * @param bool $boolReadOnly - 6: NOT_IMPLEMENTED Somente leitura. DEFAULT = false
+	 * @param bool $boolSortable - 7: Coluna ordenavel. DEFAULT = true
+	 * @param bool $boolVisivle  - 8: NOT_IMPLEMENTED Coluna visivel. DEFAULT = true
      * @return BootstrapFormBuilder
      */
-    public function __construct(string $name
+    public function __construct(object $objForm
+                              , string $name
                               , string $label
                               , string $width = NULL
                               , string $align = 'left'
+                              , bool $boolReadOnly = false
+                              , bool $boolSortable = true
+                              , bool $boolVisivle = true
                               )
     {
-        $column = new TDataGridColumn($name, $label,$align,$width);
-        $this->setAdiantiObj($column);
-        $this->setName($name);
-        return $this->getAdiantiObj();
+        if( !is_object($objForm) ){
+            $track = debug_backtrace();
+            $msg = 'A classe TFormDinGridColumn MUDOU! o primeiro parametro agora recebe object form! o Restante está igual ;-)';
+            ValidateHelper::migrarMensage($msg
+                                         ,ValidateHelper::ERROR
+                                         ,ValidateHelper::MSG_CHANGE
+                                         ,$track[0]['class']
+                                         ,$track[0]['function']
+                                         ,$track[0]['line']
+                                         ,$track[0]['file']
+                                        );
+        }else{
+            $this->setObjForm($objForm);
+            $column = new TDataGridColumn($name, $label,$align,$width);
+            $this->setAdiantiObj($column);
+            $this->setName($name);
+            $this->setSortable($boolSortable);
+            return $this->getAdiantiObj();
+        }
     }
-
+	//-------------------------------------------------------------------------------------------
+    public function setObjForm($objForm)
+    {
+        if( empty($objForm) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }
+        if( !is_object($objForm) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }        
+        return $this->objForm=$objForm;
+    }
+    public function getObjForm(){
+        return $this->objForm;
+    }
+	//-------------------------------------------------------------------------------------------
     public function setAdiantiObj($adiantiObj){
         if( empty($adiantiObj) ){
             throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
@@ -81,16 +120,39 @@ class TFormDinGridColumn
     public function getAdiantiObj(){
         return $this->adiantiObj;
     }
+	//-------------------------------------------------------------------------------------------
     public function setName($name){       
         return $this->name=$name;
     }
     public function getName(){
         return $this->name;
     }
+	//-------------------------------------------------------------------------------------------
     public function setTransformer($array){
         return $this->getAdiantiObj()->setTransformer($array);
     }
     public function getTransformer(){
         return $this->getAdiantiObj()->getTransformer();
     }
+	//-------------------------------------------------------------------------------------------
+    public function setAction(TAction $action, $parameters = null){
+        return $this->getAdiantiObj()->setAction($action, $parameters);
+    }
+    public function getAction(){
+        return $this->getAdiantiObj()->getAction();
+    }
+	//-------------------------------------------------------------------------------------------
+	public function setSortable($boolNewValue=null)
+	{
+        $this->sortable = $boolNewValue;
+        if($boolNewValue){
+            $order = new TAction(array($this->getObjForm(), 'onReload'));
+            $order->setParameter('order', $this->getName() );
+            $this->setAction($order);
+        }
+	}
+	public function getSortable()
+	{
+		return is_null($this->sortable) ? true : $this->sortable;
+	}
 }
