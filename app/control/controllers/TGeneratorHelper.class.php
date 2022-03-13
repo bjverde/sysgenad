@@ -29,7 +29,7 @@ class TGeneratorHelper
         $genSystemAcronym = strtolower ( $genSystemAcronym );
         return $genSystemAcronym;
     }
-    public static function testar($extensao = null, $html)
+    public static function testar($extensao, $html)
     {
         if (extension_loaded($extensao)) {
             $html->add('<b>'.$extensao.'</b>: <span class="success">Instalada.</span><br>');
