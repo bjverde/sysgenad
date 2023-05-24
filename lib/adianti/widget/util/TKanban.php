@@ -5,16 +5,18 @@ use Adianti\Database\TTransaction;
 use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Base\TElement;
 use Adianti\Control\TAction;
+use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Util\AdiantiTemplateHandler;
 use Adianti\Widget\Template\THtmlRenderer;
 
 use stdClass;
 use ApplicationTranslator;
+use Exception;
 
 /**
  * Kanban
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage util
  * @author     Artur Comunello
@@ -35,6 +37,8 @@ class TKanban extends TElement
     protected $templatePath;
     protected $itemTemplate;
     protected $itemDatabase;
+    protected $topScrollbar;
+    protected $stageHeight;
     
     /**
      * Class Constructor
@@ -47,11 +51,28 @@ class TKanban extends TElement
         $this->itemActions    = [];
         $this->stageActions   = [];
         $this->stageShortcuts = [];
+        $this->topScrollbar   = false;
         
         $this->kanban                 = new TElement('div');
         $this->kanban->{'id'}         = 'tkanban_' . mt_rand(1000000000, 1999999999);
         $this->kanban->{'item_class'} = 'kanban-item-wrapper';
         $this->kanban->{'class'}      = 'kanban-board';
+    }
+    
+    /**
+     *
+     */
+    public function setStageHeight($height)
+    {
+        $this->stageHeight = $height;
+    }
+    
+    /**
+     * Enable Top Scrollbar
+     */
+    public function enableTopScrollbar()
+    {
+        $this->topScrollbar = true;
     }
     
     /**
@@ -178,16 +199,20 @@ class TKanban extends TElement
      * @param  $action            Action callback (TAction)
      * @param  $icon              Action icon
      * @param  $display_condition Display condition
+     * @param  $useButton         Action displat button
      */
-    public function addItemAction($label, TAction $action, $icon = NULL, $display_condition = NULL)
+    public function addItemAction($label, TAction $action, $icon = NULL, $display_condition = NULL, $useButton = FALSE)
     {
         $itemAction            = new stdClass;
         $itemAction->label     = $label;
         $itemAction->action    = $action;
         $itemAction->icon      = $icon;
         $itemAction->condition = $display_condition;
+        $itemAction->useButton = $useButton;
         
         $this->itemActions[]   = $itemAction;
+
+        return $itemAction;
     }
     
     /**
@@ -318,10 +343,16 @@ class TKanban extends TElement
             $stageDiv                = new TElement('div');
             $stageDiv->{'stage_id'}  = $stage->{'id'};
             $stageDiv->{'class'}     = 'kanban-stage';
+            
             if (!empty($stage->{'color'}))
             {
                 $stageDiv->{'style'} = 'background:'.$stage->{'color'};
             }
+            if (!empty($this->stageHeight))
+            {
+                $stageDiv->{'style'} .= ';overflow-y:auto;height:'.$this->stageHeight; 
+            }
+            
             $stageDiv->add($title);
 
             if (!empty($this->stageActions))
@@ -354,13 +385,31 @@ class TKanban extends TElement
                 $itemAction->setParameter('key', $itemId);
                 $url = $itemAction->serialize();
                 
-                $icon                = new TImage($actionTemplate->icon);
-                $icon->{'style'}    .= ';cursor:pointer;margin-right:4px;';
-                $icon->{'title'}     = $actionTemplate->label;
-                $icon->{'generator'} = 'adianti';
-                $icon->{'href'}      = $url;
-                
-                $div->add($icon);
+                if ($actionTemplate->useButton)
+                {
+                    $icon = new TImage($actionTemplate->icon);
+                    $icon->{'style'} .= ';cursor:pointer;margin-right:4px;border:unset;padding:0px;box-shadow:unset;background-color:transparent !important;';
+
+                    $action = new TElement('button');
+                    $action->{'class'}     = 'btn ' . (empty($actionTemplate->buttonClass) ? 'btn-default' : $actionTemplate->buttonClass);
+                    $action->{'type'}      = 'button';
+                    $action->{'generator'} = 'adianti';
+                    $action->{'href'}      = $url;
+                    $action->add($icon);
+                    $action->add(TElement::tag('span', $actionTemplate->label));
+                    
+                    $div->add($action);
+                }
+                else
+                {
+                    $icon                = new TImage($actionTemplate->icon);
+                    $icon->{'style'}    .= ';cursor:pointer;margin-right:4px;';
+                    $icon->{'title'}     = $actionTemplate->label;
+                    $icon->{'generator'} = 'adianti';
+                    $icon->{'href'}      = $url;
+                    
+                    $div->add($icon);
+                }
             }
         }
         
@@ -436,9 +485,10 @@ class TKanban extends TElement
             $action                = new TElement('a');
             $action->{'generator'} = 'adianti';
             $action->{'href'}      = $url;
-            if (!empty($stageAction->icon))
+            
+            if (!empty($stageActionTemplate->icon))
             {
-                $action->add(new TImage($stageAction->icon));
+                $action->add(new TImage($stageActionTemplate->icon));
             }
             $action->add($stageActionTemplate->label);
             
@@ -456,6 +506,12 @@ class TKanban extends TElement
         $this->renderStages();
         $this->add($this->kanban);
         $this->{'style'} .= ';overflow-x:auto';
+        $this->{'class'}  = 'kanban-board-wrapper';
+        
+        if ($this->topScrollbar)
+        {
+            $this->{'class'}  = 'kanban-board-wrapper top-scroll';
+        }
         
         if (!empty($this->stageDropAction))
         {

@@ -14,7 +14,7 @@ use Exception;
 /**
  * Spinner Widget (also known as spin button)
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -31,6 +31,7 @@ class TSpinner extends TField implements AdiantiWidgetInterface
     protected $id;
     protected $formName;
     protected $value;
+    protected $stepper;
     
     /**
      * Class Constructor
@@ -41,6 +42,7 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         parent::__construct($name);
         $this->id = 'tspinner_'.mt_rand(1000000000, 1999999999);
         $this->tag->{'widget'} = 'tspinner';
+        $this->stepper = false;
     }
     
     /**
@@ -112,6 +114,22 @@ class TSpinner extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Enable stepper buttons
+     */
+    public function enableStepper()
+    {
+        $this->stepper = TRUE;
+    }
+
+    /**
+     * Disable stepper buttons
+     */
+    public function disableStepper()
+    {
+        $this->stepper = FALSE;
+    }
+    
+    /**
      * Shows the widget at the screen
      */
     public function show()
@@ -166,8 +184,11 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         {
             $this->tag->{'tabindex'} = '-1';
         }
+
+        $stepper = $this->stepper ? 'true' : 'false';
+
         $this->tag->show();
-        TScript::create(" tspinner_start( '#{$this->id}', $exit_action); ");
+        TScript::create(" tspinner_start( '#{$this->id}', $exit_action, {$stepper}); ");
         
         // verify if the widget is non-editable
         if (!parent::getEditable())

@@ -12,7 +12,7 @@ use stdClass;
 /**
  * FullCalendar Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -186,6 +186,15 @@ class TFullCalendar extends TElement
     {
         $this->movable = FALSE;
     }
+
+     /**
+     * Set disable view weekend
+     */
+    public function disableWeekend()
+    {
+        $this->setOption('businessHours', ['daysOfWeek' => [ 1, 2, 3, 4, 5 ], 'startTime' => '00:00', 'endTime' => '23:59']);
+    }
+
     
     /**
      * Add an event
@@ -227,7 +236,7 @@ class TFullCalendar extends TElement
      */
     public static function renderPopover($title, $poptitle, $popcontent)
     {
-        return "<div popover='true' poptitle='{$poptitle}' popcontent='{$popcontent}' style='display:inline;cursor:pointer'> {$title} </div>";
+        return "<div data-popover='true' poptitle='{$poptitle}' popcontent='{$popcontent}' style='display:inline;cursor:pointer'> {$title} </div>";
     }
     
     /**

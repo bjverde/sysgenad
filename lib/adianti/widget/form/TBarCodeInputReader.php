@@ -10,7 +10,7 @@ use Adianti\Control\TAction;
 /**
  * BarCode Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Lucas Tomasi
@@ -35,6 +35,7 @@ class TBarCodeInputReader extends TEntry implements AdiantiWidgetInterface
     {
         parent::__construct($name);
         $this->id = 'tbarcodeinputreader_'.mt_rand(1000000000, 1999999999);
+        $this->tag->{'inputmode'} = 'numeric';
         $this->tag->{'widget'} = 'tbarcodeinputreader';
         $this->tag->{'autocomplete'} = 'off';
     }

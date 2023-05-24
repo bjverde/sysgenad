@@ -4,7 +4,7 @@ namespace Adianti\Widget\Base;
 /**
  * Base class for all HTML Elements
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage base
  * @author     Pablo Dall'Oglio
@@ -122,7 +122,7 @@ class TElement
      * Define if the element is wrapped inside another one
      * @param @bool Boolean TRUE if is wrapped
      */
-    protected function setIsWrapped($bool)
+    public function setIsWrapped($bool)
     {
         $this->wrapped = $bool;
     }

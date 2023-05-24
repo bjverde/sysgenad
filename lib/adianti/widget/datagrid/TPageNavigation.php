@@ -11,7 +11,7 @@ use Exception;
 /**
  * Page Navigation provides navigation for a datagrid
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -314,9 +314,13 @@ class TPageNavigation
             $link->{'generator'} = 'adianti';
             $link->{'class'}     = 'page-link';
 
-            if($this->page == $n)
+            if ($this->page == $n)
             {
                 $item->{'class'} = 'active page-item';
+            }
+            else
+            {
+                $item->{'class'} = 'page-item';
             }
         }
         

@@ -17,7 +17,7 @@ use Closure;
 /**
  * Database Task manager
  *
- * @version    7.4
+ * @version    7.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2018 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -283,6 +283,50 @@ class TDatabase
         {
             return $data;
         }
+    }
+    
+    /**
+     * Get a row from the table
+     * 
+     * @param $conn     PDO source connection
+     * @param $table    Source table
+     * @param $criteria Filter criteria
+     */
+    public static function getRowData(PDO $conn, $table, $criteria = null)
+    {
+        $sql = new TSqlSelect;
+        $sql->setEntity($table);
+        
+        if (empty($criteria))
+        {
+            $criteria = new TCriteria;
+        }
+        $criteria->setProperty('limit', 1);
+        $sql->setCriteria($criteria);
+        
+        $sql->addColumn('*');
+        
+        TTransaction::log($sql->getInstruction());
+        
+        $dbinfo = TTransaction::getDatabaseInfo(); // get dbinfo
+        if (isset($dbinfo['prep']) AND $dbinfo['prep'] == '1') // prepared ON
+        {
+            $result = $conn-> prepare ( $sql->getInstruction( TRUE ) , array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $result-> execute ( $criteria->getPreparedVars() );
+        }
+        else
+        {
+            // executes the SELECT statement
+            $result= $conn-> query($sql->getInstruction());
+        }
+        
+        if ($result)
+        {
+            $row = $result->fetch();
+            return $row;
+        }
+        
+        return null;
     }
     
     /**

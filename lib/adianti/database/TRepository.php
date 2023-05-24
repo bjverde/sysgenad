@@ -15,7 +15,7 @@ use ReflectionClass;
 /**
  * Implements the Repository Pattern to deal with collections of Active Records
  *
- * @version    7.4
+ * @version    7.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -222,8 +222,9 @@ class TRepository
         {
             $criteria = isset($this->criteria) ? $this->criteria : new TCriteria;
         }
-
-        $deletedat = $this->class::getDeletedAtColumn();
+        
+        $class = $this->class;
+        $deletedat = $class::getDeletedAtColumn();
         
         if (!$this->trashed && $deletedat)
         {
@@ -353,8 +354,8 @@ class TRepository
         {
             $criteria = isset($this->criteria) ? $this->criteria : new TCriteria;
         }
-
-        $deletedat = $this->class::getDeletedAtColumn();
+        $class = $this->class;
+        $deletedat = $class::getDeletedAtColumn();
         
         if (!$this->trashed && $deletedat)
         {
@@ -458,7 +459,8 @@ class TRepository
             $criteria = isset($this->criteria) ? $this->criteria : new TCriteria;
         }
 
-        $deletedat = $this->class::getDeletedAtColumn();
+        $class = $this->class;
+        $deletedat = $class::getDeletedAtColumn();
         
         if (!$this->trashed && $deletedat)
         {
@@ -581,8 +583,9 @@ class TRepository
         {
             $criteria = isset($this->criteria) ? $this->criteria : new TCriteria;
         }
-
-        $deletedat = $this->class::getDeletedAtColumn();
+        
+        $class = $this->class;
+        $deletedat = $class::getDeletedAtColumn();
         
         if (!$this->trashed && $deletedat)
         {
@@ -917,7 +920,9 @@ class TRepository
         if (isset($this->criteria) AND $this->criteria)
         {
             $criteria = clone $this->criteria;
-            $deletedat = $this->class::getDeletedAtColumn();
+            
+            $class = $this->class;
+            $deletedat = $class::getDeletedAtColumn();
             
             if (!$this->trashed && $deletedat)
             {

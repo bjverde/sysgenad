@@ -13,18 +13,9 @@
 
 span.tdate-group-addon
 {
-    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
-    border: 1px solid #cccccc;
-    height: 28px;
-    width: 24px;
-    padding: 0px;
-    margin: 0px;
-    margin-bottom: 0px;
-    border-bottom-color: #b3b3b3;
     vertical-align:top;
     display:table-cell;
-    border-radius:0;
-    border-left:0;
+    width: 24px;
 }
 
 span.tdate-group-addon i

@@ -17,7 +17,7 @@ use Closure;
 /**
  * Base class to construct all the widgets
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -45,7 +45,7 @@ abstract class TField
     public function __construct($name)
     {
         $rc = new ReflectionClass( $this );
-        $classname = $rc->getShortName();
+        $classname = $rc-> getShortName ();
         
         if (empty($name))
         {
@@ -64,6 +64,14 @@ abstract class TField
         $this->tag = new TElement('input');
         $this->tag->{'class'} = 'tfield';   // classe CSS
         $this->tag->{'widget'} = strtolower($classname);
+    }
+    
+    /**
+     * Change input tag name
+     */
+    public function setTagName($name)
+    {
+        $this->tag->setName($name);
     }
     
     /**

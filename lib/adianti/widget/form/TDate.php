@@ -13,7 +13,7 @@ use Exception;
 /**
  * DatePicker Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio

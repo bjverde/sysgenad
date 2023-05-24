@@ -8,7 +8,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * Message Dialog
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
@@ -47,8 +47,8 @@ class TMessage
             $callback = "function () { __adianti_load_page('{$action->serialize()}') }";
         }
         
-        $title = addslashes($title);
-        $message = addslashes($message);
+        $title = addslashes((string) $title);
+        $message = addslashes((string) $message);
         
         if ($type == 'info')
         {

@@ -13,7 +13,7 @@ use Exception;
 /**
  * List Export Trait
  *
- * @version    7.4
+ * @version    7.5
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)

@@ -10,7 +10,7 @@ use Adianti\Widget\Util\TActionLink;
 /**
  * Bootstrap native panel for Adianti Framework
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -73,7 +73,7 @@ class TPanelGroup extends TElement
         }
         
         $this->actionsContainer = new TElement('div');
-        $this->actionsContainer->{'style'} = 'margin-left: auto';
+        $this->actionsContainer->{'class'} = 'header-actions';
         $this->head->add( $this->actionsContainer );
         
         if (!empty($title))

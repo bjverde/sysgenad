@@ -15,7 +15,7 @@ use ReflectionClass;
 /**
  * Wrapper class to deal with forms
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -63,7 +63,7 @@ class TForm implements AdiantiFormInterface
     public function __set($name, $value)
     {
         $rc = new ReflectionClass( $this );
-        $classname = $rc->getShortName();
+        $classname = $rc-> getShortName ();
         
         if (in_array($classname, array('TForm', 'TQuickForm', 'TQuickNotebookForm')))
         {
@@ -305,13 +305,16 @@ class TForm implements AdiantiFormInterface
      */
     public function clear($keepDefaults = FALSE)
     {
-        // iterate the form fields
-        foreach ($this->fields as $name => $field)
+        if ($this->fields)
         {
-            // labels don't have name
-            if ($name AND !$keepDefaults)
+            // iterate the form fields
+            foreach ($this->fields as $name => $field)
             {
-                $field->setValue(NULL);
+                // labels don't have name
+                if ($name AND !$keepDefaults)
+                {
+                    $field->setValue(NULL);
+                }
             }
         }
     }
@@ -322,16 +325,19 @@ class TForm implements AdiantiFormInterface
      */
     public function setData($object)
     {
-        // iterate the form fields
-        foreach ($this->fields as $name => $field)
+        if ($this->fields)
         {
-            $name = str_replace(['[',']'], ['',''], $name);
-            
-            if ($name) // labels don't have name
+            // iterate the form fields
+            foreach ($this->fields as $name => $field)
             {
-                if (isset($object->$name))
+                $name = str_replace(['[',']'], ['',''], $name);
+            
+                if ($name) // labels don't have name
                 {
-                    $field->setValue($object->$name);
+                    if (isset($object->$name))
+                    {
+                        $field->setValue($object->$name);
+                    }
                 }
             }
         }
@@ -349,16 +355,19 @@ class TForm implements AdiantiFormInterface
         }
         
         $object = new $class;
-        foreach ($this->fields as $key => $fieldObject)
+        if ($this->fields)
         {
-            $key = str_replace(['[',']'], ['',''], $key);
-            
-            if (!$fieldObject instanceof TButton && !in_array($key, $this->silent_fields))
+            foreach ($this->fields as $key => $fieldObject)
             {
-                $object->$key = $fieldObject->getPostData();
+                $key = str_replace(['[',']'], ['',''], $key);
+            
+                if (!$fieldObject instanceof TButton && !in_array($key, $this->silent_fields))
+                {
+                    $object->$key = $fieldObject->getPostData();
+                }
             }
         }
-        
+
         return $object;
     }
     
@@ -421,15 +430,18 @@ class TForm implements AdiantiFormInterface
         $this->setData($this->getData());
         
         $errors = array();
-        foreach ($this->fields as $fieldObject)
+        if ($this->fields)
         {
-            try
+            foreach ($this->fields as $fieldObject)
             {
-                $fieldObject->validate();
-            }
-            catch (Exception $e)
-            {
-                $errors[] = $e->getMessage() . '.';
+                try
+                {
+                    $fieldObject->validate();
+                }
+                catch (Exception $e)
+                {
+                    $errors[] = $e->getMessage() . '.';
+                }
             }
         }
         

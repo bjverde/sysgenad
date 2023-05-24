@@ -15,7 +15,7 @@ use Exception;
 /**
  * MultiSearch backend
  *
- * @version    7.4
+ * @version    7.5
  * @package    service
  * @author     Pablo Dall'Oglio
  * @author     Matheus Agnes Dias
@@ -34,6 +34,7 @@ class AdiantiMultiSearchService
         $seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
         $hash = md5("{$seed}{$param['database']}{$param['key']}{$param['column']}{$param['model']}");
         $mask = $param['mask'];
+        $json = ! empty($param['jsonvalue']) && $param['jsonvalue'] == 1;
         
         if ($hash == $param['hash'])
         {
@@ -57,6 +58,11 @@ class AdiantiMultiSearchService
                 {
                     $param['value'] = '';
                 }
+
+                if ($json)
+                {
+                    $param['value'] = json_decode($param['value']);
+                }
                 
                 if ($columns)
                 {
@@ -66,33 +72,39 @@ class AdiantiMultiSearchService
                     {
                         foreach ($columns as $column)
                         {
-                            if (stristr(strtolower($operator),'like') !== FALSE)
+                            $column = trim($column);
+                            
+                            if (!empty($param['value']))
                             {
-                                $param['value'] = str_replace(' ', '%', $param['value']);
-                                
-                                if (in_array($info['type'], ['mysql', 'oracle', 'mssql', 'dblib', 'sqlsrv']))
+                                if (stristr(strtolower($operator),'like') !== FALSE)
                                 {
-                                    $filter = new TFilter("lower({$column})", $operator, strtolower("%{$param['value']}%"));
+                                    $param['value'] = str_replace(' ', '%', $param['value']);
+                                    
+                                    if (in_array($info['type'], ['mysql', 'oracle', 'mssql', 'dblib', 'sqlsrv']))
+                                    {
+                                        $filter = new TFilter("lower({$column})", $operator, strtolower("%{$param['value']}%"));
+                                    }
+                                    else
+                                    {
+                                        $filter = new TFilter($column, $operator, "%{$param['value']}%");
+                                    }
                                 }
                                 else
                                 {
-                                    $filter = new TFilter($column, $operator, "%{$param['value']}%");
+                                    $filter = new TFilter($column, $operator, $param['value']);
                                 }
+            
+                                $dynamic_criteria->add($filter, TExpression::OR_OPERATOR);
                             }
-                            else
-                            {
-                                $filter = new TFilter($column, $operator, $param['value']);
-                            }
-        
-                            $dynamic_criteria->add($filter, TExpression::OR_OPERATOR);
                         }
                     }
                     
-                    $id_search_value = ((!empty($param['idtextsearch']) && $param['idtextsearch'] == '1') || ((defined("{$param['model']}::IDPOLICY")) AND (constant("{$param['model']}::IDPOLICY") == 'uuid'))) ? $param['value'] : (int) $param['value'];
+                    $id_search_value = ((!empty($param['idtextsearch']) && $param['idtextsearch'] == '1') || ((defined("{$param['model']}::IDPOLICY")) AND (constant("{$param['model']}::IDPOLICY") == 'uuid')) || is_array($param['value']) ) ? $param['value'] : (int) $param['value'];
                     
                     if ($param['idsearch'] == '1' and !empty( $id_search_value ))
                     {
-                        $dynamic_criteria->add( new TFilter($key, '=', $id_search_value), TExpression::OR_OPERATOR);
+                        $operator_idsearch = empty($param['operator_idsearch']) ? '=' :  $param['operator_idsearch'];
+                        $dynamic_criteria->add( new TFilter($key, $operator_idsearch, $id_search_value), TExpression::OR_OPERATOR);
                     }
                 }
                 

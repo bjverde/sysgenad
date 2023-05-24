@@ -7,7 +7,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * TreeView
  * 
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -20,6 +20,7 @@ class TTreeView extends TElement
     private $itemAction;
     private $collapsed;
     private $callback;
+    private $folderCallback;
     
     /**
      * Class Constructor
@@ -29,6 +30,7 @@ class TTreeView extends TElement
         parent::__construct('ul');
         $this->{'id'} = 'ttreeview_'.mt_rand(1000000000, 1999999999);
         $this->collapsed = FALSE;
+        $this->resort = false;
     }
     
     /**
@@ -37,6 +39,14 @@ class TTreeView extends TElement
     public function setTransformer($callback)
     {
         $this->callback = $callback;
+    }
+    
+    /**
+     * Set node transformer
+     */
+    public function setFolderTransformer($callback)
+    {
+        $this->folderCallback = $callback;
     }
     
     /**
@@ -135,7 +145,7 @@ class TTreeView extends TElement
                     $span->{'class'} = 'folder';
                     $span->add($key);
                     $element->add($span);
-                    $element->add($this->fromOptions($option));
+                    $element->add($this->fromOptions($option, $key));
                     parent::add($element);
                 }
             }
@@ -147,11 +157,15 @@ class TTreeView extends TElement
      * @param $options array of options
      * @ignore-autocomplete on
      */
-    private function fromOptions($options)
+    private function fromOptions($options, $parent = null)
     {
         if (is_array($options))
         {
             $ul = new TElement('ul');
+            
+            $files = [];
+            $folders = [];
+            
             foreach ($options as $key => $option)
             {
                 if (is_scalar($option))
@@ -181,23 +195,57 @@ class TTreeView extends TElement
                     }
 
                     $element->add($span);
+                    
+                    $files[ implode('',$span->getChildren()) . ' ' . $key ] = $element;
                 }
                 else if (is_array($option))
                 {
+                    //echo "$parent - $key<br>";
+                   
                     $element = new TElement('li');
                     $span = new TElement('span');
                     $span->{'class'} = 'folder';
                     $span->add($key);
+                    
+                    $span->{'key'} = $key;
+                    $span->{'parent'} = $parent;
+                    
+                    if (is_callable($this->folderCallback))
+                    {
+                        $span = call_user_func($this->folderCallback, $span);
+                    }
+                    
                     $element->add($span);
-                    $element->add($this->fromOptions($option));
+                    $element->add($this->fromOptions($option, $key));
+                    
+                    $folders[ implode('',$span->getChildren()) . ' ' . $key ] = $element;
                 }
                 else if (is_object($option))
                 {
                     $element = new TElement('li');
                     $element->add($option);
                 }
-                $ul->add($element);
             }
+            
+            array_multisort(array_keys($folders), SORT_NATURAL | SORT_FLAG_CASE, $folders);
+            array_multisort(array_keys($files), SORT_NATURAL | SORT_FLAG_CASE, $files);
+            
+            if ($folders)
+            {
+                foreach ($folders as $element)
+                {
+                    $ul->add($element);
+                }
+            }
+            
+            if ($files)
+            {
+                foreach ($files as $element)
+                {
+                    $ul->add($element);
+                }
+            }
+            
             return $ul;
         }
     }

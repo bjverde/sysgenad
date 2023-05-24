@@ -14,7 +14,7 @@ use Exception;
 /**
  * DBUnique Search Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -52,7 +52,7 @@ class TDBUniqueSearch extends TDBMultiSearch implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        if ($value)
+        if (is_scalar($value) && !empty($value))
         {
             TTransaction::open($this->database);
             $model = $this->model;
@@ -80,8 +80,7 @@ class TDBUniqueSearch extends TDBMultiSearch implements AdiantiWidgetInterface
         }
         else
         {
-            $this->value = null;
-            parent::addItems([]);
+            $this->value = $value;
         }
     }
     

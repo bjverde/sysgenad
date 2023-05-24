@@ -3,11 +3,13 @@ namespace Adianti\Database;
 
 use Adianti\Database\TExpression;
 use Adianti\Database\TSqlStatement;
+use Adianti\Registry\TSession;
+use Adianti\Util\AdiantiStringConversion;
 
 /**
  * Provides an interface to define filters to be used inside a criteria
  *
- * @version    7.4
+ * @version    7.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -21,7 +23,8 @@ class TFilter extends TExpression
     private $value2;
     private $preparedVars;
     private $caseInsensitive;
-
+    private static $paramCounter;
+    
     /**
      * Class Constructor
      * @param  $variable = variable
@@ -103,6 +106,12 @@ class TFilter extends TExpression
         {
             $value  = str_replace(['#', '--', '/*'], ['', '', ''], $value);
             $result = $value;
+        }
+        // if the value is a session variable
+        else if (strpos((string) $value, '{session.') !== false)
+        {
+            $session_var = AdiantiStringConversion::getBetween($value, '{session.', '}');
+            $result = str_replace("{session.{$session_var}}", TSession::getValue($session_var), $value);
         }
         // if the value must not be escaped (NOESC in front)
         else if (substr( (string) $value,0,6) == 'NOESC:')
@@ -192,7 +201,7 @@ class TFilter extends TExpression
             {
                 $variable = "UPPER({$variable})";
                 $value = "UPPER({$value})";
-                $operator = 'like';
+                $operator = str_ireplace('ilike', 'LIKE', $operator);
             }
 
             // concatenated the expression
@@ -205,7 +214,8 @@ class TFilter extends TExpression
      */
     private function getRandomParameter()
     {
-        return mt_rand(1000000000, 1999999999);
+        self::$paramCounter ++;
+        return self::$paramCounter;
     }
 
     /**

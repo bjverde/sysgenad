@@ -2,15 +2,17 @@
 namespace Adianti\Control;
 
 use Adianti\Control\TAction;
+use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Widget\Container\TJQueryDialog;
 use Adianti\Widget\Base\TScript;
 
 use ReflectionClass;
+use Exception;
 
 /**
  * Window Container (JQueryDialog wrapper)
  *
- * @version    7.4
+ * @version    7.5
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -37,6 +39,15 @@ class TWindow extends TPage
         $this->{'role'} = 'window-wrapper';
         parent::add($this->wrapper);
     }
+    
+    /**
+     *
+     */
+    public function setTargetContainer($container)
+    {
+        throw new Exception( AdiantiCoreTranslator::translate('Use of target containers along with windows is not allowed') );
+    }
+    
     
     /**
      * Returns ID
@@ -214,6 +225,14 @@ class TWindow extends TPage
         {
             TJQueryDialog::closeLatest();
         }
+    }
+    
+    /**
+     * Close all windows
+     */
+    public static function closeAll()
+    {
+        TJQueryDialog::closeAll();
     }
     
     /**

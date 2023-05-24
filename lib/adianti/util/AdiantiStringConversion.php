@@ -4,7 +4,7 @@ namespace Adianti\Util;
 /**
  * String manipulation
  *
- * @version    7.4
+ * @version    7.5
  * @package    util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -63,7 +63,7 @@ class AdiantiStringConversion
     {
         if (extension_loaded('mbstring') && extension_loaded('iconv'))
         {
-            $enc_in = mb_detect_encoding($content, ['UTF-8', 'ISO-8859-1', 'ASCII'], true);
+            $enc_in = mb_detect_encoding( (string) $content, ['UTF-8', 'ISO-8859-1', 'ASCII'], true);
             if ($enc_in !== 'UTF-8')
             {
                 $converted = iconv($enc_in, "UTF-8", $content);
@@ -157,10 +157,20 @@ class AdiantiStringConversion
     public static function getBetween($str, $needle_start, $needle_end, $include_limits = true)
     {
         $pos = strpos($str, $needle_start);
-        $start = $pos === false ? 0 : $pos + ($include_limits ? strlen($needle_start) : 0);
+        if ($pos === false)
+        {
+            return '';
+        }
+        
+        $start = $pos + ($include_limits ? strlen($needle_start) : 0);
 
         $pos = strpos($str, $needle_end, $start);
-        $end = $pos === false ? strlen($str) : ($include_limits ? $pos : $pos + strlen($needle_end));
+        if ($pos === false)
+        {
+            return '';
+        }
+        
+        $end = ($include_limits ? $pos : $pos + strlen($needle_end));
 
         return substr($str, $start, $end - $start);
     }

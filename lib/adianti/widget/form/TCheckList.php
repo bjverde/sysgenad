@@ -9,11 +9,12 @@ use Adianti\Database\TCriteria;
 use Adianti\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Widget\Wrapper\AdiantiDatabaseWidgetTrait;
 use Adianti\Validator\TFieldValidator;
+use Adianti\Control\TAction;
 
 /**
  * Checklist
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -32,6 +33,8 @@ class TCheckList implements AdiantiWidgetInterface
     protected $checkColumn;
     protected $checkAllButton;
     protected $width;
+    protected $separator;
+    protected $selectAction;
     
     use AdiantiDatabaseWidgetTrait;
     
@@ -43,6 +46,7 @@ class TCheckList implements AdiantiWidgetInterface
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->{'style'} = 'width: 100%';
         $this->datagrid->{'widget'} = 'tchecklist';
+        $this->datagrid->{'class'}  .= ' tchecklist';
         $this->datagrid->disableDefaultClick(); // important!
         
         $id = $this->datagrid->{'id'};
@@ -66,6 +70,23 @@ class TCheckList implements AdiantiWidgetInterface
         $this->value = [];
         $this->fields = [];
         $this->width = '100%';
+    }
+    
+    /**
+     * Define the action to be executed when the user selects a row
+     * @param $action TAction object
+     */
+    public function setSelectAction(TAction $action)
+    {
+        if ($action->isStatic())
+        {
+            $this->selectAction = $action;
+        }
+        else
+        {
+            $string_action = $action->toString();
+            throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
+        }
     }
     
     /**
@@ -142,6 +163,11 @@ class TCheckList implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
+        if ($this->separator && is_scalar($value))
+        {
+            $value = explode($this->separator, $value);
+        }
+
         $this->value = $value;
         $id_column = $this->idColumn;
         $items = $this->datagrid->getItems();
@@ -314,6 +340,15 @@ class TCheckList implements AdiantiWidgetInterface
     }
     
     /**
+     * Define the field's separator
+     * @param $sep A string containing the field's separator
+     */
+    public function setValueSeparator($sep)
+    {
+        $this->separator = $sep;
+    }
+
+    /**
      * Get post data
      */
     public function getPostData()
@@ -333,6 +368,11 @@ class TCheckList implements AdiantiWidgetInterface
                     $value[] = $item->$id_column;
                 }
             }
+        }
+
+        if ($this->separator)
+        {
+            $value = implode($this->separator, $value);
         }
         
         return $value;
@@ -376,6 +416,26 @@ class TCheckList implements AdiantiWidgetInterface
     }
     
     /**
+     * Enable the field
+     * @param $form_name Form name
+     * @param $field Field name
+     */
+    public static function enableField($field)
+    {
+        TScript::create( " tchecklist_enable_field('{$field}'); " );
+    }
+    
+    /**
+     * Disable the field
+     * @param $form_name Form name
+     * @param $field Field name
+     */
+    public static function disableField($field)
+    {
+        TScript::create( " tchecklist_disable_field('{$field}'); " );
+    }
+    
+    /**
      * Show checklist
      */
     public function show()
@@ -383,6 +443,13 @@ class TCheckList implements AdiantiWidgetInterface
         if (count($this->datagrid->getItems()) == 0)
         {
             $this->datagrid->createModel();
+        }
+        
+        $this->datagrid->{'name'} = $this->name;
+        
+        if (!empty($this->selectAction))
+        { 
+            $this->datagrid->{'onselect'} = $this->selectAction->serialize(FALSE);
         }
         
         $this->datagrid->show();

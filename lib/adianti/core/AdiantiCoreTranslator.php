@@ -4,7 +4,7 @@ namespace Adianti\Core;
 /**
  * Framework translation class for internal messages
  *
- * @version    7.4
+ * @version    7.5
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -13,6 +13,7 @@ namespace Adianti\Core;
  */
 class AdiantiCoreTranslator
 {
+    private $messages;
     private static $instance; // singleton instance
     private $lang;            // target language
     
@@ -21,6 +22,7 @@ class AdiantiCoreTranslator
      */
     private function __construct()
     {
+        $this->messages = [];
         $this->messages['en'][] = 'Loading';
         $this->messages['en'][] = 'File not found';
         $this->messages['en'][] = 'Search';
@@ -154,6 +156,17 @@ class AdiantiCoreTranslator
         $this->messages['en'][] = 'Friday';
         $this->messages['en'][] = 'Saturday';
         $this->messages['en'][] = 'Softdelete is not active';
+        $this->messages['en'][] = 'Use of target containers along with windows is not allowed';
+        $this->messages['en'][] = 'View mode';
+        $this->messages['en'][] = 'Zoom mode';
+        $this->messages['en'][] = 'Months';
+        $this->messages['en'][] = 'Months with days';
+        $this->messages['en'][] = 'Days';
+        $this->messages['en'][] = 'Days with hours';
+        $this->messages['en'][] = 'Large';
+        $this->messages['en'][] = 'Medium';
+        $this->messages['en'][] = 'Small';
+        $this->messages['en'][] = 'Condensed';
         
         $this->messages['pt'][] = 'Carregando';
         $this->messages['pt'][] = 'Arquivo não encontrado';
@@ -288,6 +301,17 @@ class AdiantiCoreTranslator
         $this->messages['pt'][] = 'Sexta';
         $this->messages['pt'][] = 'Sábado';
         $this->messages['pt'][] = 'Softdelete não está ativo';
+        $this->messages['pt'][] = 'Não é permitido usar target cointainers junto com janelas';
+        $this->messages['pt'][] = 'Modo de visualização';
+        $this->messages['pt'][] = 'Modo de zoom';
+        $this->messages['pt'][] = 'Meses';
+        $this->messages['pt'][] = 'Meses com dias';
+        $this->messages['pt'][] = 'Dias';
+        $this->messages['pt'][] = 'Dias com horas';
+        $this->messages['pt'][] = 'Grande';
+        $this->messages['pt'][] = 'Médio';
+        $this->messages['pt'][] = 'Pequeno';
+        $this->messages['pt'][] = 'Condensado';
         
         $this->messages['es'][] = 'Cargando';
         $this->messages['es'][] = 'Archivo no encontrado';
@@ -353,7 +377,7 @@ class AdiantiCoreTranslator
         $this->messages['es'][] = 'Cerrar la aplicación ?';
         $this->messages['es'][] = 'Utilize addField() o setFields() para definir los campos del formulário';
         $this->messages['es'][] = 'Verifique si la acción (^1) existe';
-        $this->messages['es'][] = 'Informacin';
+        $this->messages['es'][] = 'Información';
         $this->messages['es'][] = 'Error';
         $this->messages['es'][] = 'Excepción';
         $this->messages['es'][] = 'Pregunta';
@@ -422,6 +446,17 @@ class AdiantiCoreTranslator
         $this->messages['es'][] = 'Viernes';
         $this->messages['es'][] = 'Sábado';
         $this->messages['es'][] = 'Softdelete no esta activo';
+        $this->messages['es'][] = 'No se permite el uso de contenedores de destino junto con ventanas';
+        $this->messages['es'][] = 'Modo de vista';
+        $this->messages['es'][] = 'Modo de zoom';
+        $this->messages['es'][] = 'Meses';
+        $this->messages['es'][] = 'Meses con dias';
+        $this->messages['es'][] = 'Días';
+        $this->messages['es'][] = 'Dias con horas';
+        $this->messages['es'][] = 'Grande';
+        $this->messages['es'][] = 'Medio';
+        $this->messages['es'][] = 'Pequeño';
+        $this->messages['es'][] = 'Condensado';
     }
     
     /**

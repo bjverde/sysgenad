@@ -15,7 +15,7 @@ use Exception;
 /**
  * Manage Database transactions
  *
- * @version    7.4
+ * @version    7.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -75,6 +75,10 @@ class TTransaction
         {
             // begins transaction
             self::$conn[self::$counter]->beginTransaction();
+        }
+        else if (in_array($dbinfo['type'], ['ibase', 'fbird']))
+        {
+            self::$conn[self::$counter]->setAttribute( PDO::ATTR_AUTOCOMMIT, 1);
         }
         
         if (!empty(self::$dbinfo[self::$counter]['slog']))

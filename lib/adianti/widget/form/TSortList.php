@@ -14,7 +14,7 @@ use Exception;
 /**
  * A Sortable list
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -236,6 +236,26 @@ class TSortList extends TField implements AdiantiWidgetInterface
     public static function clearField($form_name, $field)
     {
         TScript::create( " tsortlist_clear_field('{$form_name}', '{$field}'); " );
+    }
+    
+    /**
+     * Reload elements
+     */
+    public static function reload($form_name, $field, $items)
+    {
+        self::clearField($form_name, $field);
+
+        if (!empty($items))
+        {
+            $index = 1;
+            foreach ($items as $key => $value)
+            {
+                $value = htmlspecialchars( (string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                
+                TScript::create("tsortlist_add_item_field('{$form_name}', '{$field}', '{$key}', '{$value}', '{$index}');");
+                $index ++;
+            }
+        }
     }
     
     /**

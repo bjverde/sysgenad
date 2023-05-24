@@ -6,7 +6,7 @@ use Adianti\Widget\Util\TImage;
 /**
  * Image capture
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Lucas Tomasi

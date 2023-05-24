@@ -191,6 +191,126 @@ class AdiantiPDFDesigner extends FPDF
     {
         $this->replaces[$mark] = $text;
     }
+
+    /**
+     * Genereate a rectangle
+     * @param $x position X
+     * @param $y position Y
+     * @param $width size of Width
+     * @param $height size of Height
+     * @param $linecolor color of line
+     * @param $fillcolor color fill
+     * @param $linewidth size of line
+     * @param $shadowoffset offset shadow
+     * @param $shadowoColor color of shadow
+     */
+    public function makeRectangle($x, $y, $width, $height, $fillcolor, $linecolor, $linewidth, $shadowoffset = null, $shadowcolor = null)
+    {
+        if ($shadowoffset > 0)
+        {
+            $this->setFillColorRGB($shadowcolor);
+            $this->Rect($x + $shadowoffset, $y + $shadowoffset, $width, $height, 'F');
+        }
+        parent::SetLineWidth($linewidth);
+        $this->setDrawColorRGB( $linecolor );
+        $this->setFillColorRGB( $fillcolor );
+        $mode = $linewidth > 0 ? 'FD' : 'F';
+        parent::Rect($x, $y, $width, $height, $mode);
+    }
+    
+    /**
+     * Genereate a ellipse
+     * @param $x position X
+     * @param $y position Y
+     * @param $width size of Width
+     * @param $height size of Height
+     * @param $linecolor color of line
+     * @param $fillcolor color fill
+     * @param $linewidth size of line
+     * @param $shadowoffset offset shadow
+     * @param $shadowoColor color of shadow
+     */
+    public function makeEllipse($x, $y, $width, $height, $fillcolor, $linecolor, $linewidth, $shadowoffset = null, $shadowcolor = null)
+    {
+        $x = $x + ($width/2);
+        $y = $y + ($height/2);
+        
+        if ($shadowoffset > 0)
+        {
+            $fillc = $this->rgb2int255($shadowcolor);
+            parent::SetFillColor($fillc[0], $fillc[1], $fillc[2]);
+            $this->ellipse($x + $shadowoffset, $y + $shadowoffset, $width/2, $height/2, 'F');
+        }
+        $mode = $linewidth > 0 ? 'FD' : 'F';
+        parent::SetLineWidth($linewidth);
+        $this->setDrawColorRGB( $linecolor );
+        $this->setFillColorRGB( $fillcolor );
+        $this->ellipse($x, $y , $width/2, $height/2, $mode);
+    }
+
+    /**
+     * Genereate a text
+     * @param $x position X
+     * @param $y position Y
+     * @param $text
+     * @param $size
+     * @param $font
+     * @param $style
+     * @param $color
+     * @param $shadowoffset offset shadow
+     * @param $shadowoColor color of shadow
+     */
+    public function makeText($x, $y, $text, $size, $font, $style, $color, $shadowoffset = null, $shadowcolor = null)
+    {
+        $height_factor['Courier'] = 0.335;
+        $height_factor['Arial'] = 0.39;
+        $height_factor['Times'] = 0.42;
+        $text = str_replace( array_keys($this->replaces), array_values($this->replaces), $text );
+        
+        $x = $x - 2;
+        $y = $y + ($size * $height_factor[ $font ]) - (30 * (1/$size));
+        if ($shadowoffset > 0)
+        {
+            $this->setFontColorRGB($shadowcolor);
+            parent::SetFont($font, $style, $size);
+            $this->writeHTML($x + $shadowoffset, $y + $shadowoffset, $text);
+        }
+        parent::SetFont($font, $style, $size );
+        $this->setFontColorRGB($color);
+        $this->writeHTML($x, $y, $text);
+    }
+
+    /**
+     * Genereate a simple line
+     * @param $x position start X
+     * @param $y position start Y
+     * @param $x position end X
+     * @param $y position end Y
+     * @param $linewidth size line
+     * @param $linecolor color line
+     */
+    public function makeLine($x, $y, $x2, $y2, $linewidth, $linecolor)
+    {
+        parent::SetLineWidth($linewidth);
+        $this->setDrawColorRGB( $linecolor );
+        parent::Line($x, $y, $x2, $y2);
+    }
+
+    /**
+     * Genereate a simple line
+       * @param $x position X
+     * @param $y position Y
+     * @param $width size of Width
+     * @param $height size of Height
+     * @param $file path of image file
+     */
+    public function makeImage($x, $y, $width, $height, $file)
+    {
+        if (file_exists($file))
+        {
+            parent::Image($file, $x, $y, $width, $height);
+        }
+    }
     
     /**
      * Generate one PDF page with the parsed elements
@@ -208,66 +328,23 @@ class AdiantiPDFDesigner extends FPDF
                 switch ($element['class'])
                 {
                     case 'Rectangle':
-                        if ($element['shadowoffset'] > 0)
-                        {
-                            $this->setFillColorRGB($element['shadowcolor']);
-                            $this->Rect($element['x'] + $element['shadowoffset'], $element['y'] + $element['shadowoffset'], $element['width'], $element['height'], 'F');
-                        }
-                        parent::SetLineWidth($element['linewidth']);
-                        $this->setDrawColorRGB( $element['linecolor'] );
-                        $this->setFillColorRGB( $element['fillcolor'] );
-                        $mode = $element['linewidth'] > 0 ? 'FD' : 'F';
-                        parent::Rect($element['x'], $element['y'], $element['width'], $element['height'], $mode);
+                        $this->makeRectangle($element['x'], $element['y'], $element['width'],   $element['height'], $element['fillcolor'], $element['linecolor'], $element['linewidth'], $element['shadowoffset'], $element['shadowcolor']);
                         break;
                         
                     case 'Ellipse':
-                        $x = $element['x'] + ($element['width']/2);
-                        $y = $element['y'] + ($element['height']/2);
-                        
-                        if ($element['shadowoffset'] > 0)
-                        {
-                            $fillc = $this->rgb2int255($element['shadowcolor']);
-                            parent::SetFillColor($fillc[0], $fillc[1], $fillc[2]);
-                            $this->ellipse($x + $element['shadowoffset'], $y + $element['shadowoffset'], $element['width']/2, $element['height']/2, 'F');
-                        }
-                        $mode = $element['linewidth'] > 0 ? 'FD' : 'F';
-                        parent::SetLineWidth($element['linewidth']);
-                        $this->setDrawColorRGB( $element['linecolor'] );
-                        $this->setFillColorRGB( $element['fillcolor'] );
-                        $this->ellipse($x, $y , $element['width']/2, $element['height']/2, $mode);
-                        
+                        $this->makeEllipse($element['x'], $element['y'], $element['width'],  $element['height'], $element['fillcolor'], $element['linecolor'], $element['linewidth'], $element['shadowoffset'], $element['shadowcolor']);
                         break;
                         
                     case 'Text':
-                        $height_factor['Courier'] = 0.335;
-                        $height_factor['Arial'] = 0.39;
-                        $height_factor['Times'] = 0.42;
-                        $text = str_replace( array_keys($this->replaces), array_values($this->replaces), $element['text'] );
-                        
-                        $x = $element['x'] - 2;
-                        $y = $element['y'] + ($element['size'] * $height_factor[ $element['font'] ]) - (30 * (1/$element['size']));
-                        if ($element['shadowoffset'] > 0)
-                        {
-                            $this->setFontColorRGB($element['shadowcolor']);
-                            parent::SetFont($element['font'], $style, $element['size']);
-                            $this->writeHTML($x + $element['shadowoffset'], $y + $element['shadowoffset'], $text);
-                        }
-                        parent::SetFont($element['font'], $style, $element['size'] );
-                        $this->setFontColorRGB($element['color']);
-                        $this->writeHTML($x, $y, $text);
+                        $this->makeText($element['x'], $element['y'], $element['text'], $element['size'], $element['font'], $style, $element['color'], $element['shadowoffset'], $element['shadowcolor']);
                         break;
                         
                     case 'Line':
-                        parent::SetLineWidth($element['linewidth']);
-                        $this->setDrawColorRGB( $element['linecolor'] );
-                        parent::Line($element['x'], $element['y'], $element['x2'], $element['y2']);
+                        $this->makeLine($element['x'], $element['y'], $element['x2'], $element['y2'], $element['linewidth'], $element['linecolor']);
                         break;
                         
                     case 'Image':
-                        if (file_exists($element['file']))
-                        {
-                            parent::Image($element['file'], $element['x'], $element['y'], $element['width'], $element['height']);
-                        }
+                        $this->makeImage($element['x'], $element['y'], $element['width'], $element['height'], $element['file']);
                         break;
                 }
             }

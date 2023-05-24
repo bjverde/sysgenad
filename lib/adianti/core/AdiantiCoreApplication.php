@@ -15,7 +15,7 @@ use Adianti\Widget\Util\TExceptionView;
 /**
  * Basic structure to run a web application
  *
- * @version    7.4
+ * @version    7.5
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -65,7 +65,7 @@ class AdiantiCoreApplication
             $content = ob_get_contents();
             ob_end_clean();
         }
-        else if (!$rc->isUserDefined())
+        else if (!$rc-> isUserDefined ())
         {
             ob_start();
             new TMessage( 'error', AdiantiCoreTranslator::translate('The internal class ^1 can not be executed', " <b><i><u>{$class}</u></i></b>") );
@@ -170,7 +170,7 @@ class AdiantiCoreApplication
             {
                 throw new Exception(AdiantiCoreTranslator::translate('The internal class ^1 can not be executed', $class ));
             }
-            else if (!$rc->isUserDefined())
+            else if (!$rc-> isUserDefined ())
             {
                 throw new Exception(AdiantiCoreTranslator::translate('The internal class ^1 can not be executed', $class ));
             }

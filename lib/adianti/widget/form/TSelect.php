@@ -14,7 +14,7 @@ use Exception;
 /**
  * Select Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -23,6 +23,8 @@ use Exception;
  */
 class TSelect extends TField implements AdiantiWidgetInterface
 {
+    private   $searchable;
+
     protected $id;
     protected $height;
     protected $items; // array containing the combobox options
@@ -53,6 +55,14 @@ class TSelect extends TField implements AdiantiWidgetInterface
         $this->tag->{'widget'} = 'tselect';
     }
     
+    /**
+     * Enable search
+     */
+    public function enableSearch()
+    {
+        unset($this->tag->{'class'});
+        $this->searchable = true;
+    }
     
     /**
      * Disable multiple selection
@@ -221,6 +231,8 @@ class TSelect extends TField implements AdiantiWidgetInterface
         {
             foreach ($items as $key => $value)
             {
+                $value = htmlspecialchars( (string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                
                 $code .= "tselect_add_option('{$formname}', '{$name}', '{$key}', '{$value}'); ";
             }
         }
@@ -363,9 +375,25 @@ class TSelect extends TField implements AdiantiWidgetInterface
             $this->tag->{'style'}  .= ';pointer-events:none';
             $this->tag->{'class'}   = 'tselect_disabled'; // CSS
         }
-        
+
+        if ($this->searchable)
+        {
+            $this->tag->{'role'} = 'tselectsearch';
+        }
+
         // shows the widget
         $this->renderItems( $this->withTitles );
         $this->tag->show();
+
+        if ($this->searchable)
+        {
+            $select = AdiantiCoreTranslator::translate('Select');
+            TScript::create("tselect_enable_search('#{$this->id}', '{$select}')");
+            
+            if (!parent::getEditable())
+            {
+                TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
+            }
+        }
     }
 }

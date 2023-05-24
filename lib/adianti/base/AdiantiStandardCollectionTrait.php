@@ -23,7 +23,7 @@ use DomDocument;
 /**
  * Standard Collection Trait
  *
- * @version    7.4
+ * @version    7.5
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -43,6 +43,7 @@ trait AdiantiStandardCollectionTrait
     protected $criteria;
     protected $transformCallback;
     protected $afterLoadCallback;
+    protected $afterSearchCallback;
     protected $orderCommands;
     
     use AdiantiStandardControlTrait;
@@ -151,6 +152,15 @@ trait AdiantiStandardCollectionTrait
     }
     
     /**
+     * Define a callback method to transform objects
+     * after search action
+     */
+    public function setAfterSearchCallback($callback)
+    {
+        $this->afterSearchCallback = $callback;
+    }
+    
+    /**
      * Register the filter in the session
      */
     public function onSearch( $param = null )
@@ -192,12 +202,14 @@ trait AdiantiStandardCollectionTrait
                     // stores the filter in the session
                     TSession::setValue($this->activeRecord.'_filter', $filter); // BC compatibility
                     TSession::setValue($this->activeRecord.'_filter_'.$formFilter, $filter);
+                    TSession::setValue($this->activeRecord.'_filter_'.$filterKey, $filter);
                     TSession::setValue($this->activeRecord.'_'.$formFilter, $data->{$formFilter});
                 }
                 else
                 {
                     TSession::setValue($this->activeRecord.'_filter', NULL); // BC compatibility
                     TSession::setValue($this->activeRecord.'_filter_'.$formFilter, NULL);
+                    TSession::setValue($this->activeRecord.'_filter_'.$filterKey, NULL);
                     TSession::setValue($this->activeRecord.'_'.$formFilter, '');
                 }
             }
@@ -208,6 +220,11 @@ trait AdiantiStandardCollectionTrait
         
         // fill the form with data again
         $this->form->setData($data);
+        
+        if (is_callable($this->afterSearchCallback))
+        {
+            call_user_func($this->afterSearchCallback, $this->datagrid, $data);
+        }
         
         if (isset($param['static']) && ($param['static'] == '1') )
         {
@@ -235,6 +252,7 @@ trait AdiantiStandardCollectionTrait
             {
                 TSession::setValue($this->activeRecord.'_filter', NULL); // BC compatibility
                 TSession::setValue($this->activeRecord.'_filter_'.$formFilter, NULL);
+                TSession::setValue($this->activeRecord.'_filter_'.$filterKey, NULL);
                 TSession::setValue($this->activeRecord.'_'.$formFilter, '');
             }
         }
@@ -288,17 +306,23 @@ trait AdiantiStandardCollectionTrait
             $criteria->setProperties($param_criteria); // order, offset
             $criteria->setProperty('limit', $limit);
             
+            $subcriteria = new TCriteria;
             if ($this->formFilters)
             {
                 foreach ($this->formFilters as $filterKey => $filterField)
                 {
                     $logic_operator = isset($this->logic_operators[$filterKey]) ? $this->logic_operators[$filterKey] : TExpression::AND_OPERATOR;
                     
-                    if (TSession::getValue($this->activeRecord.'_filter_'.$filterField))
+                    if (TSession::getValue($this->activeRecord.'_filter_'.$filterKey))
                     {
                         // add the filter stored in the session to the criteria
-                        $criteria->add(TSession::getValue($this->activeRecord.'_filter_'.$filterField), $logic_operator);
+                        $subcriteria->add(TSession::getValue($this->activeRecord.'_filter_'.$filterKey), $logic_operator);
                     }
+                }
+                
+                if (!$subcriteria->isEmpty())
+                {
+                    $criteria->add($subcriteria);
                 }
             }
             

@@ -16,7 +16,7 @@ use ApplicationTranslator;
 /**
  * Card
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -38,6 +38,7 @@ class TCardView extends TElement
     protected $itemHeight;
     protected $contentHeight;
     protected $itemDatabase;
+    protected $itemClass;
     
     /**
      * Class Constructor
@@ -107,6 +108,15 @@ class TCardView extends TElement
     public function setColorAttribute($field)
     {
         $this->colorField = $field;
+    }
+
+    /**
+     * Set custom class card
+     * @param $class class name 
+     */
+    public function setItemClass($class)
+    {
+        $this->itemClass = $class;
     }
     
     /**
@@ -201,6 +211,11 @@ class TCardView extends TElement
         
         $item_wrapper              = new TElement('div');
         $item_wrapper->{'class'}   = 'panel card panel-default card-item';
+
+        if ($this->itemClass)
+        {
+            $item_wrapper->{'class'} .= " {$this->itemClass}";
+        }
         
         if ($colorField && $item->$colorField)
         {

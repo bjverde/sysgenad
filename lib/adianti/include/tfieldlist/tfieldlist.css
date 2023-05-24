@@ -28,3 +28,22 @@ table.tfieldlist td .tfile_row_1 {
 table.tfieldlist td .tfile_link_wrapper {
     padding: 2px;
 }
+
+table.tfieldlist td .tfile_row_wrapper {
+    width: 100%;
+    padding-left: 5px;
+}
+
+table.tfieldlist .tfile_link_wrapper {
+    width: unset !important;
+}
+
+.tfieldlist-disable
+{
+    width: calc(100% - 20px);
+    background: #eeeeee;
+    height: calc(100% + 1px);
+    position: absolute;
+    opacity: 0.5;
+    z-index: 1;
+}

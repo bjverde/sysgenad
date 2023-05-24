@@ -1,12 +1,14 @@
 <?php
+namespace Adianti\Widget\Wrapper;
 
 use Adianti\Database\TCriteria;
+use Adianti\Widget\Form\TArrowStep;
 use Adianti\Widget\Wrapper\AdiantiDatabaseWidgetTrait;
 
 /**
  * Database Arrow Step
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage util
  * @author     Lucas Tomasi
@@ -19,13 +21,13 @@ class TDBArrowStep extends TArrowStep
 {
     protected $items; // array containing the combobox options
     
-    private $database;
-    private $model;
-    private $key;
-    private $value;
-    private $ordercolumn;
-    private $colorcolumn;
-    private $criteria;
+    protected $database;
+    protected $model;
+    protected $key;
+    protected $value;
+    protected $ordercolumn;
+    protected $colorcolumn;
+    protected $criteria;
 
     use AdiantiDatabaseWidgetTrait;
     

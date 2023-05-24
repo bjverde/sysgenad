@@ -11,12 +11,13 @@ use Adianti\Widget\Form\THidden;
 use Adianti\Control\TAction;
 use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Service\AdiantiUploaderService;
 use Exception;
 
 /**
  * FileChooser widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Nataniel Rabaioli
@@ -42,6 +43,7 @@ class TFile extends TField implements AdiantiWidgetInterface
     protected $popover;
     protected $poptitle;
     protected $popcontent;
+    protected $limitSize;
     
     /**
      * Constructor method
@@ -83,6 +85,23 @@ class TFile extends TField implements AdiantiWidgetInterface
         $this->poptitle   = $title;
         $this->popcontent = $content;
     }
+
+    /**
+     * Define upload size limit
+     * @param $limit Size limit MBs
+     */
+    public function setLimitUploadSize($limit)
+    {
+        $this->limitSize = $limit * 1024 * 1024;
+    }
+
+    /**
+     * Define upload size limit
+     */
+    public function enablePHPFileUploadLimit()
+    {
+        $this->limitSize = AdiantiUploaderService::getMaximumFileUploadSize();
+    }
     
     /**
      * Define the display mode {file}
@@ -115,6 +134,14 @@ class TFile extends TField implements AdiantiWidgetInterface
     public function enableFileHandling()
     {
         $this->fileHandling = TRUE;
+    }
+    
+    /**
+     * Disable file handling
+     */
+    public function disableFileHandling()
+    {
+        $this->fileHandling = FALSE;
     }
     
     /**
@@ -159,34 +186,37 @@ class TFile extends TField implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        if ($this->fileHandling)
+        if (is_scalar($value))
         {
-            if (strpos($value, '%7B') === false)
+            if ($this->fileHandling)
             {
-                if (!empty($value))
+                if (strpos( (string) $value, '%7B') === false)
                 {
-                    $this->value = urlencode(json_encode(['fileName'=>$value]));
+                    if (!empty($value))
+                    {
+                        $this->value = urlencode(json_encode(['fileName'=>$value]));
+                    }
+                    else
+                    {
+                        $this->value = $value;
+                    }
                 }
                 else
                 {
-                    $this->value = $value;
+                    $value_object = json_decode(urldecode($value));
+                    
+                    if (!empty($value_object->{'delFile'}) AND $value_object->{'delFile'} == $value_object->{'fileName'})
+                    {
+                        $value = '';
+                    }
+                    
+                    parent::setValue($value);
                 }
             }
             else
             {
-                $value_object = json_decode(urldecode($value));
-                
-                if (!empty($value_object->{'delFile'}) AND $value_object->{'delFile'} == $value_object->{'fileName'})
-                {
-                    $value = '';
-                }
-                
                 parent::setValue($value);
             }
-        }
-        else
-        {
-            parent::setValue($value);
         }
     }
     
@@ -226,34 +256,25 @@ class TFile extends TField implements AdiantiWidgetInterface
         $error_action = "'undefined'";
         
         // verify if the widget is editable
-        if (parent::getEditable())
+        
+        if (isset($this->completeAction) || isset($this->errorAction))
         {
-            if (isset($this->completeAction) || isset($this->errorAction))
+            if (!TForm::getFormByName($this->formName) instanceof TForm)
             {
-                if (!TForm::getFormByName($this->formName) instanceof TForm)
-                {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
-                }
-            }
-            
-            if (isset($this->completeAction))
-            {
-                $string_action = $this->completeAction->serialize(FALSE);
-                $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); tfile_update_download_link('{$this->name}') }";
-            }
-            
-            if (isset($this->errorAction))
-            {
-                $string_action = $this->errorAction->serialize(FALSE);
-                $error_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); }";
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
             }
         }
-        else
+        
+        if (isset($this->completeAction))
         {
-            // make the field read-only
-            $this->tag->{'readonly'} = "1";
-            $this->tag->{'type'} = 'text';
-            $this->tag->{'class'} = 'tfield_disabled'; // CSS
+            $string_action = $this->completeAction->serialize(FALSE);
+            $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); tfile_update_download_link('{$this->name}') }";
+        }
+        
+        if (isset($this->errorAction))
+        {
+            $string_action = $this->errorAction->serialize(FALSE);
+            $error_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); }";
         }
         
         $div = new TElement('div');
@@ -306,15 +327,21 @@ class TFile extends TField implements AdiantiWidgetInterface
         $fileHandling = $this->fileHandling ? '1' : '0';
         $imageGallery = json_encode(['enabled'=> $this->imageGallery ? '1' : '0', 'width' => $this->galleryWidth, 'height' => $this->galleryHeight]);
         $popover = json_encode(['enabled' => $this->popover ? '1' : '0', 'title' => $this->poptitle, 'content' => base64_encode($this->popcontent)]);
-        
-        TScript::create(" tfile_start( '{$this->tag-> id}', '{$div-> id}', '{$action}', {$complete_action}, {$error_action}, $fileHandling, '$imageGallery', '$popover');");
+        $limitSize = $this->limitSize ?? 'null';
+
+        TScript::create(" tfile_start( '{$this->tag-> id}', '{$div-> id}', '{$action}', {$complete_action}, {$error_action}, $fileHandling, '$imageGallery', '$popover', {$limitSize});");
+
+        if (!parent::getEditable())
+        {
+            TScript::create("tfile_disable_field('{$this->formName}', '{$this->name}');");
+        }
     }
     
     /**
      * Define the action to be executed when upload is finished
      * @param $action TAction object
      */
-    function setCompleteAction(TAction $action)
+    public function setCompleteAction(TAction $action)
     {
         if ($action->isStatic())
         {
@@ -331,7 +358,7 @@ class TFile extends TField implements AdiantiWidgetInterface
      * Define the action to be executed when some error occurs
      * @param $action TAction object
      */
-    function setErrorAction(TAction $action)
+    public function setErrorAction(TAction $action)
     {
         if ($action->isStatic())
         {

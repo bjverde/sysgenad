@@ -10,7 +10,7 @@ use Adianti\Widget\Util\TImage;
 /**
  * TDropDown Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -257,7 +257,6 @@ class TDropDown extends TElement
     public function addHeader($header)
     {
         $li = new TElement('li');
-        $li->{'role'} = 'presentation';
         $li->{'class'} = 'dropdown-header';
         $li->add($header);
         $this->elements->add($li);

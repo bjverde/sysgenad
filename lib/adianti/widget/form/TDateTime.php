@@ -14,7 +14,7 @@ use Exception;
 /**
  * DateTimePicker Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -63,7 +63,18 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        $value = str_replace('T', ' ', $value);
+        if(is_array($value))
+        {
+            foreach($value as $key => $v)
+            {
+                $value[$key] = str_replace('T', ' ', (string) $v);
+            }
+        }
+        else
+        {
+            $value = str_replace('T', ' ', (string) $value);
+        }
+        
         if (!empty($this->dbmask) and ($this->mask !== $this->dbmask) )
         {
             return parent::setValue( self::convertToMask($value, $this->dbmask, $this->mask) );

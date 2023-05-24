@@ -9,7 +9,7 @@ use Exception;
 /**
  * Template parser
  *
- * @version    7.4
+ * @version    7.5
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -28,18 +28,7 @@ class AdiantiTemplateParser
         $libraries = file_get_contents("app/templates/{$theme}/libraries.html");
         $class     = isset($_REQUEST['class']) ? $_REQUEST['class'] : '';
         
-        if ((TSession::getValue('login') == 'admin'))
-        {
-            if (!empty($ini['general']['token']))
-            {
-                if (file_exists("app/templates/{$theme}/builder-menu.html"))
-                {
-                    $builder_menu = file_get_contents("app/templates/{$theme}/builder-menu.html");
-                    $content = str_replace('<!--{BUILDER-MENU}-->', $builder_menu, $content);
-                }
-            }
-        }
-        else
+        if ( !(TSession::getValue('login') == 'admin'))
         {
             $content = str_replace('<!--[IFADMIN]-->',  '<!--',  $content);
             $content = str_replace('<!--[/IFADMIN]-->', '-->',   $content);

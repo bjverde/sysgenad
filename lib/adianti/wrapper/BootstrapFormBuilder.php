@@ -24,6 +24,7 @@ use Adianti\Widget\Wrapper\TDBRadioGroup;
 use Adianti\Widget\Wrapper\TDBCheckGroup;
 use Adianti\Widget\Wrapper\TDBSeekButton;
 use Adianti\Registry\TSession;
+use Adianti\Widget\Form\TArrowStep;
 use Adianti\Widget\Form\TCheckList;
 
 use stdClass;
@@ -32,7 +33,7 @@ use Exception;
 /**
  * Bootstrap form builder for Adianti Framework
  *
- * @version    7.4
+ * @version    7.5
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -112,8 +113,8 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     {
         $this->csrf_validation = true;
         
-		TSession::setValue('csrf_token_'.$this->name.'_before', TSession::getValue('csrf_token_'.$this->name));
-		TSession::setValue('csrf_token_'.$this->name, bin2hex(random_bytes(32)));
+        TSession::setValue('csrf_token_'.$this->name.'_before', TSession::getValue('csrf_token_'.$this->name));
+        TSession::setValue('csrf_token_'.$this->name, bin2hex(random_bytes(32)));
     }
     
     /**
@@ -487,10 +488,10 @@ class BootstrapFormBuilder implements AdiantiFormInterface
      * @param $action Button action
      * @param $icon Button icon
      */
-    public function addAction($label, TAction $action, $icon = 'fa:save')
+    public function addAction($label, TAction $action, $icon = 'fa:save', $name = null)
     {
         $label_info = ($label instanceof TLabel) ? $label->getValue() : $label;
-        $name   = 'btn_'.strtolower(str_replace(' ', '_', $label_info));
+        $name   = $name ?? 'btn_'.strtolower(str_replace(' ', '_', $label_info));
         $button = new TButton($name);
         $this->decorated->addField($button);
         
@@ -642,10 +643,10 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         
         if ($this->csrf_validation)
         {
-    		$csrf_token = new THidden('csrf_token');
-    		$this->addFields([$csrf_token]);
-    		$csrf_token->setValue(TSession::getValue('csrf_token_'.$this->name));
-    		$this->decorated->silentField('csrf_token');
+            $csrf_token = new THidden('csrf_token');
+            $this->addFields([$csrf_token]);
+            $csrf_token->setValue(TSession::getValue('csrf_token_'.$this->name));
+            $this->decorated->silentField('csrf_token');
         }
         
         $this->decorated->{'class'} = 'form-horizontal';
@@ -761,7 +762,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         {
             $tabpanel = new TElement('div');
             $tabpanel->{'role'}  = 'tabpanel';
-            $tabpanel->{'class'} = 'tab-pane ' . ( ($tab_counter == $this->current_page) ? 'active' : '' );
+            $tabpanel->{'class'} = 'tab-pane tabpanel_'.$this->name .' '. ( ($tab_counter == $this->current_page) ? 'active' : '' );
             $tabpanel->{'style'} = 'padding:10px; margin-top: -1px;';
             if ($tab)
             {
@@ -935,6 +936,11 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $field_wrapper = new TElement('div');
         $field_wrapper->{'class'} = 'fb-inline-field-container ' . ((($field instanceof TField) and ($has_underline)) ? 'form-line' : '');
         $field_wrapper->{'style'} = "display: {$display};vertical-align:top;" . ($display=='inline-block'?'float:left':'');
+
+        if ($field instanceof TField)
+        {
+            $field_wrapper->{'wrapped-widget'} = $field->{'widget'};
+        }
         
         if (!empty($default_field_size))
         {
@@ -948,7 +954,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
             }
         }
         
-        if ($field instanceof TField || $field instanceof TCheckList)
+        if ($field instanceof TField || $field instanceof TCheckList || $field instanceof TTextDisplay)
         {
             if (is_array($field_size))
             {
@@ -972,11 +978,19 @@ class BootstrapFormBuilder implements AdiantiFormInterface
             {
                 $field_wrapper->{'style'} .= ( (strpos($field_size, '%') !== FALSE) ? ';width: '.$field_size : ';width: '.$field_size.'px');
             }
+            else if ($field instanceof TArrowStep)
+            {
+                $field_wrapper->{'style'} .= ';width:100%';
+            }
             
             if (is_callable([$object, 'getAfterElement']) && $object->getAfterElement())
             {
                 $field_wrapper->{'style'} .= ';display:inline-table';
             }
+        }
+        else if ($field instanceof TFormSeparator || $field instanceof BootstrapFormBuilder || $field instanceof TFieldList)
+        {
+            $field_wrapper->{'style'} .= ';width:100%';
         }
         
         $field_wrapper->add($field);
@@ -996,7 +1010,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
             
             $field_class = $input_class . ' ' . ( isset($field->{'class'}) ? $field->{'class'} : '' );
             
-            if (trim($field_class))
+            if ($field instanceof TField && trim($field_class))
             {
                 $field->{'class'} = $field_class;
             }

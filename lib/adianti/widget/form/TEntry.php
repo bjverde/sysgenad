@@ -13,7 +13,7 @@ use Exception;
 /**
  * Entry Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -22,6 +22,7 @@ use Exception;
  */
 class TEntry extends TField implements AdiantiWidgetInterface
 {
+    private $toggleVisibility;
     private $mask;
     protected $completion;
     protected $numericMask;
@@ -50,6 +51,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
     {
         parent::__construct($name);
         $this->id   = 'tentry_' . mt_rand(1000000000, 1999999999);
+        $this->toggleVisibility = FALSE;
         $this->numericMask = FALSE;
         $this->replaceOnPost = FALSE;
         $this->minLength = 1;
@@ -58,6 +60,19 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->tag->{'widget'} = 'tentry';
     }
     
+    /**
+     * Enable toggle visible
+     */
+    public function enableToggleVisibility($toggleVisibility = TRUE)
+    {
+        $this->toggleVisibility = $toggleVisibility;
+        if($toggleVisibility)
+        {
+            $this->innerIcon = new TImage('fa:eye');
+            $this->innerIcon->{'class'} .= ' tentry-toggle-visibility input-inner-icon right' ;
+        }
+    }
+
     /**
      * Define input type
      */
@@ -248,6 +263,15 @@ class TEntry extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Disable auto complete
+     */
+    public function disableAutoComplete()
+    {
+        $this->tag->{'autocomplete'} = 'off';
+        
+    }
+    
+    /**
      * Force lower case
      */
     public function forceLowerCase()
@@ -256,7 +280,6 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->tag->{'onBlur'} = "return tentry_lower(this)";
         $this->tag->{'forcelower'} = "1";
         $this->setProperty('style', "text-transform: lowercase;", false); //aggregate style info
-        
     }
     
     /**
@@ -401,7 +424,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
             
             if (isset($this->exitFunction))
             {
-                if (strstr($this->getProperty('onBlur'), 'return') == FALSE)
+                if (strstr((string) $this->getProperty('onBlur'), 'return') == FALSE)
                 {
                     $this->setProperty('onBlur', $this->exitFunction, FALSE);
                 }
@@ -423,10 +446,18 @@ class TEntry extends TField implements AdiantiWidgetInterface
         {
             TScript::create( "tentry_new_mask( '{$this->id}', '{$this->mask}'); ");
         }
-        
+
+        if($this->toggleVisibility)
+        {
+            $this->{'type'} = 'password';
+            TScript::create(" tentry_toggle_visibility( '{$this->id}' ); ");
+        }
+
         if (!empty($this->innerIcon))
         {
             $icon_wrapper = new TElement('div');
+            $icon_wrapper->{'class'} = 'inner-icon-container';
+            $icon_wrapper->{'id'} = "{$this->id}-container";
             $icon_wrapper->add($this->tag);
             $icon_wrapper->add($this->innerIcon);
             $icon_wrapper->show();

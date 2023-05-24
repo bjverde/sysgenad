@@ -16,7 +16,7 @@ use Exception;
 /**
  * A group of RadioButton's
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -258,7 +258,7 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      * @param $items array with items
      * @param $options array of options [layout, breakItems, size, useButton, value, changeAction, changeFunction, checkAll]
      */
-    public static function reload($formname, $name, $items, $options)
+    public static function reload($formname, $name, $items, $options = [])
     {
         $field = new self($name);
         $field->addItems($items);
@@ -347,7 +347,7 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
         
         if ($this->useButton)
         {
-            echo "<div class=\"toggle-wrapper {$editable_class}\" ".$this->getPropertiesAsString('aria').' data-toggle="buttons">';
+            echo "<div tradiogroup=\"{$this->name}\" class=\"toggle-wrapper {$editable_class}\" ".$this->getPropertiesAsString('aria').' data-toggle="buttons">';
             
             if (strpos( (string) $this->getSize(), '%') !== FALSE)
             {
@@ -360,7 +360,7 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
         }
         else
         {
-            echo "<div class=\"toggle-wrapper {$editable_class}\" ".$this->getPropertiesAsString('aria').' role="group">';
+            echo "<div tradiogroup=\"{$this->name}\" class=\"toggle-wrapper {$editable_class}\" ".$this->getPropertiesAsString('aria').' role="group">';
         }
         
         if ($this->items)

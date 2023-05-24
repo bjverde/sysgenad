@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * Bootstrap datagrid decorator for Adianti Framework
  *
- * @version    7.4
+ * @version    7.5
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)

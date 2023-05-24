@@ -11,12 +11,13 @@ use Adianti\Widget\Form\THidden;
 use Adianti\Control\TAction;
 use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Service\AdiantiUploaderService;
 use Exception;
 
 /**
  * FileChooser widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Nataniel Rabaioli
@@ -39,6 +40,7 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
     protected $popover;
     protected $poptitle;
     protected $popcontent;
+    protected $limitSize;
     
     /**
      * Constructor method
@@ -106,6 +108,14 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Disable file handling
+     */
+    public function disableFileHandling()
+    {
+        $this->fileHandling = FALSE;
+    }
+    
+    /**
      * Set field size
      */
     public function setSize($width, $height = NULL)
@@ -132,6 +142,23 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         {
             return $_POST[$name];
         }
+    }
+
+    /**
+     * Define upload size limit
+     * @param $limit Size limit MBs
+     */
+    public function setLimitUploadSize($limit)
+    {
+        $this->limitSize = $limit * 1024 * 1024;
+    }
+
+    /**
+     * Define upload size limit
+     */
+    public function enablePHPFileUploadLimit()
+    {
+        $this->limitSize = AdiantiUploaderService::getMaximumFileUploadSize();
     }
     
     /**
@@ -210,26 +237,15 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         
         $complete_action = "'undefined'";
         
-        // verify if the widget is editable
-        if (parent::getEditable())
+        if (isset($this->completeAction))
         {
-            if (isset($this->completeAction))
+            if (!TForm::getFormByName($this->formName) instanceof TForm)
             {
-                if (!TForm::getFormByName($this->formName) instanceof TForm)
-                {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
-                }
-                $string_action = $this->completeAction->serialize(FALSE);
-                
-                $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->tag-> id}', 'callback'); }";
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
             }
-        }
-        else
-        {
-            // make the field read-only
-            $this->tag->{'readonly'} = "1";
-            $this->tag->{'type'}     = 'text';
-            $this->tag->{'class'}    = 'tfield_disabled'; // CSS
+            $string_action = $this->completeAction->serialize(FALSE);
+            
+            $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->tag-> id}', 'callback'); }";
         }
         
         $id_div = mt_rand(1000000000, 1999999999);
@@ -266,8 +282,14 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         $fileHandling = $this->fileHandling ? '1' : '0';
         $imageGallery = json_encode(['enabled'=> $this->imageGallery ? '1' : '0', 'width' => $this->galleryWidth, 'height' => $this->galleryHeight]);
         $popover = json_encode(['enabled' => $this->popover ? '1' : '0', 'title' => $this->poptitle, 'content' => base64_encode((string) $this->popcontent)]);
-        
-        TScript::create(" tmultifile_start( '{$this->tag-> id}', '{$div-> id}', '{$action}', {$complete_action}, $fileHandling, '$imageGallery', '$popover');");
+        $limitSize = $this->limitSize ?? 'null';
+
+        TScript::create(" tmultifile_start( '{$this->tag-> id}', '{$div-> id}', '{$action}', {$complete_action}, $fileHandling, '$imageGallery', '$popover', {$limitSize});");
+
+        if(!parent::getEditable())
+        {
+            TScript::create("tmultifile_disable_field('{$this->formName}', '{$this->name}');");
+        }
     }
     
     /**

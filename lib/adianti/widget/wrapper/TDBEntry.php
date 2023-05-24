@@ -12,7 +12,7 @@ use Exception;
 /**
  * Database Entry Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio

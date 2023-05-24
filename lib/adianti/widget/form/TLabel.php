@@ -9,7 +9,7 @@ use Adianti\Widget\Form\TField;
 /**
  * Label Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -18,6 +18,7 @@ use Adianti\Widget\Form\TField;
  */
 class TLabel extends TField implements AdiantiWidgetInterface
 {
+    private $toggleVisibility;
     private $fontStyle;
     private $embedStyle;
     protected $value;
@@ -32,6 +33,7 @@ class TLabel extends TField implements AdiantiWidgetInterface
     {
         $this->id   = 'tlabel_' . mt_rand(1000000000, 1999999999);
         $stylename = 'tlabel_style_'.$this->id;
+        $this->toggleVisibility = FALSE;
         
         // set the label's content
         $this->setValue($value);
@@ -60,6 +62,14 @@ class TLabel extends TField implements AdiantiWidgetInterface
         
         // create a new element
         $this->tag = new TElement('label');
+    }
+
+    /**
+     * Enable toggle visible
+     */
+    public function enableToggleVisibility($toggleVisibility = TRUE)
+    {
+        $this->toggleVisibility = $toggleVisibility;
     }
     
     /**
@@ -167,9 +177,27 @@ class TLabel extends TField implements AdiantiWidgetInterface
         
         $this->tag->{'id'} = $this->id;
         
-        // add content to the tag
-        $this->tag->add($this->value);
-        
+        if ($this->toggleVisibility)
+        {
+            $icon = new TElement('i');
+            $icon->{'class'} = 'fa fa-eye-slash';
+
+            $span = new TElement('span');
+            $span->add($this->value);
+            $span->{'style'} = 'filter: blur(5px);';
+
+            $this->tag->add($span);
+            $this->tag->{'class'} .= ' label-toggle-visibilty ';
+            $this->tag->add($icon);
+
+            TScript::create(" tlabel_toggle_visibility( '{$this->id}' ); ");
+        }
+        else
+        {
+            // add content to the tag
+            $this->tag->add($this->value);
+        }
+
         // show the tag
         $this->tag->show();
     }

@@ -8,7 +8,7 @@ use Adianti\Widget\Form\TEntry;
 /**
  * Representes a DataGrid column
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -32,6 +32,7 @@ class TDataGridColumn
     private $totalTransformed;
     private $searchable;
     private $inputSearch;
+    private $htmlConversion;
     
     /**
      * Class Constructor
@@ -49,6 +50,7 @@ class TDataGridColumn
         $this->searchable = false;
         $this->properties = array();
         $this->dataProperties = array();
+        $this->htmlConversion = true;
     }
     
     /**
@@ -84,12 +86,36 @@ class TDataGridColumn
     {
         $this->searchable = true;
         
-        $name = 'search_' . str_replace(['-', '>'],['_', ''],$this->name);
+        $name = 'search_' . str_replace(['-', '>'],['_', ''],$this->name) . '_' . uniqid();
         
         $this->inputSearch = new TEntry($name);
         $this->inputSearch->setId($name);
         $this->inputSearch->{'placeholder'} = AdiantiCoreTranslator::translate('Search');
         $this->inputSearch->setSize('50%');
+    }
+    
+    /**
+     * Enable htmlspecialchars on output
+     */
+    public function enableHtmlConversion()
+    {
+        $this->htmlConversion = true;
+    }
+    
+    /**
+     * Disable htmlspecialchars on output
+     */
+    public function disableHtmlConversion()
+    {
+        $this->htmlConversion = false;
+    }
+    
+    /**
+     * return if has html conversion
+     */
+    public function hasHtmlConversionEnabled()
+    {
+        return $this->htmlConversion;
     }
     
     /**

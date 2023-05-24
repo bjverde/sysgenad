@@ -9,7 +9,7 @@
 
 .kanban-stage
 {
-    background: whitesmoke;
+    background: white;
     float: left;
     margin-left: 15px;
     margin-right: 15px;
@@ -114,4 +114,15 @@
 {
     transition: 600ms;
     color: #444;
+}
+
+.kanban-board-wrapper.top-scroll
+{
+    transform: rotateX(180deg);
+    overflow-x: auto;
+}
+
+.kanban-board-wrapper.top-scroll > .kanban-board
+{
+    transform: rotateX(180deg);
 }

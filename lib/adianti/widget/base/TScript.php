@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * Base class for scripts
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage base
  * @author     Pablo Dall'Oglio
@@ -27,7 +27,7 @@ class TScript
         }
         
         $script = new TElement('script');
-        $script->{'language'} = 'JavaScript';
+        $script->{'type'} = 'text/javascript';
         $script->setUseSingleQuotes(TRUE);
         $script->setUseLineBreaks(FALSE);
         $script->add( str_replace( ["\n", "\r"], [' ', ' '], $code) );

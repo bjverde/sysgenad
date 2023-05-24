@@ -4,7 +4,7 @@ namespace Adianti\Core;
 /**
  * Class map
  *
- * @version    7.4
+ * @version    7.5
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -141,6 +141,7 @@ class AdiantiClassMap
         $classPath['TBreadCrumb']                     = 'lib/adianti/widget/util/TBreadCrumb.php';
         $classPath['TProgressBar']                    = 'lib/adianti/widget/util/TProgressBar.php';
         $classPath['TCalendar']                       = 'lib/adianti/widget/util/TCalendar.php';
+        $classPath['TGantt']                          = 'lib/adianti/widget/util/TGantt.php';
         $classPath['TFullCalendar']                   = 'lib/adianti/widget/util/TFullCalendar.php';
         $classPath['TDropDown']                       = 'lib/adianti/widget/util/TDropDown.php';
         $classPath['TExceptionView']                  = 'lib/adianti/widget/util/TExceptionView.php';
@@ -156,6 +157,8 @@ class AdiantiClassMap
         $classPath['TKanban']                         = 'lib/adianti/widget/util/TKanban.php';
         $classPath['TCardView']                       = 'lib/adianti/widget/util/TCardView.php';
         $classPath['TPageStep']                       = 'lib/adianti/widget/util/TPageStep.php';
+        $classPath['TPillBar']                        = 'lib/adianti/widget/util/TPillBar.php';
+        $classPath['TDBArrowStep']                    = 'lib/adianti/widget/wrapper/TDBArrowStep.php';
         $classPath['TDBCheckGroup']                   = 'lib/adianti/widget/wrapper/TDBCheckGroup.php';
         $classPath['TDBCombo']                        = 'lib/adianti/widget/wrapper/TDBCombo.php';
         $classPath['TDBEntry']                        = 'lib/adianti/widget/wrapper/TDBEntry.php';

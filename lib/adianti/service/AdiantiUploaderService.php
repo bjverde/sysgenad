@@ -7,7 +7,7 @@ use Adianti\Core\AdiantiApplicationConfig;
 /**
  * File uploader listener
  *
- * @version    7.4
+ * @version    7.5
  * @package    service
  * @author     Nataniel Rabaioli
  * @author     Pablo Dall'Oglio
@@ -111,7 +111,7 @@ class AdiantiUploaderService
     /**
      *
      */
-    function getMaximumFileUploadSizeFormatted()  
+    public static function getMaximumFileUploadSizeFormatted()  
     {  
         $post_max_size = self::convertSizeToBytes(ini_get('post_max_size'));
         $upld_max_size = self::convertSizeToBytes(ini_get('upload_max_filesize'));  
@@ -122,12 +122,12 @@ class AdiantiUploaderService
         }
         
         return 'upload_max_filesize: ' .ini_get('upload_max_filesize');
-    } 
+    }
     
     /**
      *
      */
-    function getMaximumFileUploadSize()  
+    public static function getMaximumFileUploadSize()  
     {  
         return min(self::convertSizeToBytes(ini_get('post_max_size')), self::convertSizeToBytes(ini_get('upload_max_filesize')));  
     }  
@@ -135,7 +135,7 @@ class AdiantiUploaderService
     /**
      *
      */
-    function convertSizeToBytes($size)
+    public static function convertSizeToBytes($size)
     {
         $suffix = strtoupper(substr($size, -1));
         if (!in_array($suffix,array('P','T','G','M','K'))){

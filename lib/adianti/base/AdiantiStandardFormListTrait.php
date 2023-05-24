@@ -16,7 +16,7 @@ use Exception;
 /**
  * Standard Form List Trait
  *
- * @version    7.4
+ * @version    7.5
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -24,7 +24,18 @@ use Exception;
  */
 trait AdiantiStandardFormListTrait
 {
+    protected $afterSaveAction;
+    
     use AdiantiStandardControlTrait;
+    
+    /**
+     * method setAfterSaveAction()
+     * Define after save action
+     */
+    public function setAfterSaveAction($action)
+    {
+        $this->afterSaveAction = $action;
+    }
     
     /**
      * method setLimit()
@@ -158,7 +169,7 @@ trait AdiantiStandardFormListTrait
             TTransaction::close();
             
             // shows the success message
-            new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));
+            new TMessage('info', AdiantiCoreTranslator::translate('Record saved'), $this->afterSaveAction ?? null);
             
             // reload the listing
             $this->onReload();

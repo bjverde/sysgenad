@@ -9,7 +9,7 @@ use Adianti\Widget\Util\TImage;
 /**
  * MenuItem Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage menu
  * @author     Pablo Dall'Oglio
@@ -99,6 +99,30 @@ class TMenuItem extends TElement
     public function setImage($image)
     {
         $this->image = $image;
+    }
+    
+    /**
+     * Returns the menu
+     */
+    public function getMenu()
+    {
+        return $this->menu;
+    }
+    
+    /**
+     * Returns the level
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+    
+    /**
+     * Returns the link
+     */
+    public function getLink()
+    {
+        return $this->link;
     }
     
     /**

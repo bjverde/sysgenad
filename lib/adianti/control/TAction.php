@@ -9,7 +9,7 @@ use ReflectionMethod;
 /**
  * Structure to encapsulate an action
  *
- * @version    7.4
+ * @version    7.5
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -30,6 +30,11 @@ class TAction
     {
         $this->action = $action;
         
+        if (is_object($this->action[0]))
+        {
+            $this->action[0] = get_class($this->action[0]);
+        }
+        
         if (!$this->validate($action))
         {
             $action_string = $this->toString();
@@ -45,6 +50,24 @@ class TAction
             
             $this->param = $parameters;
         }
+    }
+    
+    /**
+     *
+     */
+    public function cloneWithParameters($parameters = [])
+    {
+        $clone = clone $this;
+        
+        if ($parameters)
+        {
+            foreach ($parameters as $key => $value)
+            {
+                $clone->setParameter($key, $value);
+            }
+        }
+        
+        return $clone;
     }
     
     /**

@@ -15,7 +15,7 @@ use Exception;
 /**
  * Password Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -100,6 +100,15 @@ class TPassword extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Disable auto complete
+     */
+    public function disableAutoComplete()
+    {
+        $this->tag->{'autocomplete'} = 'new-password';
+        
+    }
+    
+    /**
      * Show the widget at the screen
      */
     public function show()
@@ -148,7 +157,29 @@ class TPassword extends TField implements AdiantiWidgetInterface
             $this->tag->{'tabindex'} = '-1';
         }
         
-        if (!empty($this->innerIcon))
+        if ($this->toggleVisibility)
+        {
+            $div    = new TElement('div');
+            $button = new TElement('button');
+            $icon   = new TElement('i');
+
+            $div->{'id'} = $this->id;
+
+            $icon->{'class'} = 'fa fa-eye-slash';
+            $div->{'class'} = 'tpassword';
+
+            $button->{'type'} = 'button';
+
+            $button->add($icon);
+            $div->add($this->innerIcon);
+            $div->add($this->tag);
+            $div->add($button);
+
+            $div->show();
+
+            TScript::create("tpassword_start('{$this->id}');");
+        }
+        else if (!empty($this->innerIcon))
         {
             $icon_wrapper = new TElement('div');
             $icon_wrapper->add($this->tag);
@@ -157,33 +188,8 @@ class TPassword extends TField implements AdiantiWidgetInterface
         }
         else
         {
-            if ($this->toggleVisibility)
-            {
-                $div    = new TElement('div');
-                $button = new TElement('button');
-                $icon   = new TElement('i');
-    
-                $div->{'id'} = $this->id;
-                $div->{'style'} = $this->getProperty('style');
-    
-                $icon->{'class'} = 'fa fa-eye-slash';
-                $div->{'class'} = 'tpassword';
-    
-                $button->{'type'} = 'button';
-    
-                $button->add($icon);
-                $div->add($this->tag);
-                $div->add($button);
-    
-                $div->show();
-    
-                TScript::create("tpassword_start('{$this->id}');");
-            }
-            else
-            {
-                // shows the tag
-                $this->tag->show();
-            }
+            // shows the tag
+            $this->tag->show();
         }
     }
 }

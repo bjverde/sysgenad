@@ -9,7 +9,7 @@ use PDO;
 /**
  * Provides an Interface to create SELECT statements
  *
- * @version    7.4
+ * @version    7.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -131,11 +131,11 @@ class TSqlSelect extends TSqlStatement
             
             if ($limit)
             {
-                $this->sql .= ' FIRST ' . $limit;
+                $this->sql .= ' FIRST ' . $limit . ' ';
             }
             if ($offset)
             {
-                $this->sql .= ' SKIP ' . $offset;
+                $this->sql .= ' SKIP ' . $offset . ' ';
             }
         }
         

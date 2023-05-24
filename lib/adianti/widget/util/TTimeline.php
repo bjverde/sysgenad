@@ -14,7 +14,7 @@ use ApplicationTranslator;
 /**
  * Timeline
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage util
  * @author     Artur Comunello
@@ -190,6 +190,7 @@ class TTimeline extends TElement
                     $span->add( $label );
                     $button->add( $span );
                     $button->{'class'} = $action->getProperty('btn-class') ?? 'btn btn-default';
+                    $button->{'type'} = 'button';
                     
                     $footer->add( $button );
                 }

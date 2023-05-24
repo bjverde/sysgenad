@@ -34,8 +34,12 @@
 @import url("tcard/tcard.css");
 @import url("ttext/ttext.css");
 @import url("tpagestep/tpagestep.css");
+@import url("tpillbar/tpillbar.css");
 @import url("tcheckgroup/tcheckgroup.css");
 @import url("tbarcodeinputreader/tbarcodeinputreader.css");
 @import url("tqrcodeinputreader/tqrcodeinputreader.css");
 @import url("timagecropper/timagecropper.css");
 @import url("tarrowstep/tarrowstep.css");
+@import url("tgantt/tgantt.css");
+@import url("tentry/tentry.css");
+@import url("tchecklist/tchecklist.css");

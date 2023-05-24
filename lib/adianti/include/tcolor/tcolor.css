@@ -27,7 +27,6 @@ div.color-div .pickr button {
     border-radius: 0px;
     width: 30px;
     border: 1px solid #cccccc;
-    border-left: none;
 }
 div.color-div .pickr button.clear {
     background-size: 50%;
@@ -46,6 +45,11 @@ div.color-div span.tcolor
     box-sizing: border-box;
     border-bottom-color: #b3b3b3;
     vertical-align:top;
+}
+
+.tfieldlist div.color-div
+{
+    display: inline-block;
 }
 
 div.color-div

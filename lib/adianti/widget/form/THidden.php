@@ -7,7 +7,7 @@ use Adianti\Widget\Form\TField;
 /**
  * Hidden field
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -17,6 +17,16 @@ use Adianti\Widget\Form\TField;
 class THidden extends TField implements AdiantiWidgetInterface
 {
     protected $id;
+    
+    /**
+     * Class Constructor
+     * @param  $name name of the field
+     */
+    public function __construct($name)
+    {
+        parent::__construct($name);
+        $this->id = 'thidden_' . mt_rand(1000000000, 1999999999);
+    }
     
     /**
      * Return the post data
@@ -50,10 +60,6 @@ class THidden extends TField implements AdiantiWidgetInterface
         if ($this->id and empty($this->tag->{'id'}))
         {
             $this->tag->{'id'} = $this->id;
-        }
-        else
-        {
-            $this->tag->{'id'} = 'thidden_' . mt_rand(1000000000, 1999999999);
         }
         
         // shows the widget

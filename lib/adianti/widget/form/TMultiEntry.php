@@ -13,7 +13,7 @@ use Exception;
 /**
  * Multi Entry Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Matheus Agnes Dias
@@ -42,7 +42,7 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
         parent::__construct($name);
         $this->id   = 'tmultientry_'.mt_rand(1000000000, 1999999999);
 
-        $this->height = 34;
+        $this->height = 38;
         $this->maxSize = 0;
         
         $this->tag->{'component'} = 'multientry';

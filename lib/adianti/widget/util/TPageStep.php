@@ -1,8 +1,13 @@
 <?php
+namespace Adianti\Widget\Util;
+
+use Adianti\Widget\Base\TElement;
+use Adianti\Control\TAction;
+
 /**
  * Page Step
  *
- * @version    3.0
+ * @version    7.5
  * @package    widget
  * @subpackage util
  * @author     Matheus Agnes Dias

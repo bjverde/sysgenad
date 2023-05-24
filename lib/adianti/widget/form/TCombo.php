@@ -12,7 +12,7 @@ use Exception;
 /**
  * ComboBox Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -224,14 +224,14 @@ class TCombo extends TField implements AdiantiWidgetInterface
         {
             foreach ($items as $key => $value)
             {
+                $value = htmlspecialchars( (string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                
                 if (substr($key, 0, 3) == '>>>')
                 {
                     $code .= "tcombo_create_opt_group('{$formname}', '{$name}', '{$value}'); ";
                 }
                 else
                 {
-                    // se exitsir optgroup add nele
-                    $value = addslashes($value);
                     $code .= "tcombo_add_option('{$formname}', '{$name}', '{$key}', '{$value}'); ";
                 }
             }

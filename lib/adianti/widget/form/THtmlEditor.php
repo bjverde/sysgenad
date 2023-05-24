@@ -6,11 +6,12 @@ use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Form\TField;
+use Adianti\Widget\Util\TImage;
 
 /**
  * Html Editor
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -23,6 +24,7 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
     protected $size;
     protected $formName;
     protected $toolbar;
+    protected $customButtons;
     protected $completion;
     protected $options;
     private   $height;
@@ -37,7 +39,7 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
         $this->id = 'THtmlEditor_'.mt_rand(1000000000, 1999999999);
         $this->toolbar = true;
         $this->options = [];
-        
+        $this->customButtons = [];
         // creates a tag
         $this->tag = new TElement('textarea');
         $this->tag->{'widget'} = 'thtmleditor';
@@ -62,6 +64,26 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
     public function setOption($option, $value)
     {
         $this->options[$option] = $value;
+    }
+
+    /**
+     * Add custom button
+     *
+     * @link https://summernote.org/deep-dive/#custom-button
+     * @param $name     String  name action
+     * @param $function String  function(context){  }
+     * @param $title    String  title icon
+     * @param $icon     TImage  toolbar icon
+     */
+    public function addCustomButton($name, $function, $title, TImage $icon, $showLabel = false)
+    {
+        $this->customButtons[] = [
+            'name' => $name,
+            'function' => base64_encode($function),
+            'title' => base64_encode($title),
+            'showLabel' => $showLabel,
+            'icon' => base64_encode($icon->getContents()),
+        ];
     }
     
     /**
@@ -147,6 +169,17 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Insert text
+     * @param $form_name Form name
+     * @param $field Field name
+     * @param $content Text content
+     */
+    public static function insertText($form_name, $field, $content)
+    {
+        TScript::create( " thtmleditor_insert_text('{$form_name}', '{$field}', '{$content}'); " );
+    }
+    
+    /**
      * Show the widget
      */
     public function show()
@@ -162,7 +195,10 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
         $this->tag->add(htmlspecialchars( (string) $this->value));
         
         // show the tag
-        $this->tag->show();
+        $div = new TElement('div');
+        $div->style = 'display: none';
+        $div->add($this->tag);
+        $div->show();
         
         $options = $this->options;
         if (!$this->toolbar)
@@ -175,7 +211,9 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
         }
         
         $options_json = json_encode( $options );
-        TScript::create(" thtmleditor_start( '{$this->tag->{'id'}}', '{$this->size}', '{$this->height}', '{$locale}', '{$options_json}' ); ");
+        $buttons_json = json_encode( $this->customButtons );
+        TScript::create(" thtmleditor_start( '{$this->tag->{'id'}}', '{$this->size}', '{$this->height}', '{$locale}', '{$options_json}', '{$buttons_json}' ); ");
+        TScript::create(" $('#{$this->tag->id}').parent().show();");
         
         // check if the field is not editable
         if (!parent::getEditable())

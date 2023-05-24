@@ -16,7 +16,7 @@ use Exception;
 /**
  * Database Multisearch Widget
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -160,6 +160,20 @@ class TDBMultiSearch extends TMultiSearch
     public function setMask($mask)
     {
         $this->mask = $mask;
+    }
+
+    /**
+     * Define the filter columns
+     * @param $columns
+     */
+    public function setFilterColumns($columns)
+    {
+        if (is_array($columns))
+        {
+            $columns = implode(',', $columns);
+        }
+
+        $this->column = $columns;
     }
     
     /**

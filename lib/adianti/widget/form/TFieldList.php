@@ -16,7 +16,7 @@ use stdClass;
 /**
  * Create a field list
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -691,6 +691,50 @@ class TFieldList extends TTable
             $this->tbody->{'class'} .= ' thin-scroll';
             $this->tfoot->{'style'} .= ';display:block;float:right;margin-right:10px';
         }
+    }
+    
+    /**
+     * Get head
+     */
+    public function getHead()
+    {
+        return $this->thead;
+    }
+
+    /**
+     * Get foot
+     */
+    public function getFoot()
+    {
+        return $this->tfoot;
+    }
+
+    /**
+     * Get body
+     */
+    public function getBody()
+    {
+        return $this->tbody;
+    }
+    
+    /**
+     * Enable the field
+     * @param $form_name Form name
+     * @param $field Field name
+     */
+    public static function enableField($field)
+    {
+        TScript::create( " tfieldlist_enable_field('{$field}'); " );
+    }
+    
+    /**
+     * Disable the field
+     * @param $form_name Form name
+     * @param $field Field name
+     */
+    public static function disableField($field)
+    {
+        TScript::create( " tfieldlist_disable_field('{$field}'); " );
     }
     
     /**

@@ -8,8 +8,8 @@ use Exception;
 /**
  * Basic HTTP Client request
  *
- * @version    7.4
- * @package    core
+ * @version    7.5
+ * @package    http
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    http://www.adianti.com.br/framework-license

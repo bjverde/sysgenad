@@ -13,7 +13,7 @@ use Adianti\Widget\Util\TImage;
 /**
  * Image uploader with cropper
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Lucas Tomasi
@@ -261,6 +261,17 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
     }
 
     /**
+     * Returns the field sizes
+     */
+    public function getSize()
+    {
+        return [
+            str_replace('px', '', $this->width),
+            str_replace('px', '', $this->height)
+        ];
+    }
+
+    /**
      * Set image size after crop
      *
      * @param px $width
@@ -349,7 +360,7 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
                 $fileExtension = pathinfo($dados_file->fileName)['extension'];
                 
                 // Set src img
-                $src = $dados_file->fileName . '?v=' . uniqid();
+                $src = 'download.php?file=' . $dados_file->fileName . '&v=' . uniqid();
             }
         }
         else if ($this->base64 && $this->value)
@@ -379,6 +390,7 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
         if ($src)
         {
             $img->{'src'} = $src;
+            $this->imagePlaceholder->{'style'} = 'display: none;';
         }            
 
         $this->tag->{'value'} = $this->value;

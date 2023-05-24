@@ -17,7 +17,7 @@ use ReflectionClass;
 /**
  * Record Lookup Widget: Creates a lookup field used to search values from associated entities
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -214,7 +214,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
                     if (is_object($callback[0]))
                     {
                         $rc = new ReflectionClass($callback[0]);
-                        $class = $rc->getName();
+                        $class = $rc-> getName ();
                     }
                     else
                     {

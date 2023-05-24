@@ -1,4 +1,5 @@
 <?php
+namespace Adianti\Widget\Form;
 
 use Adianti\Control\TAction;
 use Adianti\Core\AdiantiCoreTranslator;
@@ -6,12 +7,13 @@ use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Base\TStyle;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
+use Adianti\Widget\Form\TField;
 use Adianti\Widget\Form\TForm;
 
 /**
  * Arrow Step
  *
- * @version    7.4
+ * @version    7.5
  * @package    widget
  * @subpackage util
  * @author     Lucas Tomasi
@@ -20,13 +22,14 @@ use Adianti\Widget\Form\TForm;
  * @copyright  Copyright (c) 2006-2014 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    http://www.adianti.com.br/framework-license
  */
-class TArrowStep extends TElement implements AdiantiWidgetInterface
+class TArrowStep extends TField implements AdiantiWidgetInterface
 {
     protected $container;
     protected $items;
     protected $colorItems;
     protected $action;
     protected $selected;
+    protected $width;
     protected $height;
     protected $name;
     protected $id;
@@ -45,7 +48,8 @@ class TArrowStep extends TElement implements AdiantiWidgetInterface
      */
     public function __construct($name)
     {
-        parent::__construct('div');
+        parent::__construct($name);
+        $this->tag = new TElement('div');
 
         $this->id = 'tarrowstep_' . mt_rand(1000000000, 1999999999);
 
@@ -61,6 +65,7 @@ class TArrowStep extends TElement implements AdiantiWidgetInterface
         $this->editable = true;
         $this->hideText = false;
         $this->height = 50;
+        $this->width = '100%';
         $this->fontSize = '14px';
         $this->color = "#6c757d";
         $this->fontColor = "#ffffff";
@@ -75,7 +80,7 @@ class TArrowStep extends TElement implements AdiantiWidgetInterface
      * 
      * @param $name name of arrow steps
      */
-    public static function disableField($name)
+    public static function disableField($formName, $name)
     {
         TScript::create("tarrowstep_disable_field('{$name}');");
     }
@@ -85,7 +90,7 @@ class TArrowStep extends TElement implements AdiantiWidgetInterface
      * 
      * @param $name name of arrow steps
      */
-    public static function enableField($name)
+    public static function enableField($formName, $name)
     {
         TScript::create("tarrowstep_enable_field('{$name}');");
     }
@@ -96,7 +101,7 @@ class TArrowStep extends TElement implements AdiantiWidgetInterface
      * 
      * @param $name name of arrow steps
      */
-    public static function clearField($name)
+    public static function clearField($formName, $name)
     {
         TScript::create("tarrowstep_clear('{$name}');");
     }
@@ -137,30 +142,11 @@ class TArrowStep extends TElement implements AdiantiWidgetInterface
     {
         if (isset($_POST[$this->name]))
         {
-            return $_POST[$this->name];
+            return $_POST[$this->name] ? $_POST[$this->name] : null;
         }
 
         return null;
     }
-
-    /**
-     * Validate a field
-     */
-    public function validate()
-    {
-        if ($this->validations)
-        {
-            foreach ($this->validations as $validation)
-            {
-                $label      = $validation[0];
-                $validator  = $validation[1];
-                $parameters = $validation[2];
-                
-                $validator->validate($label, $this->getValue(), $parameters);
-            }
-        }
-    }
-    
 
     /**
      * Set form name
@@ -270,6 +256,45 @@ class TArrowStep extends TElement implements AdiantiWidgetInterface
         $this->disableFontColor = $color;
     }
     
+    /**
+     * Set width
+     * @param $width int|float to width
+     */
+    public function setWidth($width)
+    {
+        if (is_numeric($width))
+        {
+            $this->width = $width . 'px';
+        }
+        else
+        {
+            $this->width = $width;
+        }
+    }
+
+    /**
+     * Get width
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * Set sizes
+     * @param $width
+     * @param $height
+     */
+    public function setSize($width, $height = null)
+    {
+        if ($height)
+        {
+            $this->setHeight($height);
+        }
+
+        $this->setWidth($width);
+    }
+
     /**
      * Set height arrows
      * @param $height int|float to height 
@@ -560,6 +585,7 @@ class TArrowStep extends TElement implements AdiantiWidgetInterface
 
         $input = new TElement('input');
         $input->{'type'} = 'hidden';
+        $input->{'widget'} = 'tarrowstep';
         $input->{'id'} = $this->id;
         $input->{'name'} = $this->name;
         $input->{'value'} = $this->selected;
@@ -569,6 +595,11 @@ class TArrowStep extends TElement implements AdiantiWidgetInterface
         if (! $this->editable)
         {
             $this->className .= ' disabled ';
+        }
+
+        if ($this->width)
+        {
+            $this->style = 'width: ' . $this->width;
         }
 
         parent::setProperty('class', $this->className . " div_arrow_steps");
