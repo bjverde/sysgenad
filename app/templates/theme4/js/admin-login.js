@@ -13,7 +13,11 @@ $.AdminBSB.input = {
     activate: function () {
         //On focus event
         $('.form-control').focus(function () {
-            $(this).parent().addClass('focused');
+            // Exclude date picker
+            if ( ! $(this).parent().hasClass('tdate-group') ) {
+                // add on .formline
+                $(this).parents('.form-line').addClass('focused');
+            }
         });
 
         //On focusout event

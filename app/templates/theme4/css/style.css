@@ -3368,7 +3368,7 @@ section.content {
   -ms-border-radius: 0 !important;
   border-radius: 0 !important; }
   .sweet-alert p {
-    font-size: 14px !important; }
+    font-size: 14px; }
   .sweet-alert .sa-input-error {
     top: 23px !important;
     right: 13px !important; }
@@ -3376,7 +3376,7 @@ section.content {
     font-size: 18px !important;
     margin: 0 0 5px 0 !important; }
   .sweet-alert button {
-    font-size: 15px !important;
+    font-size: 15px;
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
     -ms-border-radius: 0 !important;
