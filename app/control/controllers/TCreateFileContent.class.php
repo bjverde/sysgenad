@@ -18,7 +18,7 @@ class TCreateFileContent
 
     public function __construct()    
     {
-        $this->lines = array();
+        $this->setLinesArrayBranco();
     }
     //--------------------------------------------------------------------------------------
     /**
@@ -50,6 +50,11 @@ class TCreateFileContent
     {
         return $this->fileName;
     }
+    //------------------------------------------------------------------------------------
+    public function setLinesArrayBranco()
+    {
+        return $this->lines = array();
+    }    
     //------------------------------------------------------------------------------------
     public function getLinesArray()
     {
