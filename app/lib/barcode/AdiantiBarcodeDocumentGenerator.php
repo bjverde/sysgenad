@@ -1,7 +1,9 @@
 <?php
 
 use Picqer\Barcode\BarcodeGeneratorPNG;
-use BaconQrCode\Renderer\Image\Png;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 
 /**
@@ -163,12 +165,15 @@ class AdiantiBarcodeDocumentGenerator extends AdiantiPDFDesigner
                         {
                             $rand   = mt_rand(1000000000, 1999999999);
                             $output = "tmp/barcode_{$counter}_{$rand}.png";
-                            $renderer = new Png;
-                            $renderer->setHeight( $this->barcodeHeight * 3.78 );
-                            $renderer->setWidth( $this->barcodeHeight * 3.78 );
-                            $renderer->setMargin(0);
+                            
+                            $renderer = new ImageRenderer(new RendererStyle((int) ($this->barcodeHeight * 3.78),2), new ImagickImageBackEnd);
+                            
                             $writer = new Writer($renderer);
                             $writer->writeFile($barcode, $output);
+                            
+                            $imagick_image = new Imagick($output);
+                            $imagick_image->setCompressionQuality(100);
+                            $imagick_image->writeImage("png24:$output");
                             list($w,$h) = $this->Image($output, parent::GetX() + $this->imageMargin, parent::GetY(), 0, $this->barcodeHeight, '', '', true);
                             
                             unlink($output);
