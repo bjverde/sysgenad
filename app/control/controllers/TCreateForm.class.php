@@ -169,13 +169,13 @@ class TCreateForm extends TCreateFileContent
         return $dtView;
     }
     //------------------------------------------------------------------------------------
-    public function setDtDb($dtBd)
+    public function setDtDb($dtDb)
     {
-        return $this->dtBd = $dtBd;
+        return $this->dtDb = $dtDb;
     }
     public function getDtDb()
     {
-        $dtView = empty($this->dtBd)?Message::MASK_DT_ISO:$this->dtBd;
+        $dtView = empty($this->dtDb)?Message::MASK_DT_ISO:$this->dtDb;
         return $dtView;
     }    
     //--------------------------------------------------------------------------------------
