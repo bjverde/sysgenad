@@ -524,7 +524,7 @@ class TCreateDAO extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function show($print = false)
     {
-        $this->lines=null;
+        $this->setLinesArrayBranco();
         $this->addLine('<?php');
         $this->addSysGenHeaderNote();
         $this->addLine('class '.ucfirst($this->getTableName()).'DAO ');

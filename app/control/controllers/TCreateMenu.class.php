@@ -102,7 +102,7 @@ class TCreateMenu extends TCreateFileContent
     //--------------------------------------------------------------------------------------
     public function show($print = false)
     {
-        $this->lines=null;
+        $this->setLinesArrayBranco();
         $this->addLine('<menu>');
         $this->addBasicMenuCruds();
         $this->addBlankLine();
