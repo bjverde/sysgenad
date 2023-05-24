@@ -68,6 +68,10 @@ class TFormDinMessage {
     const FORM_MIN_VERSION_BLANK = 'Informe a versão minima do formDin';
     const FORM_MIN_VERSION_NOT = ' Para esse sistema funcionar a versão mínima necessária do formDin é: ';
     const FORM_MIN_YOU_VERSION = 'Sua versão do FormDin é : ';
+
+    const ADIANTI_VERSION_BLANK   = 'A versão do Adianti está em branco! procure o arquivo sistema/lib/VERSION';
+    const ADIANTI_MIN_YOU_VERSION = 'Sua versão do Adianti é : ';
+    const ADIANTI_MIN_VERSION_FORMDIN = ' Para esse sistema funcionar a versão mínima necessária do Adianti é: ';
     
     const ARRAY_EXPECTED = 'O atribruto deveria ser um array';
     const ARRAY_KEY_NOT_EXIST = 'Não existe a chave procurada no array FormDin';
@@ -89,6 +93,8 @@ class TFormDinMessage {
     const ERROR_SQL_NULL       = 'O SQL está em branco';
     const ERROR_SQL_PARAM      = 'Quantidade de parametros diferente da quantidade utilizada na instrução sql!';
     const ERROR_SQL_NULL_DBMA  = 'O Tipo do Database management system está em branco';
+    const ERROR_VALEU_NOT_VALID= 'O Valor não é válido';
+    const ERROR_FILE_NOT_FOUND = Self::ERROR_FD5.' O arquivo não existe:';
 
     const ERROR_FD5  = 'ERRO FormDin5: ';
     const ERROR_FD5_PARAM_MIGRA  = 'Falha na migração do FormDin 4 para 5.';

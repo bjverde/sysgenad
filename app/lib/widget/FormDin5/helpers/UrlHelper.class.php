@@ -49,6 +49,7 @@ class UrlHelper
 
     /**
      * @deprecated use ServerHelper::getCurrentUrl()
+     * @codeCoverageIgnore
      */    
     static public function curPageURL() 
     {
@@ -57,6 +58,7 @@ class UrlHelper
     
     /**
      * @deprecated use ServerHelper::homeUrl()
+     * @codeCoverageIgnore
      */
     public static function homeUrl() 
     {

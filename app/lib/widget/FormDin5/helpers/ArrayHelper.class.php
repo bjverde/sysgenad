@@ -143,6 +143,7 @@ class ArrayHelper
     }
     /***
      * @deprecated chante to formDinGetValue
+     * @codeCoverageIgnore
      * Evita erro de notice. Recebe um array FormDin, um atributo e a chave.
      * Verifica se o atributo e achave existem e devolve o valor
      * @param array $array
@@ -157,6 +158,7 @@ class ArrayHelper
     //--------------------------------------------------------------------------------
     /**
      * @deprecated chante to ValidateHelper::isArray
+     * @codeCoverageIgnore
      * Validade is array and not empty
      * @param integer $id
      * @param string $method

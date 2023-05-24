@@ -65,6 +65,7 @@ class TFormDinDaoDbms
 	private $sqlParams	= null;
 	private $cursor		= null;
 	private $eof		= null;
+	private $type		= null;
 
 	/**
 	* Classe para pegar metadatos sobre diversos banco de dados.

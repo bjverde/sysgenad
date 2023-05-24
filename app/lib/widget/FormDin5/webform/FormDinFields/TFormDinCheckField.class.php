@@ -63,6 +63,8 @@
 class TFormDinCheckField  extends TFormDinOption
 {
     protected $adiantiObj;
+    private $intWidth;
+    private $intHeight;
     
     /**
      * Adicionar campo tipo combobox ou menu select
@@ -88,21 +90,21 @@ class TFormDinCheckField  extends TFormDinOption
      *  $frm->addSelectField('tipo','Tipo',true,$tiposDocumentos,null,null,null,null,null,null,' ','');
      * </code>
      *
-     * @param string  $id             -01: ID do campo
-     * @param string  $strLabel       -02: Label do campo
-     * @param boolean $boolRequired   -03: Campo obrigatório. Default FALSE = não obrigatório, TRUE = obrigatório
-     * @param mixed   $mixOptions     -04: String "S=SIM,N=NAO,..." ou Array dos valores nos formatos: PHP "id=>value", FormDin, PDO ou Adianti
-     * @param boolean $boolNewLine    -05: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
-     * @param boolean $boolLabelAbove -06: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
-     * @param mixed   $mixValue       -07: Informe o ID do array ou array com a lista de ID's no formato "key=>id" para identificar a(s) opção(ões) selecionada(s)
-     * @param integer $intQtdColumns  -08: Quantidade de colunas
-     * @param integer $intWidth       -09: DEPRECATED. Informe NULL para evitar o warning. Largura em Pixels
-     * @param integer $intHeight      -10: DEPRECATED. Informe NULL para evitar o warning. Altura em Pixels
-     * @param integer $intPaddingItems-11: DEPRECATED. Informe NULL para evitar o warning. 
-     * @param boolean $boolNoWrapLabel-12: NOT_IMPLEMENTED 
-     * @param boolean $boolNowrapText -13: NOT_IMPLEMENTED
-     * @param boolean $useButton      -14: FORMDIN5 Default FALSE = estilo radio comum, TRUE = estilo tipo botões
-     * @param mixed   $strKeyColumn   -15: FORMDIN5 Nome da coluna que será utilizada para preencher os valores das opções
+     * @param string  $id              -01: ID do campo
+     * @param string  $strLabel        -02: Label do campo
+     * @param boolean $boolRequired    -03: Campo obrigatório. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param mixed   $mixOptions      -04: String "S=SIM,N=NAO,..." ou Array dos valores nos formatos: PHP "id=>value", FormDin, PDO ou Adianti
+     * @param boolean $boolNewLine     -05: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
+     * @param boolean $boolLabelAbove  -06: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param mixed   $mixValue        -07: Informe o ID do array ou array com a lista de ID's no formato "key=>id" para identificar a(s) opção(ões) selecionada(s)
+     * @param integer $intQtdColumns   -08: Quantidade de colunas
+     * @param integer $intWidth        -09: Informe NULL para evitar o warning. Largura em Pixels
+     * @param integer $intHeight       -10: DEPRECATED. Informe NULL para evitar o warning. Altura em Pixels
+     * @param integer $intPaddingItems -11: DEPRECATED. Informe NULL para evitar o warning. 
+     * @param boolean $boolNoWrapLabel -12: NOT_IMPLEMENTED 
+     * @param boolean $boolNowrapText  -13: NOT_IMPLEMENTED
+     * @param boolean $useButton       -14: FORMDIN5 Default FALSE = mostra com check normal, TRUE = mostra como um botão
+     * @param mixed   $strKeyColumn    -15: FORMDIN5 Nome da coluna que será utilizada para preencher os valores das opções
      * @param mixed   $strDisplayColumn-16: FORMDIN5 Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário 
      * @return TCheckGroup
      */
@@ -153,11 +155,18 @@ class TFormDinCheckField  extends TFormDinOption
 
     public function setWidth($intWidth)
     {
-        ValidateHelper::validadeParam('intWidth',$intWidth
-                                     ,ValidateHelper::WARNING
-                                     ,ValidateHelper::MSG_DECREP
-                                     ,__CLASS__,__METHOD__,__LINE__);
+        if( !empty($intWidth) ){            
+            ValidateHelper::isNumeric($intWidth,__METHOD__,__LINE__);
+            $this->intWidth = $intWidth;
+            foreach ($this->getAdiantiObj()->getLabels() as $key => $label){
+                $label->setSize($intWidth);
+            }
+        }
     }
+    public function getWidth()
+    {
+        return $this->intWidth;
+    }    
     
     public function setHeight($intHeight)
     {

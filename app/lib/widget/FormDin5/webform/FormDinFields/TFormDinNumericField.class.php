@@ -49,8 +49,6 @@ class TFormDinNumericField extends TFormDinGenericField
     const COMMA = ',';
     const DOT = '.';
 
-    protected $adiantiObj;
-    protected $label;
     protected $decimalsSeparator;
     protected $thousandSeparator;
 

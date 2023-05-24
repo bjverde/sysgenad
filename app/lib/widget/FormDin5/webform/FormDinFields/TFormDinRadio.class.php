@@ -77,7 +77,7 @@ class TFormDinRadio extends TFormDinOption
      * @param integer $intQtdColumns  - 8: Quantidade de colunas, valor DEFAULT = 1;
      * @param integer $intWidth       - 9: DEPRECATED. Informe NULL para evitar o warning. Largura em Pixels
      * @param integer $intHeight      -10: DEPRECATED. Informe NULL para evitar o warning. Altura em Pixels
-     * @param integer $intPaddingItems-11: EPRECATED. Informe NULL para evitar o warning. 
+     * @param integer $intPaddingItems-11: DEPRECATED. Informe NULL para evitar o warning. 
      * @param boolean $boolNoWrapLabel-12: NOT_IMPLEMENTED
      * @param boolean $boolNowrapText -13: NOT_IMPLEMENTED
      * @param boolean $useButton      -14: FORMDIN5 Default FALSE = estilo radio comum, TRUE = estilo tipo botões

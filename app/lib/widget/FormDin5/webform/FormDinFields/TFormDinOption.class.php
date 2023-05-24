@@ -77,6 +77,7 @@ class TFormDinOption  extends TFormDinGenericField
 	private $selectSize;
 	private $keyField;
 	private $displayField;
+	private $fldType;
 	private $showMinimal;
 	private $nowWrapText;
 	private $arrOptionsData;

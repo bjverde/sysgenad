@@ -51,12 +51,13 @@ class ServerHelper
     const DEVICE_TYPE_TABLE   = 'tablet';
     const DEVICE_TYPE_DESKTOP = 'desktop';
 
+    /**
+     * @codeCoverageIgnore
+     */     
     public static function get($atributeName) 
     {
-        if(!isset($_SERVER[$atributeName])) {
-            $_SERVER[$atributeName]="";
-        }
-        return is_null($_SERVER[$atributeName])?"":trim($_SERVER[$atributeName]);
+        $result = ArrayHelper::get($_SERVER,$atributeName);
+        return $result;
     }    
     
     /**
@@ -64,6 +65,7 @@ class ServerHelper
      *
      * @param  boolean $trim_query_string
      * @return string|mixed
+     * @codeCoverageIgnore
      */
     public static function getCurrentUrl( $trim_query_string = false ) 
     {
@@ -104,7 +106,7 @@ class ServerHelper
     public static function getClientIP()
     {
         $client = ArrayHelper::get($_SERVER,'HTTP_CLIENT_IP');
-        $forward = ArrayHelper::get($_SERVER,'HTTP_X_FORWARDED_FOR');
+        $forward= ArrayHelper::get($_SERVER,'HTTP_X_FORWARDED_FOR');
         $remote = ArrayHelper::get($_SERVER,'REMOTE_ADDR');
         if ( filter_var($client, FILTER_VALIDATE_IP) ){
             $ip = $client;

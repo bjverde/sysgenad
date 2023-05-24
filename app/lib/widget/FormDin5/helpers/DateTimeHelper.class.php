@@ -186,6 +186,16 @@ class DateTimeHelper
     }
     
     /**
+     * @codeCoverageIgnore
+     * @deprecated change to dateBr2Iso
+     */
+    public static function date2Mysql($dateSql,$showTime=false)
+    {
+        self::dateBr2Iso($dateSql,$showTime);
+    }
+
+
+    /**
      * Converter data no formato dd/mm/yyyy para yyyy-mm-dd.
      * Converter data no formato dd/mm/yyyy hh:mm para yyyy-mm-dd hh:mm:00
      * Converter data no formato dd/mm/yyyy hh:mm:ss para yyyy-mm-dd hh:mm:ss
@@ -199,7 +209,7 @@ class DateTimeHelper
      * @param boolean $showTime - saída com ou sem hora. Só coloca hora se entrada tiver hora
      * @return string
      */
-    public static function date2Mysql($dateSql,$showTime=false)
+    public static function dateBr2Iso($dateSql,$showTime=false)
     {
         $retorno = null;
         $dateSql = is_null($dateSql)?'':trim($dateSql);
@@ -268,6 +278,7 @@ class DateTimeHelper
     public static function DateIso2DateBr($dateSql,$showTheTime=false,$showSeconds=false)
     {
         $retorno = null;
+        $dateSql = is_null($dateSql)?'':trim($dateSql);
         if( preg_match('/\d{4}-\d{2}-\d{2}$/', $dateSql) ){
             $dateTime = new DateTime($dateSql);
             $retorno = $dateTime->format('d/m/Y');
@@ -294,7 +305,7 @@ class DateTimeHelper
     */
     public static function convertToDateTime($date)
     {
-        $result = self::date2Mysql($date);
+        $result = self::dateBr2Iso($date);
         return new DateTime($result);
     }
 
@@ -390,5 +401,42 @@ class DateTimeHelper
             break;            
           }
         return $strMaskDate;
+    }
+
+    /**
+     * Verfica se a data 1 é mais recente que a data 2
+     *
+     * @param string $datahora1 recebe uma data e hora nos formatos ISO (yyyy-mm-dd hh:mm:ss) ou Br (dd/mm/yyyy hh:mm:ss)
+     * @param string $datahora2 recebe uma data e hora nos formatos ISO (yyyy-mm-dd hh:mm:ss) ou Br (dd/mm/yyyy hh:mm:ss)
+     * @return boolean
+     */
+    public static function date1NewerThanDate2( $datahora1, $datahora2  ){ 
+        $interval = self::getIntervalDateDiff( $datahora1, $datahora2 );
+	    if( $interval->invert == 1 ){
+	        $result = true;
+	    }
+        return $result;
+    }
+
+    /**
+     * Recebe duas datas e retornar um objeto do tipo DateInterval com a diferença entre as datas
+     *
+     * @param string $datetime1 recebe uma data e hora nos formatos ISO (yyyy-mm-dd hh:mm:ss) ou Br (dd/mm/yyyy hh:mm:ss)
+     * @param string $datetime2 recebe uma data e hora nos formatos ISO (yyyy-mm-dd hh:mm:ss) ou Br (dd/mm/yyyy hh:mm:ss)
+     * @return DateInterval
+     */
+    public static function getIntervalDateDiff( $datetime1, $datetime2 ){ 
+        $datetime1 = self::dateBr2Iso($datetime1);
+		if ( empty($datetime1) ) {
+		    throw new InvalidArgumentException('Date Time 1 wrong format');
+		}
+        $datetime2 = self::dateBr2Iso($datetime2);
+		if ( empty($datetime2) ) {
+		    throw new InvalidArgumentException('Date Time 2 wrong format');
+		}
+        $dtInicioObj = new DateTime($datetime1);
+        $dtFimObj    = new DateTime($datetime2);
+        $interval = $dtInicioObj->diff($dtFimObj); //If Date is in past then invert will 1
+        return $interval;
     }
 }

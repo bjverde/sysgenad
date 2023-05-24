@@ -44,30 +44,17 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-class GetHelper
+class OrmAdiantiHelper
 {
-    /**
-     * @codeCoverageIgnore
-     */    
-    public static function get($atributeName) 
-    {
-        return ArrayHelper::get($_GET,$atributeName);
-    }
-    
-    /**
-     * @codeCoverageIgnore
-     */    
-    public static function getDefaultValue($atributeName,$DefaultValue) 
-    {
-        return ArrayHelper::getDefaultValue($_GET,$atributeName,$DefaultValue);
-    }
 
-    /**
-     * @codeCoverageIgnore
-     */
-    public static function has($atributeName) 
+    public static function testParam($param) 
     {
-        return ArrayHelper::has($atributeName,$_GET);
+        $result = false;
+        if (isset($param) AND ( (is_scalar($param) AND $param !== '') OR (is_array($param) AND (!empty($param)) )) )
+        {
+            $result = true;// create the filter 
+        }
+    	return $result;
     }
 }
 ?>

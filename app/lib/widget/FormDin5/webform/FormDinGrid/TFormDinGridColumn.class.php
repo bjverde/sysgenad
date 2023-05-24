@@ -128,8 +128,16 @@ class TFormDinGridColumn
         return $this->name;
     }
 	//-------------------------------------------------------------------------------------------
-    public function setTransformer($array){
-        return $this->getAdiantiObj()->setTransformer($array);
+    public function setVisibility($bool){
+        return $this->getAdiantiObj()->setVisibility($bool);
+    }
+    public function enableAutoHide($width)
+    {
+        return $this->getAdiantiObj()->enableAutoHide($width);
+    }
+	//-------------------------------------------------------------------------------------------
+    public function setTransformer(Callable $callback){
+        return $this->getAdiantiObj()->setTransformer($callback);
     }
     public function getTransformer(){
         return $this->getAdiantiObj()->getTransformer();

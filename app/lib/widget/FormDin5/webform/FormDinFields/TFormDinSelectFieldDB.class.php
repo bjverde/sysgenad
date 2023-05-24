@@ -44,8 +44,8 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
- /**
- * Classe para criação campo do tipo Switch
+/**
+ * Classe para criação campo texto simples
  * ------------------------------------------------------------------------
  * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
  * os parâmetros do metodos foram marcados com:
@@ -59,48 +59,56 @@
  * 
  * @author Reinaldo A. Barrêto Junior
  */
-class TFormDinSwitch extends TFormDinRadio
+class TFormDinSelectFieldDB extends TFormDinGenericField
 {
-    protected $adiantiObj;
-    protected $items = ['S'=>'Sim', 'N'=>'Não'];
-    
     /**
-     * Cria um RadioGroup com efeito visual de Switch
-     * Reconstruido FormDin 4 Sobre o Adianti 7
-     * 
-     * @param string  $id            - 1: ID do campo
-     * @param string  $strLabel      - 2: Label do campo
-     * @param boolean $boolRequired  - 3: TRUE = Required, FALSE = not Required
-     * @param array   $mixOptions    - 4: Array Options ou String FormDin 'S=SIM,N=Não'
-     * @param boolean $boolNewLine   - 5: TRUE = new line, FALSE = no, DEFAULT ou NULL = FALSE
-     * @param boolean $boolLabelAbove- 6: TRUE = Titulo em cima das opções, FALSE = titulo lateral
-     * @param string  $mixValue      - 7: Valor DEFAULT, informe o ID do array
-     * @return mixed TRadioGroup
+     * ------------------------------------------------------------------------
+     * FormDin 5, que é uma reconstrução do FormDin 4 sobre o Adianti 7.X
+     * Alguns parâmetros têm uma TAG, veja documentação da classe para saber
+     * o que cada marca significa.
+     * ------------------------------------------------------------------------
+     *
+     * @param string $id           - 01: ID do campo
+     * @param string $label        - 02: Label do campo
+     * @param boolean $boolRequired- 03: Campo obrigatório. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param string $value        - 04: Valor inicial 
+     * @param string $database     - 05: Nome da conexão
+     * @param string $model        - 06: Nome arquivo model, precisa ser do tipo TRecord
+     * @param string $key          - 07: Nome da chave, será o valor enviado para o banco
+     * @param string $name         - 08: Nome do balor que vai aparecer para o usuário
+     * @param string $ordercolumn  - 09: Nome da colune de ordenação
+     * @param TCriteria $criteria  - 10: Objeto do tipo TCriteria para fazer filtros 
+     * @param string $enableSearch - 11: Define se o campo será tipo autocomplete
+     * @param string $placeholder   -12: PlaceHolder é um Texto de exemplo
+     * @return TDBCombo
      */
-    public function __construct(string $id,string $label,$boolRequired = false,array $mixOptions= null, $boolNewLine=true,$boolLabelAbove=false,$mixValue=null)
-    {        
-        if( !empty($mixOptions) ){
-            $this->items = $mixOptions;
-        }else{
-            $mixOptions = $this->items;
-        }
-        parent::__construct($id
-                            ,$label
-                            ,$boolRequired
-                            ,$mixOptions
-                            ,$boolNewLine
-                            ,$boolLabelAbove
-                            ,$mixValue
-                            ,2
-                            ,null
-                            ,null
-                            ,null
-                            ,null
-                            ,null
-                            ,true
-                            ,null
-                            ,null
-                            );    
+    public function __construct(string $id
+                               ,string $label
+                               ,bool|null   $boolRequired
+                               ,string|null $value
+                               ,string $database
+                               ,string $model
+                               ,string $key
+                               ,string $name
+                               ,string $ordercolumn = null
+                               ,TCriteria $criteria = null
+                               ,bool $enableSearch = true
+                               ,bool $placeholder = null
+                               )
+    {
+        $boolRequired   = empty($boolRequired)?false:$boolRequired;
+
+        $adiantiObj = new TDBCombo($id, $database, $model, $key, $name, $ordercolumn, $criteria);
+        parent::__construct($adiantiObj,$id,$label,$boolRequired,$value,$placeholder);
+        $this->enableSearch($enableSearch);
         return $this->getAdiantiObj();
+    }
+
+    public function enableSearch($enableSearch)
+    {
+        $enableSearch = is_null($enableSearch)?true:$enableSearch;
+        if($enableSearch){
+            $this->getAdiantiObj()->enableSearch();
+        }
     }
 }

@@ -49,6 +49,7 @@ use Adianti\Validator\TCNPJValidator;
 class TFormDinCnpjField  extends TFormDinMaskField
 {
     protected $adiantiObj;
+    protected $alwaysValidate;
     
     /**
      * Campo de entrada de dados do tipo CNPJ

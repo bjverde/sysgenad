@@ -62,7 +62,8 @@
 class FormDinHelper
 {
 
-    const FORMDIN_VERSION = '5.0.0-alpha27';
+    const FORMDIN_VERSION = '5.0.0-alpha33';
+    const ADIANTI_MIN_FORMDIN = '7.5.1';
     const GRID_SIMPLE = 'GRID_SIMPLE';
     const GRID_SCREEN_PAGINATION = 'GRID_SCREEN_PAGINATION';
     const GRID_SQL_PAGINATION    = 'GRID_SQL_PAGINATION';
@@ -79,16 +80,20 @@ class FormDinHelper
      * Returns if the current formDin version meets the minimum requirements
      * 
      * Retorna se a versão atual do formDin atende aos requisitos mínimos 
-     * @param string $version
+     * @param string $version    - versão de referencia
+     * @param string $versionRef - versão de referencia
      * @return boolean
      */
-    public static function versionMinimum($version)
+    public static function versionMinimum($version,$versionRef=null)
     {
-        $formVersion = explode("-", self::version());
-        $formVersion = $formVersion[0];
+        if(empty($versionRef)){
+            $formVersion = explode("-", self::version());
+            $formVersion = $formVersion[0];
+        }else{
+            $formVersion = $versionRef;
+        }
         return version_compare($formVersion,$version,'>=');
     }
-
 	/***
      * Sets the minimum formDin version for the system to work
 	 * 
@@ -111,8 +116,59 @@ class FormDinHelper
 			}
 		}
 	}
-
-
+	/***
+     * Sets the minimum AdiantiFrameWork version for FormDin to work
+	 * 
+	 * Define a versão minima do AdiantiFrameWork para o FormDin funcionar
+     * @param string $minimumVersion
+     */
+	public static function setAdminMinimumVersionFrameWork($minimumVersion) {
+		if ( empty($minimumVersion) ) {
+		    throw new DomainException(TFormDinMessage::ADIANTI_VERSION_BLANK);			
+		} else {
+			if( !FormDinHelper::versionMinimum($minimumVersion,self::ADIANTI_MIN_FORMDIN) ){
+                $msg = TFormDinMessage::ADIANTI_MIN_YOU_VERSION.self::ADIANTI_MIN_FORMDIN.'.'.TFormDinMessage::FORM_MIN_VERSION_NOT.$minimumVersion;
+			    throw new DomainException($msg);
+			}
+		}
+	}
+	/***
+     * Sets the minimum AdiantiFrameWork version for the system to work
+	 * 
+	 * Define a versão minima do formDin para o sistema funcionar
+     * @param string $minimumVersion
+     */
+	public static function setAdminSystemMinimumVersion($minimumVersion) {		
+		if ( empty($minimumVersion) ) {
+		    throw new DomainException(TFormDinMessage::FORM_MIN_VERSION_BLANK);			
+		} else {
+		    $t = explode(".", $minimumVersion);
+		    if( CountHelper::count($t) != 3 ){
+		        throw new DomainException(TFormDinMessage::FORM_MIN_VERSION_INVALID_FORMAT);
+			}
+			$t = explode("-", $minimumVersion);
+			$minimumVersion = $t[0];
+            $adiantiVersion = self::getAdiantiFrameWorkVersion();
+            self::setAdminMinimumVersionFrameWork($adiantiVersion);
+			if( !FormDinHelper::versionMinimum($minimumVersion,$adiantiVersion) ){
+                $msg = TFormDinMessage::FORM_MIN_YOU_VERSION.self::getAdiantiFrameWorkVersion().TFormDinMessage::FORM_MIN_VERSION_NOT.$minimumVersion;
+			    throw new DomainException($msg);
+			}
+		}
+	}
+    //--------------------------------------------------------------------------------
+    public static function getAdiantiFrameWorkVersion(){
+        if(!defined('DS') ) { 
+            define('DS', DIRECTORY_SEPARATOR); 
+        }
+        $fileVersion = __DIR__.DS.'..'.DS.'..'.DS.'..'.DS.'..'.DS.'..'.DS.'lib'.DS.'VERSION';
+        if ( !file_exists($fileVersion) ) {
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FILE_NOT_FOUND.' VERSION do Adianti');
+        }
+        $linesVersion = file($fileVersion, FILE_SKIP_EMPTY_LINES);
+        $version = trim(ArrayHelper::get($linesVersion,0));
+        return $version;
+    }
     //--------------------------------------------------------------------------------
     /**
      * Recebe um array PHP que pode ser o corpo de um request e um objeto VO. Quando o id do array bodyRequest for

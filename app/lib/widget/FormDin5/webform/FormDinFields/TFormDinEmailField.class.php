@@ -49,6 +49,7 @@ use Adianti\Validator\TEmailValidator;
 class TFormDinEmailField  extends TFormDinTextField
 {
     protected $adiantiObj;
+    protected $alwaysValidate;
     
     /**
      * Adiciona campo para entrada de endereço eletrônico - e-mail
@@ -68,7 +69,7 @@ class TFormDinEmailField  extends TFormDinTextField
      */   
     public function __construct(  string $id
                                 , string $label=null
-                                , int $intMaxLength
+                                , int $intMaxLength=null
                                 , $boolRequired=null
                                 , int $intSize=null
                                 , $boolNewLine=null

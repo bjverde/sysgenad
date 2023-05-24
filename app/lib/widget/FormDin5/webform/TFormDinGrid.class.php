@@ -71,12 +71,17 @@ class TFormDinGrid
     private $pageNavigation;
     private $objForm;
     private $listColumn = array();
+    private $dataGrid;
+    private $bootstrapGrid;
 
     protected $idGrid;
     protected $title;
     protected $updateFields;
     protected $key;
     protected $width;
+    protected $minWidth;
+    protected $action_group;
+    protected $enableActionGroup;
     private $maxRows;
     private $realTotalRowsSqlPaginator;    
 
@@ -87,6 +92,7 @@ class TFormDinGrid
     protected $createDefaultEditButton;
     protected $createDefaultDeleteButton;
     protected $exportShowGroup;
+    protected $exportCsv;
     protected $exportExcel;
     protected $exportPdf;
     protected $exportXml;
@@ -173,15 +179,19 @@ class TFormDinGrid
         }else{
             $this->setObjForm($objForm);
 
-            $bootgrid = new BootstrapDatagridWrapper(new TDataGrid);
-            $bootgrid->width = '100%';
-            $this->setAdiantiObj($bootgrid);
+            $strWidth = empty($strWidth)?'100%':$strWidth;
+
+            $this->dataGrid = new TDataGrid();
+            $this->bootstrapGrid = new BootstrapDatagridWrapper($this->dataGrid);
+            $this->setAdiantiObj($this->bootstrapGrid);
+            $this->setWidth($strWidth);
+            $this->setActionSide('left');
             $this->setId($strName);
             $this->setHeight($strHeight);
-            $this->setWidth($strWidth);
             $this->setData($mixData);
             $this->setUpdateFields( $mixUpdateFields );
             $this->setExportShowGroup(true);
+            $this->setExportCsv(true);
             $this->setExportExcel(true);
             $this->setExportPdf(true);
             $this->setExportXml(true);
@@ -228,6 +238,29 @@ class TFormDinGrid
         $this->getAdiantiObj()->setId($idGrid);
         $this->idGrid = $idGrid;
     }
+    //---------------------------------------------------------------
+    private function getDataGrid(){
+        return $this->dataGrid;
+    }
+    private function setDataGrid($dataGrid){
+        if( !is_object($dataGrid) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }         
+        $this->dataGrid = $dataGrid;
+    }
+    /**
+     * Define o lado que ação irá aparecer. O Default é 'left'
+     * Os valores possíveis são: left, right, esquerda, direita
+     * @param string $side
+     */
+    public function setActionSide($side){
+        $side = empty($side)?'left':$side;
+        $validando = $side=='left'||$side=='esquerda'||$side=='right'||$side=='direita';
+        if( !$validando ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_VALEU_NOT_VALID);
+        }
+        $this->getDataGrid()->setActionSide($side);
+    }    
     //---------------------------------------------------------------
     /**
      * Adciona um Objeto Adianti na lista de objetos que compeen o Formulário.
@@ -306,13 +339,20 @@ class TFormDinGrid
     public function showGridAction()
     {
         $listGridAction = $this->getListGridAction();
-        if( ArrayHelper::isArrayNotEmpty($listGridAction) ){
+        $listGridActionNotEmpty = ArrayHelper::isArrayNotEmpty($listGridAction);
+        if( $listGridActionNotEmpty && $this->getEnableActionGroup()==false ){
             foreach( $listGridAction as $itemGridAction ) {
                 $this->getAdiantiObj()->addAction($itemGridAction->getAdiantiObj()
                                                  ,$itemGridAction->getActionLabel()
                                                  ,$itemGridAction->getImage()
                                                  );
             }
+        }else if( $listGridActionNotEmpty && $this->getEnableActionGroup()==true ){
+            $action_group = $this->getActionGroup();
+            foreach( $listGridAction as $itemGridAction ) {
+                $action_group->addAction($itemGridAction->getAdiantiObj());
+            }            
+            $this->getAdiantiObj()->addActionGroup( $action_group );
         }else{
             if( $this->getCreateDefaultButtons() ){
                 if( $this->getCreateDefaultEditButton() ){
@@ -336,38 +376,46 @@ class TFormDinGrid
 
     public function showGridExport()
     {
-        $showExport = $this->getExportExcel() || $this->getExportPdf() || $this->getExportXml();
+        $showExport = $this->getExportCsv() || $this->getExportExcel() || $this->getExportPdf() || $this->getExportXml();
         $showExportGroup = $this->getExportShowGroup();
 
         if( $showExport && $showExportGroup ){
             // header actions
-            $dropdown = new TDropDown('Export', 'fa:list');
+            $dropdown = new TDropDown('Exportar', 'fa:list');
             $dropdown->setButtonClass('btn btn-default waves-effect dropdown-toggle');
-            if( $this->getExportExcel() ){
+            if( $this->getExportCsv() ){
                 $taction = new TAction([$this->getObjForm(), 'onExportCSV'], ['register_state' => 'false', 'static'=>'1']);
-                $dropdown->addAction( 'Save as CSV', $taction, 'fa:table blue' );
+                $dropdown->addAction( 'CSV', $taction, 'fas:file-csv #66ccff' );
             }
             if( $this->getExportPdf() ){
                 $taction = new TAction([$this->getObjForm(), 'onExportPDF'], ['register_state' => 'false', 'static'=>'1']);
-                $dropdown->addAction( 'Save as CSV', $taction, 'far:file-pdf fa-fw red' );
+                $dropdown->addAction( 'PDF', $taction, 'far:file-pdf #e74c3c' );
+            }
+            if( $this->getExportExcel() ){
+                $taction = new TAction([$this->getObjForm(), 'onExportXls'], ['register_state' => 'false', 'static'=>'1']);
+                $dropdown->addAction( 'XLS', $taction, 'fas:file-excel #4CAF50' );
             }
             if( $this->getExportXml() ){
                 $taction = new TAction([$this->getObjForm(), 'onExportXML'], ['register_state' => 'false', 'static'=>'1']);
-                $dropdown->addAction( 'Save as XML', $taction, 'fa:code fa-fw green' );
+                $dropdown->addAction( 'XML', $taction, 'far:file-code #95a5a6' );
             }
             $this->getPanelGroupGrid()->addHeaderWidget( $dropdown );
         }elseif( $showExport && !$showExportGroup ){
-            if( $this->getExportExcel() ){
+            if( $this->getExportCsv() ){
                 $taction = new TAction([$this->getObjForm(), 'onExportCSV'], ['register_state' => 'false', 'static'=>'1']);
-                $this->getPanelGroupGrid()->addHeaderActionLink( 'Save as CSV', $taction, 'fa:table blue' );
+                $this->getPanelGroupGrid()->addHeaderActionLink( 'CSV', $taction, 'fas:file-csv #66ccff' );
             }
             if( $this->getExportPdf() ){
                 $taction = new TAction([$this->getObjForm(), 'onExportPDF'], ['register_state' => 'false', 'static'=>'1']);
-                $this->getPanelGroupGrid()->addHeaderActionLink( 'Save as PDF', $taction, 'far:file-pdf fa-fw red' );
+                $this->getPanelGroupGrid()->addHeaderActionLink( 'PDF', $taction, 'far:file-pdf #e74c3c' );
+            }
+            if( $this->getExportExcel() ){
+                $taction = new TAction([$this->getObjForm(), 'onExportXls'], ['register_state' => 'false', 'static'=>'1']);
+                $this->getPanelGroupGrid()->addHeaderActionLink( 'XLS', $taction, 'fas:file-excel #4CAF50' );
             }
             if( $this->getExportXml() ){
                 $taction = new TAction([$this->getObjForm(), 'onExportXML'], ['register_state' => 'false', 'static'=>'1']);
-                $this->getPanelGroupGrid()->addHeaderActionLink( 'Save as XML', $taction, 'fa:code fa-fw green' );
+                $this->getPanelGroupGrid()->addHeaderActionLink( 'XML', $taction, 'far:file-code #95a5a6' );
             }
         }
     }
@@ -381,8 +429,6 @@ class TFormDinGrid
         $this->showGridColumn();
         $this->showGridAction();
         $this->showGridExport();
-
-        //TDataGrid::setActionSide('right');
 
         $this->getAdiantiObj()->createModel();
         if( !empty($this->getData()) ){
@@ -480,23 +526,35 @@ class TFormDinGrid
      * Coluna do Grid Padronizado em BoorStrap
      * Reconstruido FormDin 4 Sobre o Adianti 7.1
      *
-     * @param  string $name  - 1: Name of the column in the database
-     * @param  string $label - 2: Text label that will be shown in the header
-     * @param  string $width - 3: Column Width (pixels)
-     * @param  string $align - 4: Column align (left|right|center|justify)
+     * @param string $name  - 1: Name of the column in the database
+     * @param string $label - 2: Text label that will be shown in the header
+     * @param string $width - 3: Column Width (pixels)
+     * @param string $align - 4: Column align (left|right|center|justify)
+     * @param bool $boolReadOnly - 5: FORMDIN5: NOT_IMPLEMENTED Somente leitura. DEFAULT = false
+	 * @param bool $boolSortable - 6: FORMDIN5: Coluna ordenavel. DEFAULT = true
+	 * @param bool $boolVisivle  - 7: FORMDIN5: NOT_IMPLEMENTED Coluna visivel. DEFAULT = true
      * @return TDataGridColumn
      */
     public function addColumn(string $name
                             , string $label
                             , string $width = NULL
-                            , string $align='left' )
+                            , string $align='left'
+                            , bool $boolReadOnly = false
+                            , bool $boolSortable = true
+                            , bool $boolVisivle = true
+                            )
     {
-        $formDinGridColumn = new TFormDinGridColumn( $this->getObjForm(), $name,$label,$width,$align);
+        $formDinGridColumn = new TFormDinGridColumn( $this->getObjForm()
+                                                   , $name
+                                                   , $label
+                                                   , $width
+                                                   , $align
+                                                   , $boolReadOnly
+                                                   , $boolSortable
+                                                   , $boolVisivle
+                                                );
         $this->addListColumn($formDinGridColumn);
         return $formDinGridColumn;
-        //$column = $formDinGridColumn->getAdiantiObj();
-        //$this->getAdiantiObj()->addColumn($column);
-        //return $column;
     }
     //---------------------------------------------------------------
     /**
@@ -634,7 +692,7 @@ class TFormDinGrid
     public function getOnDrawActionButton()
     {
         return $this->onDrawActionButton;
-    }    
+    }
     //------------------------------------------------------------------------------------
     /**
      * Campos do form origem que serão atualizados ao selecionar o item desejado.
@@ -660,7 +718,7 @@ class TFormDinGrid
     {
         $mixUpdateFields = ArrayHelper::convertArrayMixUpdate2OutputFormat($this->updateFields,$outputFormat);
         return $mixUpdateFields;
-    }    
+    }
     //------------------------------------------------------------------------------------
     public function clearUpdateFields()
     {
@@ -688,7 +746,7 @@ class TFormDinGrid
     public function getMaxRows() {
         $maxRows =  empty($this->maxRows)?self::ROWS_PER_PAGE:$this->maxRows;
         return ( int ) $maxRows;
-    }    
+    }
     //---------------------------------------------------------------------------------------
     public function getCreateDefaultButtons()
     {
@@ -705,13 +763,24 @@ class TFormDinGrid
         }
     }
     //---------------------------------------------------------------
-    public function getWidth()
-    {
+    public function getWidth(){
         return $this->width;
-    }   
-    public function setWidth( $width )
-    {
+    }
+    public function setWidth(string $width){
+        if(empty($width)){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_EMPTY_INPUT);
+        }
         $this->width = $width;
+        $this->getAdiantiObj()->width=$width;
+    }
+    //---------------------------------------------------------------
+    public function getMinWidth()
+    {
+        return $this->minWidth;
+    }
+    public function setMinWidth( $width )
+    {
+        $this->minWidth = $width;
         $this->getAdiantiObj()->style = 'min-width: '.$width.'px';
     }
     //---------------------------------------------------------------
@@ -730,14 +799,23 @@ class TFormDinGrid
     public function setExportShowGroup( $boolNewValue = null )
     {
         $this->exportShowGroup = is_null( $boolNewValue ) ? true : $boolNewValue;
-    }    
+    }
     public function getExportShowGroup() {
         return $this->exportShowGroup;
+    }
+    //---------------------------------------------------------------------------------------
+    public function setExportCsv( $boolNewValue = null )
+    {
+        $this->exportCsv = is_null( $boolNewValue ) ? true : $boolNewValue;
+    }
+    public function getExportCsv() {
+        return $this->exportCsv;
     }    
+    //---------------------------------------------------------------------------------------
     public function setExportExcel( $boolNewValue = null )
     {
         $this->exportExcel = is_null( $boolNewValue ) ? true : $boolNewValue;
-    }    
+    }
     public function getExportExcel() {
         return $this->exportExcel;
     }
@@ -745,7 +823,7 @@ class TFormDinGrid
     public function setExportPdf( $boolNewValue = null )
     {
         $this->exportPdf = is_null( $boolNewValue ) ? true : $boolNewValue;
-    }    
+    }
     public function getExportPdf() {
         return $this->exportPdf;
     }
@@ -753,11 +831,11 @@ class TFormDinGrid
     public function setExportXml( $boolNewValue = null )
     {
         $this->exportXml = is_null( $boolNewValue ) ? true : $boolNewValue;
-    }    
+    }
     public function getExportXml() {
         return $this->exportXml;
-    }        
-
+    }
+    //------------------------------------------------------------------------------------
     /**
      * Define se os botoes Alterar e Excluir serão exibidos quando não for
      * adicionado nenhum botão
@@ -772,19 +850,49 @@ class TFormDinGrid
     public function setCreateDefaultEditButton( $boolNewValue = null )
     {
         $this->createDefaultEditButton = is_null( $boolNewValue ) ? true : $boolNewValue;
-    }    
+    }
     public function getCreateDefaultEditButton( $boolNewValue = null )
     {
         return is_null( $this->createDefaultEditButton ) ? true : $this->createDefaultEditButton;
-    }    
+    }
     //------------------------------------------------------------------------------------
     public function setCreateDefaultDeleteButton( $boolNewValue = null )
     {
         $this->createDefaultDeleteButton = is_null( $boolNewValue ) ? true : $boolNewValue;
-    }
-    
+    }    
     public function getCreateDefaultDeleteButton( $boolNewValue = null )
     {
         return is_null( $this->createDefaultDeleteButton ) ? true : $this->createDefaultDeleteButton;
+    }
+    //------------------------------------------------------------------------------------
+    /**
+     * Ativa um grupo de ações padrão 
+     *
+     * @param boolean $enable - Default = FALSE, sem grupo de ações. TRUE = Habilita grupo de ações
+     */
+    public function enableActionGroup( $enable )
+    {
+        $enable=empty($enable)?false:$enable;
+        if ($enable==true){
+            $this->setActionGroup( 'Ações', 'fa:th' );
+        }
+        $this->enableActionGroup = $enable;
+    }
+    public function getEnableActionGroup()
+    {
+        return $this->enableActionGroup;
+    }
+    /**
+     * Cria um Action Group
+     * @param $label Action Group label
+     * @param $icon  Action Group icon
+     */
+    public function setActionGroup( $label,$icon )
+    {
+        $this->action_group = new TDataGridActionGroup($label,$icon);
+    }
+    public function getActionGroup()
+    {
+        return $this->action_group;
     }    
 }

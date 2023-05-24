@@ -124,10 +124,11 @@ class TFormDinDateTime extends TFormDinGenericField
         return $this->databaseMask;
     }    
     public function setDatabaseMask($databaseMask){
-        if( !is_null($databaseMask) ){
-            $this->databaseMask = $databaseMask;
-            $this->getAdiantiObj()->setDatabaseMask($databaseMask);
+        if(is_null($databaseMask)){
+            $databaseMask = 'yyyy-mm-dd hh:ii:ss';
         }
+        $this->databaseMask = $databaseMask;
+        $this->getAdiantiObj()->setDatabaseMask($databaseMask);
     }
 	//--------------------------------------------------------------------------
 	public function setButtonVisible($boolValue=null)

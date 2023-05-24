@@ -149,4 +149,26 @@ class TFormDinGridTransformer
     {
         return  self::dateTime($value);
     }
+    
+    public static function gridNumeroBrasil($value, $object, $row)
+    {
+        if(!$value){
+            $value = 0;
+        }
+        $value = StringHelper::numeroBrasil($value);
+        return  $value;
+    }
+    public static function gridNumeroBrasilFormatStyle($value, $object, $row)
+    {
+        if(!$value){
+            $value = 0;
+        }
+        $number = StringHelper::numeroBrasil($value);
+        if ($value > 0){
+            return "<span style='color:blue'>$number</span>";
+        }else{
+            //$row->style = "background: #FFF9A7";
+            return "<span style='color:red'>$number</span>";
+        }
+    }
 }

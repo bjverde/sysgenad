@@ -63,6 +63,7 @@ class TFormDinDate extends TFormDinGenericField
 {
     private $minValue;
     private $maxValue;
+    private $databaseMask;
     
     /****
      * Adicona um campo data ou mes/ano ou dia/mes de acordo com o parametro strMaxType
@@ -80,7 +81,7 @@ class TFormDinDate extends TFormDinGenericField
      * @param string  $strExampleText  - 10: Texto de exmplo
      * @param boolean $boolLabelAbove  - 11: DEFAULT = false. Label acima do campo = true
      * @param string  $boolNoWrapLabel - 12: NOT_IMPLEMENTED
-     * @param string  $databaseMask    - 13: FORMDIN5 Mascará usada no banco de dados
+     * @param string  $databaseMask    - 13: FORMDIN5 Mascará usada no banco de dados. DEFAULT = yyyy-mm-dd.
      * @return TDate
      */
     public function __construct(string $id
@@ -122,9 +123,11 @@ class TFormDinDate extends TFormDinGenericField
         return $this->getAdiantiObj()->getDatabaseMask();
     }    
     public function setDatabaseMask($databaseMask){
-        if( !is_null($databaseMask) ){
-            $this->getAdiantiObj()->setDatabaseMask($databaseMask);
+        if(is_null($databaseMask)){
+            $databaseMask = 'yyyy-mm-dd';
         }
+        $this->databaseMask = $databaseMask;
+        $this->getAdiantiObj()->setDatabaseMask($databaseMask);
     }
 	//--------------------------------------------------------------------------
 	public function setButtonVisible($boolValue=null)

@@ -44,30 +44,54 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-class GetHelper
+class TFormDinPassword extends TFormDinGenericField
 {
-    /**
-     * @codeCoverageIgnore
-     */    
-    public static function get($atributeName) 
-    {
-        return ArrayHelper::get($_GET,$atributeName);
-    }
+    protected $adiantiObj;
+    private $class = array();
     
-    /**
-     * @codeCoverageIgnore
-     */    
-    public static function getDefaultValue($atributeName,$DefaultValue) 
-    {
-        return ArrayHelper::getDefaultValue($_GET,$atributeName,$DefaultValue);
-    }
 
     /**
-     * @codeCoverageIgnore
+     * Video HTML 5, com a classe CSS fd5Video basta criar um css para
+     * determinar o tamanho do vídeo
+     * 
+     * Vídeos no HTML5 só tem autoplay SE SOMENTE SE o video for mutado
+     * https://developer.chrome.com/blog/autoplay/
+     *
+     * @param string $id                     -01: id do campo
+     * @param string $label                  -02: Rotulo do campo que irá aparece na tela
+     * @param boolean $boolRequired          -03: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param integer $intmaxLength          -04: Tamanho maximo
+     * @param string  $value                 -05: Valor inicial
+     * @param boolean $enableToggleVisibility-06: FORMDIN5 DEFALUT is TRUE mostra a senha ou não
+     * @return TLabel
      */
-    public static function has($atributeName) 
+    public function __construct(string $id
+                               ,string $label=null
+                               ,$boolRequired=null
+                               ,$intmaxLength=null
+                               ,$value=null
+                               ,$enableToggleVisibility=true
+                               )
     {
-        return ArrayHelper::has($atributeName,$_GET);
+
+        $adiantiObj = new TPassword($id);
+        parent::__construct($adiantiObj,$id,$label,$boolRequired,$value,null);
+        $this->setMaxLength($intmaxLength);
+        $this->enableToggleVisibility($enableToggleVisibility);
     }
+
+    public function setMaxLength($intmaxLength)
+    {
+        $this->getAdiantiObj()->setMaxLength($intmaxLength);
+    }
+
+    public function enableToggleVisibility($enableToggleVisibility)
+    {
+        $this->getAdiantiObj()->enableToggleVisibility($enableToggleVisibility);
+    }
+
+    public function setExitAction(TAction $action)
+    {
+        $this->getAdiantiObj()->setExitAction($action);
+    }    
 }
-?>

@@ -92,7 +92,7 @@ class TFormDin
      * @param string $strMethod - 06: NOT_IMPLEMENTED: metodo GET ou POST, utilizado pelo formulario para submeter as informações. padrão=POST
      * @param string $strAction - 07: NOT_IMPLEMENTED: página/url para onde os dados serão enviados. Padrão = propria página
      * @param boolean $boolPublicMode      - 08: NOT_IMPLEMENTED: ignorar mensagem fwSession_exprired da aplicação e não chamar atela de login
-     * @param boolean $boolClientValidation- 09: FORMDIN5: Se vai fazer validação no Cliente (Navegador)
+     * @param boolean $boolClientValidation- 09: FORMDIN5: Se vai fazer validação no Cliente (Navegador), use com cuidado essa opção.
      *
      * @return BootstrapFormBuilder
      */    
@@ -104,7 +104,7 @@ class TFormDin
                                ,$strMethod = null
                                ,$strAction  = null
                                ,$boolPublicMode  = null
-                               ,$boolClientValidation = true)
+                               ,$boolClientValidation = false)
     {
 
         if( !is_object($objForm) ){
@@ -123,6 +123,7 @@ class TFormDin
 
             $this->validateDeprecated($strHeigh,$strWidth);
             $bootForm = new BootstrapFormBuilder($strName);
+            $boolClientValidation = is_null($boolClientValidation)?false:$boolClientValidation;
             $this->setAdiantiObj( $bootForm, $strName,$strTitle, $boolClientValidation);
             return $this->getAdiantiObj();
         }
@@ -706,7 +707,7 @@ class TFormDin
     *
     * @param string $strName       - 1: Id do Campo
     * @param string $strValue      - 2: Valor inicial
-    * @param boolean $boolRequired - 3: True = Obrigatorio; False (Defalt) = Não Obrigatorio  
+    * @param boolean $boolRequired - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
     * @return TFormDinHiddenField
     */
     public function addHiddenField(string $id
@@ -715,7 +716,6 @@ class TFormDin
     {
         $formField = new TFormDinHiddenField($id,$strValue,$boolRequired);
         $objField = $formField->getAdiantiObj();
-        //$this->adiantiObj->addFields([$objField]);
         $this->addElementFormList($objField,self::TYPE_HIDDEN);
         return $formField;
     }
@@ -731,7 +731,7 @@ class TFormDin
      * @param string $id              -  1: ID do campo
      * @param string $strLabel        -  2: Label do campo
      * @param integer $intMaxLength   -  3: tamanho máximo de caracteres
-     * @param boolean $boolRequired   -  4: Obrigatorio ou não. DEFAULT = False.
+     * @param boolean $boolRequired   -  4: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
      * @param integer $intSize        -  5: NOT_IMPLEMENTED quantidade de caracteres visíveis
      * @param string $strValue        -  6: texto preenchido
      * @param boolean $boolNewLine    -  7: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
@@ -762,7 +762,6 @@ class TFormDin
         $formField->setExampleText($strExampleText);
         $objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
@@ -955,6 +954,7 @@ class TFormDin
      * @param array $itens           - 4: Informe um array do tipo "chave=>valor", com maximo de 2 elementos
      * @param boolean $boolNewLine   - 5: Default TRUE = cria nova linha , FALSE = fica depois do campo anterior
      * @param boolean $boolLabelAbove- 6: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param string  $mixValue      - 7: Valor DEFAULT, informe o ID do array
      * @return TRadioGroup
      */
     public function addSwitchField(string $id
@@ -962,12 +962,12 @@ class TFormDin
                                   ,$boolRequired = false
                                   ,array $itens=null
                                   ,$boolNewLine=null
-                                  ,$boolLabelAbove=null)
+                                  ,$boolLabelAbove=null
+                                  ,$mixValue=null)
     {
-        $formField = new TFormDinSwitch($id,$strLabel,$boolRequired,$itens);
+        $formField = new TFormDinSwitch($id,$strLabel,$boolRequired,$itens,$mixValue);
         $objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
 
         return $formField;
@@ -981,41 +981,90 @@ class TFormDin
      * saber o que cada marca singinifica.
      * ------------------------------------------------------------------------    
      *
-     * @param string $strName             - 1: id do campo
-     * @param string $strLabel            - 2: Rotulo do campo que irá aparece na tela
-     * @param boolean $boolRequired       - 3: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
-     * @param boolean $boolNewLine        - 4: Em nova linha, DEFALUT is TRUE não obrigatorio.
-     * @param integer $intmaxLength       - 5: Tamanho maximo
-     * @param string $strValue            - 6: Valor inicial
-     * @param boolean $boolLabelAbove     - 7: Label acima, DEFAULT is FALSE na mesma linha
-     * @param boolean $boolNoWrapLabel    - 8: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
-     * @param integer $intSize            - 9: NOT_IMPLEMENTED quantidade de caracteres visíveis
-     * @param boolean $boolUseVirtualKeyboard
-     * @param boolean $boolShowVirtualKeyboardImage
-     * @param boolean $boolReadOnly
+     * @param string $id                     -01: id do campo
+     * @param string $label                  -02: Rotulo do campo que irá aparece na tela
+     * @param boolean $boolRequired          -03: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param boolean $boolNewLine           -04: Em nova linha, DEFALUT is TRUE não obrigatorio.
+     * @param integer $intmaxLength          -05: Tamanho maximo
+     * @param string  $value                 -06: Valor inicial
+     * @param boolean $boolLabelAbove        -07: Label acima, DEFAULT is FALSE na mesma linha
+     * @param boolean $boolNoWrapLabel       -08: NOT_IMPLEMENTED
+     * @param integer $intSize               -09: NOT_IMPLEMENTED
+     * @param boolean $boolUseVirtualKeyboard-10: NOT_IMPLEMENTED
+     * @param boolean $boolShowVirtualKeyboardImage -11: NOT_IMPLEMENTED
+     * @param boolean $boolReadOnly          -12: NOT_IMPLEMENTED
+     * @param boolean $enableToggleVisibility-13: FORMDIN5 DEFALUT is TRUE mostra a senha ou não
      * @return TFormDinPassword
      */
-    public function addPasswordField( string $strName
-                                    , string $strLabel=null
+    public function addPasswordField( string $id
+                                    , string $label=null
                                     , $boolRequired=null
                                     , $boolNewLine=null
                                     , $intmaxLength=null
-                                    , $strValue=null
+                                    , $value=null
                                     , $boolLabelAbove=null
                                     , $boolNoWrapLabel=null
                                     , $intSize=null
                                     , $boolUseVirtualKeyboard=null
                                     , $boolShowVirtualKeyboardImage=null
-                                    , $boolReadOnly=null )
+                                    , $boolReadOnly=null 
+                                    , $enableToggleVisibility=true)
     {
-        $formField = new TFormDinSwitch($id,$strLabel,$boolRequired,$itens);
+        $formField = new TFormDinPassword($id
+                                         ,$label
+                                         ,$boolRequired
+                                         ,$intmaxLength
+                                         ,$value
+                                         ,$enableToggleVisibility
+                                        );
         $objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
-
         return $formField;
-    }    
+    }
+
+
+    /**
+     * Campo com vídeo html5
+     * 
+     * Vídeos no HTML5 só tem autoplay SE SOMENTE SE o video for mutado
+     * https://developer.chrome.com/blog/autoplay/
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------    
+     *
+     * @param string $id             - 1: id do campo
+     * @param string $label          - 2: Rotulo do campo que irá aparece na tela
+     * @param boolean $boolNewLine   - 3: Em nova linha, DEFALUT is TRUE não obrigatorio.
+     * @param boolean $boolLabelAbove- 4: Label acima, DEFAULT is FALSE na mesma linha
+     * @param string  $strValue      - 5: Valor inicial
+     * @param boolean $controls      - 6: Default TRUE  = habilita o controler sobre o vídeo, FALSE desativa o controler
+     * @param boolean $autoplay      - 7: Default FALSE = habilita o autoplay, FALSE não iniciar o vídeo automaticamente
+     * @param boolean $loop          - 8: Default FALSE = habilita o video em loop, FALSE não fica em loop
+     * @return TFormDinVideoHtml
+     */
+    public function addVideoHtml5(string $id
+                                ,string $label
+                                ,$boolNewLine
+                                ,$boolLabelAbove
+                                ,string $strValue
+                                ,$controls = true
+                                ,$autoplay = false
+                                ,$loop = false
+                                )
+    {
+        $boolNewLine    = is_null($boolNewLine)?true:$boolNewLine;
+        $boolLabelAbove = is_null($boolLabelAbove)?false:$boolLabelAbove;
+
+        $formField = new TFormDinVideoHtml($id,$label,$strValue,$controls,$autoplay,$loop);
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+    }
+
 
     /**
      * Campos para anexar arquivo. Pode ser um carregamento sincrono ou assincrono via ajax.
@@ -1040,13 +1089,15 @@ class TFormDin
      * @param string  $strMaxFileSize  - 05: Input the max size file with K, M for Megabit (Mb) or G for Gigabit (Gb). Example 2M = 2 Mb = 2048Kb.
      * @param integer $intFieldSize    - 06: NOT_IMPLEMENTED
      * @param boolean $boolAsync       - 07: NOT_IMPLEMENTED
-     * @param boolean $boolNewLine     - 08: NOT_IMPLEMENTED
+     * @param boolean $boolNewLine     - 08: Em nova linha, DEFALUT is TRUE não obrigatorio.
      * @param string  $strJsCallBack   - 09: NOT_IMPLEMENTED
      * @param boolean $boolLabelAbove  - 10: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
      * @param boolean $boolNoWrapLabel - 11: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param string  $strMessageInvalidFileType - 12: NOT_IMPLEMENTED
-     * @param boolean $enableFileHandling -13: FORMDIN5 Habilita barra de progresso
-     * @param boolean $enablePopover      -14: FORMDIN5 Habilita o preview
+     * @param boolean $value              -13: FORMDIN5 Valor padrão do campo
+     * @param boolean $enableFileHandling -14: FORMDIN5 Habilita barra de progresso
+     * @param boolean $enablePopover      -15: FORMDIN5 Habilita o preview
+     * @param integer $enableImageGallery -16: FORMDIN5 Numero da Largura (width) da imagem da galaria, DEFAULT = 120. Para customizar use o metodo enableImageGallery
      * @return TFile|TFileAsync
      */
     public function addFileField(string $id
@@ -1061,8 +1112,10 @@ class TFormDin
                                , $boolLabelAbove=true
                                , $boolNoWrapLabel=null
                                , $strMessageInvalidFileType=null 
+                               , $value=null
                                , $enableFileHandling=false
                                , $enablePopover=false
+                               , $enableImageGallery=null
                                )
     {
         $formField = new TFormDinFileField($id
@@ -1071,14 +1124,14 @@ class TFormDin
                                           ,$strAllowedFileTypes
                                           ,$intFieldSize
                                           ,$strMaxFileSize
+                                          ,$value
                                           ,$enableFileHandling
                                           ,$enablePopover
+                                          ,$enableImageGallery
                                         );
         $objField  = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
-
         return $formField;
     }    
 
@@ -1123,7 +1176,6 @@ class TFormDin
                                               ,$strExampleText,$boolSendMask);
         $objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
@@ -1240,7 +1292,7 @@ class TFormDin
                                   ,string $strDataColumns = null
                                   )
     {
-        $boolRequired = empty($boolRequired)?false:$boolRequired;
+        $boolRequired = is_null($boolRequired)?false:$boolRequired;
         $formField = new TFormDinSelectField($id
                                             ,$strLabel
                                             ,$boolRequired
@@ -1259,11 +1311,78 @@ class TFormDin
                                             ,$strDataColumns
                                         );
         $objField = $formField->getAdiantiObj();
-        $label = $this->getLabelField($strLabel,$boolRequired);
-        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $label = $formField->getLabel();
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
+
+
+    /**
+     * Adicionar campo tipo combobox ou menu select que faz uma busca no banco
+     * usando TRecord
+     * 
+     * ------------------------------------------------------------------------
+     * Esse é o FormDin 5, que é uma reconstrução do FormDin 4 Sobre o Adianti 7.X
+     * os parâmetros do metodos foram marcados veja documentação da classe para
+     * saber o que cada marca singinifica.
+     * ------------------------------------------------------------------------
+     *
+     * @param string  $id            - 01: ID do campo
+     * @param string  $label         - 02: Label do campo
+     * @param boolean $boolRequired  - 03: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
+     * @param boolean $boolNewLine   - 04: Default TRUE = cria nova linha, FALSE = fica depois do campo anterior
+     * @param boolean $boolLabelAbove- 05: Label sobre o campo. Default FALSE = Label mesma linha, TRUE = Label acima
+     * @param string $value          - 04: Valor inicial 
+     * @param string $database       - 05: Nome da conexão
+     * @param string $model          - 06: Nome arquivo model, precisa ser do tipo TRecord
+     * @param string $key            - 07: Nome da chave, será o valor enviado para o banco
+     * @param string $name           - 08: Nome do balor que vai aparecer para o usuário
+     * @param string $ordercolumn    - 09: Nome da colune de ordenação
+     * @param TCriteria $criteria    - 10: Objeto do tipo TCriteria para fazer filtros 
+     * @param string $enableSearch   - 11: Define se o campo será tipo autocomplete
+     * @param string $placeholder    - 12: PlaceHolder é um Texto de exemplo
+     * @return TDBCombo
+     */
+    public function addSelectFieldDB(string $id
+                                    ,string $label
+                                    ,$boolRequired
+                                    ,$boolNewLine
+                                    ,$boolLabelAbove
+                                    ,string|null $value
+                                    ,string $database
+                                    ,string $model
+                                    ,string $key
+                                    ,string $name
+                                    ,string|null $ordercolumn = null
+                                    ,TCriteria|null $criteria = null
+                                    ,$enableSearch = true
+                                    ,$placeholder = null
+                                  )
+    {
+        $boolRequired   = is_null($boolRequired)?false:$boolRequired;
+        $boolNewLine    = is_null($boolNewLine)?true:$boolNewLine;
+        $boolLabelAbove = is_null($boolLabelAbove)?false:$boolLabelAbove;
+
+        $formField = new TFormDinSelectFieldDB($id
+                                            ,$label
+                                            ,$boolRequired
+                                            ,$value
+                                            ,$database
+                                            ,$model
+                                            ,$key
+                                            ,$name
+                                            ,$ordercolumn
+                                            ,$criteria
+                                            ,$enableSearch
+                                            ,$placeholder
+                                        );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;        
+    }
+
+
     //-----------------------------------------------------------------------------
     /**
      * Adicicionar campo tipo radiobutton
@@ -1320,7 +1439,7 @@ class TFormDin
                                      , $useButton
                                      );
         $objField = $formField->getAdiantiObj();
-        $label = $this->getLabelField($strLabel,$boolRequired);
+        $label = $formField->getLabel();
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
@@ -1335,7 +1454,7 @@ class TFormDin
      *
      * @param string  $id              - 01: ID do campo
      * @param string  $strLabel        - 02: Label do campo
-     * @param boolean $boolRequired    - 03: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatórioObrigatorio.
+     * @param boolean $boolRequired    - 03: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
      * @param mixed   $mixOptions      - 04: String "S=SIM,N=NAO,..." ou Array dos valores nos formatos: ArrayHelper::TYPE_ADIANTI, ArrayHelper::TYPE_PDO, ArrayHelper::TYPE_FORMDIN e ArrayHelper::TYPE_PHP
      * @param boolean $boolNewLine     - 05: Default TRUE = cria nova linha, FALSE = fica depois do campo anterior
      * @param boolean $boolLabelAbove  - 06: TRUE = Titulo em cima das opções, FALSE = titulo lateral
@@ -1346,8 +1465,9 @@ class TFormDin
      * @param integer $intPaddingItems - 11: DEPRECATED.
      * @param boolean $boolNoWrapLabel - 12: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param boolean $boolNowrapText  - 13: NOT_IMPLEMENTED 
-     * @param mixed   $strKeyColumn    - 14: FORMDIN5 Nome da coluna que será utilizada para preencher os valores das opções
-     * @param mixed   $strDisplayColumn- 15: FORMDIN5 Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
+     * @param boolean $setUseButton    - 14: FORMDIN5 Default FALSE = mostra com check normal, TRUE = mostra como um botão
+     * @param mixed   $strKeyColumn    - 15: FORMDIN5 Nome da coluna que será utilizada para preencher os valores das opções
+     * @param mixed   $strDisplayColumn- 16: FORMDIN5 Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário     
      * @return TFormDinCheckField
      */
     public function addCheckField(string $id
@@ -1363,8 +1483,9 @@ class TFormDin
                                 , $intPaddingItems=null
                                 , $boolNoWrapLabel=null 
                                 , $boolNowrapText=null
+                                , $setUseButton=null
                                 , $strKeyColumn=null
-                                , $strDisplayColumn=null
+                                , $strDisplayColumn=null                                
                                 )
     {
        //$field = new TCheck( $strName, $arrOptions, $arrValues, $boolRequired, $intQtdColumns, $intWidth, $intHeight, $intPaddingItems );
@@ -1383,12 +1504,12 @@ class TFormDin
                                            ,$intPaddingItems
                                            ,$boolNoWrapLabel
                                            ,$boolNowrapText
+                                           ,$setUseButton
                                            ,$strKeyColumn
-                                           ,$strDisplayColumn
+                                           ,$strDisplayColumn                                           
                                           );
         $objField = $formField->getAdiantiObj();
-        $label = $this->getLabelField($strLabel,$boolRequired);
-        //$this->addFields($label ,$objField ,$boolLabelAbove);
+        $label = $formField->getLabel();
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
@@ -1500,7 +1621,6 @@ class TFormDin
                                           ,$strWidth,$boolNewLine,$boolNoWrapLabel);
         $objField = $formField->getAdiantiObj();
         $label = $formField->getLabel();
-        //$this->addFields($label ,$objField ,$boolLabelAbove);
         $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
         return $formField;
     }
@@ -1642,7 +1762,7 @@ class TFormDin
      * @param string $strName            - 1: ID do campo
      * @param string $strLabel           - 2: Label do campo, que irá aparecer na tela do usuario
      * @param integer $intMaxLength      - 3: Quantidade maxima de digitos, considerando ponto e virgula
-     * @param boolean $boolRequired      - 4: Obrigatorio
+     * @param boolean $boolRequired      - 4: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
      * @param integer $intDecimalPlaces  - 5: Quantidade de casas decimais.
      * @param boolean $boolNewLine       - 6: Campo em nova linha. Default = true = inicia em nova linha, false = continua na linha anterior 
      * @param string $strValue           - 7: valor inicial do campo
@@ -1717,9 +1837,9 @@ class TFormDin
 	 * @param string  $strName       -01: ID do campo
 	 * @param string  $strLabel      -02: Label do campo, que irá aparecer na tela do usuario
 	 * @param integer $intMaxLength  -03: Tamanho maximo de caracteres
-	 * @param boolean $boolRequired  -04: Obrigatorio
+	 * @param boolean $boolRequired  -04: Campo obrigatório ou não. Default FALSE = não obrigatório, TRUE = obrigatório
 	 * @param integer $intSize       -05: Tamanho do campo na tela
-	 * @param boolean $boolNewLine   -06: Campo em nova linha
+	 * @param boolean $boolNewLine   -06: Default TRUE = campo em nova linha, FALSE continua na linha anterior
 	 * @param string  $strValue      -07: valor inicial do campo
 	 * @param boolean $boolLabelAbove-08: Label acima, DEFAULT is FALSE na mesma linha
      * @param string $placeholder    -09: FORMDIN5: Texto do Place Holder
@@ -1727,7 +1847,7 @@ class TFormDin
 	 */
 	public function addEmailField( string $strName
                                  , string $strLabel=null
-                                 , int $intMaxLength
+                                 , int $intMaxLength=null
                                  , $boolRequired=null
                                  , $intSize=null
                                  , $boolNewLine=null
@@ -1754,6 +1874,192 @@ class TFormDin
         return $formField;
 	}
 
+    /**
+     * Adiciona uma linha simples de texto com label
+     *
+     * @param string $strName         -01: ID do campo
+     * @param string $strLabel        -02: Label do campo, que irá aparecer na tela do usuario
+     * @param string $value           -03: Texto que será incluido
+     * @param boolean $boolNewLine    -04: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param boolean $boolLabelAbove -05: Label acima, DEFAULT is FALSE na mesma linha
+     * @param [type] $color
+     * @param [type] $size
+     * @param [type] $decoration
+     * @return void
+     */
+	public function addTextDisplay( string $id
+                                   ,string $label
+                                   ,string $value
+                                   ,$boolNewLine=null
+                                   ,$boolLabelAbove=null
+                                   ,$color = null
+                                   ,$size = null
+                                   ,$decoration = null
+                                 )
+	{
+        $formField = new TFormDinTextDisplay($id
+                                            ,$label
+                                            ,$value
+                                            ,$color
+                                            ,$size
+                                            ,$decoration
+                                            );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+	}
+
+    /**
+     * Adiciona uma linha simples de texto formatado com cnpj com label
+     *
+     * @param string $strName         -01: ID do campo
+     * @param string $strLabel        -02: Label do campo, que irá aparecer na tela do usuario
+     * @param string $value           -03: Texto que será incluido
+     * @param boolean $boolNewLine    -04: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param boolean $boolLabelAbove -05: Label acima, DEFAULT is FALSE na mesma linha
+     * @param [type] $color
+     * @param [type] $size
+     * @param [type] $decoration
+     * @return void
+     */
+	public function addTextDisplayCpfCpnj(string $id
+                                        ,string $label
+                                        ,string $value
+                                        ,$boolNewLine=null
+                                        ,$boolLabelAbove=null
+                                        ,$color = null
+                                        ,$size = null
+                                        ,$decoration = null
+                                        )
+	{
+        $formField = TFormDinTextDisplay::cnpjCpf($id
+                                            ,$label
+                                            ,$value
+                                            ,$color
+                                            ,$size
+                                            ,$decoration
+                                            );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+	}
+
+    /**
+     * Adiciona uma linha simples de texto formatado numero de telefone
+     *
+     * @param string $strName         -01: ID do campo
+     * @param string $strLabel        -02: Label do campo, que irá aparecer na tela do usuario
+     * @param string $value           -03: Texto que será incluido
+     * @param boolean $boolNewLine    -04: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param boolean $boolLabelAbove -05: Label acima, DEFAULT is FALSE na mesma linha
+     * @param [type] $color
+     * @param [type] $size
+     * @param [type] $decoration
+     * @return void
+     */
+	public function addTextDisplayPhoneNumber(string $id
+                                        ,string $label
+                                        ,string $value
+                                        ,$boolNewLine=null
+                                        ,$boolLabelAbove=null
+                                        ,$color = null
+                                        ,$size = null
+                                        ,$decoration = null
+                                        )
+	{        
+        $formField = TFormDinTextDisplay::phoneNumber($id
+                                            ,$label
+                                            ,$value
+                                            ,$color
+                                            ,$size
+                                            ,$decoration
+                                            );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+	}
+
+    /**
+     * Adiciona uma linha simples de texto formatado de data
+     *
+     * @param string $strName         -01: ID do campo
+     * @param string $strLabel        -02: Label do campo, que irá aparecer na tela do usuario
+     * @param string $value           -03: Texto que será incluido
+     * @param boolean $boolNewLine    -04: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param boolean $boolLabelAbove -05: Label acima, DEFAULT is FALSE na mesma linha
+     * @param [type] $color
+     * @param [type] $size
+     * @param [type] $decoration
+     * @return void
+     */
+	public function addTextDisplayDataTimeBr(string $id
+                                        ,string $label
+                                        ,string $value
+                                        ,$showTheTime = false
+                                        ,$showSeconds = false
+                                        ,$boolNewLine=null
+                                        ,$boolLabelAbove=null
+                                        ,$color = null
+                                        ,$size = null
+                                        ,$decoration = null
+                                        )
+	{        
+        $formField = TFormDinTextDisplay::dataTimeBr($id
+                                            ,$label
+                                            ,$value
+                                            ,$showTheTime
+                                            ,$showSeconds
+                                            ,$color
+                                            ,$size
+                                            ,$decoration
+                                            );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+	}
+
+
+    /**
+     * Adiciona uma linha simples de texto formatado de data
+     *
+     * @param string $strName         -01: ID do campo
+     * @param string $strLabel        -02: Label do campo, que irá aparecer na tela do usuario
+     * @param string $value           -03: Texto que será incluido
+     * @param boolean $boolNewLine    -04: Default TRUE = campo em nova linha, FALSE continua na linha anterior
+     * @param boolean $boolLabelAbove -05: Label acima, DEFAULT is FALSE na mesma linha
+     * @param [type] $color
+     * @param [type] $size
+     * @param [type] $decoration
+     * @return void
+     */
+	public function addTextDisplayNumeroBrasil(string $id
+                                        ,string $label
+                                        ,string $value
+                                        ,$decimals=2
+                                        ,$boolNewLine=null
+                                        ,$boolLabelAbove=null
+                                        ,$color = null
+                                        ,$size = null
+                                        ,$decoration = null
+                                        )
+	{        
+        $formField = TFormDinTextDisplay::numeroBrasil($id
+                                            ,$label
+                                            ,$value
+                                            ,$decimals
+                                            ,$color
+                                            ,$size
+                                            ,$decoration
+                                            );
+        $objField = $formField->getAdiantiObj();
+        $label = $formField->getLabel();
+        $this->addElementFormList($objField,self::TYPE_FIELD,$label,$boolNewLine,$boolLabelAbove);
+        return $formField;
+	}
 
     //----------------------------------------------------------------
     //----------------------------------------------------------------

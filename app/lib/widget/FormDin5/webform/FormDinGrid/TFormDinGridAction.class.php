@@ -95,6 +95,7 @@ class TFormDinGridAction
         return $this->actionLabel;
     }
     public function setActionLabel($actionLabel){
+        $this->getAdiantiObj()->setLabel($actionLabel);
         $this->actionLabel = $actionLabel;
     }
     //-------------------------------------------------------------------------
@@ -109,6 +110,7 @@ class TFormDinGridAction
         return $this->image;
     }
     public function setImage($image){
+        $this->getAdiantiObj()->setImage($image);
         $this->image = $image;
     }
     //-------------------------------------------------------------------------

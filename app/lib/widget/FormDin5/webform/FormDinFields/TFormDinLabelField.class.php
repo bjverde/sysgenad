@@ -54,18 +54,27 @@ class TFormDinLabelField
      * Label do campo de entrada
      * Reconstruido FormDin 4 Sobre o Adianti 7
      *
-     * @param string $strLabel      - 1: Label do campo, usado para validações
-     * @param boolean $boolRequired - 2: Obrigatorio. DEFAULT = False.
-     * @return TEntry
+     * @param string $strLabel     - 1: Label do campo, usado para validações
+     * @param boolean $boolRequired- 2: Obrigatorio. DEFAULT = False.
+     * @param [type] $color        - 3: Define the font color
+     * @param [type] $fontsize     - 4: Font size in pixels
+     * @param [type] $decoration   - 5: text decorations (b=bold, i=italic, u=underline)
+     * @param [type] $size         - 6: Field's width in pixels
+     * @return TLabel
      */
     public function __construct(string $strLabel
-                               ,$boolRequired = false)
-    {        
-        if($boolRequired){
-            $this->adiantiObj = new TLabel($strLabel, 'red');
-        }else{
-            $this->adiantiObj = new TLabel($strLabel);
+                               ,$boolRequired = false
+                               ,$color = null
+                               ,$fontsize = null
+                               ,$decoration = null
+                               ,$size = null                               
+                               )
+    {
+        if( empty($color) && ($boolRequired==true) ){
+            $color = 'red';
         }
+        $fontsize = empty($fontsize)?'14px':$fontsize;
+        $this->adiantiObj = new TLabel($strLabel,$color,$fontsize,$decoration,$size);
     }
 
     public function getAdiantiObj(){
@@ -100,5 +109,40 @@ class TFormDinLabelField
 	{
 		return $this->tooltip;
     }    
-	//------------------------------------------------------------------------------       
+	//------------------------------------------------------------------------------
+    /**
+     * Define the font size
+     * @param $size Font size in pixels
+     */    
+    public function setFontSize($size)
+	{
+		$this->getAdiantiObj()->setFontSize($size);
+	}
+	//------------------------------------------------------------------------------
+    /**
+     * Define the style
+     * @param  $decoration text decorations (b=bold, i=italic, u=underline)
+     */    
+    public function setFontStyle($decoration)
+	{
+		$this->getAdiantiObj()->setFontStyle($decoration);
+	}
+	//------------------------------------------------------------------------------
+    /**
+     * Define the font face
+     * @param $font Font Family Name
+     */    
+    public function setFontFace($font)
+	{
+		$this->getAdiantiObj()->setFontFace($font);
+	}
+	//------------------------------------------------------------------------------
+    /**
+     * Define the font color
+     * @param $color Font Color
+     */    
+    public function setFontColor($color)
+	{
+		$this->getAdiantiObj()->setFontColor($color);
+	}         
 }
