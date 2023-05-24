@@ -5,15 +5,13 @@ cd ../../
 
 REM ---------------- 9.1.4 -------------------------
 
-REM ECHO PHP 7.3.5 and PHPUnit 9.1.4 Simples
-REM D:\wamp\bin\php\php7.3.5\php.exe D:\wamp\bin\phpunit\phpunit-9.1.4.phar --colors=auto --bootstrap D:\wamp\www\adianti\sysgenad\init.php D:\wamp\www\adianti\sysgenad\app\tests\
+REM ECHO PHP 7.4.33 and PHPUnit 9.1.4 Simples
+REM C:\wamp64\bin\php\php7.4.33\php.exe C:\wamp64\bin\phpunit\phpunit-9.5.9.phar --colors=auto --bootstrap C:\wamp64\www\adinatiApp\sysgenad\init.php C:\wamp64\www\adinatiApp\sysgenad\app\tests\
 
-REM ECHO PHP 7.3.5 and PHPUnit 9.1.4 Simples with Coverage
-REM D:\wamp\bin\php\php7.3.5\php.exe D:\wamp\bin\phpunit\phpunit-9.1.4.phar --colors=auto --bootstrap D:\wamp\www\adianti\sysgenad\init.php --whitelist D:\wamp\www\adianti\sysgenad\app\control\controllers --coverage-html D:\wamp\www\adianti\sysgenad\phpunit-code-coverage D:\wamp\www\adianti\sysgenad\app\tests\
+REM ECHO PHP 7.4.33 and PHPUnit 9.5.9 Simples with Coverage
+REM C:\wamp64\bin\php\php7.4.33\php.exe C:\wamp64\bin\phpunit\phpunit-9.5.9.phar --colors=auto --bootstrap C:\wamp64\www\adinatiApp\sysgenad\init.php --whitelist C:\wamp64\www\adiantiApp\sysgenad\app\control\controllers --coverage-html C:\wamp64\www\adinatiApp\sysgenad\phpunit-code-coverage C:\wamp64\www\adinatiApp\sysgenad\app\tests\
 
-REM ---------------- 9.5.9 -------------------------
-
-ECHO PHP 8.1.0 and PHPUnit 9.5.9 Simples with Coverage
-D:\wamp64\bin\php\php8.1.0\php.exe D:\wamp64\bin\phpunit\phpunit-9.5.9.phar --colors=auto --bootstrap D:\wamp64\www\adianti\sysgenad\init.php --whitelist D:\wamp64\www\adianti\formDin5\appexemplo_v1.0\app\lib\widget\FormDin5 --coverage-html D:\wamp64\www\adianti\sysgenad\phpunit-code-coverage D:\wamp64\www\adianti\sysgenad\app\tests\
+ECHO PHP 8.1.13 and PHPUnit 9.5.9 Simples with Coverage
+C:\wamp64\bin\php\php8.1.13\php.exe C:\wamp64\bin\phpunit\phpunit-9.5.9.phar --colors=auto --bootstrap C:\wamp64\www\adinatiApp\sysgenad\init.php --whitelist C:\wamp64\www\adiantiApp\sysgenad\app\control\controllers --coverage-html C:\wamp64\www\adiantiApp\sysgenad\phpunit-code-coverage C:\wamp64\www\adinatiApp\sysgenad\app\tests\
 
 cd app\tests\
