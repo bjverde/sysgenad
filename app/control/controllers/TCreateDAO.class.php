@@ -497,6 +497,13 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'}');
     }    
     //--------------------------------------------------------------------------------------
+    public function addGetRepositoryName()
+    {
+        $this->addLine(ESP.'public function getRepositoryName()');
+        $this->addLine(ESP.'{');
+        $this->addLine(ESP.ESP.'return $this->repositoryName;');
+        $this->addLine(ESP.'}');
+    }    
     public function addConstruct()
     {
         $this->addLine(ESP.'private $tpdo = null;');
@@ -519,7 +526,8 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'//FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);');
         $this->addLine(ESP.ESP.'$this->tpdo = $tpdo;');
-        $this->addLine(ESP.'}');        
+        $this->addLine(ESP.'}');
+        $this->addGetRepositoryName();
     }
     //--------------------------------------------------------------------------------------
     public function show($print = false)
