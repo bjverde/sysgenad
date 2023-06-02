@@ -207,12 +207,13 @@ class TCreateDAOTest extends TestCase
 	    $expected = array();
 		$expected[] = ESP.'private $tpdo = null;'.EOL;
 		$expected[] = ESP.'private $repositoryName = \'test\'; //Nome da Classe do tipo Active Record no diretorio /app/model/maindatabase'.EOL;
+		$expected[] = ESP.'private $dataBaseName = null;'.EOL;
 		$expected[] = EOL;
 		$expected[] = ESP.'public function __construct($tpdo=null)'.EOL;
 		$expected[] = ESP.'{'.EOL;
 		$expected[] = ESP.ESP.'//FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);'.EOL;
 		$expected[] = ESP.ESP.'if( empty($tpdo) ){'.EOL;
-		$expected[] = ESP.ESP.ESP.'//$tpdo = New TPDOConnectionObj();  //FomDin4'.EOL;
+		$expected[] = ESP.ESP.ESP.'//$tpdo = New TPDOConnectionObj(); //FomDin4'.EOL;
 		$expected[] = ESP.ESP.ESP.'$tpdo = New TFormDinPdoConnection(\'maindatabase\');'.EOL;
 		$expected[] = ESP.ESP.'}'.EOL;
 		$expected[] = ESP.ESP.'$this->setTPDOConnection($tpdo);'.EOL;
@@ -228,6 +229,11 @@ class TCreateDAOTest extends TestCase
 	    $this->assertSame($expected[4], $resultArray[4]);
 	    $this->assertSame($expected[5], $resultArray[5]);
 	    $this->assertSame($expected[6], $resultArray[6]);
+		$this->assertSame($expected[7], $resultArray[7]);
+		$this->assertSame($expected[8], $resultArray[8]);
+		$this->assertSame($expected[9], $resultArray[9]);
+		$this->assertSame($expected[10], $resultArray[10]);
+		$this->assertSame($expected[11], $resultArray[11]);
 	}
 	
 	public function testShow_VIEW_numLines(){
