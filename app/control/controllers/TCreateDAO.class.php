@@ -497,17 +497,29 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.'}');
     }    
     //--------------------------------------------------------------------------------------
+    public function addDataBaseMethods()
+    {
+        $this->addLine(ESP.'public function getDataBaseName()');
+        $this->addLine(ESP.'{');
+        $this->addLine(ESP.ESP.'return $this->dataBaseName;');
+        $this->addLine(ESP.'}');
+        $this->addLine(ESP.'public function setDataBaseName($dataBaseName)');
+        $this->addLine(ESP.'{');
+        $this->addLine(ESP.ESP.'$this->dataBaseName = $dataBaseName;');
+        $this->addLine(ESP.'}');        
+    }
     public function addGetRepositoryName()
     {
         $this->addLine(ESP.'public function getRepositoryName()');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'return $this->repositoryName;');
         $this->addLine(ESP.'}');
-    }    
+    }
     public function addConstruct()
     {
         $this->addLine(ESP.'private $tpdo = null;');
         $this->addLine(ESP.'private $repositoryName = \''.$this->getTableName().'\'; //Nome da Classe do tipo Active Record no diretorio /app/model/maindatabase');
+        $this->addLine(ESP.'private $dataBaseName = null;');
         $this->addBlankLine();
         $this->addLine(ESP.'public function __construct($tpdo=null)');
         $this->addLine(ESP.'{');
@@ -527,6 +539,7 @@ class TCreateDAO extends TCreateFileContent
         $this->addLine(ESP.ESP.'//FormDinHelper::validateObjTypeTPDOConnectionObj($tpdo,__METHOD__,__LINE__);');
         $this->addLine(ESP.ESP.'$this->tpdo = $tpdo;');
         $this->addLine(ESP.'}');
+        $this->addDataBaseMethods();
         $this->addGetRepositoryName();
     }
     //--------------------------------------------------------------------------------------
