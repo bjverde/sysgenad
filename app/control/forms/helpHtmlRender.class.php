@@ -17,11 +17,11 @@ class helpHtmlRender extends TPage
         $this->adianti_target_container = 'adianti_right_panel';
 
         TPage::include_css('app/resources/styles.css');
-        $this->html = new THtmlRenderer($this->getHtmlResource($param));
+        $this->html = new THtmlRenderer($this->getHtmlResource());
         $replace = array(); // define replacements for the main section        
         $this->html->enableSection('main', $replace); // replace the main section variables
 
-        $frm = new TFormDin($this,$this->getFormTitle($param));
+        $frm = new TFormDin($this,$this->getFormTitle());
         $frm->addHiddenField('id'); //POG para evitar problema de noticie
 
         // O Adianti permite a Internacionalização - A função _t('string') serve
@@ -51,23 +51,23 @@ class helpHtmlRender extends TPage
     }
     public function loadEasyLabel()
     {
-        $param['html']=self::HTML_EASY;
-        $this->onReload($param);
+        TSession::setValue('HELP_HTML',self::HTML_EASY);
+        $this->onReload();
     }
     public function loadDataFormt()
     {
-        $param['html']=self::HTML_DATE_FORMAT;
-        $this->onReload($param);
+        TSession::setValue('HELP_HTML',self::HTML_DATE_FORMAT);
+        $this->onReload();
     }
     public function loadGrid()
     {
-        $param['html']=self::HTML_TP_GRID;
-        $this->onReload($param);
+        TSession::setValue('HELP_HTML',self::HTML_TP_GRID);
+        $this->onReload();
     }
-    public function getFormTitle($param = null)
+    public function getFormTitle()
     {
         $result = 'app/resources/sysgen_easylabel_pt-br.html';
-        $html = ArrayHelper::get($param,'html');
+        $html = TSession::getValue('HELP_HTML');
         if ($html == self::HTML_EASY) {
             $result = 'app/resources/sysgen_easylabel_pt-br.html';
         }elseif($html == self::HTML_DATE_FORMAT){
@@ -77,10 +77,10 @@ class helpHtmlRender extends TPage
         }
         return $result;
     }
-    public function getHtmlResource($param = null)
+    public function getHtmlResource()
     {
         $result = 'app/resources/sysgen_easylabel_pt-br.html';
-        $html = ArrayHelper::get($param,'html');
+        $html = TSession::getValue('HELP_HTML');
         if ($html == self::HTML_EASY) {
             $result = 'app/resources/sysgen_easylabel_pt-br.html';
         }elseif($html == self::HTML_DATE_FORMAT){
