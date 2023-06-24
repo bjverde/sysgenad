@@ -26,6 +26,7 @@ final class TableInfo
     //-----------------------------------------------------------------------------------
     const TP_SYSTEM = 'TP_SYSTEM';
     const TP_SYSTEM_THEME = 'TP_SYSTEM_THEME';
+    const TP_GRID = 'TP_GRID';
     
     const TABLE_SCHEMA = 'TABLE_SCHEMA';
     const TABLE_NAME = 'TABLE_NAME';

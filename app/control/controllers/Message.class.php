@@ -53,6 +53,7 @@ final class Message
     const GPX_DATEFORMAT      = 'Formatação geral dos campos Date e DateTime';
     const FIELD_EASY_LABEL    = 'Deseja usar o Easy Label ?';
     const FIELD_TP_SYSTEM     = 'Qual tipo de sistema deseja gerar ?';
+    const FIELD_TP_GRID       = 'Qual tipo de Grid deseja ?';
     const FIELD_LOGFILE_LABEL = 'Qual tipo de Log em arquivo (php_error.log) quer para o sistema?';
     const FIELD_LOGFILE_OPT00 = 'Nada será gravado no Log !!';
     const FIELD_LOGFILE_OPT01 = 'Quero tudo mesmo! até DomainException !';
