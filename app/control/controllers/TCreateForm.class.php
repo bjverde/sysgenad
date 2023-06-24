@@ -740,7 +740,7 @@ class TCreateForm extends TCreateFileContent
             $this->addLine(ESP.'use Adianti\Base\AdiantiStandardFormTrait;');
         }
         $this->addBlankLine();
-        $this->addLine(ESP.'public function __construct()');
+        $this->addLine(ESP.'public function __construct($param = null)');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'parent::__construct();');
         $this->addLine(ESP.ESP.'// $this->adianti_target_container = \'adianti_right_panel\';');
@@ -751,7 +751,11 @@ class TCreateForm extends TCreateFileContent
             $this->addLine(ESP.ESP.'$this->setDefaultOrder(\''.$this->getPrimaryKeyTable().'\', \'asc\'); // define the default order');
             $this->addBlankLine();
             $this->addLine(ESP.ESP.'$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
-        }        
+        }
+        $this->addLine(ESP.ESP.'if(!empty($param[\'target_container\'])){');
+        $this->addLine(ESP.ESP.ESP.'$this->adianti_target_container = $param[\'target_container\'];');
+        $this->addLine(ESP.ESP.'}');
+        $this->addBlankLine();
         $this->addLine(ESP.ESP.'$this->frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
         $this->addLine(ESP.ESP.'$frm = $this->frm;');
         $this->addLine(ESP.ESP.'$frm->enableCSRFProtection(); // Protection cross-site request forgery ');
