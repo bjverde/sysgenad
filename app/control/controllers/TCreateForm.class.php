@@ -12,6 +12,7 @@
 
 class TCreateForm extends TCreateFileContent
 {
+    private $formId;
     private $formTitle;
     private $primaryKeyTable;
     private $tableRef;
@@ -52,6 +53,7 @@ class TCreateForm extends TCreateFileContent
         $tableName = strtolower($tableName);
         $this->setFormTitle($tableName);
         $this->setTableRef($tableName);
+        $this->setFormId($tableName);
         $this->setFileName(strtolower($tableName).'Form.class.php');
         $this->setFilePath($pathFolder);
         $this->setListColumnsProperties($listColumnsProperties);
@@ -98,6 +100,21 @@ class TCreateForm extends TCreateFileContent
         $this->tableRefClass = $this->getTableRefCC($tableRef);
         $this->tableRefDAO   = $this->getTableRefCC($tableRef).'DAO';
         $this->tableRefVO    = $this->getTableRefCC($tableRef).'VO';
+    }
+    //--------------------------------------------------------------------------------------
+    public function getFormId()
+    {
+        return $this->formId;
+    }
+    /**
+     * Set Form ID
+     *
+     * @param string $tableName - table name reference
+     * @return void
+     */
+    public function setFormId($tableName)
+    {
+        $this->formId    = 'form_'.$this->getTableRefCC($tableName);
     }
     //--------------------------------------------------------------------------------------
     public function setListColunnsName($listColumnsName)
@@ -722,7 +739,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine("class ".$this->tableRef."Form extends TPage");
         $this->addLine("{");
         $this->addBlankLine();
-        $this->addLine(ESP.'protected $form; //Registration form Adianti');
+        $this->addLine(ESP.'private static $formId = \'form_'.$this->getFormId().'\'; //Form ID');
         $this->addLine(ESP.'protected $frm;  //Registration component FormDin 5');
         $this->addLine(ESP.'protected $datagrid; //Listing');
         $this->addLine(ESP.'protected $pageNavigation;');
@@ -756,7 +773,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine(ESP.ESP.ESP.'$this->adianti_target_container = $param[\'target_container\'];');
         $this->addLine(ESP.ESP.'}');
         $this->addBlankLine();
-        $this->addLine(ESP.ESP.'$this->frm = new TFormDin($this,\''.$this->getFormTitle().'\');');
+        $this->addLine(ESP.ESP.'$this->frm = new TFormDin($this,\''.$this->getFormTitle().'\',null,null,self::$formId);');
         $this->addLine(ESP.ESP.'$frm = $this->frm;');
         $this->addLine(ESP.ESP.'$frm->enableCSRFProtection(); // Protection cross-site request forgery ');
         $this->addFields(ESP.ESP);
