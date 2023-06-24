@@ -54,6 +54,16 @@ class helpHtmlRender extends TPage
         $param['html']=self::HTML_EASY;
         $this->onReload($param);
     }
+    public function loadDataFormt()
+    {
+        $param['html']=self::HTML_DATE_FORMAT;
+        $this->onReload($param);
+    }
+    public function loadGrid()
+    {
+        $param['html']=self::HTML_TP_GRID;
+        $this->onReload($param);
+    }
     public function getFormTitle($param = null)
     {
         $result = 'app/resources/sysgen_easylabel_pt-br.html';
