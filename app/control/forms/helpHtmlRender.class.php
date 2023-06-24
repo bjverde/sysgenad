@@ -67,28 +67,27 @@ class helpHtmlRender extends TPage
     public function getFormTitle($param = null)
     {
         $result = 'app/resources/sysgen_easylabel_pt-br.html';
-        $target = ArrayHelper::get($param,'html');
-        if ($result == self::HTML_EASY) {
+        $html = ArrayHelper::get($param,'html');
+        if ($html == self::HTML_EASY) {
             $result = 'app/resources/sysgen_easylabel_pt-br.html';
-        }elseif($result == self::HTML_DATE_FORMAT){
+        }elseif($html == self::HTML_DATE_FORMAT){
             $result = Message::BUTTON_LABEL_HELP_DATEFORMAT;
-        }elseif($result == self::HTML_TP_GRID){
+        }elseif($html == self::HTML_TP_GRID){
             $result = Message::BUTTON_LABEL_HELP_DATEFORMAT;
         }
         return $result;
-    }    
+    }
     public function getHtmlResource($param = null)
     {
         $result = 'app/resources/sysgen_easylabel_pt-br.html';
-        $target = ArrayHelper::get($param,'html');
-        if ($result == self::HTML_EASY) {
+        $html = ArrayHelper::get($param,'html');
+        if ($html == self::HTML_EASY) {
             $result = 'app/resources/sysgen_easylabel_pt-br.html';
-        }elseif($result == self::HTML_DATE_FORMAT){
+        }elseif($html == self::HTML_DATE_FORMAT){
             $result = 'app/resources/sysgen_dateformat_pt-br.html';
-        }elseif($result == self::HTML_TP_GRID){
+        }elseif($html == self::HTML_TP_GRID){
             $result = 'app/resources/sysgen_tdgrid_pt-br.html';
         }
         return $result;
     }
-
 }
