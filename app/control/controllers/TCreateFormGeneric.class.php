@@ -121,6 +121,10 @@ class TCreateFormGeneric extends TCreateFileContent
         return $this->formId;
     }
     //--------------------------------------------------------------------------------------
+    public function getListColunnsName()
+    {
+        return $this->listColumnsName;
+    }
     public function setListColunnsName($listColumnsName)
     {
         array_shift($listColumnsName);

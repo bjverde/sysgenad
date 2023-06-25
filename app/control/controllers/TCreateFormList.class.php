@@ -44,7 +44,8 @@ class TCreateFormList extends TCreateFormGeneric
     {
         if ($this->validateListColumnsName()) {
             $this->addLine($qtdTab.'$mixUpdateFields = $primaryKey.\'|\'.$primaryKey');
-            foreach ($this->listColumnsName as $value) {
+            $listColumnsName = $this->getListColunnsName();
+            foreach ($listColumnsName as $value) {
                 $value   = strtoupper($value);
                 $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'.\','.$value.'|'.$value.'\'');
             }
