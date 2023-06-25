@@ -481,119 +481,6 @@ class TCreateForm extends TCreateFileContent
         $this->addLine($qtdTab.'}');
     }
     //--------------------------------------------------------------------------------------
-    private function addBasicaViewController_buscar()
-    {
-        $this->addLine();
-        $this->addLine(ESP.'case \'Buscar\':');
-        $this->addGetWhereGridParametersArray(ESP.ESP);
-        $this->addLine(ESP.ESP.'$whereGrid = $retorno;');
-        $this->addLine(ESP.'break;');
-    }
-    //--------------------------------------------------------------------------------------
-    private function addBasicaViewController_limpar()
-    {
-        $this->addLine();
-        $this->addLine(ESP.'case \'Limpar\':');
-        $this->addLine(ESP.ESP.'$frm->clearFields();');
-        $this->addLine(ESP.'break;');
-    }
-    //--------------------------------------------------------------------------------------
-    private function addBasicaViewController_gdExcluir()
-    {
-        $this->addLine();
-        $this->addLine(ESP.'case \'gd_excluir\':');
-        $this->addLine(ESP.ESP.'try{');
-        $this->addLine(ESP.ESP.ESP.'$id = $frm->get( $primaryKey ) ;');
-        $this->addLine(ESP.ESP.ESP.'$controller = new '.$this->tableRefClass.'();');
-        $this->addLine(ESP.ESP.ESP.'$resultado = $controller->delete( $id );');
-        $this->addLine(ESP.ESP.ESP.'if($resultado==1) {');
-        $this->addLine(ESP.ESP.ESP.ESP.'$frm->addMessage(Message::GENERIC_DELETE);');
-        $this->addLine(ESP.ESP.ESP.ESP.'$frm->clearFields();');
-        $this->addLine(ESP.ESP.ESP.'}else{');
-        $this->addLine(ESP.ESP.ESP.ESP.'$frm->addMessage($resultado);');
-        $this->addLine(ESP.ESP.ESP.'}');
-        $this->addLine(ESP.ESP.'}');
-        $this->addBasicViewController_logCatch(ESP.ESP);
-        $this->addLine(ESP.'break;');
-    }   
-    //--------------------------------------------------------------------------------------
-    public function getMixUpdateFields($qtdTab)
-    {
-        if ($this->validateListColumnsName()) {
-            $this->addLine($qtdTab.'$mixUpdateFields = $primaryKey.\'|\'.$primaryKey');
-            foreach ($this->listColumnsName as $value) {
-                $value   = strtoupper($value);
-                $this->addLine($qtdTab.ESP.ESP.ESP.ESP.'.\','.$value.'|'.$value.'\'');
-            }
-            $this->addLine($qtdTab.ESP.ESP.ESP.ESP.';');
-        }
-    }
-    //--------------------------------------------------------------------------------------
-    public function addColumnsGrid($qtdTab)
-    {
-        //$this->addLine($qtdTab.'$grid->addRowNumColumn(); //Mostra Numero da linha');
-        $this->addLine($qtdTab.'$grid->addColumn($primaryKey,\'id\');');
-        if ($this->validateListColumnsName()) {
-            foreach ($this->listColumnsName as $key => $value) {
-                /**
-                 * Esse ajuste do $key acontece em função do setListColunnsName descarta o primeiro
-                 * registro que assume ser a chave primaria.
-                 */
-                $keyColumns = $key+1;
-                $formDinType = $this->getColumnsPropertieFormDinType($keyColumns);               
-                $fieldLabel = EasyLabel::convertLabel($value, $formDinType);
-                $value      = strtoupper($value);
-
-                switch ($formDinType) {
-                    case self::FORMDIN_TYPE_DATE:
-                        $this->addLine($qtdTab.'$grid->addColumnFormatDate(\''.$value.'\',\''.$fieldLabel.'\',null,\'left\',\''.$this->getDtView().'\');');
-                    break;
-                    case self::FORMDIN_TYPE_DATETIME:
-                        $this->addLine($qtdTab.'$grid->addColumnFormatDate(\''.$value.'\',\''.$fieldLabel.'\',null,\'left\',\''.$this->getDtView().' hh:ii\');');
-                    break;
-                    default:
-                        $this->addLine($qtdTab.'$grid->addColumn(\''.$value.'\',\''.$fieldLabel.'\');');
-                }
-            }//end foreach
-        }//end if
-    }
-    //--------------------------------------------------------------------------------------
-    public function addGetWhereGridParameters_fied($primeira, $campo, $qtdTabs)
-    {
-        if ($primeira == true) {
-            $this->addLine($qtdTabs.'\''.$campo.'\'=>$frm->get(\''.$campo.'\')');
-        } else {
-            $this->addLine($qtdTabs.',\''.$campo.'\'=>$frm->get(\''.$campo.'\')');
-        }
-    }
-    //--------------------------------------------------------------------------------------
-    public function addGetWhereGridParametersFields($qtdTabs)
-    {
-        foreach ($this->listColumnsName as $value) {
-            $this->addGetWhereGridParameters_fied(false, $value, $qtdTabs);
-        }
-    }
-    //--------------------------------------------------------------------------------------
-    public function addGrid($qtdTab)
-    {   
-        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addBlankLine();
-            $this->getMixUpdateFields($qtdTab);
-            $this->addLine($qtdTab.'$grid = new TFormDinGrid($this,\'gd\',\'Data Grid\');');
-            $this->addLine($qtdTab.'$grid->setUpdateFields($mixUpdateFields);');
-            $this->addColumnsGrid($qtdTab);
-            if( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
-                $this->addLine($qtdTab.'$grid->enableDefaultButtons(false); //Disable Grid Action Edit e Delete');
-            }
-            $this->addBlankLine();
-            $this->addLine($qtdTab.'$this->datagrid = $grid->show();');
-            $this->addLine($qtdTab.'$this->pageNavigation = $grid->getPageNavigation();');
-            $this->addLine($qtdTab.'$panelGroupGrid = $grid->getPanelGroupGrid();');
-            $this->addBlankLine();
-            $this->addBlankLine();
-        }
-    }
-    //--------------------------------------------------------------------------------------
     public function addMethod_onSave($qtdTab)
     {
         $this->addBlankLine();
@@ -783,7 +670,6 @@ class TCreateForm extends TCreateFileContent
         $this->addBlankLine();        
         $this->addLine(ESP.ESP.'$this->form = $frm->show();');
         $this->addLine(ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
-        $this->addGrid(ESP.ESP);
         $this->addVbox(ESP.ESP);
         $this->addLine(ESP.'}');//FIM construct
         $this->addBasicViewController(ESP);
