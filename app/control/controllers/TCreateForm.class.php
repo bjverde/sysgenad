@@ -17,6 +17,7 @@ class TCreateForm extends TCreateFileContent
     private $primaryKeyTable;
     private $tableRef;
     private $tableRefClass;
+    private $tableRefClassForm;
     private $tableRefDAO;
     private $tableRefVO;
     private $listColumnsName;
@@ -53,7 +54,6 @@ class TCreateForm extends TCreateFileContent
         $tableName = strtolower($tableName);
         $this->setFormTitle($tableName);
         $this->setTableRef($tableName);
-        $this->setFormId($tableName);
         $this->setFileName(strtolower($tableName).'Form.class.php');
         $this->setFilePath($pathFolder);
         $this->setListColumnsProperties($listColumnsProperties);
@@ -94,27 +94,27 @@ class TCreateForm extends TCreateFileContent
         return ucfirst($tableRef);
     }
     //--------------------------------------------------------------------------------------
+    public function getTableRefClass()
+    {
+        return $this->tableRefClass;
+    }     
+    public function getTableRefClassForm()
+    {
+        return $this->tableRefClassForm;
+    }    
     public function setTableRef($tableRef)
     {
         $this->tableRef      = strtolower($tableRef);
         $this->tableRefClass = $this->getTableRefCC($tableRef);
+        $this->tableRefClassForm = strtolower($tableRef);
         $this->tableRefDAO   = $this->getTableRefCC($tableRef).'DAO';
         $this->tableRefVO    = $this->getTableRefCC($tableRef).'VO';
     }
     //--------------------------------------------------------------------------------------
     public function getFormId()
     {
+        $this->formId    = 'form_'.$this->getTableRefClassForm();
         return $this->formId;
-    }
-    /**
-     * Set Form ID
-     *
-     * @param string $tableName - table name reference
-     * @return void
-     */
-    public function setFormId($tableName)
-    {
-        $this->formId    = 'form_'.$this->getTableRefCC($tableName);
     }
     //--------------------------------------------------------------------------------------
     public function setListColunnsName($listColumnsName)
