@@ -359,13 +359,25 @@ class TGeneratorHelper
 
         $configDBMS = self::getConfigByDBMS();
         $pathFolder = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'views';
-        $geradorForm= new TCreateForm($pathFolder ,$tableName ,$listColumnsProperties);
-        $geradorForm->setDatabaseManagementSystem($DBMS_TYPE);
-        $geradorForm->setTableType($tableType);
-        $geradorForm->setGridType($configDBMS['TPGRID']);
-        $geradorForm->setDtView($dtView);
-        $geradorForm->setDtDb($dtDB);
-        $geradorForm->saveFile();
+
+        $geradorFormList= new TCreateFormList($pathFolder ,$tableName ,$listColumnsProperties);
+        $geradorFormList->setDatabaseManagementSystem($DBMS_TYPE);
+        $geradorFormList->setTableType($tableType);
+        $geradorFormList->setGridType($configDBMS['TPGRID']);
+        $geradorFormList->setDtView($dtView);
+        $geradorFormList->setDtDb($dtDB);
+        $geradorFormList->saveFile();
+
+        if($tableType == TableInfo::TB_TYPE_TABLE){
+            $geradorForm= new TCreateForm($pathFolder ,$tableName ,$listColumnsProperties);
+            $geradorForm->setDatabaseManagementSystem($DBMS_TYPE);
+            $geradorForm->setTableType($tableType);
+            $geradorForm->setGridType($configDBMS['TPGRID']);
+            $geradorForm->setDtView($dtView);
+            $geradorForm->setDtDb($dtDB);
+            $geradorForm->saveFile();
+        }
+
     }
 
     public static function createFilesControllesAndRoutesAPI($tableName, $listColumnsProperties, $tableSchema, $tableType)
