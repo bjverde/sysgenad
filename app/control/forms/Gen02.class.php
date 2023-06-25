@@ -2,6 +2,7 @@
 class Gen02 extends TPage
 {
     protected $form; // registration form
+    protected $frm;  //Registration component FormDin 5');
     protected $datagrid; // listing
     protected $pageNavigation;
 

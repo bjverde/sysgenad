@@ -1,6 +1,10 @@
 <?php
 class Gen01 extends TPage
 {
+    protected $form; //Registration form Adianti');
+    protected $frm;  //Registration component FormDin 5');
+    protected $adianti_target_container;
+    protected $html;
 
     // trait com onReload, onSearch, onDelete...
     use Adianti\Base\AdiantiStandardListTrait;
