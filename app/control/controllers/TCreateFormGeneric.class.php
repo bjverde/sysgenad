@@ -102,6 +102,10 @@ class TCreateFormGeneric extends TCreateFileContent
     {
         return $this->tableRefClassForm;
     }
+    public function getTableRefVO()
+    {
+        return $this->tableRefVO;
+    }     
     public function getTableRef()
     {
         return $this->tableRef;

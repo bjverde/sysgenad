@@ -55,7 +55,7 @@ class TCreateForm extends TCreateFormGeneric
         $this->addLine($qtdTab.ESP.'try{');
         $this->addLine($qtdTab.ESP.ESP.'$this->form->validate();');        
         $this->addLine($qtdTab.ESP.ESP.'$this->form->setData($data);');
-        $this->addLine($qtdTab.ESP.ESP.'$vo = new '.$this->tableRefVO.'();');
+        $this->addLine($qtdTab.ESP.ESP.'$vo = new '.$this->getTableRefVO().'();');
         $this->addLine($qtdTab.ESP.ESP.'$this->frm->setVo( $vo ,$data ,$param );');
         $this->addLine($qtdTab.ESP.ESP.'$controller = new '.$this->getTableRefClass().'Controller();');
         $this->addLine($qtdTab.ESP.ESP.'$resultado = $controller->save( $vo );');
@@ -88,7 +88,7 @@ class TCreateForm extends TCreateFormGeneric
         $this->addLine($qtdTab.ESP.'try{');
         $this->addLine($qtdTab.ESP.ESP.'$this->form->validate();');        
         $this->addLine($qtdTab.ESP.ESP.'$this->form->setData($data);');
-        $this->addLine($qtdTab.ESP.ESP.'$vo = new '.$this->tableRefVO.'();');
+        $this->addLine($qtdTab.ESP.ESP.'$vo = new '.$this->getTableRefVO().'();');
         $this->addLine($qtdTab.ESP.ESP.'$this->frm->setVo( $vo ,$data ,$param );');
         $this->addLine($qtdTab.ESP.ESP.'$controller = new '.$this->getTableRefClass().'Controller();');
         $this->addLine($qtdTab.ESP.ESP.'$resultado = $controller->execProcedure( $vo );');
