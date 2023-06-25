@@ -106,7 +106,7 @@ class TCreateForm extends TCreateFileContent
     {
         $this->tableRef      = strtolower($tableRef);
         $this->tableRefClass = $this->getTableRefCC($tableRef);
-        $this->tableRefClassForm = strtolower($tableRef);
+        $this->tableRefClassForm = strtolower($tableRef).'Form';
         $this->tableRefDAO   = $this->getTableRefCC($tableRef).'DAO';
         $this->tableRefVO    = $this->getTableRefCC($tableRef).'VO';
     }
