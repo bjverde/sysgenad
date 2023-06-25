@@ -94,27 +94,32 @@ class TCreateFormGeneric extends TCreateFileContent
         return ucfirst($tableRef);
     }
     //--------------------------------------------------------------------------------------
-    public function getTableRefClass()
-    {
-        return $this->tableRefClass;
-    }     
     public function getTableRefClassForm()
     {
         return $this->tableRefClassForm;
     }
+    public function setTableRefClassForm($tableRefClassForm)
+    {
+        $this->tableRefClassForm = $tableRefClassForm;
+    }
+    //--------------------------------------------------------------------------------------
+    public function getTableRefClass()
+    {
+        return $this->tableRefClass;
+    }
     public function getTableRefVO()
     {
         return $this->tableRefVO;
-    }     
+    }
     public function getTableRef()
     {
         return $this->tableRef;
-    }      
+    }
     public function setTableRef($tableRef)
     {
         $this->tableRef      = strtolower($tableRef);
         $this->tableRefClass = $this->getTableRefCC($tableRef);
-        $this->tableRefClassForm = strtolower($tableRef).'Form';
+        $this->setTableRefClassForm( strtolower($tableRef).'Form' );
         $this->tableRefDAO   = $this->getTableRefCC($tableRef).'DAO';
         $this->tableRefVO    = $this->getTableRefCC($tableRef).'VO';
     }
