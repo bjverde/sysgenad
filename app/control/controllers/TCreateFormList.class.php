@@ -21,6 +21,7 @@ class TCreateFormList extends TCreateFormGeneric
     public function __construct($pathFolder ,$tableName ,$listColumnsProperties)
     {
         parent::__construct($pathFolder,$tableName,$listColumnsProperties);
+        $this->setFileName(strtolower($tableName).'FormList.class.php');
     }
     //--------------------------------------------------------------------------------------
     public function getMixUpdateFields($qtdTab)
