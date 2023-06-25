@@ -480,45 +480,4 @@ class TCreateFormGeneric extends TCreateFileContent
         $this->addLine($qtdTab.ESP.'$frm->addMessage( $e->getMessage() ); //addMessage evita o problema do setMessage');
         $this->addLine($qtdTab.'}');
     }
-    //--------------------------------------------------------------------------------------
-    protected function addBasicViewController($qtdTab)
-    {
-
-        $this->addMethod_onClose($qtdTab);
-        if( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
-            $this->addMethod_onClear($qtdTab);
-        }elseif ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
-            $this->addMethod_onSave($qtdTab);
-        }elseif ($this->getTableType() == TableInfo::TB_TYPE_PROCEDURE) {
-            $this->addMethod_onExecute($qtdTab);
-        }
-        $this->addBlankLine();
-    }        
-    //--------------------------------------------------------------------------------------
-    public function addButtons($qtdTab)
-    {
-        $this->addLine($qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve');
-        $this->addLine($qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo');
-        $this->addLine($qtdTab.'//primeiro em ingles e depois traduzindo');
-        if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
-            $this->addLine($qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );');
-        }elseif( $this->getTableType() == TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine($qtdTab.'$frm->setAction( _t(\'Execute\'), \'onExecute\', null, \'fa:save\', \'green\' );');
-        }
-        $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');');
-    }
-    //--------------------------------------------------------------------------------------
-    public function addVbox($qtdTab)
-    {
-        $this->addLine($qtdTab.'// creates the page structure using a table');
-        $this->addLine($qtdTab.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
-        $this->addLine($qtdTab.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
-        $this->addLine($qtdTab.'$vbox->add($this->form);');
-        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine($qtdTab.'$vbox->add($panelGroupGrid);');
-        }        
-        $this->addBlankLine();
-        $this->addLine($qtdTab.'// add the table inside the page');
-        $this->addLine($qtdTab.'parent::add($vbox);');
-    }
 }
