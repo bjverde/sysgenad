@@ -241,7 +241,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function getColumnsPropertieRequired($key)
+    protected function getColumnsPropertieRequired($key)
     {
         $result = true;
         if (ArrayHelper::has('REQUIRED', $this->listColumnsProperties)) {
@@ -250,7 +250,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return strtolower($result);
     }
     //--------------------------------------------------------------------------------------
-    private function getColumnsPropertieDataType($key)
+    protected function getColumnsPropertieDataType($key)
     {
         $result = null;
         if (ArrayHelper::has('DATA_TYPE', $this->listColumnsProperties)) {
@@ -260,7 +260,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function getColumnsPropertieFormDinType($key)
+    protected function getColumnsPropertieFormDinType($key)
     {
         $result = null;
         if (ArrayHelper::has(self::FORMDIN_TYPE_COLUMN_NAME, $this->listColumnsProperties)) {
@@ -269,7 +269,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldTypeToolTip($qtdTab,$key, $fieldName)
+    protected function addFieldTypeToolTip($qtdTab,$key, $fieldName)
     {
         $COLUMN_COMMENT = null;
         if (ArrayHelper::has('COLUMN_COMMENT', $this->listColumnsProperties)) {
@@ -281,7 +281,7 @@ class TCreateFormGeneric extends TCreateFileContent
         }
     }
     //--------------------------------------------------------------------------------------
-    private function getColumnsPropertieCharMax($key)
+    protected function getColumnsPropertieCharMax($key)
     {
         $result = null;
         if (ArrayHelper::has('CHAR_MAX', $this->listColumnsProperties)) {
@@ -291,7 +291,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function getColumnsPropertieNumLength($key)
+    protected function getColumnsPropertieNumLength($key)
     {
         $result = null;
         if (ArrayHelper::has('NUM_LENGTH', $this->listColumnsProperties)) {
@@ -301,7 +301,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function getColumnsPropertieNumScale($key)
+    protected function getColumnsPropertieNumScale($key)
     {
         $result = null;
         if (ArrayHelper::has('NUM_SCALE', $this->listColumnsProperties)) {
@@ -311,7 +311,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function getColumnsPropertieKeyType($key)
+    protected function getColumnsPropertieKeyType($key)
     {
         $result = null;
         if (ArrayHelper::has('KEY_TYPE', $this->listColumnsProperties)) {
@@ -321,7 +321,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function getColumnsPropertieReferencedTable($key)
+    protected function getColumnsPropertieReferencedTable($key)
     {
         $result = null;
         if (ArrayHelper::has('REFERENCED_TABLE_NAME', $this->listColumnsProperties)) {
@@ -331,7 +331,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function getFkTypeScreenReferenced($key)
+    protected function getFkTypeScreenReferenced($key)
     {        
         $result = null;
         if (ArrayHelper::has(TableInfo::FK_TYPE_SCREEN_REFERENCED, $this->listColumnsProperties)) {
@@ -341,7 +341,7 @@ class TCreateFormGeneric extends TCreateFileContent
         return $result;
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldNumber($qtdTab,$key, $fieldName, $REQUIRED)
+    protected function addFieldNumber($qtdTab,$key, $fieldName, $REQUIRED)
     {
         $NUM_LENGTH = $this->getColumnsPropertieNumLength($key);
         $NUM_SCALE  = $this->getColumnsPropertieNumScale($key);
@@ -351,7 +351,7 @@ class TCreateFormGeneric extends TCreateFileContent
         $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldForenAutoComplete($key, $fieldName, $REQUIRED)
+    protected function addFieldForenAutoComplete($key, $fieldName, $REQUIRED)
     {
         $NUM_LENGTH = $this->getColumnsPropertieNumLength($key);
         $REFERENCED_TABLE_NAME = $this->getColumnsPropertieReferencedTable($key);
@@ -379,7 +379,7 @@ class TCreateFormGeneric extends TCreateFileContent
         $this->addLine('$frm->closeGroup();');
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldForenKeySelectField($qtdTab,$key, $fieldName, $REQUIRED)
+    protected function addFieldForenKeySelectField($qtdTab,$key, $fieldName, $REQUIRED)
     {
         $REFERENCED_TABLE_NAME = $this->getColumnsPropertieReferencedTable($key);
         $REFERENCED_TABLE_NAME = $this->getTableRefCC($REFERENCED_TABLE_NAME);
@@ -392,7 +392,7 @@ class TCreateFormGeneric extends TCreateFileContent
         $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldNumberOrForeignKey($qtdTab,$key, $fieldName, $REQUIRED)
+    protected function addFieldNumberOrForeignKey($qtdTab,$key, $fieldName, $REQUIRED)
     {        
         $KEY_TYPE   = $this->getColumnsPropertieKeyType($key);
         if ($KEY_TYPE != TableInfo::KEY_TYPE_FK) {
@@ -409,7 +409,7 @@ class TCreateFormGeneric extends TCreateFileContent
         }
     }
     //--------------------------------------------------------------------------------------
-    private function addFieldType($qtdTab,$key, $fieldName, $notPK = true)
+    protected function addFieldType($qtdTab,$key, $fieldName, $notPK = true)
     {
         /**
          * Esse ajuste do $key acontece em função do setListColunnsName descarta o primeiro
@@ -450,7 +450,7 @@ class TCreateFormGeneric extends TCreateFileContent
     }
     
     //--------------------------------------------------------------------------------------
-    private function addFields($qtdTab)
+    protected function addFields($qtdTab)
     {
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){            
             $this->addLine($qtdTab.'$frm->addHiddenField( $primaryKey );   // coluna chave da tabela');
@@ -464,7 +464,7 @@ class TCreateFormGeneric extends TCreateFileContent
         }
     }
     //--------------------------------------------------------------------------------------
-    private function addBasicViewController_logCatch($qtdTab)
+    protected function addBasicViewController_logCatch($qtdTab)
     {
         $logType = TSysgenSession::getValue('logType');
         $logType = empty($logType)?2:$logType;;
@@ -481,102 +481,7 @@ class TCreateFormGeneric extends TCreateFileContent
         $this->addLine($qtdTab.'}');
     }
     //--------------------------------------------------------------------------------------
-    public function addMethod_onSave($qtdTab)
-    {
-        $this->addBlankLine();
-        $this->addLine();
-        $this->addLine($qtdTab.'public function onSave($param)');
-        $this->addLine($qtdTab.'{');
-        $this->addLine($qtdTab.ESP.'$data = $this->form->getData();');
-        $this->addLine($qtdTab.ESP.'//Função do FormDin para Debug');
-        $this->addLine($qtdTab.ESP.'FormDinHelper::d($param,\'$param\');');
-        $this->addLine($qtdTab.ESP.'FormDinHelper::debug($data,\'$data\');');
-        $this->addLine($qtdTab.ESP.'FormDinHelper::debug($_REQUEST,\'$_REQUEST\');');
-        $this->addBlankLine();
-        $this->addLine($qtdTab.ESP.'try{');
-        $this->addLine($qtdTab.ESP.ESP.'$this->form->validate();');        
-        $this->addLine($qtdTab.ESP.ESP.'$this->form->setData($data);');
-        $this->addLine($qtdTab.ESP.ESP.'$vo = new '.$this->tableRefVO.'();');
-        $this->addLine($qtdTab.ESP.ESP.'$this->frm->setVo( $vo ,$data ,$param );');
-        $this->addLine($qtdTab.ESP.ESP.'$controller = new '.$this->tableRefClass.'Controller();');
-        $this->addLine($qtdTab.ESP.ESP.'$resultado = $controller->save( $vo );');
-        $this->addLine($qtdTab.ESP.ESP.'if( is_int($resultado) && $resultado!=0 ) {');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'//$text = TFormDinMessage::messageTransform($text); //Tranform Array in Msg Adianti');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'$this->onReload();');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'$this->frm->addMessage( _t(\'Record saved\') );');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'//$this->frm->clearFields();');
-        $this->addLine($qtdTab.ESP.ESP.'}else{');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'$this->frm->addMessage($resultado);');
-        $this->addLine($qtdTab.ESP.ESP.'}');
-        $this->addLine($qtdTab.ESP.'}catch (Exception $e){');
-        $this->addLine($qtdTab.ESP.ESP.'new TMessage(TFormDinMessage::TYPE_ERROR, $e->getMessage());');
-        $this->addLine($qtdTab.ESP.'} //END TryCatch');
-        $this->addLine($qtdTab.'} //END onSave');
-    }
-    //--------------------------------------------------------------------------------------
-    public function addMethod_onExecute($qtdTab)
-    {
-        $this->addBlankLine();
-        $this->addLine();
-        $this->addLine($qtdTab.'public function onExecute($param)');
-        $this->addLine($qtdTab.'{');
-        $this->addLine($qtdTab.ESP.'$data = $this->form->getData();');
-        $this->addLine($qtdTab.ESP.'//Função do FormDin para Debug');
-        $this->addLine($qtdTab.ESP.'FormDinHelper::d($param,\'$param\');');
-        $this->addLine($qtdTab.ESP.'FormDinHelper::debug($data,\'$data\');');
-        $this->addLine($qtdTab.ESP.'FormDinHelper::debug($_REQUEST,\'$_REQUEST\');');
-        $this->addBlankLine();
-        $this->addLine($qtdTab.ESP.'try{');
-        $this->addLine($qtdTab.ESP.ESP.'$this->form->validate();');        
-        $this->addLine($qtdTab.ESP.ESP.'$this->form->setData($data);');
-        $this->addLine($qtdTab.ESP.ESP.'$vo = new '.$this->tableRefVO.'();');
-        $this->addLine($qtdTab.ESP.ESP.'$this->frm->setVo( $vo ,$data ,$param );');
-        $this->addLine($qtdTab.ESP.ESP.'$controller = new '.$this->tableRefClass.'Controller();');
-        $this->addLine($qtdTab.ESP.ESP.'$resultado = $controller->execProcedure( $vo );');
-        $this->addLine($qtdTab.ESP.ESP.'if( is_int($resultado) && $resultado!=0 ) {');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'//$text = TFormDinMessage::messageTransform($text); //Tranform Array in Msg Adianti');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'$this->frm->addMessage( _t(\'Record saved\') );');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'//$this->frm->clearFields();');
-        $this->addLine($qtdTab.ESP.ESP.'}else{');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'//$this->frm->addMessage($resultado);');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'FormDinHelper::debug($resultado,\'$resultado\');');
-        $this->addLine($qtdTab.ESP.ESP.'}');
-        $this->addLine($qtdTab.ESP.'}catch (Exception $e){');
-        $this->addLine($qtdTab.ESP.ESP.'new TMessage(TFormDinMessage::TYPE_ERROR, $e->getMessage());');
-        $this->addLine($qtdTab.ESP.'} //END TryCatch');
-        $this->addLine($qtdTab.'} //END onSave');
-    }    
-    //--------------------------------------------------------------------------------------
-    public function addMethod_onClose($qtdTab)
-    {
-        $this->addBlankLine();
-        $this->addLine();
-        $this->addLine($qtdTab.'/**');
-        $this->addLine($qtdTab.' * Close right panel');
-        $this->addLine($qtdTab.' */');
-        $this->addLine($qtdTab.' /*');
-        $this->addLine($qtdTab.'public function onClose()');
-        $this->addLine($qtdTab.'{');
-        $this->addLine($qtdTab.ESP.'TScript::create("Template.closeRightPanel()");');
-        $this->addLine($qtdTab.'} //END onClose');
-        $this->addLine($qtdTab.' */');
-    }    
-    //--------------------------------------------------------------------------------------
-    public function addMethod_onClear($qtdTab)
-    {
-        $this->addBlankLine();
-        $this->addLine();
-        $this->addLine($qtdTab.'/**');
-        $this->addLine($qtdTab.' * Clear filters');
-        $this->addLine($qtdTab.' */');
-        $this->addLine($qtdTab.'public function onClear()');
-        $this->addLine($qtdTab.'{');
-        $this->addLine($qtdTab.ESP.'$this->clearFilters();');
-        $this->addLine($qtdTab.ESP.'$this->onReload();');
-        $this->addLine($qtdTab.'} //END onClear');
-    }
-    //--------------------------------------------------------------------------------------
-    private function addBasicViewController($qtdTab)
+    protected function addBasicViewController($qtdTab)
     {
 
         $this->addMethod_onClose($qtdTab);
@@ -615,65 +520,5 @@ class TCreateFormGeneric extends TCreateFileContent
         $this->addBlankLine();
         $this->addLine($qtdTab.'// add the table inside the page');
         $this->addLine($qtdTab.'parent::add($vbox);');
-    }
-    //--------------------------------------------------------------------------------------
-    public function show($print = false)
-    {
-        $this->setLinesArrayBranco();
-        $this->addLine('<?php');
-        $this->addSysGenHeaderNote();
-        $this->addBlankLine();
-        $this->addLine("class ".$this->getTableRefClassForm()." extends TPage");
-        $this->addLine("{");
-        $this->addBlankLine();
-        $this->addLine(ESP.'private static $formId =\''.$this->getFormId().'\'; //Form ID');
-        $this->addLine(ESP.'protected $form; //Registration form Adianti');
-        $this->addLine(ESP.'protected $frm;  //Registration component FormDin 5');
-        $this->addLine(ESP.'protected $adianti_target_container;');
-        $this->addLine(ESP.'protected $datagrid; //Listing');
-        $this->addLine(ESP.'protected $pageNavigation;');
-        $this->addBlankLine();
-        if( $this->getTableType() == TableInfo::TB_TYPE_TABLE ){
-            $this->addLine(ESP.'// trait com onReload, onSearch, onDelete, onClear, onEdit, show');
-            $this->addLine(ESP.'use Adianti\Base\AdiantiStandardFormTrait;');
-            $this->addLine(ESP.'// trait com onReload, onSearch, onDelete...');
-            $this->addLine(ESP.'use Adianti\Base\AdiantiStandardListTrait;');            
-        }elseif( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
-            $this->addLine(ESP.'// trait com onReload, onSearch, onDelete...');
-            $this->addLine(ESP.'use Adianti\Base\AdiantiStandardListTrait;');
-        }elseif( $this->getTableType() == TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine(ESP.'// trait com onReload, onSearch, onDelete, onClear, onEdit, show');
-            $this->addLine(ESP.'use Adianti\Base\AdiantiStandardFormTrait;');
-        }
-        $this->addBlankLine();
-        $this->addLine(ESP.'public function __construct($param = null)');
-        $this->addLine(ESP.'{');
-        $this->addLine(ESP.ESP.'parent::__construct();');
-        $this->addBlankLine();
-        $this->addLine(ESP.ESP.'$this->setDatabase(\'maindatabase\'); // define the database');
-        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine(ESP.ESP.'$this->setActiveRecord(\''.$this->tableRef.'\'); // define the Active Record');
-            $this->addLine(ESP.ESP.'$this->setDefaultOrder(\''.$this->getPrimaryKeyTable().'\', \'asc\'); // define the default order');
-            $this->addBlankLine();
-            $this->addLine(ESP.ESP.'$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
-        }
-        $this->addLine(ESP.ESP.'if(!empty($param[\'target_container\'])){');
-        $this->addLine(ESP.ESP.ESP.'$this->adianti_target_container = $param[\'target_container\'];');
-        $this->addLine(ESP.ESP.'}');
-        $this->addBlankLine();
-        $this->addLine(ESP.ESP.'$this->frm = new TFormDin($this,\''.$this->getFormTitle().'\',null,null,self::$formId);');
-        $this->addLine(ESP.ESP.'$frm = $this->frm;');
-        $this->addLine(ESP.ESP.'$frm->enableCSRFProtection(); // Protection cross-site request forgery ');
-        $this->addFields(ESP.ESP);
-        $this->addBlankLine();
-        $this->addButtons(ESP.ESP);
-        $this->addBlankLine();        
-        $this->addLine(ESP.ESP.'$this->form = $frm->show();');
-        $this->addLine(ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
-        $this->addVbox(ESP.ESP);
-        $this->addLine(ESP.'}');//FIM construct
-        $this->addBasicViewController(ESP);
-        $this->addLine("}");//FIM class
-        return $this->showContent($print);
     }
 }
