@@ -234,7 +234,8 @@ class TCreateFormTest extends TestCase
 		$expected[15] = ESP.'private static $formId =\'form_testForm\'; //Form ID'.EOL;
 		$expected[16] = ESP.'protected $form; //Registration form Adianti'.EOL;
 		$expected[17] = ESP.'protected $frm;  //Registration component FormDin 5'.EOL;
-		$expected[18] = ESP.'protected $datagrid; //Listing'.EOL;
+		$expected[18] = ESP.'protected $adianti_target_container;'.EOL;
+		$expected[19] = ESP.'protected $datagrid; //Listing'.EOL;
 	    
 		$this->create->setTableType(TableInfo::TB_TYPE_VIEW);
 		$resultArray = $this->create->show('array');
@@ -246,6 +247,7 @@ class TCreateFormTest extends TestCase
 		$this->assertSame($expected[16], $resultArray[16]);
 		$this->assertSame($expected[17], $resultArray[17]);
 		$this->assertSame($expected[18], $resultArray[18]);
+		$this->assertSame($expected[19], $resultArray[19]);
 	}
 	
 	public function testShow_TABLE(){
@@ -256,7 +258,8 @@ class TCreateFormTest extends TestCase
 		$expected[15] = ESP.'private static $formId =\'form_testForm\'; //Form ID'.EOL;
 		$expected[16] = ESP.'protected $form; //Registration form Adianti'.EOL;
 		$expected[17] = ESP.'protected $frm;  //Registration component FormDin 5'.EOL;
-		$expected[18] = ESP.'protected $datagrid; //Listing'.EOL;
+		$expected[18] = ESP.'protected $adianti_target_container;'.EOL;
+		$expected[19] = ESP.'protected $datagrid; //Listing'.EOL;
 		
 		$this->create->setTableType(TableInfo::TB_TYPE_TABLE);
 		$resultArray = $this->create->show('array');
@@ -268,5 +271,6 @@ class TCreateFormTest extends TestCase
 		$this->assertSame($expected[16], $resultArray[16]);
 		$this->assertSame($expected[17], $resultArray[17]);
 		$this->assertSame($expected[18], $resultArray[18]);
+		$this->assertSame($expected[19], $resultArray[19]);
 	}
 }
