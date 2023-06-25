@@ -5,6 +5,11 @@ class Gen00 extends TPage
     // trait com onReload, onSearch, onDelete...
     use Adianti\Base\AdiantiStandardListTrait;
 
+    protected $form; //Registration form Adianti');
+    protected $frm;  //Registration component FormDin 5');
+    protected $adianti_target_container;
+    protected $html;
+
     /**
      * Constructor method
      */
