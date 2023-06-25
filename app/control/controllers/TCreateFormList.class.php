@@ -58,7 +58,8 @@ class TCreateFormList extends TCreateFormGeneric
         //$this->addLine($qtdTab.'$grid->addRowNumColumn(); //Mostra Numero da linha');
         $this->addLine($qtdTab.'$grid->addColumn($primaryKey,\'id\');');
         if ($this->validateListColumnsName()) {
-            foreach ($this->listColumnsName as $key => $value) {
+            $listColumnsName = $this->getListColunnsName();
+            foreach ($listColumnsName as $key => $value) {
                 /**
                  * Esse ajuste do $key acontece em função do setListColunnsName descarta o primeiro
                  * registro que assume ser a chave primaria.
@@ -93,7 +94,8 @@ class TCreateFormList extends TCreateFormGeneric
     //--------------------------------------------------------------------------------------
     public function addGetWhereGridParametersFields($qtdTabs)
     {
-        foreach ($this->listColumnsName as $value) {
+        $listColumnsName = $this->getListColunnsName();
+        foreach ($listColumnsName as $value) {
             $this->addGetWhereGridParameters_fied(false, $value, $qtdTabs);
         }
     }
