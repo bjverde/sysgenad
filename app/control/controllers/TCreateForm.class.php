@@ -12,23 +12,6 @@
 
 class TCreateForm extends TCreateFormGeneric
 {
-    private $formId;
-    private $formTitle;
-    private $primaryKeyTable;
-    private $tableRef;
-    private $tableRefClass;
-    private $tableRefClassForm;
-    private $tableRefDAO;
-    private $tableRefVO;
-    private $listColumnsName;
-    private $lines;
-    private $gridType;
-    private $listColumnsProperties;
-    private $tableType = null;
-    private $databaseManagementSystem  = null;
-    private $dtView;
-    private $dtDb;
-
     /**
      * Create file FROM form a table info
      * @param string $pathFolder   - folder path to create file
