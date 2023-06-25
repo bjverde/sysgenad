@@ -739,7 +739,7 @@ class TCreateForm extends TCreateFileContent
         $this->addLine("class ".$this->tableRef."Form extends TPage");
         $this->addLine("{");
         $this->addBlankLine();
-        $this->addLine(ESP.'private static $formId = \'form_'.$this->getFormId().'\'; //Form ID');
+        $this->addLine(ESP.'private static $formId =\''.$this->getFormId().'\'; //Form ID');
         $this->addLine(ESP.'protected $frm;  //Registration component FormDin 5');
         $this->addLine(ESP.'protected $datagrid; //Listing');
         $this->addLine(ESP.'protected $pageNavigation;');
