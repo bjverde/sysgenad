@@ -55,12 +55,11 @@ class Gen04 extends TPage
                 $listFieldsTable = TGeneratorHelper::loadFieldsTablesSelectedWithFormDin($table,$tableType,$tableSchema);
                 
                 $tableType = strtoupper($listTables['TABLE_TYPE'][$key]);
+                TGeneratorHelper::createFilesFormControllerModelFromTable($table, $listFieldsTable ,$tableSchema ,$tableType);
                 $key = $key + 1;
                 if($tableType == TableInfo::TB_TYPE_TABLE){
-                    TGeneratorHelper::createFilesFormControllerModelFromTable($table, $listFieldsTable ,$tableSchema ,$tableType);
                     $html->add('<br>'.$key.Message::CREATED_TABLE_ITEN.$table);
                 }else{
-                    TGeneratorHelper::createFilesFormControllerModelFromTable($table, $listFieldsTable ,$tableSchema ,$tableType);
                     $html->add('<br>'.$key.Message::CREATED_VIEW_ITEN.$table);
                 }
                 
