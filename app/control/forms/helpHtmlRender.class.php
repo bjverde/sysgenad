@@ -6,6 +6,10 @@ class helpHtmlRender extends TPage
     const HTML_TP_GRID = 'html_grid';
 
     private static $formId = 'form_helpHtmlRender';
+    protected $form; //Registration form Adianti
+    protected $frm;  //Registration component FormDin 5
+    protected $html;
+    protected $adianti_target_container;
 
     // trait com onReload, onSearch, onDelete...
     use Adianti\Base\AdiantiStandardListTrait;
@@ -54,12 +58,18 @@ class helpHtmlRender extends TPage
     }
     public function loadEasyLabel()
     {
-        TSession::setValue('HELP_HTML',self::HTML_EASY);
-        $this->onReload();
+        //TSession::setValue('HELP_HTML',self::HTML_TP_GRID);        
+        $obj = new StdClass;
+        $obj->html = self::HTML_EASY;
+        TForm::sendData(self::$formId, $obj);
+        $this->onReload();      
     }
     public function loadDataFormt()
     {
-        TSession::setValue('HELP_HTML',self::HTML_DATE_FORMAT);
+        //TSession::setValue('HELP_HTML',self::HTML_TP_GRID);        
+        $obj = new StdClass;
+        $obj->html = self::HTML_DATE_FORMAT;
+        TForm::sendData(self::$formId, $obj);
         $this->onReload();
     }
     public function loadGrid()
@@ -67,14 +77,15 @@ class helpHtmlRender extends TPage
         //TSession::setValue('HELP_HTML',self::HTML_TP_GRID);        
         $obj = new StdClass;
         $obj->html = self::HTML_TP_GRID;
-        TForm::sendData(self::$formName, $obj);
+        TForm::sendData(self::$formId, $obj);
         $this->onReload();
     }
     public function getFormTitle()
     {
+        FormDinHelper::debug($this->form,'form');
+        $data = $this->form->getData();
+        FormDinHelper::debug($data,'getFormTitle');
         $result = 'app/resources/sysgen_easylabel_pt-br.html';
-        $html = TSession::getValue('HELP_HTML');
-        FormDinHelper::debug($html,'titulo');
         if ($html == self::HTML_EASY) {
             $result = 'app/resources/sysgen_easylabel_pt-br.html';
         }elseif($html == self::HTML_DATE_FORMAT){
