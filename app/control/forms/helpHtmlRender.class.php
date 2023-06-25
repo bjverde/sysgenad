@@ -5,6 +5,8 @@ class helpHtmlRender extends TPage
     const HTML_DATE_FORMAT = 'html_data_format';
     const HTML_TP_GRID = 'html_grid';
 
+    private static $formId = 'form_helpHtmlRender';
+
     // trait com onReload, onSearch, onDelete...
     use Adianti\Base\AdiantiStandardListTrait;
 
@@ -16,13 +18,14 @@ class helpHtmlRender extends TPage
         parent::__construct();
         $this->adianti_target_container = 'adianti_right_panel';
 
+        $frm = new TFormDin($this,$this->getFormTitle(),null,null,self::$formId);
+        $frm->addHiddenField('id');  //POG para evitar problema de noticie
+        $frm->addHiddenField('html');
+
         TPage::include_css('app/resources/styles.css');
         $this->html = new THtmlRenderer($this->getHtmlResource());
         $replace = array(); // define replacements for the main section        
         $this->html->enableSection('main', $replace); // replace the main section variables
-
-        $frm = new TFormDin($this,$this->getFormTitle());
-        $frm->addHiddenField('id'); //POG para evitar problema de noticie
 
         // O Adianti permite a Internacionalização - A função _t('string') serve
         //para traduzir termos no sistema. Veja ApplicationTranslator escrevendo
@@ -61,13 +64,17 @@ class helpHtmlRender extends TPage
     }
     public function loadGrid()
     {
-        TSession::setValue('HELP_HTML',self::HTML_TP_GRID);
+        //TSession::setValue('HELP_HTML',self::HTML_TP_GRID);        
+        $obj = new StdClass;
+        $obj->html = self::HTML_TP_GRID;
+        TForm::sendData(self::$formName, $obj);
         $this->onReload();
     }
     public function getFormTitle()
     {
         $result = 'app/resources/sysgen_easylabel_pt-br.html';
         $html = TSession::getValue('HELP_HTML');
+        FormDinHelper::debug($html,'titulo');
         if ($html == self::HTML_EASY) {
             $result = 'app/resources/sysgen_easylabel_pt-br.html';
         }elseif($html == self::HTML_DATE_FORMAT){
@@ -81,6 +88,7 @@ class helpHtmlRender extends TPage
     {
         $result = 'app/resources/sysgen_easylabel_pt-br.html';
         $html = TSession::getValue('HELP_HTML');
+        FormDinHelper::debug($html,'Resource');
         if ($html == self::HTML_EASY) {
             $result = 'app/resources/sysgen_easylabel_pt-br.html';
         }elseif($html == self::HTML_DATE_FORMAT){
