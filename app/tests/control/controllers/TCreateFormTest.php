@@ -227,13 +227,14 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW(){
-		$expectedQtd = 96;
+		$expectedQtd = 100;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
-		$expected[15] = ESP.'protected $form; //Registration form Adianti'.EOL;
-		$expected[16] = ESP.'protected $frm;  //Registration component FormDin 5'.EOL;
-		$expected[17] = ESP.'protected $datagrid; //Listing'.EOL;
+		$expected[15] = ESP.'private static $formId =\'form_testForm\'; //Form ID'.EOL;
+		$expected[16] = ESP.'protected $form; //Registration form Adianti'.EOL;
+		$expected[17] = ESP.'protected $frm;  //Registration component FormDin 5'.EOL;
+		$expected[18] = ESP.'protected $datagrid; //Listing'.EOL;
 	    
 		$this->create->setTableType(TableInfo::TB_TYPE_VIEW);
 		$resultArray = $this->create->show('array');
@@ -244,25 +245,28 @@ class TCreateFormTest extends TestCase
 		$this->assertSame($expected[15], $resultArray[15]);
 		$this->assertSame($expected[16], $resultArray[16]);
 		$this->assertSame($expected[17], $resultArray[17]);
+		$this->assertSame($expected[18], $resultArray[18]);
 	}
 	
 	public function testShow_TABLE(){
-		$expectedQtd = 117;
+		$expectedQtd = 121;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
-		$expected[15] = ESP.'protected $form; //Registration form Adianti'.EOL;
-		$expected[16] = ESP.'protected $frm;  //Registration component FormDin 5'.EOL;
-		$expected[17] = ESP.'protected $datagrid; //Listing'.EOL;
+		$expected[15] = ESP.'private static $formId =\'form_testForm\'; //Form ID'.EOL;
+		$expected[16] = ESP.'protected $form; //Registration form Adianti'.EOL;
+		$expected[17] = ESP.'protected $frm;  //Registration component FormDin 5'.EOL;
+		$expected[18] = ESP.'protected $datagrid; //Listing'.EOL;
 		
 		$this->create->setTableType(TableInfo::TB_TYPE_TABLE);
 		$resultArray = $this->create->show('array');
 		$size = CountHelper::count($resultArray);
 		
 		$this->assertEquals( $expectedQtd, $size );
-		$this->assertSame($expected[12], $resultArray[12]);
+		$this->assertSame($expected[12], $resultArray[12]);		
 		$this->assertSame($expected[15], $resultArray[15]);
 		$this->assertSame($expected[16], $resultArray[16]);
 		$this->assertSame($expected[17], $resultArray[17]);
+		$this->assertSame($expected[18], $resultArray[18]);
 	}
 }
