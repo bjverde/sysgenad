@@ -101,7 +101,11 @@ class TCreateFormGeneric extends TCreateFileContent
     public function getTableRefClassForm()
     {
         return $this->tableRefClassForm;
-    }    
+    }
+    public function getTableRef()
+    {
+        return $this->tableRef;
+    }      
     public function setTableRef($tableRef)
     {
         $this->tableRef      = strtolower($tableRef);
