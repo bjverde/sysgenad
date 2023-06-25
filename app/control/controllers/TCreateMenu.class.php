@@ -31,6 +31,13 @@ class TCreateMenu extends TCreateFileContent
         return $this->listTableNames;
     }
     //--------------------------------------------------------------------------------------
+    /**
+     * Incluie o item de menu, conforme o tableType
+     *
+     * @param string $ESP - quantidade inicial de espaço
+     * @param string $tableTypeObj - tipo de tabela que vem do TableInfo::TB_TYPE_TABLE ou TableInfo::TB_TYPE_VIEW ou TableInfo::TB_TYPE_PROCEDURE
+     * @return void
+     */
     public function addBasicMenuItems($ESP, $tableTypeObj)
     {
         $listTableNames = $this->listTableNames['TABLE_NAME'];
