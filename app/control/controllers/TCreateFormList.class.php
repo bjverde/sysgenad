@@ -10,7 +10,7 @@
  * PHP Version 5.6
  */
 
-class TCreateFormList extends TCreateFileContent
+class TCreateFormList extends TCreateFormGeneric
 {
     private $formId;
     private $formTitle;
