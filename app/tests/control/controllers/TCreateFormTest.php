@@ -227,7 +227,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW(){
-		$expectedQtd = 100;
+		$expectedQtd = 101;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
@@ -249,7 +249,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_TABLE(){
-		$expectedQtd = 121;
+		$expectedQtd = 122;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
