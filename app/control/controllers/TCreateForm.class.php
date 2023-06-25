@@ -57,7 +57,7 @@ class TCreateForm extends TCreateFormGeneric
         $this->addLine($qtdTab.ESP.ESP.'$this->form->setData($data);');
         $this->addLine($qtdTab.ESP.ESP.'$vo = new '.$this->tableRefVO.'();');
         $this->addLine($qtdTab.ESP.ESP.'$this->frm->setVo( $vo ,$data ,$param );');
-        $this->addLine($qtdTab.ESP.ESP.'$controller = new '.$this->tableRefClass.'Controller();');
+        $this->addLine($qtdTab.ESP.ESP.'$controller = new '.$this->getTableRefClass().'Controller();');
         $this->addLine($qtdTab.ESP.ESP.'$resultado = $controller->save( $vo );');
         $this->addLine($qtdTab.ESP.ESP.'if( is_int($resultado) && $resultado!=0 ) {');
         $this->addLine($qtdTab.ESP.ESP.ESP.'//$text = TFormDinMessage::messageTransform($text); //Tranform Array in Msg Adianti');
@@ -90,7 +90,7 @@ class TCreateForm extends TCreateFormGeneric
         $this->addLine($qtdTab.ESP.ESP.'$this->form->setData($data);');
         $this->addLine($qtdTab.ESP.ESP.'$vo = new '.$this->tableRefVO.'();');
         $this->addLine($qtdTab.ESP.ESP.'$this->frm->setVo( $vo ,$data ,$param );');
-        $this->addLine($qtdTab.ESP.ESP.'$controller = new '.$this->tableRefClass.'Controller();');
+        $this->addLine($qtdTab.ESP.ESP.'$controller = new '.$this->getTableRefClass().'Controller();');
         $this->addLine($qtdTab.ESP.ESP.'$resultado = $controller->execProcedure( $vo );');
         $this->addLine($qtdTab.ESP.ESP.'if( is_int($resultado) && $resultado!=0 ) {');
         $this->addLine($qtdTab.ESP.ESP.ESP.'//$text = TFormDinMessage::messageTransform($text); //Tranform Array in Msg Adianti');
@@ -211,7 +211,7 @@ class TCreateForm extends TCreateFormGeneric
         $this->addBlankLine();
         $this->addLine(ESP.ESP.'$this->setDatabase(\'maindatabase\'); // define the database');
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine(ESP.ESP.'$this->setActiveRecord(\''.$this->tableRef.'\'); // define the Active Record');
+            $this->addLine(ESP.ESP.'$this->setActiveRecord(\''.$this->getTableRef().'\'); // define the Active Record');
             $this->addLine(ESP.ESP.'$this->setDefaultOrder(\''.$this->getPrimaryKeyTable().'\', \'asc\'); // define the default order');
             $this->addBlankLine();
             $this->addLine(ESP.ESP.'$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
