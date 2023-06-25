@@ -377,7 +377,6 @@ class TGeneratorHelper
             $geradorForm->setDtDb($dtDB);
             $geradorForm->saveFile();
         }
-
     }
 
     public static function createFilesControllesAndRoutesAPI($tableName, $listColumnsProperties, $tableSchema, $tableType)
