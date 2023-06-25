@@ -138,11 +138,7 @@ class TCreateFormList extends TCreateFormGeneric
     {
 
         $this->addMethod_onClose($qtdTab);
-        if( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
-            $this->addMethod_onClear($qtdTab);
-        }elseif ($this->getTableType() == TableInfo::TB_TYPE_PROCEDURE) {
-            $this->addMethod_onExecute($qtdTab);
-        }
+        $this->addMethod_onClear($qtdTab);
         $this->addBlankLine();
     }        
     //--------------------------------------------------------------------------------------
@@ -151,12 +147,11 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve');
         $this->addLine($qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo');
         $this->addLine($qtdTab.'//primeiro em ingles e depois traduzindo');
-        if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
-            $this->addLine($qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );');
-        }elseif( $this->getTableType() == TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine($qtdTab.'$frm->setAction( _t(\'Execute\'), \'onExecute\', null, \'fa:save\', \'green\' );');
-        }
+        $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Search\'), \'onSearch\', null, \'fas:search\', \'#ffffff\');');
         $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');');
+        if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
+            $this->addLine($qtdTab.'$frm->setAction( _t(\'Cadastrar\'), [\''.$this->getTableRef().'Form\',\'onSave\'], null, \'fa:save\', \'green\' );');
+        }        
     }
     //--------------------------------------------------------------------------------------
     public function addVbox($qtdTab)
