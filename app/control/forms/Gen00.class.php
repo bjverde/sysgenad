@@ -50,8 +50,8 @@ class Gen00 extends TPage
                 $frm->addRadioField('EASYLABEL', Message::FIELD_EASY_LABEL, true, $listTpSystem, false, true, 'Y', 3, null, null, null, false);
 
                 $frm->addButton('Ajuda sobre Grid',null,['helpHtmlRender','loadGrid'],null,null,true,false,'fa:life-ring fa-fw #f0db4f');                
-                $listTpGrid = array('AD'=>'Adianti Nativo','FD'=>'Formdin5');
-                $frm->addRadioField(TableInfo::TP_GRID, Message::FIELD_TP_GRID, true, $listTpGrid, false, true, 'AD', 3, null, null, null, false);
+                $listTpGrid = array(TableInfo::TP_GRID_FROM_LIST_AD=>'Adianti Nativo',TableInfo::TP_GRID_FROM_LIST_FD5=>'Formdin5');
+                $frm->addRadioField(TableInfo::TP_GRID_FROM_LIST, Message::FIELD_TP_GRID, true, $listTpGrid, false, true, TableInfo::TP_GRID_FROM_LIST_AD, 3, null, null, null, false);
             //$frm->closeGroup();
 
             $frm->addGroupField('gpx3', Message::GEN00_GPX3_TITLE);
