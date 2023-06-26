@@ -23,6 +23,7 @@ class TCreateFormGeneric extends TCreateFileContent
     private $listColumnsName;
     private $lines;
     private $gridType;
+    private $gridTypeFormList;
     private $listColumnsProperties;
     private $tableType = null;
     private $databaseManagementSystem  = null;
@@ -155,6 +156,16 @@ class TCreateFormGeneric extends TCreateFileContent
     {
         return $this->gridType;
     }
+    //--------------------------------------------------------------------------------------
+    public function setGridTypeFormList($gridTypeFormList)
+    {
+        $gridTypeFormList = ( !empty($gridTypeFormList) ) ?$gridTypeFormList : TableInfo::TP_GRID_FROM_LIST_AD;
+        $this->gridTypeFormList = $gridTypeFormList;
+    }
+    public function getGridTypeFormList()
+    {
+        return $this->gridTypeFormList;
+    }    
     //--------------------------------------------------------------------------------------
     public function setListColumnsProperties($listColumnsProperties)
     {
