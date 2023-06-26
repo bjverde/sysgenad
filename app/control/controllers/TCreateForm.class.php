@@ -149,9 +149,6 @@ class TCreateForm extends TCreateFormGeneric
         $this->addLine($qtdTab.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__,false);');
         $this->addLine($qtdTab.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
         $this->addLine($qtdTab.'$vbox->add($this->form);');
-        if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine($qtdTab.'$vbox->add($panelGroupGrid);');
-        }        
         $this->addBlankLine();
         $this->addLine($qtdTab.'// add the table inside the page');
         $this->addLine($qtdTab.'parent::add($vbox);');
