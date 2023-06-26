@@ -149,7 +149,7 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Search\'), \'onSearch\', null, \'fas:search\', \'#2168bd\');');
         $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');');
         if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
-            $this->addLine($qtdTab.'$frm->setAction( _t(\'Register\'), [\''.$this->getTableRef().'Form\',\'onReload\'], null, \'fas:fa-plus-square\', \'green\' );');
+            $this->addLine($qtdTab.'$frm->setAction( _t(\'Register\'), [\''.$this->getTableRef().'Form\',\'onReload\'], null, \'fa:plus-square\', \'green\' );');
         }
     }
     //--------------------------------------------------------------------------------------
