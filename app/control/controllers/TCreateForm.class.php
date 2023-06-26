@@ -140,7 +140,7 @@ class TCreateForm extends TCreateFormGeneric
             $this->addLine($qtdTab.'$frm->setAction( _t(\'Execute\'), \'onExecute\', null, \'fa:save\', \'green\' );');
         }
         $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');');
-        $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Voltar\'), [\''.$this->getTableRef().'FormList\',\'onShow\'], null, \'fas:arrow-left\', \'#000000\');');
+        $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Voltar\'), [\''.$this->getTableRef().'FormList\',\'onReload\'], null, \'fas:arrow-left\', \'#000000\');');
     }
     //--------------------------------------------------------------------------------------
     public function addVbox($qtdTab)
