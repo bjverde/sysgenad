@@ -120,17 +120,14 @@ class TCreateForm extends TCreateFormGeneric
     //--------------------------------------------------------------------------------------
     protected function addBasicViewController($qtdTab)
     {
-
         $this->addMethod_onClose($qtdTab);
-        if( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
-            $this->addMethod_onClear($qtdTab);
-        }elseif ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
+        if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
             $this->addMethod_onSave($qtdTab);
         }elseif ($this->getTableType() == TableInfo::TB_TYPE_PROCEDURE) {
             $this->addMethod_onExecute($qtdTab);
         }
         $this->addBlankLine();
-    }        
+    }
     //--------------------------------------------------------------------------------------
     public function addButtons($qtdTab)
     {
@@ -143,6 +140,7 @@ class TCreateForm extends TCreateFormGeneric
             $this->addLine($qtdTab.'$frm->setAction( _t(\'Execute\'), \'onExecute\', null, \'fa:save\', \'green\' );');
         }
         $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');');
+        $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Voltar\'), [\''.$this->getTableRef().'FormList\',\'onShow\'], null, \'fas:arrow-left\', \'#000000\');');
     }
     //--------------------------------------------------------------------------------------
     public function addVbox($qtdTab)
@@ -209,7 +207,7 @@ class TCreateForm extends TCreateFormGeneric
         $this->addFields(ESP.ESP);
         $this->addBlankLine();
         $this->addButtons(ESP.ESP);
-        $this->addBlankLine();        
+        $this->addBlankLine();
         $this->addLine(ESP.ESP.'$this->form = $frm->show();');
         $this->addLine(ESP.ESP.'$this->form->setData( TSession::getValue(__CLASS__.\'_filter_data\'));');
         $this->addVbox(ESP.ESP);
