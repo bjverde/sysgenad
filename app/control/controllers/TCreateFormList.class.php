@@ -136,7 +136,6 @@ class TCreateFormList extends TCreateFormGeneric
     //--------------------------------------------------------------------------------------
     protected function addBasicViewController($qtdTab)
     {
-
         $this->addMethod_onClose($qtdTab);
         $this->addMethod_onClear($qtdTab);
         $this->addBlankLine();
@@ -147,11 +146,11 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve');
         $this->addLine($qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo');
         $this->addLine($qtdTab.'//primeiro em ingles e depois traduzindo');
-        $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Search\'), \'onSearch\', null, \'fas:search\', \'#ffffff\');');
+        $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Search\'), \'onSearch\', null, \'fas:search\', \'#2168bd\');');
         $this->addLine($qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');');
         if ($this->getTableType() == TableInfo::TB_TYPE_TABLE) {
-            $this->addLine($qtdTab.'$frm->setAction( _t(\'Register\'), [\''.$this->getTableRef().'Form\',\'onSave\'], null, \'fa:save\', \'green\' );');
-        }        
+            $this->addLine($qtdTab.'$frm->setAction( _t(\'Register\'), [\''.$this->getTableRef().'Form\',\'onReload\'], null, \'fas:fa-plus-square\', \'green\' );');
+        }
     }
     //--------------------------------------------------------------------------------------
     public function addVbox($qtdTab)
