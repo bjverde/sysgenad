@@ -146,7 +146,7 @@ class TCreateForm extends TCreateFormGeneric
     public function addVbox($qtdTab)
     {
         $this->addLine($qtdTab.'// creates the page structure using a table');
-        $this->addLine($qtdTab.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__);');
+        $this->addLine($qtdTab.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__,false);');
         $this->addLine($qtdTab.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
         $this->addLine($qtdTab.'$vbox->add($this->form);');
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
