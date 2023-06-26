@@ -149,6 +149,7 @@ class Gen01 extends TPage
 
                 //MSG depois do loadPage para evitar o carregando 2x
                 $text[] = Message::MSG_TEST_CONNECT;
+                $text[] = 'Espere!!! Vai mudar de tela automaticamente';
                 $text = TFormDinMessage::messageTransform($text);
                 new TMessage(TFormDinMessage::TYPE_INFO, $text);
                 AdiantiCoreApplication::loadPage('Gen01','onLoadFromSession'); //POG para recarregar a pagina
