@@ -356,6 +356,7 @@ class TGeneratorHelper
 
         $dtView = TSysgenSession::getValue('DT_VIEW');
         $dtDB   = TSysgenSession::getValue('DT_DB');
+        $TP_GRIDP_FORM_LIST   = TSysgenSession::getValue(TableInfo::TP_GRID_FROM_LIST);
 
         $configDBMS = self::getConfigByDBMS();
         $pathFolder = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'views';
@@ -364,6 +365,7 @@ class TGeneratorHelper
         $geradorFormList->setDatabaseManagementSystem($DBMS_TYPE);
         $geradorFormList->setTableType($tableType);
         $geradorFormList->setGridType($configDBMS['TPGRID']);
+        $geradorFormList->setGridTypeFormList($TP_GRIDP_FORM_LIST);
         $geradorFormList->setDtView($dtView);
         $geradorFormList->setDtDb($dtDB);
         $geradorFormList->saveFile();
