@@ -211,7 +211,7 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine(ESP.ESP.ESP.'$this->adianti_target_container = $param[\'target_container\'];');
         $this->addLine(ESP.ESP.'}');
         $this->addBlankLine();
-        $this->addLine(ESP.ESP.'$this->frm = new TFormDin($this,\''.$this->getFormTitle().'\',null,null,self::$formId);');
+        $this->addLine(ESP.ESP.'$this->frm = new TFormDin($this,_t(\'List\').\' '.$this->getFormTitle().'\',null,null,self::$formId);');
         $this->addLine(ESP.ESP.'$frm = $this->frm;');
         $this->addLine(ESP.ESP.'$frm->enableCSRFProtection(); // Protection cross-site request forgery ');
         $this->addFields(ESP.ESP);
