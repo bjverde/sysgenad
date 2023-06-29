@@ -184,6 +184,7 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine(ESP.'protected $adianti_target_container;');
         $this->addLine(ESP.'protected $datagrid; //Listing');
         $this->addLine(ESP.'protected $pageNavigation;');
+        $this->addLine(ESP.'public $datagrid_form;');
         $this->addBlankLine();
         if( $this->getTableType() == TableInfo::TB_TYPE_TABLE ){
             $this->addLine(ESP.'// trait com onReload, onSearch, onDelete, onClear, onEdit, show');

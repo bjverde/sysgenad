@@ -73,6 +73,7 @@ class TFormDinGrid
     private $listColumn = array();
     private $dataGrid;
     private $bootstrapGrid;
+    private $objDatagrid_form;
 
     protected $idGrid;
     protected $title;
@@ -250,6 +251,21 @@ class TFormDinGrid
         }         
         $this->dataGrid = $dataGrid;
     }
+    //---------------------------------------------------------------
+    private function getObjDatagrid_form(){
+        return $this->objDatagrid_form;
+    }
+    private function setObjDatagrid_form($objDatagrid_form){
+        if( !is_object($objDatagrid_form) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
+        }
+        $this->objDatagrid_form = $objDatagrid_form;
+    }
+    public function creatObjDatagrid_form(){
+        $datagrid_form = new TForm('datagrid_'.$this->getId());
+        $datagrid_form->onsubmit = 'return false';
+        $this->setObjDatagrid_form($datagrid_form);
+    }    
     /**
      * Define o lado que ação irá aparecer. O Default é 'left'
      * Os valores possíveis são: left, right, esquerda, direita
