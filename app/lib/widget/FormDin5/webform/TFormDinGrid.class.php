@@ -82,6 +82,8 @@ class TFormDinGrid
     protected $minWidth;
     protected $action_group;
     protected $enableActionGroup;
+    private $columns;
+    private $qtdColumns;
     private $maxRows;
     private $realTotalRowsSqlPaginator;    
 
