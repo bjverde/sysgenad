@@ -164,6 +164,7 @@ class TCreateForm extends TCreateFormGeneric
         $this->addLine("{");
         $this->addBlankLine();
         $this->addLine(ESP.'private static $formId =\''.$this->getFormId().'\'; //Form ID');
+        $this->addLine(ESP.'private static $primaryKey =\''.$this->getPrimaryKeyTable().'\';');
         $this->addLine(ESP.'protected $form; //Registration form Adianti');
         $this->addLine(ESP.'protected $frm;  //Registration component FormDin 5');
         $this->addLine(ESP.'protected $adianti_target_container;');
@@ -186,13 +187,10 @@ class TCreateForm extends TCreateFormGeneric
         $this->addLine(ESP.'public function __construct($param = null)');
         $this->addLine(ESP.'{');
         $this->addLine(ESP.ESP.'parent::__construct();');
-        $this->addBlankLine();
         $this->addLine(ESP.ESP.'$this->setDatabase(\'maindatabase\'); // define the database');
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
             $this->addLine(ESP.ESP.'$this->setActiveRecord(\''.$this->getTableRef().'\'); // define the Active Record');
             $this->addLine(ESP.ESP.'$this->setDefaultOrder(\''.$this->getPrimaryKeyTable().'\', \'asc\'); // define the default order');
-            $this->addBlankLine();
-            $this->addLine(ESP.ESP.'$primaryKey = \''.$this->getPrimaryKeyTable().'\';');
         }
         $this->addLine(ESP.ESP.'if(!empty($param[\'target_container\'])){');
         $this->addLine(ESP.ESP.ESP.'$this->adianti_target_container = $param[\'target_container\'];');
