@@ -87,6 +87,7 @@ class TFormDinGrid
     private $qtdColumns;
     private $maxRows;
     private $realTotalRowsSqlPaginator;    
+    private $onDrawActionButton;
 
     protected $data;
 
