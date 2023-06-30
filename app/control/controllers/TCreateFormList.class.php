@@ -134,12 +134,33 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTab.'} //END onClear');
     }
     //--------------------------------------------------------------------------------------
+    public function addMethod_datagrid_form($qtdTab)
+    {
+        $this->addBlankLine();
+        $this->addLine();
+        $this->addLine($qtdTab.'/**');
+        $this->addLine($qtdTab.' * Usado no TFormDinGrid');
+        $this->addLine($qtdTab.' */');
+        $this->addLine($qtdTab.'public function setDatagrid_form($datagrid_form)');
+        $this->addLine($qtdTab.'{');
+        $this->addLine($qtdTab.ESP.'if( !is_object($datagrid_form) ){');
+        $this->addLine($qtdTab.ESP.ESP.'throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);');
+        $this->addLine($qtdTab.ESP.'}');
+        $this->addLine($qtdTab.ESP.'$this->datagrid_form = $datagrid_form;');
+        $this->addLine($qtdTab.'}');
+        $this->addLine($qtdTab.'public function getDatagrid_form()');
+        $this->addLine($qtdTab.'{');
+        $this->addLine($qtdTab.ESP.'return $this->datagrid_form;');
+        $this->addLine($qtdTab.'}');
+    }
+    //--------------------------------------------------------------------------------------
     protected function addBasicViewController($qtdTab)
     {
         $this->addMethod_onClose($qtdTab);
         $this->addMethod_onClear($qtdTab);
+        $this->addMethod_datagrid_form($qtdTab);
         $this->addBlankLine();
-    }        
+    }
     //--------------------------------------------------------------------------------------
     public function addButtons($qtdTab)
     {
