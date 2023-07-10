@@ -457,7 +457,7 @@ class TFormDinGrid
         if( !empty($this->getData()) ){
             $this->getAdiantiObj()->addItems( $this->getData() );
         }
-        $this->getPanelGroupGrid()->add($this->getAdiantiObj())->style = 'overflow-x:auto';
+        //$this->getPanelGroupGrid()->add($this->getAdiantiObj())->style = 'overflow-x:auto';
 
 
         // the creation of the navigation page must come after createModel
