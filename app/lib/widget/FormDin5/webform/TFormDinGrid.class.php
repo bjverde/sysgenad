@@ -202,6 +202,9 @@ class TFormDinGrid
 
             $this->setTitle($strTitle);
             $panel = new TPanelGroup($this->getTitle());
+            $this->creatDatagrid_form();
+            $this->getDatagrid_form()->add($this->dataGrid);
+            $panel->add($this->getDatagrid_form());
             $this->setPanelGroupGrid($panel);
         }
     }
@@ -253,19 +256,19 @@ class TFormDinGrid
         $this->dataGrid = $dataGrid;
     }
     //---------------------------------------------------------------
-    private function getObjDatagrid_form(){
+    private function getDatagrid_form(){
         return $this->objDatagrid_form;
     }
-    private function setObjDatagrid_form($objDatagrid_form){
-        if( !is_object($objDatagrid_form) ){
+    private function setDatagrid_form($datagrid_form){
+        if( !is_object($datagrid_form) ){
             throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
         }
-        $this->objDatagrid_form = $objDatagrid_form;
+        $this->objDatagrid_form = $datagrid_form;
     }
-    public function creatObjDatagrid_form(){
+    public function creatDatagrid_form(){
         $datagrid_form = new TForm('datagrid_'.$this->getId());
         $datagrid_form->onsubmit = 'return false';
-        $this->setObjDatagrid_form($datagrid_form);
+        $this->setDatagrid_form($datagrid_form);
     }    
     /**
      * Define o lado que ação irá aparecer. O Default é 'left'
