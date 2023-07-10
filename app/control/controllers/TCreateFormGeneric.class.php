@@ -481,7 +481,7 @@ class TCreateFormGeneric extends TCreateFileContent
     protected function addFields($qtdTab)
     {
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){            
-            $this->addLine($qtdTab.'$frm->addHiddenField( $primaryKey );   // coluna chave da tabela');
+            $this->addLine($qtdTab.'$frm->addHiddenField( self::primaryKey );   // coluna chave da tabela');
         }else{
             $this->addFieldType($qtdTab,0, $this->getPrimaryKeyTable(),false);
         }

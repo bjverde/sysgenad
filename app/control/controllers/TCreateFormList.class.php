@@ -28,7 +28,7 @@ class TCreateFormList extends TCreateFormGeneric
     public function getMixUpdateFields($qtdTab)
     {
         if ($this->validateListColumnsName()) {
-            $this->addLine($qtdTab.'$mixUpdateFields = $primaryKey.\'|\'.$primaryKey');
+            $this->addLine($qtdTab.'$mixUpdateFields = self::primaryKey.\'|\'.self::primaryKey');
             $listColumnsName = $this->getListColunnsName();
             foreach ($listColumnsName as $value) {
                 $value   = strtoupper($value);
@@ -41,7 +41,7 @@ class TCreateFormList extends TCreateFormGeneric
     public function addColumnsGrid($qtdTab)
     {
         //$this->addLine($qtdTab.'$grid->addRowNumColumn(); //Mostra Numero da linha');
-        $this->addLine($qtdTab.'$grid->addColumn($primaryKey,\'id\');');
+        $this->addLine($qtdTab.'$grid->addColumn(self::primaryKey,\'id\');');
         if ($this->validateListColumnsName()) {
             $listColumnsName = $this->getListColunnsName();
             foreach ($listColumnsName as $key => $value) {
