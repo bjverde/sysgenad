@@ -185,8 +185,9 @@ class TFormDinGrid
 
             $strWidth = empty($strWidth)?'100%':$strWidth;
 
-            $this->dataGrid = new TDataGrid();
-            $this->bootstrapGrid = new BootstrapDatagridWrapper($this->dataGrid);
+            $dataGrid = new TDataGrid();
+            $this->setDataGrid($dataGrid);
+            $this->bootstrapGrid = new BootstrapDatagridWrapper($this->getDatagrid());
             $this->setAdiantiObj($this->bootstrapGrid);
             $this->setWidth($strWidth);
             $this->setActionSide('left');
