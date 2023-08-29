@@ -228,7 +228,9 @@ class TCreateFormList extends TCreateFormGeneric
             $this->addLine(ESP.ESP.'$this->setActiveRecord(\''.$this->getTableRef().'\'); // define the Active Record');
             $this->addLine(ESP.ESP.'$this->setDefaultOrder(self::$primaryKey, \'desc\'); // define the default order');
             $this->addLine(ESP.ESP.'$this->setLimit(TFormDinGrid::ROWS_PER_PAGE);');
+            $this->addBlankLine();
             $this->addLine(ESP.ESP.'$this->filter_criteria = new TCriteria;');
+            $this->addLine(ESP.ESP.'$this->addFilterField(self::$primaryKey, \'=\', self::$primaryKey); //campo, operador, campo do form');
         }
         $this->addLine(ESP.ESP.'if(!empty($param[\'target_container\'])){');
         $this->addLine(ESP.ESP.ESP.'$this->adianti_target_container = $param[\'target_container\'];');
