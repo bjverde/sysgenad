@@ -146,9 +146,17 @@ class TCreateForm extends TCreateFormGeneric
     public function addVbox($qtdTab)
     {
         $this->addLine($qtdTab.'// creates the page structure using a table');
-        $this->addLine($qtdTab.'$formDinBreadCrumb = new TFormDinBreadCrumb(__CLASS__,false);');
-        $this->addLine($qtdTab.'$vbox = $formDinBreadCrumb->getAdiantiObj();');
-        $this->addLine($qtdTab.'$vbox->add($this->form);');
+        $this->addLine($qtdTab.'$breadCrumb = new TFormDinBreadCrumb(__CLASS__,false);');
+        $this->addLine($qtdTab.'$breadCrumb = $formDinBreadCrumb->getAdiantiObj();');
+        $this->addBlankLine();
+        $this->addLine($qtdTab.'// vertical box container');
+        $this->addLine($qtdTab.'$container = new TVBox;');
+        $this->addLine($qtdTab.'$container->style = \'width: 100%\';');
+        $this->addLine($qtdTab.'$container->add($breadCrumb);');
+        $this->addLine($qtdTab.'$container->add($this->form);');
+        $this->addLine($qtdTab.'$container->add($panel);');
+        $this->addLine($qtdTab.'//<onAfterPageCreation>');
+        $this->addLine($qtdTab.'//</onAfterPageCreation>');
         $this->addBlankLine();
         $this->addLine($qtdTab.'// add the table inside the page');
         $this->addLine($qtdTab.'parent::add($vbox);');
