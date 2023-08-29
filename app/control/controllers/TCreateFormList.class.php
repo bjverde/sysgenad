@@ -227,7 +227,7 @@ class TCreateFormList extends TCreateFormGeneric
         if( $this->getTableType() != TableInfo::TB_TYPE_PROCEDURE ){
             $this->addLine(ESP.ESP.'$this->setActiveRecord(\''.$this->getTableRef().'\'); // define the Active Record');
             $this->addLine(ESP.ESP.'$this->setDefaultOrder(\''.$this->getPrimaryKeyTable().'\', \'asc\'); // define the default order');
-            $this->addLine(ESP.ESP.'$this->setLimit(20);');
+            $this->addLine(ESP.ESP.'$this->setLimit(TFormDinGrid::ROWS_PER_PAGE);');
             $this->addLine(ESP.ESP.'$this->filter_criteria = new TCriteria;');
         }
         $this->addLine(ESP.ESP.'if(!empty($param[\'target_container\'])){');
