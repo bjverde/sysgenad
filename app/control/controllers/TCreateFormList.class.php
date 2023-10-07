@@ -84,13 +84,41 @@ class TCreateFormList extends TCreateFormGeneric
             $this->addGetWhereGridParameters_fied(false, $value, $qtdTabs);
         }
     }
+    //--------------------------------------------------------------------------------------
+    public function getSqlOperatorsByType($formDinType)
+    {
+        $restult = null;
+        switch ($formDinType) {
+            case TCreateFormGeneric::FORMDIN_TYPE_DATE:
+                $restult = '=';
+            break;
+            case TCreateFormGeneric::FORMDIN_TYPE_DATETIME:
+                $restult = '=';
+            break;
+            case TCreateFormGeneric::FORMDIN_TYPE_NUMBER:
+                $restult = '=';
+            break;
+            case TCreateFormGeneric::FORMDIN_TYPE_TEXT:
+                $restult = 'like';
+            break;
+            default:
+                $restult = '=';
+            }
+        return $restult;
+    }
+    public function addFilterFieldType($qtdTabs,$key, $fieldName, $notPK = true)
+    {
+        $formDinType = $this->getColumnsPropertieFormDinType($key);
+        $conector    = $this->getSqlOperatorsByType($formDinType);
+        $this->addLine($qtdTabs.'$this->addFilterField(\''.$fieldName.'\', \''.$conector.'\', \''.$fieldName.'\'); //campo, operador, campo do form');
+    }
     public function addFilterFields($qtdTabs)
     {
         $this->addLine($qtdTabs.'$this->filter_criteria = new TCriteria;');
         $this->addLine($qtdTabs.'$this->addFilterField(self::$primaryKey, \'=\', self::$primaryKey); //campo, operador, campo do form');
         $listColumnsName = $this->getListColunnsName();
         foreach ($listColumnsName as $key => $value) {
-            $this->addGetWhereGridParameters_fied(false, $value, $qtdTabs);
+            $this->addGetWhereGridParameters_fied($qtdTabs,$key, $value);
         }
     }
     //--------------------------------------------------------------------------------------
