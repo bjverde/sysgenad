@@ -215,9 +215,6 @@ class TCreateFormList extends TCreateFormGeneric
         }elseif( $this->getTableType() == TableInfo::TB_TYPE_VIEW ){
             $this->addLine(ESP.'// trait com onReload, onSearch, onDelete...');
             $this->addLine(ESP.'use Adianti\Base\AdiantiStandardListTrait;');
-        }elseif( $this->getTableType() == TableInfo::TB_TYPE_PROCEDURE ){
-            $this->addLine(ESP.'// trait com onReload, onSearch, onDelete, onClear, onEdit, show');
-            $this->addLine(ESP.'use Adianti\Base\AdiantiStandardFormTrait;');
         }
         $this->addBlankLine();
         $this->addLine(ESP.'public function __construct($param = null)');
