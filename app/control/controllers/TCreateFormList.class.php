@@ -171,6 +171,23 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTab.'} //END onClear');
     }
     //--------------------------------------------------------------------------------------
+    public function addMethod_onSearch($qtdTab)
+    {
+        $this->addBlankLine();
+        $this->addLine();
+        $this->addLine($qtdTab.'/**');
+        $this->addLine($qtdTab.' * Use esse metodo para customizar as pesquisas. Se não precisar vai permanecer comentádo');
+        $this->addLine($qtdTab.' */');
+        $this->addLine($qtdTab.'public function onSearch($param = null)');
+        $this->addLine($qtdTab.'{');
+        $this->addLine($qtdTab.ESP.'$data = $this->form->getData();');
+        $this->addLine($qtdTab.ESP.'$filters = [];');
+        $this->addBlankLine();
+        $this->addLine($qtdTab.ESP.'TSession::setValue(__CLASS__.\'_filter_data\', NULL);');
+        $this->addLine($qtdTab.ESP.'TSession::setValue(__CLASS__.\'_filters\', NULL);');
+        $this->addLine($qtdTab.'} //END onClear');
+    }    
+    //--------------------------------------------------------------------------------------
     public function addMethod_datagrid_form($qtdTab)
     {
         $this->addBlankLine();
