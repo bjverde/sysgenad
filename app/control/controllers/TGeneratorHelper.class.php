@@ -361,16 +361,18 @@ class TGeneratorHelper
         $configDBMS = self::getConfigByDBMS();
         $pathFolder = self::getPathNewSystem().DS.'app'.DS.'control'.DS.'maindatabase'.DS.'views';
 
-        $geradorFormList= new TCreateFormList($pathFolder ,$tableName ,$listColumnsProperties);
-        $geradorFormList->setDatabaseManagementSystem($DBMS_TYPE);
-        $geradorFormList->setTableType($tableType);
-        $geradorFormList->setGridType($configDBMS['TPGRID']);
-        $geradorFormList->setGridTypeFormList($TP_GRIDP_FORM_LIST);
-        $geradorFormList->setDtView($dtView);
-        $geradorFormList->setDtDb($dtDB);
-        $geradorFormList->saveFile();
+        if( ($tableType == TableInfo::TB_TYPE_TABLE) || ($tableType == TableInfo::TB_TYPE_VIEW) ){
+            $geradorFormList= new TCreateFormList($pathFolder ,$tableName ,$listColumnsProperties);
+            $geradorFormList->setDatabaseManagementSystem($DBMS_TYPE);
+            $geradorFormList->setTableType($tableType);
+            $geradorFormList->setGridType($configDBMS['TPGRID']);
+            $geradorFormList->setGridTypeFormList($TP_GRIDP_FORM_LIST);
+            $geradorFormList->setDtView($dtView);
+            $geradorFormList->setDtDb($dtDB);
+            $geradorFormList->saveFile();
+        }
 
-        if($tableType == TableInfo::TB_TYPE_TABLE){
+        if( ($tableType == TableInfo::TB_TYPE_TABLE) || ($tableType == TableInfo::TB_TYPE_PROCEDURE) ){
             $geradorForm= new TCreateForm($pathFolder ,$tableName ,$listColumnsProperties);
             $geradorForm->setDatabaseManagementSystem($DBMS_TYPE);
             $geradorForm->setTableType($tableType);
