@@ -185,6 +185,13 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addBlankLine();
         $this->addLine($qtdTab.ESP.'TSession::setValue(__CLASS__.\'_filter_data\', NULL);');
         $this->addLine($qtdTab.ESP.'TSession::setValue(__CLASS__.\'_filters\', NULL);');
+        $this->addBlankLine();
+        $this->addLine($qtdTab.ESP.'$this->form->setData($data); // fill the form with data again');
+        $this->addLine($qtdTab.ESP.'// keep the search data in the session');
+        $this->addLine($qtdTab.ESP.'TSession::setValue(__CLASS__.\'_filter_data\', $data);');
+        $this->addLine($qtdTab.ESP.'TSession::setValue(__CLASS__.\'_filters\', $filters);');
+        $this->addBlankLine();
+        $this->addLine($qtdTab.ESP.'$this->onReload([\'offset\' => 0, \'first_page\' => 1]);');
         $this->addLine($qtdTab.'} //END onClear');
     }    
     //--------------------------------------------------------------------------------------
