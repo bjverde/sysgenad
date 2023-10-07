@@ -84,6 +84,15 @@ class TCreateFormList extends TCreateFormGeneric
             $this->addGetWhereGridParameters_fied(false, $value, $qtdTabs);
         }
     }
+    public function addFilterFields($qtdTabs)
+    {
+        $this->addLine($qtdTabs.'$this->filter_criteria = new TCriteria;');
+        $this->addLine($qtdTabs.'$this->addFilterField(self::$primaryKey, \'=\', self::$primaryKey); //campo, operador, campo do form');
+        $listColumnsName = $this->getListColunnsName();
+        foreach ($listColumnsName as $key => $value) {
+            $this->addGetWhereGridParameters_fied(false, $value, $qtdTabs);
+        }
+    }
     //--------------------------------------------------------------------------------------
     public function addGrid($qtdTab)
     {   
@@ -225,8 +234,8 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine(ESP.ESP.'$this->setDefaultOrder(self::$primaryKey, \'desc\'); // define the default order');
         $this->addLine(ESP.ESP.'$this->setLimit(TFormDinGrid::ROWS_PER_PAGE);');
         $this->addBlankLine();
-        $this->addLine(ESP.ESP.'$this->filter_criteria = new TCriteria;');
-        $this->addLine(ESP.ESP.'$this->addFilterField(self::$primaryKey, \'=\', self::$primaryKey); //campo, operador, campo do form');
+        $this->addFilterFields(ESP.ESP);
+        $this->addBlankLine();
         $this->addLine(ESP.ESP.'if(!empty($param[\'target_container\'])){');
         $this->addLine(ESP.ESP.ESP.'$this->adianti_target_container = $param[\'target_container\'];');
         $this->addLine(ESP.ESP.'}');
