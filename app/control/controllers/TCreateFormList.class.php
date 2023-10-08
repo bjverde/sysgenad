@@ -118,7 +118,7 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTabs.'$this->addFilterField(self::$primaryKey, \'=\', self::$primaryKey); //campo, operador, campo do form');
         $listColumnsName = $this->getListColunnsName();
         foreach ($listColumnsName as $key => $value) {
-            $this->addGetWhereGridParameters_fied($qtdTabs,$key, $value);
+            $this->addFilterFieldType($qtdTabs,$key, $value);
         }
     }
     //--------------------------------------------------------------------------------------
