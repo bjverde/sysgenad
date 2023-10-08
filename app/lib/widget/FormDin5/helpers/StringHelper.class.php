@@ -110,6 +110,12 @@ class StringHelper
         return $value;
     }
 
+    /**
+     * Recebe uma string e deixar apenas os números sem formatação
+     *
+     * @param string $value
+     * @return string
+     */
     public static function limpaCnpjCpf($value) 
     {
         $limpo = preg_replace("/\D/", '', $value);
@@ -117,13 +123,13 @@ class StringHelper
     }
 
     /**
-     * Recebe uma string e formata o numero telefone em dos 4 formatos
+     * Recebe uma string e formata o numero telefone em dos 4 formatos, conforme o tamanho da string
      * (61) 91234-5678
      * (61) 1234-5678
      * 91234-5678
      * 1234-5678
      * @param string $value
-     * @return string
+     * @return string|int
      */
     public static function formatPhoneNumber($value) 
     {
@@ -140,9 +146,26 @@ class StringHelper
         return $value;
     }
 
+    /**
+     * Recebe um string e verfica se está no formato de número brasileiro
+     * 999.999.999,00000 ou 999999999,00000
+     * 
+     * @param string|int|float|null $value
+     * @return boolean
+     */    
     public static function is_numeroBrasil($value)
     {
         if( empty($value) ){
+            return false;
+        }
+        //Retira números no formato 12,00
+        $naoNumero = preg_match('/^([0-9]*)([\.]{1})(\d{1,2})$/', $value, $output_array);
+        if($naoNumero===1){
+            return false;
+        }
+        //Retira números no formato 12,1234
+        $naoNumero = preg_match('/^([0-9]*)(...)([\.]{1})(\d{4,})$/', $value, $output_array);
+        if($naoNumero===1){
             return false;
         }
         $numero= preg_match('/^([0-9\.]*)(,?)(\d*)$/', $value, $output_array);
@@ -150,18 +173,36 @@ class StringHelper
         return $result;
     }
 
+    /**
+     * Recebe um string e verfica se está no formato de número americano
+     * 999,999,999.00000 ou 999999999.00000
+     * 
+     * @param string|int|float $value
+     * @return boolean
+     */
     public static function is_numeroEua($value)
     {
         if( empty($value) ){
             return false;
         }
-        $numero= preg_match('/^([0-9,]*)(\.+)(\d*)$/', $value, $output_array);
+        //Retira números no formato 12,00
+        $naoNumero = preg_match('/^([0-9]*)([\,]{1})(\d{1,2})$/', $value, $output_array);
+        if($naoNumero===1){
+            return false;
+        }
+        //Retira números no formato 12,1234
+        $naoNumero = preg_match('/^([0-9]*)(...)([\,]{1})(\d{4,})$/', $value, $output_array);
+        if($naoNumero===1){
+            return false;
+        }
+        $numero= preg_match('/^([0-9,]*)(\.?)(\d*)$/', $value, $output_array);
         $result= ($numero===1)?true:false;
         return $result;
     }
 
     /**
      * Recebe uma string com numero formato brasil ou eua e devolver no formato Brasil
+     * Qualquer outro formato vai retorna null
      *
      * @param numeric|string $value  valor que deve ser convertido
      * @param integer $decimals numero de casas decimais
@@ -176,7 +217,7 @@ class StringHelper
                 return $value;
             }else if( (strlen($value)==5) && str_contains($value,'.') ) {
                 $value=str_replace('.',',', $value);
-                return $value;                
+                return $value;
             }else{
                 $search =array('.',',');
                 $replace=array('', '.');
@@ -184,7 +225,7 @@ class StringHelper
                 $value=number_format($value, $decimals,',','.');
                 return $value;
             }
-        }else if( is_string($value) && self::is_numeroEua($value) ){        
+        }else if( is_string($value) && self::is_numeroEua($value) ){
             $value=str_replace(',','', $value);
             $value=number_format($value, $decimals,',','.');
         }else{
@@ -194,7 +235,8 @@ class StringHelper
     }
 
     /**
-     * Recebe uma string com numero formato EUA ou Brasil e devolver no formato EUA
+     * Recebe uma string com numero formato EUA ou Brasil e devolver no formato EUA.
+     * Qualquer outro formato vai retorna null
      *
      * @param numeric|string $value  valor que deve ser convertido
      * @param integer $decimals numero de casas decimais
@@ -209,13 +251,13 @@ class StringHelper
                 return $value;
             }else if( (strlen($value)==5) && str_contains($value,',') ) {
                 $value=str_replace(',','.', $value);
-                return $value;                
+                return $value;
             }else{
                 $value=str_replace(',','', $value);
                 $value=number_format($value, $decimals,'.',',');
                 return $value;
             }
-        }else if( is_string($value) && self::is_numeroBrasil($value) ){        
+        }else if( is_string($value) && self::is_numeroBrasil($value) ){
             $search =array('.',',');
             $replace=array('', '.');
             $value=str_replace($search, $replace, $value);
@@ -224,7 +266,7 @@ class StringHelper
             $value = null;
         }
         return $value;
-    }     
+    }
     
     /**
      * Recebe uma string do tipo "olá à mim! ñ" e retona "ola a mim! n"
@@ -281,6 +323,27 @@ class StringHelper
     }
 
     /**
+     * Recebe uma string "minha string"e converte para o formato PascalCase
+     * "MinhaString"
+     * https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841
+     *
+     * @param string $string
+     * @param string $separator 
+     * @return string
+     */
+    public static function string2PascalCaseWithSeparator($string,$separator) 
+    {
+        $listSeparator = array('-','_',';',',');
+        if (!in_array($separator, $listSeparator)) {
+            throw new InvalidArgumentException('Use um separador valido: - _ ; ,');
+        }
+        $separator = '/'.$separator.'/';
+        $string = preg_replace($separator, ' ', $string);
+        $string = self::string2PascalCase($string);
+        return $string;
+    }
+
+    /**
      * Recebe uma string "minha string"e converte para o formato CamelCase
      * "minhaString"
      * https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841
@@ -326,24 +389,4 @@ class StringHelper
         $string = preg_replace('/[-]/', '_', $string);
         return $string;
     }
-
-    /**
-     * Gera um link para API do WhatsApp
-     *
-     * @param string $numeroTelefone - formatado ou não
-     * @param string $msg - mensagem que vai aparecer
-     * @param boolean $iconeVerde - default é o icone verde
-     * @return void
-     */
-    public static function linkApiWhatsApp($numeroTelefone,$msg,$iconeVerde=true) 
-    {
-        $numeroLimpo = str_replace([' ','-','(',')'],['','','',''], $numeroTelefone);
-        $icon = "<i class='fab fa-whatsapp green' aria-hidden='true'></i>";
-        if($iconeVerde==false){
-            $icon = "<i class='fab fa-whatsapp' aria-hidden='true'></i>";
-        }
-        $link =  "{$icon} <a target='newwindow' href='https://api.whatsapp.com/send?phone=55{$numeroLimpo}&text={$msg}'> {$numeroTelefone} </a>";
-        return $link;
-    }
-
 }

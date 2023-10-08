@@ -73,7 +73,6 @@ class TFormDinGrid
     private $listColumn = array();
     private $dataGrid;
     private $bootstrapGrid;
-    private $objDatagrid_form;
 
     protected $idGrid;
     protected $title;
@@ -83,11 +82,8 @@ class TFormDinGrid
     protected $minWidth;
     protected $action_group;
     protected $enableActionGroup;
-    private $columns;
-    private $qtdColumns;
     private $maxRows;
     private $realTotalRowsSqlPaginator;    
-    private $onDrawActionButton;
 
     protected $data;
 
@@ -185,9 +181,8 @@ class TFormDinGrid
 
             $strWidth = empty($strWidth)?'100%':$strWidth;
 
-            $dataGrid = new TDataGrid();
-            $this->setDataGrid($dataGrid);
-            $this->bootstrapGrid = new BootstrapDatagridWrapper($this->getDatagrid());
+            $this->dataGrid = new TDataGrid();
+            $this->bootstrapGrid = new BootstrapDatagridWrapper($this->dataGrid);
             $this->setAdiantiObj($this->bootstrapGrid);
             $this->setWidth($strWidth);
             $this->setActionSide('left');
@@ -203,9 +198,6 @@ class TFormDinGrid
 
             $this->setTitle($strTitle);
             $panel = new TPanelGroup($this->getTitle());
-            $this->creatDatagrid_form();
-            $this->getDatagrid_form()->add($this->dataGrid);
-            $panel->add($this->getDatagrid_form());
             $this->setPanelGroupGrid($panel);
         }
     }
@@ -256,21 +248,6 @@ class TFormDinGrid
         }         
         $this->dataGrid = $dataGrid;
     }
-    //---------------------------------------------------------------
-    private function getDatagrid_form(){
-        return $this->objDatagrid_form;
-    }
-    private function setDatagrid_form($datagrid_form){
-        if( !is_object($datagrid_form) ){
-            throw new InvalidArgumentException(TFormDinMessage::ERROR_FD5_OBJ_ADI);
-        }
-        $this->objDatagrid_form = $datagrid_form;
-    }
-    public function creatDatagrid_form(){
-        $datagrid_form = new TForm('datagrid_'.$this->getId());
-        $datagrid_form->onsubmit = 'return false';
-        $this->setDatagrid_form($datagrid_form);
-    }    
     /**
      * Define o lado que ação irá aparecer. O Default é 'left'
      * Os valores possíveis são: left, right, esquerda, direita
@@ -457,7 +434,7 @@ class TFormDinGrid
         if( !empty($this->getData()) ){
             $this->getAdiantiObj()->addItems( $this->getData() );
         }
-        //$this->getPanelGroupGrid()->add($this->getAdiantiObj())->style = 'overflow-x:auto';
+        $this->getPanelGroupGrid()->add($this->getAdiantiObj())->style = 'overflow-x:auto';
 
 
         // the creation of the navigation page must come after createModel

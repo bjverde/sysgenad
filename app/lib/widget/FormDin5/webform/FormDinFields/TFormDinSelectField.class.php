@@ -64,6 +64,7 @@ class TFormDinSelectField  extends TFormDinOption
 {
     protected $adiantiObj;
     private $multiSelect;
+    private $enableSearch;
     
     /**
      * Adicionar campo tipo combobox ou menu select
@@ -105,6 +106,7 @@ class TFormDinSelectField  extends TFormDinOption
      * @param string  $strDisplayColumn   - 14: Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
      * @param string  $boolNoWrapLabel    - 15: NOT_IMPLEMENTED
      * @param string  $strDataColumns     - 16: NOT_IMPLEMENTED Informações extras do banco de dados que deverão ser adicionadas na tag option do campo select
+     * @param string  $enableSearch       - 17: FORMDIN5: Define se o campo select terá autocomplete
      * @return TCombo
      */
     public function __construct(string $id
@@ -123,9 +125,11 @@ class TFormDinSelectField  extends TFormDinOption
                                ,string $strDisplayColumn = null
                                ,$boolNoWrapLabel = null
                                ,string $strDataColumns = null
+                               ,bool $enableSearch = true
                                )
     {
         $this->setWidth( $intWidth );
+        $this->setEnableSearch($enableSearch);
 
         $boolRequired   = empty($boolRequired)?false:$boolRequired;
         $boolNewLine    = empty($boolNewLine)?true:$boolNewLine;
@@ -138,7 +142,11 @@ class TFormDinSelectField  extends TFormDinOption
             //$adiantiObj->tag->{'size'} = $intSize;
             //$adiantiObj->setProperty('size', $intSize);
         }else{
-            $adiantiObj = new TCombo($id);            
+            if( $this->getEnableSearch() == true ){
+                $adiantiObj = new TUniqueSearch($id);
+            }else{
+                $adiantiObj = new TCombo($id);
+            }
         }
 
         parent::__construct($adiantiObj            //01: Objeto de campo do Adianti
@@ -157,6 +165,7 @@ class TFormDinSelectField  extends TFormDinOption
                            ,$strDisplayColumn      //14: Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
                            ,null                   //15: 
                            ,$strDataColumns        //16: informações extras do banco de dados que deverão ser adicionadas na tag option do campo select
+                           ,$enableSearch          //17: FORMDIN5: Define se o campo select terá autocomplete
                         );        
         return $this->getAdiantiObj();
     }
@@ -171,15 +180,24 @@ class TFormDinSelectField  extends TFormDinOption
     {
         $this->multiSelect = $boolMultiSelect;
     }
-
-    public function enableSearch()
+    //-----------------------------------------------------------
+    public function getEnableSearch()
     {
-        if($this->getMultiSelect() == false)
-        {
+        return $this->enableSearch;
+    }
+    private function setEnableSearch($enableSearch)
+    {
+        $this->enableSearch = $enableSearch;
+    }
+    public function enableSearch($enableSearch)
+    {
+        $enableSearch = is_null($enableSearch)?true:$enableSearch;
+        $adiantiObj = $this->getAdiantiObj();
+        if($enableSearch && (($adiantiObj instanceof TUniqueSearch)) ){
             $this->getAdiantiObj()->enableSearch();
         }
     }
-
+    //-----------------------------------------------------------
     public function setWidth($intWidth)
     {
         ValidateHelper::validadeParam('intWidth',$intWidth

@@ -97,10 +97,20 @@ class TFormDinGridTransformer
         return $div;
     }
 
+    /**
+     * Formata um número de celular com um link para WhatsApp API para enviar uma mensagem
+     *
+     * @param [type] $value   01 - número de celular, formatado ou não. É recomendavél enviar com DDI e DDD
+     * @param object $object  02 - objeto adianti
+     * @param [type] $row     03 - linha do grid
+     * @param string $msg     04 - texto da mensagem
+     * @param boolean $iconeVerde 05 - Mostra icone verde ou mostra icone na cor da fonte
+     * @return void
+     */    
     public static function linkApiWhatsApp($value, $object, $row, $msg, $iconeVerde)
     {
         if ($value){
-            $string = StringHelper::linkApiWhatsApp($value,$msg,$iconeVerde);
+            $string = HtmlHelper::linkApiWhatsApp($value,$msg,$iconeVerde);
             return $string;
         }
         return $value;

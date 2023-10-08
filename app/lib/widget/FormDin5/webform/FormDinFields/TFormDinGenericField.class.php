@@ -70,6 +70,7 @@ class TFormDinGenericField
     private $tooltip;
     private $readOnly;
     private $class = array();
+    private $id;
     
     /**
      *
@@ -170,6 +171,10 @@ class TFormDinGenericField
         }else{
             $adiantiObj->setId($id);
         }
+        $this->id = $id;
+    }
+    public function getId(){
+        return $this->id;
     }
     //---------------------------------------------------------------
     public function setRequired($boolRequired){

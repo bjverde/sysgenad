@@ -44,39 +44,21 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-class OrmAdiantiHelper
+class NumericHelper
 {
-
-    public static function testParam($param) 
-    {
-        $result = false;
-        if (isset($param) AND ( (is_scalar($param) AND $param !== '') OR (is_array($param) AND (!empty($param)) )) )
-        {
-            $result = true;// create the filter 
-        }
-    	return $result;
-    }
-
     /**
-     * Inclui um novo elemento do tipo TFilter no ArrayFilter se $data for tiver valor
+     * Convert uma string númerica no formato Brasil 123.456,78 ou americana 123,456.78
+     * para um float 123456.78 com 2 casas decimais
      *
-     * @param array  $arrayFilter 01: array com os filtros já incluiso
-     * @param string $filde       02: campo que será usado
-     * @param string $conector    03: conectores SQL: like, =, !=, in, not in, >=, <=, >, <
-     * @param mixed  $data        04: valor que será testado
-     * @param string $sql         05: String Sql para um sub select. 
-     * @return array
+     * @param string|int|float $number
+     * @return float
      */
-    public static function addFilter($arrayFilter,$filde,$conector,$data,$sql) 
+    public static function cast2Float($number) 
     {
-        if( self::testParam($data) ){
-            if( empty($sql) ){
-                $arrayFilter[] = new TFilter($filde,$conector,$data);// create the filter 
-            }else{
-                $arrayFilter[] = new TFilter($filde,$conector,$sql);// create the filter 
-            }
-        }
-    	return $arrayFilter;
-    }    
+        $number=StringHelper::numeroEua($number);
+        $number=str_replace(',','', $number);
+        $number=(float)$number;
+        return $number;
+    }
 }
 ?>

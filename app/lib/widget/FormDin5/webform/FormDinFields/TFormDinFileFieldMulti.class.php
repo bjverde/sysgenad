@@ -60,7 +60,7 @@
  * 
  * @author Reinaldo A. Barrêto Junior
  */
-class TFormDinFileField extends TFormDinGenericField
+class TFormDinFileFieldMulti extends TFormDinGenericField
 {    
     private $maxSize;
     private $maxSizeKb;
@@ -104,7 +104,7 @@ class TFormDinFileField extends TFormDinGenericField
     {
         $this->setId($id);
         $this->setAllowedFileTypes( $strAllowedFileTypes );
-        $adiantiObj = new TFile($id);
+        $adiantiObj = new TMultiFile($id);
         $adiantiObj->setAllowedExtensions( $this->getAllowedFileTypes() );
         //$adiantiObj->enableFileHandling();
         //$adiantiObj->enablePopover();
@@ -136,16 +136,14 @@ class TFormDinFileField extends TFormDinGenericField
         return $this->id;
     }
 
-    /**
-     * Define os tipos de arquivos permitidos. Pode ser um array simples ou uma string com os valores separados por virgula
-     *
-     * @param string|array 
-     */
     public function setAllowedFileTypes($strNewFileTypes=null)
     {
         if( is_string($strNewFileTypes) ){
             $strNewFileTypes = strtolower($strNewFileTypes);
             $strNewFileTypes = explode(',',$strNewFileTypes);
+        }
+        if( empty($strNewFileTypes) ){
+            $strNewFileTypes='';
         }
         $this->allowedFileTypes = $strNewFileTypes;
     }
@@ -213,5 +211,6 @@ class TFormDinFileField extends TFormDinGenericField
     {
         $this->enableFileHandling();
         $this->getAdiantiObj()->enableImageGallery($width,$height);
-    }  
+    }
+    
 }
