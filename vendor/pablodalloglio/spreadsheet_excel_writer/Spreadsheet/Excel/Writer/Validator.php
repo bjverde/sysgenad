@@ -45,6 +45,7 @@ define("OP_LTE",        0x07);
 * @category FileFormats
 * @package  Spreadsheet_Excel_Writer
 */
+#[\AllowDynamicProperties]
 class Spreadsheet_Excel_Writer_Validator
 {
    public $_type;

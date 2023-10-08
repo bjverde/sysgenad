@@ -149,17 +149,17 @@
         },
         {
             "name": "dasprid/enum",
-            "version": "1.0.4",
-            "version_normalized": "1.0.4.0",
+            "version": "1.0.5",
+            "version_normalized": "1.0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DASPRiD/Enum.git",
-                "reference": "8e6b6ea76eabbf19ea2bf5b67b98e1860474012f"
+                "reference": "6faf451159fb8ba4126b925ed2d78acfce0dc016"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DASPRiD/Enum/zipball/8e6b6ea76eabbf19ea2bf5b67b98e1860474012f",
-                "reference": "8e6b6ea76eabbf19ea2bf5b67b98e1860474012f",
+                "url": "https://api.github.com/repos/DASPRiD/Enum/zipball/6faf451159fb8ba4126b925ed2d78acfce0dc016",
+                "reference": "6faf451159fb8ba4126b925ed2d78acfce0dc016",
                 "shasum": ""
             },
             "require": {
@@ -169,7 +169,7 @@
                 "phpunit/phpunit": "^7 | ^8 | ^9",
                 "squizlabs/php_codesniffer": "*"
             },
-            "time": "2023-03-01T18:44:03+00:00",
+            "time": "2023-08-25T16:18:39+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -196,7 +196,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DASPRiD/Enum/issues",
-                "source": "https://github.com/DASPRiD/Enum/tree/1.0.4"
+                "source": "https://github.com/DASPRiD/Enum/tree/1.0.5"
             },
             "install-path": "../dasprid/enum"
         },
@@ -267,17 +267,17 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "v6.5.0",
-            "version_normalized": "6.5.0.0",
+            "version": "v6.9.0",
+            "version_normalized": "6.9.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "e94e7353302b0c11ec3cfff7180cd0b1743975d2"
+                "reference": "f03270e63eaccf3019ef0f32849c497385774e11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/e94e7353302b0c11ec3cfff7180cd0b1743975d2",
-                "reference": "e94e7353302b0c11ec3cfff7180cd0b1743975d2",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/f03270e63eaccf3019ef0f32849c497385774e11",
+                "reference": "f03270e63eaccf3019ef0f32849c497385774e11",
                 "shasum": ""
             },
             "require": {
@@ -295,7 +295,7 @@
                 "ext-sodium": "Support EdDSA (Ed25519) signatures",
                 "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
             },
-            "time": "2023-05-12T15:47:07+00:00",
+            "time": "2023-10-05T00:24:42+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -327,23 +327,23 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v6.5.0"
+                "source": "https://github.com/firebase/php-jwt/tree/v6.9.0"
             },
             "install-path": "../firebase/php-jwt"
         },
         {
             "name": "linfo/linfo",
-            "version": "v4.0.7",
-            "version_normalized": "4.0.7.0",
+            "version": "v4.0.8",
+            "version_normalized": "4.0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jrgp/linfo.git",
-                "reference": "b2719321a34cbbd3f87407649610d5fff3177d3f"
+                "reference": "69c76c4613932d4a3ca36c36faebb122093522f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jrgp/linfo/zipball/b2719321a34cbbd3f87407649610d5fff3177d3f",
-                "reference": "b2719321a34cbbd3f87407649610d5fff3177d3f",
+                "url": "https://api.github.com/repos/jrgp/linfo/zipball/69c76c4613932d4a3ca36c36faebb122093522f6",
+                "reference": "69c76c4613932d4a3ca36c36faebb122093522f6",
                 "shasum": ""
             },
             "require": {
@@ -356,7 +356,7 @@
             "suggest": {
                 "ext-com": "On Windows"
             },
-            "time": "2022-06-18T05:21:05+00:00",
+            "time": "2023-08-09T20:09:20+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -387,23 +387,23 @@
             ],
             "support": {
                 "issues": "https://github.com/jrgp/linfo/issues",
-                "source": "https://github.com/jrgp/linfo/tree/v4.0.7"
+                "source": "https://github.com/jrgp/linfo/tree/v4.0.8"
             },
             "install-path": "../linfo/linfo"
         },
         {
             "name": "masterminds/html5",
-            "version": "2.8.0",
-            "version_normalized": "2.8.0.0",
+            "version": "2.8.1",
+            "version_normalized": "2.8.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Masterminds/html5-php.git",
-                "reference": "3c5d5a56d56f48a1ca08a0670f0f80c1dad368f3"
+                "reference": "f47dcf3c70c584de14f21143c55d9939631bc6cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/3c5d5a56d56f48a1ca08a0670f0f80c1dad368f3",
-                "reference": "3c5d5a56d56f48a1ca08a0670f0f80c1dad368f3",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/f47dcf3c70c584de14f21143c55d9939631bc6cf",
+                "reference": "f47dcf3c70c584de14f21143c55d9939631bc6cf",
                 "shasum": ""
             },
             "require": {
@@ -413,7 +413,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6 || ^7 || ^8"
             },
-            "time": "2023-04-26T07:27:39+00:00",
+            "time": "2023-05-10T11:58:31+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -457,7 +457,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Masterminds/html5-php/issues",
-                "source": "https://github.com/Masterminds/html5-php/tree/2.8.0"
+                "source": "https://github.com/Masterminds/html5-php/tree/2.8.1"
             },
             "install-path": "../masterminds/html5"
         },
@@ -468,15 +468,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pablodalloglio/fpdf.git",
-                "reference": "e1c7233cdc7c8854aa3b134762e1d349633b602a"
+                "reference": "d618db8f2b8549613c3b5b31e6afd9915bda9330"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pablodalloglio/fpdf/zipball/e1c7233cdc7c8854aa3b134762e1d349633b602a",
-                "reference": "e1c7233cdc7c8854aa3b134762e1d349633b602a",
+                "url": "https://api.github.com/repos/pablodalloglio/fpdf/zipball/d618db8f2b8549613c3b5b31e6afd9915bda9330",
+                "reference": "d618db8f2b8549613c3b5b31e6afd9915bda9330",
                 "shasum": ""
             },
-            "time": "2021-03-08T21:58:36+00:00",
+            "time": "2023-06-01T18:33:08+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -513,15 +513,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pablodalloglio/ole.git",
-                "reference": "ba03f4bd294fe5202b3e18092c1a79e67a8024ec"
+                "reference": "7f363227708424cdc6ff9ca4764f59895b4b27a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pablodalloglio/ole/zipball/ba03f4bd294fe5202b3e18092c1a79e67a8024ec",
-                "reference": "ba03f4bd294fe5202b3e18092c1a79e67a8024ec",
+                "url": "https://api.github.com/repos/pablodalloglio/ole/zipball/7f363227708424cdc6ff9ca4764f59895b4b27a8",
+                "reference": "7f363227708424cdc6ff9ca4764f59895b4b27a8",
                 "shasum": ""
             },
-            "time": "2021-08-11T12:41:26+00:00",
+            "time": "2023-06-01T19:22:33+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -563,19 +563,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pablodalloglio/spreadsheet_excel_writer.git",
-                "reference": "c7ad7feeb4fb5586fd3d35ab812ace1f1168e9ef"
+                "reference": "21022df9029a58f2f812bfcb1879a1f83678d571"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pablodalloglio/spreadsheet_excel_writer/zipball/c7ad7feeb4fb5586fd3d35ab812ace1f1168e9ef",
-                "reference": "c7ad7feeb4fb5586fd3d35ab812ace1f1168e9ef",
+                "url": "https://api.github.com/repos/pablodalloglio/spreadsheet_excel_writer/zipball/21022df9029a58f2f812bfcb1879a1f83678d571",
+                "reference": "21022df9029a58f2f812bfcb1879a1f83678d571",
                 "shasum": ""
             },
             "require": {
                 "pablodalloglio/ole": "*",
                 "php": ">=5.3.3"
             },
-            "time": "2021-08-11T12:40:21+00:00",
+            "time": "2023-06-01T19:11:16+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -718,17 +718,17 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.8.0",
-            "version_normalized": "6.8.0.0",
+            "version": "v6.8.1",
+            "version_normalized": "6.8.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "df16b615e371d81fb79e506277faea67a1be18f1"
+                "reference": "e88da8d679acc3824ff231fdc553565b802ac016"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/df16b615e371d81fb79e506277faea67a1be18f1",
-                "reference": "df16b615e371d81fb79e506277faea67a1be18f1",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/e88da8d679acc3824ff231fdc553565b802ac016",
+                "reference": "e88da8d679acc3824ff231fdc553565b802ac016",
                 "shasum": ""
             },
             "require": {
@@ -738,13 +738,13 @@
                 "php": ">=5.5.0"
             },
             "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
                 "doctrine/annotations": "^1.2.6 || ^1.13.3",
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
                 "php-parallel-lint/php-parallel-lint": "^1.3.2",
                 "phpcompatibility/php-compatibility": "^9.3.5",
                 "roave/security-advisories": "dev-latest",
-                "squizlabs/php_codesniffer": "^3.7.1",
+                "squizlabs/php_codesniffer": "^3.7.2",
                 "yoast/phpunit-polyfills": "^1.0.4"
             },
             "suggest": {
@@ -757,7 +757,7 @@
                 "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)",
                 "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
             },
-            "time": "2023-03-06T14:43:22+00:00",
+            "time": "2023-08-29T08:26:30+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -789,7 +789,7 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.8.0"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.8.1"
             },
             "funding": [
                 {
@@ -841,17 +841,17 @@
         },
         {
             "name": "picqer/php-barcode-generator",
-            "version": "v2.2.4",
-            "version_normalized": "2.2.4.0",
+            "version": "v2.4.0",
+            "version_normalized": "2.4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picqer/php-barcode-generator.git",
-                "reference": "b98f110cc5a79f723688fb17fd90b9325300d844"
+                "reference": "4cec18909dffd86e14beb69b1040f2520c2e1bb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/b98f110cc5a79f723688fb17fd90b9325300d844",
-                "reference": "b98f110cc5a79f723688fb17fd90b9325300d844",
+                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/4cec18909dffd86e14beb69b1040f2520c2e1bb1",
+                "reference": "4cec18909dffd86e14beb69b1040f2520c2e1bb1",
                 "shasum": ""
             },
             "require": {
@@ -859,6 +859,7 @@
                 "php": "^7.3|^8.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^9.5"
             },
             "suggest": {
@@ -866,7 +867,7 @@
                 "ext-gd": "For JPG and PNG generators, GD or Imagick is required",
                 "ext-imagick": "For JPG and PNG generators, GD or Imagick is required"
             },
-            "time": "2022-07-01T08:27:26+00:00",
+            "time": "2023-09-16T08:58:52+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -918,7 +919,7 @@
             ],
             "support": {
                 "issues": "https://github.com/picqer/php-barcode-generator/issues",
-                "source": "https://github.com/picqer/php-barcode-generator/tree/v2.2.4"
+                "source": "https://github.com/picqer/php-barcode-generator/tree/v2.4.0"
             },
             "funding": [
                 {

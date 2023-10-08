@@ -39,7 +39,7 @@
 * @category FileFormats
 * @package  Spreadsheet_Excel_Writer
 */
-
+#[\AllowDynamicProperties]
 class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwriter
 {
     /**
@@ -594,7 +594,8 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         $this->_storeGridset();
 
          //  Prepend GUTS
-        if ($this->_BIFF_version == 0x0500) {
+        if ($this->_BIFF_version == 0x0500)
+        {
             $this->_storeGuts();
         }
 
@@ -605,22 +606,27 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         $this->_storePrintHeaders();
 
         // Prepend EXTERNSHEET references
-        if ($this->_BIFF_version == 0x0500) {
-            for ($i = $num_sheets; $i > 0; $i--) {
+        if ($this->_BIFF_version == 0x0500)
+        {
+            for ($i = $num_sheets; $i > 0; $i--)
+            {
                 $sheetname = $sheetnames[$i-1];
                 $this->_storeExternsheet($sheetname);
             }
         }
 
         // Prepend the EXTERNCOUNT of external references.
-        if ($this->_BIFF_version == 0x0500) {
+        if ($this->_BIFF_version == 0x0500)
+        {
             $this->_storeExterncount($num_sheets);
         }
 
         // Prepend the COLINFO records if they exist
-        if (!empty($this->_colinfo)) {
+        if (!empty($this->_colinfo))
+        {
             $colcount = count($this->_colinfo);
-            for ($i = 0; $i < $colcount; $i++) {
+            for ($i = 0; $i < $colcount; $i++)
+            {
                 $this->_storeColinfo($this->_colinfo[$i]);
             }
             $this->_storeDefcol();
@@ -636,7 +642,8 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         // Append
         $this->_storeWindow2();
         $this->_storeZoom();
-        if (!empty($this->_panes)) {
+        if (!empty($this->_panes))
+        {
             $this->_storePanes($this->_panes);
         }
         $this->_storeSelection($this->_selection);
@@ -681,18 +688,22 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         $buffer = 4096;
 
         // Return data stored in memory
-        if (isset($this->_data)) {
+        if (isset($this->_data))
+        {
             $tmp   = $this->_data;
             unset($this->_data);
             $fh    = $this->_filehandle;
-            if ($this->_using_tmpfile) {
+            if ($this->_using_tmpfile)
+            {
                 fseek($fh, 0);
             }
             return $tmp;
         }
         // Return data stored on disk
-        if ($this->_using_tmpfile) {
-            if ($tmp = fread($this->_filehandle, $buffer)) {
+        if ($this->_using_tmpfile)
+        {
+            if ($tmp = fread($this->_filehandle, $buffer))
+            {
                 return $tmp;
             }
         }
@@ -932,7 +943,8 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     */
     public function setFooter($string,$margin = 0.50)
     {
-        if (strlen($string) >= 255) {
+        if (strlen($string) >= 255)
+        {
             //carp 'Footer string must be less than 255 characters';
             return;
         }
@@ -1054,9 +1066,13 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     public function repeatRows($first_row, $last_row = null)
     {
         $this->title_rowmin  = $first_row;
-        if (isset($last_row)) { //Second row is optional
+        if (isset($last_row))
+        {
+            //Second row is optional
             $this->title_rowmax  = $last_row;
-        } else {
+        }
+        else
+        {
             $this->title_rowmax  = $first_row;
         }
     }
@@ -1071,9 +1087,13 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     public function repeatColumns($first_col, $last_col = null)
     {
         $this->title_colmin  = $first_col;
-        if (isset($last_col)) { // Second col is optional
+        if (isset($last_col))
+        {
+            // Second col is optional
             $this->title_colmax  = $last_col;
-        } else {
+        }
+        else
+        {
             $this->title_colmax  = $first_col;
         }
     }
@@ -1152,7 +1172,8 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     */
     public function setHPagebreaks($breaks)
     {
-        foreach ($breaks as $break) {
+        foreach ($breaks as $break)
+        {
             array_push($this->_hbreaks, $break);
         }
     }
@@ -1166,7 +1187,8 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     */
     public function setVPagebreaks($breaks)
     {
-        foreach ($breaks as $break) {
+        foreach ($breaks as $break)
+        {
             array_push($this->_vbreaks, $break);
         }
     }
@@ -1181,7 +1203,8 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     public function setZoom($scale = 100)
     {
         // Confine the scale to Excel's range
-        if ($scale < 10 || $scale > 400) {
+        if ($scale < 10 || $scale > 400)
+        {
             throw new Exception("Zoom factor $scale outside range: 10 <= zoom <= 400");
             $scale = 100;
         }
@@ -1199,7 +1222,8 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     public function setPrintScale($scale = 100)
     {
         // Confine the scale to Excel's range
-        if ($scale < 10 || $scale > 400) {
+        if ($scale < 10 || $scale > 400)
+        {
             throw new Exception("Print scale $scale outside range: 10 <= zoom <= 400");
             $scale = 100;
         }

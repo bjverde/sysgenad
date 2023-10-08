@@ -27,6 +27,7 @@
 * @category Structures
 * @package  OLE
 */
+#[\AllowDynamicProperties]
 class OLE_PPS_File extends OLE_PPS
 {
     /**
@@ -67,7 +68,8 @@ class OLE_PPS_File extends OLE_PPS
     */
     function setTempDir($dir)
     {
-        if (is_dir($dir)) {
+        if (is_dir($dir))
+        {
             $this->_tmp_dir = $dir;
             return true;
         }
@@ -84,11 +86,13 @@ class OLE_PPS_File extends OLE_PPS
     {
         $this->_tmp_filename = tempnam($this->_tmp_dir, "OLE_PPS_File");
         $fh = @fopen($this->_tmp_filename, "w+b");
-        if ($fh == false) {
+        if ($fh == false)
+        {
             throw new Exception("Can't create temporary file");
         }
         $this->_PPS_FILE = $fh;
-        if ($this->_PPS_FILE) {
+        if ($this->_PPS_FILE)
+        {
             fseek($this->_PPS_FILE, 0);
         }
 
@@ -103,9 +107,12 @@ class OLE_PPS_File extends OLE_PPS
     */
     function appendPPS($data)
     {
-        if ($this->_PPS_FILE) {
+        if ($this->_PPS_FILE)
+        {
             fwrite($this->_PPS_FILE, $data);
-        } else {
+        }
+        else
+        {
             $this->_data .= $data;
         }
     }
@@ -119,4 +126,4 @@ class OLE_PPS_File extends OLE_PPS
         $this->ole->getStream($this);
     }
 }
-?>
+

@@ -45,6 +45,7 @@ $GLOBALS['_OLE_INSTANCES'] = array();
 * @author   Xavier Noguer <xnoguer@php.net>
 * @author   Christian Schmidt <schmidt@php.net>
 */
+#[\AllowDynamicProperties]
 class OLE
 {
 
@@ -120,17 +121,20 @@ class OLE
     function read($file)
     {
         $fh = @fopen($file, "r");
-        if (!$fh) {
+        if (!$fh)
+        {
             throw new Exception("Can't open file $file");
         }
         $this->_file_handle = $fh;
 
         $signature = fread($fh, 8);
-        if ("\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1" != $signature) {
+        if ("\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1" != $signature)
+        {
             throw new Exception("File doesn't seem to be an OLE container.");
         }
         fseek($fh, 28);
-        if (fread($fh, 2) != "\xFE\xFF") {
+        if (fread($fh, 2) != "\xFE\xFF")
+        {
             // This shouldn't be a problem in practice
             throw new Exception("Only Little-Endian encoding is supported.");
         }
@@ -163,15 +167,18 @@ class OLE
         // Remaining 4 * 109 bytes of current block is beginning of Master
         // Block Allocation Table
         $mbatBlocks = array();
-        for ($i = 0; $i < 109; $i++) {
+        for ($i = 0; $i < 109; $i++)
+        {
             $mbatBlocks[] = $this->_readInt4($fh);
         }
 
         // Read rest of Master Block Allocation Table (if any is left)
         $pos = $this->_getBlockOffset($mbatFirstBlockId);
-        for ($i = 0; $i < $mbbatBlockCount; $i++) {
+        for ($i = 0; $i < $mbbatBlockCount; $i++)
+        {
             fseek($fh, $pos);
-            for ($j = 0; $j < $this->bigBlockSize / 4 - 1; $j++) {
+            for ($j = 0; $j < $this->bigBlockSize / 4 - 1; $j++)
+            {
                 $mbatBlocks[] = $this->_readInt4($fh);
             }
             // Last block id in each block points to next block
@@ -180,10 +187,12 @@ class OLE
 
         // Read Big Block Allocation Table according to chain specified by
         // $mbatBlocks
-        for ($i = 0; $i < $bbatBlockCount; $i++) {
+        for ($i = 0; $i < $bbatBlockCount; $i++)
+        {
             $pos = $this->_getBlockOffset($mbatBlocks[$i]);
             fseek($fh, $pos);
-            for ($j = 0 ; $j < $this->bigBlockSize / 4; $j++) {
+            for ($j = 0 ; $j < $this->bigBlockSize / 4; $j++)
+            {
                 $this->bbat[] = $this->_readInt4($fh);
             }
         }
@@ -192,7 +201,8 @@ class OLE
         $this->sbat = array();
         $shortBlockCount = $sbbatBlockCount * $this->bigBlockSize / 4;
         $sbatFh = $this->getStream($sbatFirstBlockId);
-        for ($blockId = 0; $blockId < $shortBlockCount; $blockId++) {
+        for ($blockId = 0; $blockId < $shortBlockCount; $blockId++)
+        {
             $this->sbat[$blockId] = $this->_readInt4($sbatFh);
         }
         fclose($sbatFh);
@@ -221,7 +231,8 @@ class OLE
     function getStream($blockIdOrPps)
     {
         static $isRegistered = false;
-        if (!$isRegistered) {
+        if (!$isRegistered)
+        {
             stream_wrapper_register('ole-chainedblockstream',
                                     'OLE_ChainedBlockStream');
             $isRegistered = true;
@@ -234,10 +245,13 @@ class OLE
         $instanceId = end(array_keys($GLOBALS['_OLE_INSTANCES']));
 
         $path = 'ole-chainedblockstream://oleInstanceId=' . $instanceId;
-        if (is_a($blockIdOrPps, 'OLE_PPS')) {
+        if (is_a($blockIdOrPps, 'OLE_PPS'))
+        {
             $path .= '&blockId=' . $blockIdOrPps->_StartBlock;
             $path .= '&size=' . $blockIdOrPps->Size;
-        } else {
+        }
+        else
+        {
             $path .= '&blockId=' . $blockIdOrPps;
         }
         return fopen($path, 'r');
@@ -290,7 +304,8 @@ class OLE
     function _readPpsWks($blockId)
     {
         $fh = $this->getStream($blockId);
-        for ($pos = 0; ; $pos += 128) {
+        for ($pos = 0; ; $pos += 128)
+        {
             fseek($fh, $pos, SEEK_SET);
             $nameUtf16 = fread($fh, 64);
             $nameLength = $this->_readInt2($fh);
@@ -298,7 +313,8 @@ class OLE
             // Simple conversion from UTF-16LE to ISO-8859-1
             $name = str_replace("\x00", "", $nameUtf16);
             $type = $this->_readInt1($fh);
-            switch ($type) {
+            switch ($type)
+            {
             case OLE_PPS_TYPE_ROOT:
                 $pps = new OLE_PPS_Root(null, null, array());
                 $this->root = $pps;
@@ -311,7 +327,7 @@ class OLE
                 $pps = new OLE_PPS_File($name);
                 break;
             default:
-                continue 2;
+                break;
             }
             fseek($fh, 1, SEEK_CUR);
             $pps->Type    = $type;
@@ -329,7 +345,8 @@ class OLE
 
             // check if the PPS tree (starting from root) is complete
             if (isset($this->root) &&
-                $this->_ppsTreeComplete($this->root->No)) {
+                $this->_ppsTreeComplete($this->root->No))
+            {
 
                 break;
             }
@@ -337,13 +354,17 @@ class OLE
         fclose($fh);
 
         // Initialize $pps->children on directories
-        foreach ($this->_list as $pps) {
-            if ($pps->Type == OLE_PPS_TYPE_DIR || $pps->Type == OLE_PPS_TYPE_ROOT) {
+        foreach ($this->_list as $pps)
+        {
+            if ($pps->Type == OLE_PPS_TYPE_DIR || $pps->Type == OLE_PPS_TYPE_ROOT)
+            {
                 $nos = array($pps->DirPps);
                 $pps->children = array();
-                while ($nos) {
+                while ($nos)
+                {
                     $no = array_pop($nos);
-                    if ($no != -1) {
+                    if ($no != -1)
+                    {
                         $childPps = $this->_list[$no];
                         $nos[] = $childPps->PrevPps;
                         $nos[] = $childPps->NextPps;
@@ -385,7 +406,8 @@ class OLE
     */
     function isFile($index)
     {
-        if (isset($this->_list[$index])) {
+        if (isset($this->_list[$index]))
+        {
             return ($this->_list[$index]->Type == OLE_PPS_TYPE_FILE);
         }
         return false;
@@ -400,7 +422,8 @@ class OLE
     */
     function isRoot($index)
     {
-        if (isset($this->_list[$index])) {
+        if (isset($this->_list[$index]))
+        {
             return ($this->_list[$index]->Type == OLE_PPS_TYPE_ROOT);
         }
         return false;
@@ -451,7 +474,8 @@ class OLE
     */
     function getDataLength($index)
     {
-        if (isset($this->_list[$index])) {
+        if (isset($this->_list[$index]))
+        {
             return $this->_list[$index]->Size;
         }
         return 0;
@@ -468,7 +492,8 @@ class OLE
     public static function Asc2Ucs($ascii)
     {
         $rawname = '';
-        for ($i = 0; $i < strlen($ascii); $i++) {
+        for ($i = 0; $i < strlen($ascii); $i++)
+        {
             $rawname .= $ascii[$i] . "\x00";
         }
         return $rawname;
@@ -485,7 +510,8 @@ class OLE
     */
     public static function LocalDate2OLE($date = null)
     {
-        if (!isset($date)) {
+        if (!isset($date))
+        {
             return "\x00\x00\x00\x00\x00\x00\x00\x00";
         }
 
@@ -508,13 +534,15 @@ class OLE
         // Make HEX string
         $res = '';
 
-        for ($i = 0; $i < 4; $i++) {
-            $hex = $low_part % 0x100;
+        for ($i = 0; $i < 4; $i++)
+        {
+            $hex = (int) $low_part % 0x100;
             $res .= pack('c', $hex);
             $low_part /= 0x100;
         }
-        for ($i = 0; $i < 4; $i++) {
-            $hex = $high_part % 0x100;
+        for ($i = 0; $i < 4; $i++)
+        {
+            $hex = (int) $high_part % 0x100;
             $res .= pack('c', $hex);
             $high_part /= 0x100;
         }
@@ -528,23 +556,26 @@ class OLE
     * @access public
     * @static
     */
-    static function OLE2LocalDate($string)
+    public static function OLE2LocalDate($string)
     {
-        if (strlen($string) != 8) {
+        if (strlen($string) != 8)
+        {
             throw new Exception("Expecting 8 byte string");
         }
 
         // factor used for separating numbers into 4 bytes parts
         $factor = pow(2,32);
         $high_part = 0;
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 4; $i++)
+        {
             list(, $high_part) = unpack('C', $string[(7 - $i)]);
             if ($i < 3) {
                 $high_part *= 0x100;
             }
         }
         $low_part = 0;
-        for ($i = 4; $i < 8; $i++) {
+        for ($i = 4; $i < 8; $i++)
+        {
             list(, $low_part) = unpack('C', $string[(7 - $i)]);
             if ($i < 7) {
                 $low_part *= 0x100;
@@ -562,4 +593,4 @@ class OLE
         return floor($big_date);
     }
 }
-?>
+

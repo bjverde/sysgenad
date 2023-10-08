@@ -39,7 +39,7 @@
 * @category FileFormats
 * @package  Spreadsheet_Excel_Writer
 */
-
+#[\AllowDynamicProperties]
 class Spreadsheet_Excel_Writer_Format
 {
     /**
@@ -296,7 +296,8 @@ class Spreadsheet_Excel_Writer_Format
         // Set properties passed to Spreadsheet_Excel_Writer_Workbook::addFormat()
         foreach ($properties as $property => $value)
         {
-            if (method_exists($this, 'set'.ucwords($property))) {
+            if (method_exists($this, 'set'.ucwords($property)))
+            {
                 $method_name = 'set'.ucwords($property);
                 $this->$method_name($value);
             }
@@ -313,9 +314,12 @@ class Spreadsheet_Excel_Writer_Format
     public function getXf($style)
     {
         // Set the type of the XF record and some of the attributes.
-        if ($style == 'style') {
+        if ($style == 'style') 
+        {
             $style = 0xFFF5;
-        } else {
+        }
+        else
+        {
             $style   = $this->_locked;
             $style  |= $this->_hidden << 1;
         }
@@ -334,33 +338,41 @@ class Spreadsheet_Excel_Writer_Format
         $atr_prot    = $this->_locked | $this->_hidden;
 
         // Zero the default border colour if the border has not been set.
-        if ($this->_bottom == 0) {
+        if ($this->_bottom == 0)
+        {
             $this->_bottom_color = 0;
         }
-        if ($this->_top  == 0) {
+        if ($this->_top  == 0)
+        {
             $this->_top_color = 0;
         }
-        if ($this->_right == 0) {
+        if ($this->_right == 0)
+        {
             $this->_right_color = 0;
         }
-        if ($this->_left == 0) {
+        if ($this->_left == 0)
+        {
             $this->_left_color = 0;
         }
-        if ($this->_diag == 0) {
+        if ($this->_diag == 0)
+        {
             $this->_diag_color = 0;
         }
 
         $record         = 0x00E0;              // Record identifier
-        if ($this->_BIFF_version == 0x0500) {
+        if ($this->_BIFF_version == 0x0500)
+        {
             $length         = 0x0010;              // Number of bytes to follow
         }
-        if ($this->_BIFF_version == 0x0600) {
+        if ($this->_BIFF_version == 0x0600)
+        {
             $length         = 0x0014;
         }
 
         $ifnt           = $this->font_index;   // Index to FONT record
         $ifmt           = $this->_num_format;  // Index to FORMAT record
-        if ($this->_BIFF_version == 0x0500) {
+        if ($this->_BIFF_version == 0x0500)
+        {
             $align          = $this->_text_h_align;       // Alignment
             $align         |= $this->_text_wrap     << 3;
             $align         |= $this->_text_v_align  << 4;
@@ -392,7 +404,9 @@ class Spreadsheet_Excel_Writer_Format
             $data        = pack("vvvvvvvv", $ifnt, $ifmt, $style, $align,
                                             $icv, $fill,
                                             $border1, $border2);
-        } elseif ($this->_BIFF_version == 0x0600) {
+        }
+        elseif ($this->_BIFF_version == 0x0600)
+        {
             $align          = $this->_text_h_align;       // Alignment
             $align         |= $this->_text_wrap     << 3;
             $align         |= $this->_text_v_align  << 4;
@@ -455,32 +469,42 @@ class Spreadsheet_Excel_Writer_Format
 
         $cch        = strlen($this->_font_name); // Length of font name
         $record     = 0x31;                      // Record identifier
-        if ($this->_BIFF_version == 0x0500) {
+        if ($this->_BIFF_version == 0x0500)
+        {
             $length     = 0x0F + $cch;            // Record length
-        } elseif ($this->_BIFF_version == 0x0600) {
+        }
+        elseif ($this->_BIFF_version == 0x0600)
+        {
             $length     = 0x10 + $cch;
         }
         $reserved   = 0x00;                // Reserved
         $grbit      = 0x00;                // Font attributes
-        if ($this->_italic) {
+        if ($this->_italic)
+        {
             $grbit     |= 0x02;
         }
-        if ($this->_font_strikeout) {
+        if ($this->_font_strikeout)
+        {
             $grbit     |= 0x08;
         }
-        if ($this->_font_outline) {
+        if ($this->_font_outline)
+        {
             $grbit     |= 0x10;
         }
-        if ($this->_font_shadow) {
+        if ($this->_font_shadow)
+        {
             $grbit     |= 0x20;
         }
 
         $header  = pack("vv",         $record, $length);
-        if ($this->_BIFF_version == 0x0500) {
+        if ($this->_BIFF_version == 0x0500)
+        {
             $data    = pack("vvvvvCCCCC", $dyHeight, $grbit, $icv, $bls,
                                           $sss, $uls, $bFamily,
                                           $bCharSet, $reserved, $cch);
-        } elseif ($this->_BIFF_version == 0x0600) {
+        }
+        elseif ($this->_BIFF_version == 0x0600)
+        {
             $data    = pack("vvvvvCCCCCC", $dyHeight, $grbit, $icv, $bls,
                                            $sss, $uls, $bFamily,
                                            $bCharSet, $reserved, $cch, $encoding);
@@ -552,17 +576,20 @@ class Spreadsheet_Excel_Writer_Format
                        );
 
         // Return the default color, 0x7FFF, if undef,
-        if ($name_color == '') {
+        if ($name_color == '')
+        {
             return(0x7FFF);
         }
 
         // or the color string converted to an integer,
-        if (isset($colors[$name_color])) {
+        if (isset($colors[$name_color]))
+        {
             return($colors[$name_color]);
         }
 
         // or the default color if string is unrecognised,
-        if (preg_match("/\D/",$name_color)) {
+        if (preg_match("/\D/",$name_color))
+        {
             return(0x7FFF);
         }
 
@@ -573,7 +600,8 @@ class Spreadsheet_Excel_Writer_Format
         }
 
         // or the default color if arg is outside range,
-        if ($name_color > 63) {
+        if ($name_color > 63)
+        {
             return(0x7FFF);
         }
 
@@ -589,52 +617,67 @@ class Spreadsheet_Excel_Writer_Format
     */
     public function setAlign($location)
     {
-        if (preg_match("/\d/",$location)) {
+        if (preg_match("/\d/",$location))
+        {
             return;                      // Ignore numbers
         }
 
         $location = strtolower($location);
 
-        if ($location == 'left') {
+        if ($location == 'left')
+        {
             $this->_text_h_align = 1;
         }
-        if ($location == 'centre') {
+        if ($location == 'centre')
+        {
             $this->_text_h_align = 2;
         }
-        if ($location == 'center') {
+        if ($location == 'center')
+        {
             $this->_text_h_align = 2;
         }
-        if ($location == 'right') {
+        if ($location == 'right')
+        {
             $this->_text_h_align = 3;
         }
-        if ($location == 'fill') {
+        if ($location == 'fill')
+        {
             $this->_text_h_align = 4;
         }
-        if ($location == 'justify') {
+        if ($location == 'justify')
+        {
             $this->_text_h_align = 5;
         }
-        if ($location == 'merge') {
+        if ($location == 'merge')
+        {
             $this->_text_h_align = 6;
         }
-        if ($location == 'equal_space') { // For T.K.
+        if ($location == 'equal_space')
+        { // For T.K.
             $this->_text_h_align = 7;
         }
-        if ($location == 'top') {
+        if ($location == 'top')
+        {
             $this->_text_v_align = 0;
         }
-        if ($location == 'vcentre') {
+        if ($location == 'vcentre')
+        {
             $this->_text_v_align = 1;
         }
-        if ($location == 'vcenter') {
+        if ($location == 'vcenter')
+        {
             $this->_text_v_align = 1;
         }
-        if ($location == 'bottom') {
+        if ($location == 'bottom')
+        {
             $this->_text_v_align = 2;
         }
-        if ($location == 'vjustify') {
+        if ($location == 'vjustify')
+        {
             $this->_text_v_align = 3;
         }
-        if ($location == 'vequal_space') { // For T.K.
+        if ($location == 'vequal_space')
+        { // For T.K.
             $this->_text_v_align = 4;
         }
     }
@@ -647,34 +690,43 @@ class Spreadsheet_Excel_Writer_Format
     */
     public function setHAlign($location)
     {
-        if (preg_match("/\d/",$location)) {
+        if (preg_match("/\d/",$location))
+        {
             return;                      // Ignore numbers
         }
-
+    
         $location = strtolower($location);
-
-        if ($location == 'left') {
+    
+        if ($location == 'left')
+        {
             $this->_text_h_align = 1;
         }
-        if ($location == 'centre') {
+        if ($location == 'centre')
+        {
             $this->_text_h_align = 2;
         }
-        if ($location == 'center') {
+        if ($location == 'center')
+        {
             $this->_text_h_align = 2;
         }
-        if ($location == 'right') {
+        if ($location == 'right')
+        {
             $this->_text_h_align = 3;
         }
-        if ($location == 'fill') {
+        if ($location == 'fill')
+        {
             $this->_text_h_align = 4;
         }
-        if ($location == 'justify') {
+        if ($location == 'justify')
+        {
             $this->_text_h_align = 5;
         }
-        if ($location == 'merge') {
+        if ($location == 'merge')
+        {
             $this->_text_h_align = 6;
         }
-        if ($location == 'equal_space') { // For T.K.
+        if ($location == 'equal_space')
+        { // For T.K.
             $this->_text_h_align = 7;
         }
     }
@@ -687,28 +739,35 @@ class Spreadsheet_Excel_Writer_Format
     */
     public function setVAlign($location)
     {
-        if (preg_match("/\d/",$location)) {
+        if (preg_match("/\d/",$location))
+        {
             return;                      // Ignore numbers
         }
-
+    
         $location = strtolower($location);
-
-        if ($location == 'top') {
+ 
+        if ($location == 'top')
+        {
             $this->_text_v_align = 0;
         }
-        if ($location == 'vcentre') {
+        if ($location == 'vcentre')
+        {
             $this->_text_v_align = 1;
         }
-        if ($location == 'vcenter') {
+        if ($location == 'vcenter')
+        {
             $this->_text_v_align = 1;
         }
-        if ($location == 'bottom') {
+        if ($location == 'bottom')
+        {
             $this->_text_v_align = 2;
         }
-        if ($location == 'vjustify') {
+        if ($location == 'vjustify')
+        {
             $this->_text_v_align = 3;
         }
-        if ($location == 'vequal_space') { // For T.K.
+        if ($location == 'vequal_space')
+        { // For T.K.
             $this->_text_v_align = 4;
         }
     }
@@ -735,16 +794,20 @@ class Spreadsheet_Excel_Writer_Format
     */
     public function setBold($weight = 1)
     {
-        if ($weight == 1) {
+        if ($weight == 1)
+        {
             $weight = 0x2BC;  // Bold text
         }
-        if ($weight == 0) {
+        if ($weight == 0)
+        {
             $weight = 0x190;  // Normal text
         }
-        if ($weight <  0x064) {
+        if ($weight <  0x064)
+        {
             $weight = 0x190;  // Lower bound
         }
-        if ($weight >  0x3E8) {
+        if ($weight >  0x3E8)
+        {
             $weight = 0x190;  // Upper bound
         }
         $this->_bold = $weight;
@@ -995,26 +1058,32 @@ class Spreadsheet_Excel_Writer_Format
                 $this->_rotation = 0;
                 break;
             case 90:
-                if ($this->_BIFF_version == 0x0500) {
+                if ($this->_BIFF_version == 0x0500)
+                {
                     $this->_rotation = 3;
                 }
-                elseif ($this->_BIFF_version == 0x0600) {
+                elseif ($this->_BIFF_version == 0x0600)
+                {
                     $this->_rotation = 180;
                 }
                 break;
             case 270:
-                if ($this->_BIFF_version == 0x0500) {
+                if ($this->_BIFF_version == 0x0500)
+                {
                     $this->_rotation = 2;
                 }
-                elseif ($this->_BIFF_version == 0x0600) {
+                elseif ($this->_BIFF_version == 0x0600)
+                {
                     $this->_rotation = 90;
                 }
                 break;
             case -1:
-                if ($this->_BIFF_version == 0x0500) {
+                if ($this->_BIFF_version == 0x0500)
+                {
                     $this->_rotation = 1;
                 }
-                elseif ($this->_BIFF_version == 0x0600) {
+                elseif ($this->_BIFF_version == 0x0600)
+                {
                     $this->_rotation = 255;
                 }
                 break;

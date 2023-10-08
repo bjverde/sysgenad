@@ -27,6 +27,7 @@
 * @category Structures
 * @package  OLE
 */
+#[\AllowDynamicProperties]
 class OLE_PPS
 {
     /**
@@ -134,9 +135,12 @@ class OLE_PPS
         $this->Time2nd = $time_2nd;
         $this->_data      = $data;
         $this->children   = $children;
-        if ($data != '') {
+        if ($data != '')
+        {
             $this->Size = strlen($data);
-        } else {
+        }
+        else
+        {
             $this->Size = 0;
         }
     }
@@ -149,14 +153,18 @@ class OLE_PPS
     */
     function _DataLen()
     {
-        if (!isset($this->_data)) {
+        if (!isset($this->_data))
+        {
             return 0;
         }
-        if (isset($this->_PPS_FILE)) {
+        if (isset($this->_PPS_FILE))
+        {
             fseek($this->_PPS_FILE, 0);
             $stats = fstat($this->_PPS_FILE);
             return $stats[7];
-        } else {
+        }
+        else
+        {
             return strlen($this->_data);
         }
     }
@@ -170,7 +178,8 @@ class OLE_PPS
     function _getPpsWk()
     {
         $ret = $this->Name;
-        for ($i = 0; $i < (64 - strlen($this->Name)); $i++) {
+        for ($i = 0; $i < (64 - strlen($this->Name)); $i++)
+        {
             $ret .= "\x00";
         }
         $ret .= pack("v", strlen($this->Name) + 2)  // 66

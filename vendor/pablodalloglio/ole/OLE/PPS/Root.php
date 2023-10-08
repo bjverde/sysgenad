@@ -27,6 +27,7 @@
 * @category Structures
 * @package  OLE
 */
+#[\AllowDynamicProperties]
 class OLE_PPS_Root extends OLE_PPS
 {
     /**
@@ -67,7 +68,8 @@ class OLE_PPS_Root extends OLE_PPS
     */
     function setTempDir($dir)
     {
-        if (is_dir($dir)) {
+        if (is_dir($dir))
+        {
             $this->_tmp_dir = $dir;
             return true;
         }
@@ -92,15 +94,20 @@ class OLE_PPS_Root extends OLE_PPS
                       ((isset($this->_SMALL_BLOCK_SIZE))?  $this->_adjust2($this->_SMALL_BLOCK_SIZE): 6));
  
         // Open temp file if we are sending output to stdout
-        if (($filename == '-') || ($filename == '')) {
+        if (($filename == '-') || ($filename == ''))
+        {
             $this->_tmp_filename = tempnam($this->_tmp_dir, "OLE_PPS_Root");
             $this->_FILEH_ = @fopen($this->_tmp_filename,"w+b");
-            if ($this->_FILEH_ == false) {
+            if ($this->_FILEH_ == false)
+            {
                 throw new Exception("Can't create temporary file.");
             }
-        } else {
+        }
+        else
+        {
             $this->_FILEH_ = @fopen($filename, "wb");
-            if ($this->_FILEH_ == false) {
+            if ($this->_FILEH_ == false)
+            {
                 throw new Exception("Can't open $filename. It may be in use or protected.");
             }
         }
@@ -123,13 +130,16 @@ class OLE_PPS_Root extends OLE_PPS
         // Write Big Block Depot and BDList and Adding Header informations
         $this->_saveBbd($iSBDcnt, $iBBcnt, $iPPScnt);
         // Close File, send it to stdout if necessary
-        if (($filename == '-') || ($filename == '')) {
+        if (($filename == '-') || ($filename == ''))
+        {
             fseek($this->_FILEH_, 0);
             fpassthru($this->_FILEH_);
             @fclose($this->_FILEH_);
             // Delete the temporary file.
             @unlink($this->_tmp_filename);
-        } else {
+        }
+        else
+        {
             @fclose($this->_FILEH_);
         }
 
@@ -149,13 +159,18 @@ class OLE_PPS_Root extends OLE_PPS
         list($iSBDcnt, $iBBcnt, $iPPScnt) = array(0,0,0);
         $iSmallLen = 0;
         $iSBcnt = 0;
-        for ($i = 0; $i < count($raList); $i++) {
-            if ($raList[$i]->Type == OLE_PPS_TYPE_FILE) {
+        for ($i = 0; $i < count($raList); $i++)
+        {
+            if ($raList[$i]->Type == OLE_PPS_TYPE_FILE)
+            {
                 $raList[$i]->Size = $raList[$i]->_DataLen();
-                if ($raList[$i]->Size < OLE_DATA_SIZE_SMALL) {
+                if ($raList[$i]->Size < OLE_DATA_SIZE_SMALL)
+                {
                     $iSBcnt += floor($raList[$i]->Size / $this->_SMALL_BLOCK_SIZE)
                                   + (($raList[$i]->Size % $this->_SMALL_BLOCK_SIZE)? 1: 0);
-                } else {
+                }
+                else
+                {
                     $iBBcnt += (floor($raList[$i]->Size / $this->_BIG_BLOCK_SIZE) +
                         (($raList[$i]->Size % $this->_BIG_BLOCK_SIZE)? 1: 0));
                 }
@@ -210,13 +225,16 @@ class OLE_PPS_Root extends OLE_PPS
         $iBdCnt = floor(($iAll + $iBdCntW) / $iBlCnt) + ((($iAllW+$iBdCntW) % $iBlCnt)? 1: 0);
   
         // Calculate BD count
-        if ($iBdCnt > $i1stBdL) {
-            while (1) {
+        if ($iBdCnt > $i1stBdL)
+        {
+            while (1)
+            {
                 $iBdExL++;
                 $iAllW++;
                 $iBdCntW = floor($iAllW / $iBlCnt) + (($iAllW % $iBlCnt)? 1: 0);
                 $iBdCnt = floor(($iAllW + $iBdCntW) / $iBlCnt) + ((($iAllW+$iBdCntW) % $iBlCnt)? 1: 0);
-                if ($iBdCnt <= ($iBdExL*$iBlCnt+ $i1stBdL)) {
+                if ($iBdCnt <= ($iBdExL*$iBlCnt+ $i1stBdL))
+                {
                     break;
                 }
             }
@@ -245,21 +263,27 @@ class OLE_PPS_Root extends OLE_PPS
                   . pack("V", 1)
           );
         // Extra BDList Start, Count
-        if ($iBdCnt < $i1stBdL) {
+        if ($iBdCnt < $i1stBdL)
+        {
             fwrite($FILE,
                       pack("V", -2).      // Extra BDList Start
                       pack("V", 0)        // Extra BDList Count
                   );
-        } else {
+        }
+        else
+        {
             fwrite($FILE, pack("V", $iAll+$iBdCnt) . pack("V", $iBdExL));
         }
 
         // BDList
-        for ($i = 0; $i < $i1stBdL && $i < $iBdCnt; $i++) {
+        for ($i = 0; $i < $i1stBdL && $i < $iBdCnt; $i++)
+        {
             fwrite($FILE, pack("V", $iAll+$i));
         }
-        if ($i < $i1stBdL) {
-            for ($j = 0; $j < ($i1stBdL-$i); $j++) {
+        if ($i < $i1stBdL)
+        {
+            for ($j = 0; $j < ($i1stBdL-$i); $j++)
+            {
                 fwrite($FILE, (pack("V", -1)));
             }
         }
@@ -277,26 +301,34 @@ class OLE_PPS_Root extends OLE_PPS
         $FILE = $this->_FILEH_;
    
         // cycle through PPS's
-        for ($i = 0; $i < count($raList); $i++) {
-            if ($raList[$i]->Type != OLE_PPS_TYPE_DIR) {
+        for ($i = 0; $i < count($raList); $i++)
+        {
+            if ($raList[$i]->Type != OLE_PPS_TYPE_DIR)
+            {
                 $raList[$i]->Size = $raList[$i]->_DataLen();
                 if (($raList[$i]->Size >= OLE_DATA_SIZE_SMALL) ||
                     (($raList[$i]->Type == OLE_PPS_TYPE_ROOT) && isset($raList[$i]->_data)))
                 {
                     // Write Data
-                    if (isset($raList[$i]->_PPS_FILE)) {
+                    if (isset($raList[$i]->_PPS_FILE))
+                    {
                         $iLen = 0;
                         fseek($raList[$i]->_PPS_FILE, 0); // To The Top
-                        while($sBuff = fread($raList[$i]->_PPS_FILE, 4096)) {
+                        while($sBuff = fread($raList[$i]->_PPS_FILE, 4096))
+                        {
                             $iLen += strlen($sBuff);
                             fwrite($FILE, $sBuff);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         fwrite($FILE, $raList[$i]->_data);
                     }
            
-                    if ($raList[$i]->Size % $this->_BIG_BLOCK_SIZE) {
-                        for ($j = 0; $j < ($this->_BIG_BLOCK_SIZE - ($raList[$i]->Size % $this->_BIG_BLOCK_SIZE)); $j++) {
+                    if ($raList[$i]->Size % $this->_BIG_BLOCK_SIZE)
+                    {
+                        for ($j = 0; $j < ($this->_BIG_BLOCK_SIZE - ($raList[$i]->Size % $this->_BIG_BLOCK_SIZE)); $j++)
+                        {
                             fwrite($FILE, "\x00");
                         }
                     }
@@ -307,7 +339,8 @@ class OLE_PPS_Root extends OLE_PPS
                                 (($raList[$i]->Size % $this->_BIG_BLOCK_SIZE)? 1: 0));
                 }
                 // Close file for each PPS, and unlink it
-                if (isset($raList[$i]->_PPS_FILE)) {
+                if (isset($raList[$i]->_PPS_FILE))
+                {
                     @fclose($raList[$i]->_PPS_FILE);
                     $raList[$i]->_PPS_FILE = null;
                     @unlink($raList[$i]->_tmp_filename);
@@ -328,32 +361,43 @@ class OLE_PPS_Root extends OLE_PPS
         $FILE = $this->_FILEH_;
         $iSmBlk = 0;
    
-        for ($i = 0; $i < count($raList); $i++) {
+        for ($i = 0; $i < count($raList); $i++)
+        {
             // Make SBD, small data string
-            if ($raList[$i]->Type == OLE_PPS_TYPE_FILE) {
-                if ($raList[$i]->Size <= 0) {
+            if ($raList[$i]->Type == OLE_PPS_TYPE_FILE)
+            {
+                if ($raList[$i]->Size <= 0)
+                {
                     continue;
                 }
-                if ($raList[$i]->Size < OLE_DATA_SIZE_SMALL) {
+                if ($raList[$i]->Size < OLE_DATA_SIZE_SMALL)
+                {
                     $iSmbCnt = floor($raList[$i]->Size / $this->_SMALL_BLOCK_SIZE)
                                   + (($raList[$i]->Size % $this->_SMALL_BLOCK_SIZE)? 1: 0);
                     // Add to SBD
-                    for ($j = 0; $j < ($iSmbCnt-1); $j++) {
+                    for ($j = 0; $j < ($iSmbCnt-1); $j++)
+                    {
                         fwrite($FILE, pack("V", $j+$iSmBlk+1));
                     }
                     fwrite($FILE, pack("V", -2));
                    
                     // Add to Data String(this will be written for RootEntry)
-                    if ($raList[$i]->_PPS_FILE) {
+                    if ($raList[$i]->_PPS_FILE)
+                    {
                         fseek($raList[$i]->_PPS_FILE, 0); // To The Top
-                        while ($sBuff = fread($raList[$i]->_PPS_FILE, 4096)) {
+                        while ($sBuff = fread($raList[$i]->_PPS_FILE, 4096))
+                        {
                             $sRes .= $sBuff;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         $sRes .= $raList[$i]->_data;
                     }
-                    if ($raList[$i]->Size % $this->_SMALL_BLOCK_SIZE) {
-                        for ($j = 0; $j < ($this->_SMALL_BLOCK_SIZE - ($raList[$i]->Size % $this->_SMALL_BLOCK_SIZE)); $j++) {
+                    if ($raList[$i]->Size % $this->_SMALL_BLOCK_SIZE)
+                    {
+                        for ($j = 0; $j < ($this->_SMALL_BLOCK_SIZE - ($raList[$i]->Size % $this->_SMALL_BLOCK_SIZE)); $j++)
+                        {
                             $sRes .= "\x00";
                         }
                     }
@@ -364,8 +408,10 @@ class OLE_PPS_Root extends OLE_PPS
             }
         }
         $iSbCnt = floor($this->_BIG_BLOCK_SIZE / OLE_LONG_INT_SIZE);
-        if ($iSmBlk % $iSbCnt) {
-            for ($i = 0; $i < ($iSbCnt - ($iSmBlk % $iSbCnt)); $i++) {
+        if ($iSmBlk % $iSbCnt)
+        {
+            for ($i = 0; $i < ($iSbCnt - ($iSmBlk % $iSbCnt)); $i++)
+            {
                 fwrite($FILE, pack("V", -1));
             }
         }
@@ -381,14 +427,17 @@ class OLE_PPS_Root extends OLE_PPS
     function _savePps(&$raList) 
     {
         // Save each PPS WK
-        for ($i = 0; $i < count($raList); $i++) {
+        for ($i = 0; $i < count($raList); $i++)
+        {
             fwrite($this->_FILEH_, $raList[$i]->_getPpsWk());
         }
         // Adjust for Block
         $iCnt = count($raList);
         $iBCnt = $this->_BIG_BLOCK_SIZE / OLE_PPS_SIZE;
-        if ($iCnt % $iBCnt) {
-            for ($i = 0; $i < (($iBCnt - ($iCnt % $iBCnt)) * OLE_PPS_SIZE); $i++) {
+        if ($iCnt % $iBCnt)
+        {
+            for ($i = 0; $i < (($iBCnt - ($iCnt % $iBCnt)) * OLE_PPS_SIZE); $i++)
+            {
                 fwrite($this->_FILEH_, "\x00");
             }
         }
@@ -415,13 +464,16 @@ class OLE_PPS_Root extends OLE_PPS
         $iBdCntW = floor($iAllW / $iBbCnt) + (($iAllW % $iBbCnt)? 1: 0);
         $iBdCnt = floor(($iAll + $iBdCntW) / $iBbCnt) + ((($iAllW+$iBdCntW) % $iBbCnt)? 1: 0);
         // Calculate BD count
-        if ($iBdCnt >$i1stBdL) {
-            while (1) {
+        if ($iBdCnt >$i1stBdL)
+        {
+            while (1)
+            {
                 $iBdExL++;
                 $iAllW++;
                 $iBdCntW = floor($iAllW / $iBbCnt) + (($iAllW % $iBbCnt)? 1: 0);
                 $iBdCnt = floor(($iAllW + $iBdCntW) / $iBbCnt) + ((($iAllW+$iBdCntW) % $iBbCnt)? 1: 0);
-                if ($iBdCnt <= ($iBdExL*$iBbCnt+ $i1stBdL)) {
+                if ($iBdCnt <= ($iBdExL*$iBbCnt+ $i1stBdL))
+                {
                     break;
                 }
             }
@@ -429,51 +481,64 @@ class OLE_PPS_Root extends OLE_PPS
       
         // Making BD
         // Set for SBD
-        if ($iSbdSize > 0) {
-            for ($i = 0; $i < ($iSbdSize - 1); $i++) {
+        if ($iSbdSize > 0)
+        {
+            for ($i = 0; $i < ($iSbdSize - 1); $i++)
+            {
                 fwrite($FILE, pack("V", $i+1));
             }
             fwrite($FILE, pack("V", -2));
         }
         // Set for B
-        for ($i = 0; $i < ($iBsize - 1); $i++) {
+        for ($i = 0; $i < ($iBsize - 1); $i++)
+        {
             fwrite($FILE, pack("V", $i+$iSbdSize+1));
         }
         fwrite($FILE, pack("V", -2));
       
         // Set for PPS
-        for ($i = 0; $i < ($iPpsCnt - 1); $i++) {
+        for ($i = 0; $i < ($iPpsCnt - 1); $i++)
+        {
             fwrite($FILE, pack("V", $i+$iSbdSize+$iBsize+1));
         }
         fwrite($FILE, pack("V", -2));
         // Set for BBD itself ( 0xFFFFFFFD : BBD)
-        for ($i = 0; $i < $iBdCnt; $i++) {
+        for ($i = 0; $i < $iBdCnt; $i++)
+        {
             fwrite($FILE, pack("V", 0xFFFFFFFD));
         }
         // Set for ExtraBDList
-        for ($i = 0; $i < $iBdExL; $i++) {
+        for ($i = 0; $i < $iBdExL; $i++)
+        {
             fwrite($FILE, pack("V", 0xFFFFFFFC));
         }
         // Adjust for Block
-        if (($iAllW + $iBdCnt) % $iBbCnt) {
-            for ($i = 0; $i < ($iBbCnt - (($iAllW + $iBdCnt) % $iBbCnt)); $i++) {
+        if (($iAllW + $iBdCnt) % $iBbCnt)
+        {
+            for ($i = 0; $i < ($iBbCnt - (($iAllW + $iBdCnt) % $iBbCnt)); $i++)
+            {
                 fwrite($FILE, pack("V", -1));
             }
         }
         // Extra BDList
-        if ($iBdCnt > $i1stBdL) {
+        if ($iBdCnt > $i1stBdL)
+        {
             $iN=0;
             $iNb=0;
-            for ($i = $i1stBdL;$i < $iBdCnt; $i++, $iN++) {
-                if ($iN >= ($iBbCnt - 1)) {
+            for ($i = $i1stBdL;$i < $iBdCnt; $i++, $iN++)
+            {
+                if ($iN >= ($iBbCnt - 1))
+                {
                     $iN = 0;
                     $iNb++;
                     fwrite($FILE, pack("V", $iAll+$iBdCnt+$iNb));
                 }
                 fwrite($FILE, pack("V", $iBsize+$iSbdSize+$iPpsCnt+$i));
             }
-            if (($iBdCnt-$i1stBdL) % ($iBbCnt-1)) {
-                for ($i = 0; $i < (($iBbCnt - 1) - (($iBdCnt - $i1stBdL) % ($iBbCnt - 1))); $i++) {
+            if (($iBdCnt-$i1stBdL) % ($iBbCnt-1))
+            {
+                for ($i = 0; $i < (($iBbCnt - 1) - (($iBdCnt - $i1stBdL) % ($iBbCnt - 1))); $i++)
+                {
                     fwrite($FILE, pack("V", -1)); 
                 }
             }
@@ -481,4 +546,4 @@ class OLE_PPS_Root extends OLE_PPS
         }
     }
 }
-?>
+

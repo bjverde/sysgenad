@@ -48,7 +48,7 @@
 * @category FileFormats
 * @package  Spreadsheet_Excel_Writer
 */
-
+#[\AllowDynamicProperties]
 class Spreadsheet_Excel_Writer_BIFFwriter
 {
     /**
@@ -115,11 +115,16 @@ class Spreadsheet_Excel_Writer_BIFFwriter
         // Check if "pack" gives the required IEEE 64bit float
         $teststr = pack("d", 1.2345);
         $number  = pack("C8", 0x8D, 0x97, 0x6E, 0x12, 0x83, 0xC0, 0xF3, 0x3F);
-        if ($number == $teststr) {
+        if ($number == $teststr)
+        {
             $byte_order = 0;    // Little Endian
-        } elseif ($number == strrev($teststr)){
+        }
+        elseif ($number == strrev($teststr))
+        {
             $byte_order = 1;    // Big Endian
-        } else {
+        }
+        else
+        {
             // Give up. I'll fix this in a later version.
             throw new Exception("Required floating point format not supported on this platform.");
         }
@@ -134,7 +139,8 @@ class Spreadsheet_Excel_Writer_BIFFwriter
     */
     protected function _prepend($data)
     {
-        if (strlen($data) > $this->_limit) {
+        if (strlen($data) > $this->_limit)
+        {
             $data = $this->_addContinue($data);
         }
         $this->_data      = $data.$this->_data;
@@ -149,7 +155,8 @@ class Spreadsheet_Excel_Writer_BIFFwriter
     */
     protected function _append($data)
     {
-        if (strlen($data) > $this->_limit) {
+        if (strlen($data) > $this->_limit)
+        {
             $data = $this->_addContinue($data);
         }
         $this->_data      = $this->_data.$data;
@@ -170,12 +177,15 @@ class Spreadsheet_Excel_Writer_BIFFwriter
 
         // According to the SDK $build and $year should be set to zero.
         // However, this throws a warning in Excel 5. So, use magic numbers.
-        if ($this->_BIFF_version == 0x0500) {
+        if ($this->_BIFF_version == 0x0500)
+        {
             $length  = 0x0008;
             $unknown = '';
             $build   = 0x096C;
             $year    = 0x07C9;
-        } elseif ($this->_BIFF_version == 0x0600) {
+        }
+        elseif ($this->_BIFF_version == 0x0600)
+        {
             $length  = 0x0010;
             $unknown = pack("VV", 0x00000041, 0x00000006); //unknown last 8 bytes for BIFF8
             $build   = 0x0DBB;
@@ -226,7 +236,8 @@ class Spreadsheet_Excel_Writer_BIFFwriter
 
         // Retrieve chunks of 2080/8224 bytes +4 for the header.
         $data_length = strlen($data);
-        for ($i = $limit; $i <  ($data_length - $limit); $i += $limit) {
+        for ($i = $limit; $i <  ($data_length - $limit); $i += $limit)
+        {
             $tmp .= $header;
             $tmp .= substr($data, $i, $limit);
         }
@@ -248,7 +259,8 @@ class Spreadsheet_Excel_Writer_BIFFwriter
     */
     public function setTempDir($dir)
     {
-        if (is_dir($dir)) {
+        if (is_dir($dir))
+        {
             $this->_tmp_dir = $dir;
             return true;
         }

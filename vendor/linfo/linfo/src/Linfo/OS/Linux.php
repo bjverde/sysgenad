@@ -658,11 +658,13 @@ class Linux extends Unixcommon
         // Can't?
         if ($contents == false) {
             Errors::add('Linfo Core', '/proc/mounts does not exist');
+            return [];
         }
 
         // Parse
         if (@preg_match_all('/^(\S+) (\S+) (\S+) (.+) \d \d$/m', $contents, $match, PREG_SET_ORDER) === false) {
             Errors::add('Linfo Core', 'Error parsing /proc/mounts');
+            return [];
         }
 
         // Return these
@@ -955,8 +957,18 @@ class Linux extends Unixcommon
             if (!$type) {
                 $type_contents = strtoupper(Common::getContents($path.'/device/modalias'));
                 list($type_match) = explode(':', $type_contents, 2);
-                $uevent_contents = @parse_ini_file($path.'/uevent');
-                $device_uevent_contents = @parse_ini_file($path.'/device/uevent');
+		    
+		if(is_readable($path.'/uevent')){
+                    $uevent_contents = @parse_ini_file($path.'/uevent');
+                } else{
+                    $uevent_contents = false;
+                }
+
+                if(is_readable($path.'/device/uevent')){
+                    $device_uevent_contents = @parse_ini_file($path.'/device/uevent');
+                } else{
+                    $device_uevent_contents = false;
+                }
 
                 if ($uevent_contents != false && isset($uevent_contents['DEVTYPE'])) {
                   $type = ucfirst($uevent_contents['DEVTYPE']);
@@ -1211,7 +1223,9 @@ class Linux extends Unixcommon
             $status_contents = Common::getContents($process);
 
             // Try getting state
-            @preg_match('/^State:\s+(\w)/m', $status_contents, $state_match);
+	    if (!@preg_match('/^State:\s+(\w)/m', $status_contents, $state_match)) {
+                continue;
+            }
 
             // Well? Determine state
             switch ($state_match[1]) {
@@ -1231,7 +1245,9 @@ class Linux extends Unixcommon
             }
 
             // Try getting number of threads
-            @preg_match('/^Threads:\s+(\d+)/m', $status_contents, $threads_match);
+            if (!@preg_match('/^Threads:\s+(\d+)/m', $status_contents, $threads_match)){
+                continue;
+            }
 
             // Well?
             if ($threads_match) {
@@ -1571,7 +1587,7 @@ class Linux extends Unixcommon
         foreach ($procs as $proc) {
 
             // Does the process match a popular shell, such as bash, csh, etc?
-            if (preg_match('/(?:bash|csh|zsh|ksh)$/', Common::getContents($proc, ''))) {
+            if (Common::anyInString(Common::getContents($proc, ''), ['bash', 'csh', 'zsh', 'ksh'])) {
 
                 // Who owns it, anyway?
                 $owner = fileowner(dirname($proc));
