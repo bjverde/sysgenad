@@ -38,7 +38,7 @@ class Gen00 extends TPage
                 $frm->addHiddenField(TableInfo::TP_SYSTEM,TGeneratorHelper::TP_SYSTEM_FORM,true);
 
                 $listTheme = TGeneratorHelper::getListTheme();
-                $frm->addSelectField(TableInfo::TP_SYSTEM_THEME, 'Escolha o tema do sistema:', true, $listTheme,null,null,TGeneratorHelper::THEME_FORMDINVB);
+                $frm->addSelectField(TableInfo::TP_SYSTEM_THEME, 'Escolha o tema do sistema:', true, $listTheme,null,null,TGeneratorHelper::THEME_THEME3V5);
                 $html = 'Existem outros temas para o Adianti disponíveis em <a href="https://github.com/bjverde/adianti-theme" target="_blank">https://github.com/bjverde/adianti-theme</a>';
                 $frm->addHtmlField('theme',$html,null,null); 
             $frm->closeGroup();
