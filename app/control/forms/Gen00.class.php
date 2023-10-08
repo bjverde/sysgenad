@@ -38,7 +38,7 @@ class Gen00 extends TPage
                 $frm->addHiddenField(TableInfo::TP_SYSTEM,TGeneratorHelper::TP_SYSTEM_FORM,true);
 
                 $listTheme = TGeneratorHelper::getListTheme();
-                $frm->addSelectField(TableInfo::TP_SYSTEM_THEME, 'Escolha o tema do sistema:', true, $listTheme,null,null,TGeneratorHelper::THEME_THEME3V5);
+                $frm->addSelectField(TableInfo::TP_SYSTEM_THEME, 'Escolha o tema do sistema:', true, $listTheme,null,null,TGeneratorHelper::THEME_THEME3V5,null,null,null,null,null,null,null,null,null,false);
                 $html = 'Existem outros temas para o Adianti disponíveis em <a href="https://github.com/bjverde/adianti-theme" target="_blank">https://github.com/bjverde/adianti-theme</a>';
                 $frm->addHtmlField('theme',$html,null,null); 
             $frm->closeGroup();
@@ -63,7 +63,7 @@ class Gen00 extends TPage
                             </ul>';
                 $frm->addHtmlField('aviso',$html,null,null);            
                 $dbType = TFormDinPdoConnection::getListDBMS();
-                $frm->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType);
+                $frm->addSelectField('DBMS', 'Escolha o tipo de Banco de Dados:', true, $dbType,null,null,null,null,null,null,null,null,null,null,null,null,false);
                 $frm->addTextField('GEN_SYSTEM_ACRONYM','Sigla do Sistema', 50, true);
                 $frm->addMaskField('GEN_SYSTEM_VERSION', 'Versão do sistema',true,'9.9.9',null,'0.0.0');
                 $frm->addTextField('GEN_SYSTEM_NAME', 'Nome do sistem', 50, true);
