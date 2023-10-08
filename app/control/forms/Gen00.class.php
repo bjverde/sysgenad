@@ -46,10 +46,10 @@ class Gen00 extends TPage
             //$frm->addGroupField('gpxEasyLabel', Message::GPX_EASYLABEL);
                 //$frm->addHtmlField('info', null, 'ajuda/info_gen00_easylabel_pt-br.php')->setClass('htmlInfo', true);
                 $listTpSystem = array('Y'=>'Sim','N'=>'Não');
-                $frm->addButton('Ajuda sobre EasyLabel',null,['helpHtmlRender','loadEasyLabel'],null,null,true,false,'fa:life-ring fa-fw #f0db4f');
+                $frm->addButton('Ajuda sobre EasyLabel',null,['helpEasyLabel','onReload'],null,null,true,false,'fa:life-ring fa-fw #f0db4f');
                 $frm->addRadioField('EASYLABEL', Message::FIELD_EASY_LABEL, true, $listTpSystem, false, true, 'Y', 3, null, null, null, false);
 
-                $frm->addButton('Ajuda sobre Grid',null,['helpHtmlRender','loadGrid'],null,null,true,false,'fa:life-ring fa-fw #f0db4f');                
+                $frm->addButton('Ajuda sobre Grid',null,['helpTipGrid','onReload'],null,null,true,false,'fa:life-ring fa-fw #f0db4f');                
                 $listTpGrid = array(TableInfo::TP_GRID_FROM_LIST_AD=>'Adianti Nativo',TableInfo::TP_GRID_FROM_LIST_FD5=>'Formdin5');
                 $frm->addRadioField(TableInfo::TP_GRID_FROM_LIST, Message::FIELD_TP_GRID, true, $listTpGrid, false, true, TableInfo::TP_GRID_FROM_LIST_AD, 3, null, null, null, false);
             //$frm->closeGroup();
