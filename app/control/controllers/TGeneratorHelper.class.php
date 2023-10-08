@@ -19,7 +19,9 @@ class TGeneratorHelper
 
     const THEME_FORMDINVB='THEME_FORMDINVB';
     const THEME_THEME3='THEME_THEME3';
+    const THEME_THEME3V5='THEME_THEME3_V5';
     const THEME_THEME4='THEME_THEME4';
+    const THEME_THEME4V5='THEME_THEME4_V5';
 
 
     //--------------------------------------------------------------------------------------
@@ -600,7 +602,9 @@ class TGeneratorHelper
         $list = array();
         $list[self::THEME_FORMDINVB]='FormDin VB - Vertical BootStrap';
         $list[self::THEME_THEME3]='Tema 3 Adianti - BootStrap';
+        $list[self::THEME_THEME3V5]='Tema 3 V5 Adianti - BootStrap, com melhorias';
         $list[self::THEME_THEME4]='Tema 4 Adianti - Material';
+        $list[self::THEME_THEME4V5]='Tema 4 V5 Adianti - Material, com melhorias';
         return $list;
     }
 }

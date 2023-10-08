@@ -25,8 +25,12 @@ class TCreateConstants extends TCreateFileContent
         
         if( $tpSystemTheme == TGeneratorHelper::THEME_THEME3 ){
             $this->addLine('theme = theme3');
+        }elseif( $tpSystemTheme == TGeneratorHelper::THEME_THEME3V5 ){
+            $this->addLine('theme = theme3_v5');
         }elseif( $tpSystemTheme == TGeneratorHelper::THEME_THEME4 ){
-            $this->addLine('theme = theme4');
+            $this->addLine('theme = theme4');                        
+        }elseif( $tpSystemTheme == TGeneratorHelper::THEME_THEME4V5 ){
+            $this->addLine('theme = theme4_v5');
         }else{
             $this->addLine('theme = theme_formdinv');
         }
