@@ -171,13 +171,24 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTab.'} //END onClear');
     }
     //--------------------------------------------------------------------------------------
+    public function addMethod_onSearchFields($qtdTab)
+    {
+        $this->addLine($qtdTab.'$filters = OrmAdiantiHelper::addFilter($filters,self::$primaryKey,\'=\',$data->'.$this->getPrimaryKeyTable().',null);');
+        $listColumnsName = $this->getListColunnsName();
+        foreach ($listColumnsName as $key => $value) {
+            $formDinType = $this->getColumnsPropertieFormDinType($key);
+            $conector    = $this->getSqlOperatorsByType($formDinType);
+            $this->addLine($qtdTab.'$filters = OrmAdiantiHelper::addFilter($filters,\''.$value.'\',\''.$conector.'\',$data->'.$value.',null);');
+        }
+    }
     public function addMethod_onSearch($qtdTab)
     {
         $this->addBlankLine();
         $this->addLine();
         $this->addLine($qtdTab.'/**');
-        $this->addLine($qtdTab.' * Use esse metodo para customizar as pesquisas. Se não precisar vai permanecer comentádo');
+        $this->addLine($qtdTab.' * Use esse metodo para customizar as pesquisas. Se não precisar vai permanecer comentado usadando AdiantiStandardListTrait');
         $this->addLine($qtdTab.' */');
+        $this->addLine($qtdTab.'/*');
         $this->addLine($qtdTab.'public function onSearch($param = null)');
         $this->addLine($qtdTab.'{');
         $this->addLine($qtdTab.ESP.'$data = $this->form->getData();');
@@ -186,6 +197,8 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTab.ESP.'TSession::setValue(__CLASS__.\'_filter_data\', NULL);');
         $this->addLine($qtdTab.ESP.'TSession::setValue(__CLASS__.\'_filters\', NULL);');
         $this->addBlankLine();
+        $this->addMethod_onSearchFields($qtdTab.ESP);
+        $this->addBlankLine();
         $this->addLine($qtdTab.ESP.'$this->form->setData($data); // fill the form with data again');
         $this->addLine($qtdTab.ESP.'// keep the search data in the session');
         $this->addLine($qtdTab.ESP.'TSession::setValue(__CLASS__.\'_filter_data\', $data);');
@@ -193,6 +206,7 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addBlankLine();
         $this->addLine($qtdTab.ESP.'$this->onReload([\'offset\' => 0, \'first_page\' => 1]);');
         $this->addLine($qtdTab.'} //END onClear');
+        $this->addLine($qtdTab.'*/');
     }    
     //--------------------------------------------------------------------------------------
     public function addMethod_datagrid_form($qtdTab)
@@ -220,6 +234,7 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addMethod_onClose($qtdTab);
         $this->addMethod_onClear($qtdTab);
         $this->addMethod_datagrid_form($qtdTab);
+        $this->addMethod_onSearch($qtdTab);
         $this->addBlankLine();
     }
     //--------------------------------------------------------------------------------------
