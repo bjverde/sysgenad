@@ -155,20 +155,6 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTab.ESP.'TScript::create("Template.closeRightPanel()");');
         $this->addLine($qtdTab.'} //END onClose');
         $this->addLine($qtdTab.' */');
-    }    
-    //--------------------------------------------------------------------------------------
-    public function addMethod_onClear($qtdTab)
-    {
-        $this->addBlankLine();
-        $this->addLine();
-        $this->addLine($qtdTab.'/**');
-        $this->addLine($qtdTab.' * Clear filters');
-        $this->addLine($qtdTab.' */');
-        $this->addLine($qtdTab.'public function onClear()');
-        $this->addLine($qtdTab.'{');
-        $this->addLine($qtdTab.ESP.'$this->clearFilters();');
-        $this->addLine($qtdTab.ESP.'$this->onReload();');
-        $this->addLine($qtdTab.'} //END onClear');
     }
     //--------------------------------------------------------------------------------------
     public function addMethod_onSearchFields($qtdTab)

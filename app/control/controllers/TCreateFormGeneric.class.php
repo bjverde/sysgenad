@@ -508,4 +508,18 @@ class TCreateFormGeneric extends TCreateFileContent
         $this->addLine($qtdTab.ESP.'$frm->addMessage( $e->getMessage() ); //addMessage evita o problema do setMessage');
         $this->addLine($qtdTab.'}');
     }
+    //--------------------------------------------------------------------------------------
+    public function addMethod_onClear($qtdTab)
+    {
+        $this->addBlankLine();
+        $this->addLine();
+        $this->addLine($qtdTab.'/**');
+        $this->addLine($qtdTab.' * Clear filters');
+        $this->addLine($qtdTab.' */');
+        $this->addLine($qtdTab.'public function onClear()');
+        $this->addLine($qtdTab.'{');
+        $this->addLine($qtdTab.ESP.'$this->clearFilters();');
+        $this->addLine($qtdTab.ESP.'$this->onReload();');
+        $this->addLine($qtdTab.'} //END onClear');
+    }
 }
