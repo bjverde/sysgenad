@@ -17,11 +17,11 @@ The system generator reads a database and generates a CRUD system.
 
 # SysGenAd pt-bt
 
-:elephant: SysGenAd é um sistema gerador sistemas, criando toda estrutura inicial. Gerando código PHP com Adianti FrameWork e/ou [FormDin5](https://github.com/bjverde/formDin5).
+:elephant: SysGenAd é um sistema gerador sistemas, criando toda estrutura inicial de CRUDs e Menus. Gerando código PHP com Adianti FrameWork e/ou com [FormDin5](https://github.com/bjverde/formDin5). 
 
 **Escreve menos, faça mais. Mas "Falar é fácil. Me mostre o código"!** 
 
-O gerador de sistemas lê um banco de dados e gera uma sistema CRUD, usando o Adianti FrameWork
+O gerador de sistemas lê um banco de dados, pega os meta dados e gera os menus, crud, consulta para views e telas para procedures. Usando PHP com Adianti FrameWork e [FormDin5](https://github.com/bjverde/formDin5)
 
 ![Esquema do SysGen](https://raw.githubusercontent.com/bjverde/sysgen/master/images/2-code-gen-database-first.png)
 
