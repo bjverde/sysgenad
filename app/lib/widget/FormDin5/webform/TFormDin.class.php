@@ -1329,7 +1329,7 @@ class TFormDin
      * @param string  $strDisplayColumn   - 14: Nome da coluna que será utilizada para preencher as opções que serão exibidas para o usuário
      * @param string  $boolNoWrapLabel    - 15: NOT_IMPLEMENTED true ou false para quebrar ou não o valor do label se não couber na coluna do formulario
      * @param string  $strDataColumns     - 16: NOT_IMPLEMENTED Informações extras do banco de dados que deverão ser adicionadas na tag option do campo select
-     * @param string  $enableSearch       - 17: FORMDIN5: Define se o campo select terá autocomplete
+     * @param string  $enableSearch       - 17: FORMDIN5: Default FALSE = Campo SEM autocomplete, TRUE = Define se o campo select terá autocomplete
      * @return TCombo
      */
     public function addSelectField(string $id
@@ -1348,7 +1348,7 @@ class TFormDin
                                   ,string $strDisplayColumn = null
                                   ,string $boolNoWrapLabel = null
                                   ,string $strDataColumns = null
-                                  ,bool $enableSearch = true
+                                  ,bool $enableSearch = false
                                   )
     {
         $boolRequired = is_null($boolRequired)?false:$boolRequired;

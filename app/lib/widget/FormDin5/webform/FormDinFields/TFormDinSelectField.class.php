@@ -125,7 +125,7 @@ class TFormDinSelectField  extends TFormDinOption
                                ,string $strDisplayColumn = null
                                ,$boolNoWrapLabel = null
                                ,string $strDataColumns = null
-                               ,bool $enableSearch = true
+                               ,bool $enableSearch = false
                                )
     {
         $this->setWidth( $intWidth );
@@ -189,7 +189,7 @@ class TFormDinSelectField  extends TFormDinOption
     {
         $this->enableSearch = $enableSearch;
     }
-    public function enableSearch($enableSearch)
+    public function enableSearch(bool $enableSearch=true)
     {
         $enableSearch = is_null($enableSearch)?true:$enableSearch;
         $adiantiObj = $this->getAdiantiObj();
