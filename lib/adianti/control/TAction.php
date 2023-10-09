@@ -252,8 +252,8 @@ class TAction
                 }
                 else
                 {
-                    $value    = isset($object->$property)? $object->$property : null;
-                    $content  = str_replace($match, $value, $content);
+                    $value   = isset($object->$property)? $object->$property : null;
+                    $content = isset($value)? str_replace($match, $value, $content): null;
                 }
             }
         }
