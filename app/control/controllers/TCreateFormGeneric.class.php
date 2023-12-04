@@ -471,7 +471,7 @@ class TCreateFormGeneric extends TCreateFileContent
                 if ($CHAR_MAX < self::CHAR_MAX_TEXT_FIELD) {
                     $this->addLine($qtdTab.'$frm->addTextField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$CHAR_MAX.','.$REQUIRED.','.$CHAR_MAX.');');
                 } else {
-                    $this->addLine($qtdTab.'$frm->addMemoField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$CHAR_MAX.','.$REQUIRED.',80,3);');
+                    $this->addLine($qtdTab.'$frm->addMemoField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$CHAR_MAX.','.$REQUIRED.',\'95%\',8);');
                 }
                 $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
         }
