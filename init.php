@@ -36,14 +36,13 @@ session_name('PHPSESSID_'.$ini['general']['application']);
 
 setlocale(LC_ALL, 'C');
 //--- FORMDIN 5 START ---------------------------------------------------------
-define('DS', DIRECTORY_SEPARATOR);
-define('EOL', "\n");
-define('ESP', chr(32).chr(32).chr(32).chr(32) );
-define('TAB', chr(9));
+FormDinHelper::setAdminSystemMinimumVersion('7.5.1');
+FormDinHelper::setFormDinMinimumVersion('5.0.0');
 
-define('FORMDIN_VERSION', $ini['system']['formdin_min_version']);
-define('SYSTEM_VERSION', $ini['system']['version']);
-define('SYSTEM_NAME', $ini['system']['system_name']);
+if(!defined('DS') )  { define('DS', DIRECTORY_SEPARATOR); }
+if(!defined('EOL') ) { define('EOL', "\n"); }
+if(!defined('ESP') ) { define('ESP', chr(32).chr(32).chr(32).chr(32) ); }
+if(!defined('TAB') ) { define('TAB', chr(9)); }
 //--- FORMDIN 5 END -----------------------------------------------------------
 
 //--- SysGen For Adianti START ------------------------------------------------
