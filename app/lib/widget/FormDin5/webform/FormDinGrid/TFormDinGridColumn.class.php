@@ -56,15 +56,16 @@ class TFormDinGridColumn
      * Coluna do Grid Padronizado em BoorStrap
      * Reconstruido FormDin 4 Sobre o Adianti 7.1
      *
-     * @param object $objForm    - 1: FORMDIN5 Objeto do Adianti da classe do Form, é repassado pela classe TFormDinGrid
-     * @param string $name       - 2: Name of the column in the database
-     * @param string $label      - 3: Text label that will be shown in the header
-     * @param string $width      - 4: Column Width (pixels)
-     * @param string $align      - 5: Column align (left|right|center|justify)
-     * @param bool $boolReadOnly - 6: NOT_IMPLEMENTED Somente leitura. DEFAULT = false
-	 * @param bool $boolSortable - 7: Coluna ordenavel. DEFAULT = true
-	 * @param bool $boolVisivle  - 8: NOT_IMPLEMENTED Coluna visivel. DEFAULT = true
-     * @return BootstrapFormBuilder
+     * @param object $objForm    - 01: FORMDIN5 Objeto do Adianti da classe do Form, é repassado pela classe TFormDinGrid
+     * @param string $name       - 02: Name of the column in the database
+     * @param string $label      - 03: Text label that will be shown in the header
+     * @param string $width      - 04: Column Width (pixels)
+     * @param string $align      - 05: Column align (left|right|center|justify)
+     * @param bool $boolReadOnly - 06: FORMDIN5: NOT_IMPLEMENTED Somente leitura. DEFAULT = false
+	 * @param bool $boolSortable - 07: FORMDIN5: Coluna ordenavel. DEFAULT = true
+	 * @param bool $boolVisivle  - 08: FORMDIN5: Coluna visivel ou não. DEFAULT = true
+     * @param string $autoHide   - 09: FORMDIN5: Largura em pix que a coluna não ficará visivel, se a largura da tela ficar menor que o valor informado a coluna irá desaparer.
+     * @return TDataGridColumn
      */
     public function __construct(object $objForm
                               , string $name
@@ -74,6 +75,7 @@ class TFormDinGridColumn
                               , bool $boolReadOnly = false
                               , bool $boolSortable = true
                               , bool $boolVisivle = true
+                              , string $autoHide = null
                               )
     {
         if( !is_object($objForm) ){
@@ -93,6 +95,8 @@ class TFormDinGridColumn
             $this->setAdiantiObj($column);
             $this->setName($name);
             $this->setSortable($boolSortable);
+            $this->setVisibility($boolVisivle);
+            $this->enableAutoHide($autoHide);
             return $this->getAdiantiObj();
         }
     }
@@ -131,11 +135,32 @@ class TFormDinGridColumn
     public function setVisibility($bool){
         return $this->getAdiantiObj()->setVisibility($bool);
     }
+    /**
+     * Largura em pixels que a coluna não ficará visivel, se a largura da tela ficar menor que o valor informado a coluna irá desaparer.
+     *
+     * @param string $width
+     * @return void
+     */
     public function enableAutoHide($width)
     {
-        return $this->getAdiantiObj()->enableAutoHide($width);
+        if( !empty($width) ){
+            $this->getAdiantiObj()->enableAutoHide($width);
+        }
     }
 	//-------------------------------------------------------------------------------------------
+    /**
+     * Crie uma função de callback para formatar os dados da coluna da grid
+     * 
+     * Poder uma função anonimoa do tipo
+     *    function($value, $object, $row){ //codigo retun $valorAparecerGrid}
+     *    Existem diversas funções prontas em TFormDinGridTransformer 
+     * 
+     * Pode ser tambem com array array('nomeClasse', 'nomeFuncao') veja o exemplo
+     * TFormDinGridColumnFormatDate nomeClasse pode receber o valor $this
+     * nomeFuncao vai receber apenas um valor como parametro $fieldValue
+     * 
+     * @param $callback  A function name of a method of an object
+     */    
     public function setTransformer(Callable $callback){
         return $this->getAdiantiObj()->setTransformer($callback);
     }

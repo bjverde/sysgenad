@@ -66,6 +66,8 @@ class TFormDinButton {
     protected $objAction;
     protected $label;
     protected $confirmMessage;
+    protected $strOnClick;
+    protected $strHint;
 
     /**
     * Adicionar botão no layout
@@ -83,8 +85,8 @@ class TFormDinButton {
     * @param string  $mixValue          - 2 : Label do Botão. No FormDin5 não aceita array('Gravar', 'Limpar')
     * @param string  $strNameId         - 3 : Id do Botão. Se ficar null será utilizado o $strAction
     * @param mixed   $strAction         - 4 : Nome do metodo da ação (string) no mesmo Form ou  Array [FormDestino,actionsName]
-    * @param string  $strOnClick        - 5 : NOT_IMPLEMENTED Nome da função javascript
-    * @param string  $strConfirmMessage - 6 : Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito.
+    * @param string  $strOnClick        - 5 : Nome da função javascript que será executada no onClick ou script da função. Vai desativar o parametro 5
+    * @param string  $strConfirmMessage - 6 : Mensagem de confirmação, para utilizar o confirme sem utilizar javaScript explicito. Se o parametro 4 for informado não vai executar
     * @param boolean $boolNewLine       - 7 : Em nova linha. DEFAULT = true
     * @param boolean $boolFooter        - 8 : Mostrar o botão no rodapé do form. DEFAULT = true
     * @param string  $strImage          - 9 : Imagem no botão. Evite usar no lugar procure usar a propriedade setClass. Busca pasta imagens do base ou no caminho informado
@@ -122,9 +124,11 @@ class TFormDinButton {
         $this->setObjForm($objForm);
         $this->setAdiantiObj($adiantiObj);
         $this->setLabel($label);
+        $this->addFunction($strOnClick);
         $this->setAction($strAction);
         $this->setImage($strImage);
         $this->setConfirmMessage($strConfirmMessage);
+        $this->setHint($strHint);
         return $this->getAdiantiObj();
     }
 
@@ -179,18 +183,21 @@ class TFormDinButton {
 
     public function setAction($strAction)
     {
-        if( empty($strAction) ){
+        if( empty($strAction) && empty($this->getStrOnClick()) ){
             throw new InvalidArgumentException(TFormDinMessage::ERROR_EMPTY_INPUT.': strAction');
+        }else if( !empty($strAction) && !empty($this->getStrOnClick()) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_INPUT_PARAMETER_CONFLICT.' não informe os paramentros 4 (strAction) e 5 (strOnClick) aos mesmo tempo');
+        }else if( !empty($strAction) && empty($this->getStrOnClick()) ){
+            $action = null;
+            if( is_array($strAction) ){
+                $action = new TAction(array($strAction[0],$strAction[1]));
+            }else{
+                $objForm = $this->getObjForm();
+                $action = new TAction(array($objForm, $strAction));
+            }        
+            $label = $this->getLabel();
+            $this->getAdiantiObj()->setAction($action,$label);
         }
-        $action = null;
-        if( is_array($strAction) ){
-            $action = new TAction(array($strAction[0],$strAction[1]));
-        }else{
-            $objForm = $this->getObjForm();
-            $action = new TAction(array($objForm, $strAction));
-        }        
-        $label = $this->getLabel();
-        $this->getAdiantiObj()->setAction($action,$label);
     }
     public function getAction()
     {
@@ -252,9 +259,33 @@ class TFormDinButton {
         return $action->getParameters();
     }
 
+	public function getStrOnClick()
+	{
+		return $this->strOnClick;
+	}
+	private function setStrOnClick($strOnClick)
+	{
+		return $this->strOnClick = $strOnClick;
+	}
+
+    /**
+     * Add a JavaScript function to be executed by the button
+     * @param $function A piece of JavaScript code
+     */
+    public function addFunction($strOnClick)
+    {
+        if (!empty($strOnClick)){
+            $this->setStrOnClick($strOnClick);
+            $this->getAdiantiObj()->addFunction($strOnClick);
+        }
+    }
+
     public function setConfirmMessage($confirmMessage)
     {
-        if( !empty($confirmMessage) ){
+
+        if( !empty($confirmMessage) && !empty($this->getStrOnClick()) ){
+            throw new InvalidArgumentException(TFormDinMessage::ERROR_INPUT_PARAMETER_CONFLICT.' não informe os paramentros 5 (strOnClick) e 6 (confirmMessage) aos mesmo tempo');
+        }else if( !empty($confirmMessage) && empty($this->getStrOnClick()) ){
             $this->confirmMessage=$confirmMessage;
             $class = get_class ( $this->getObjForm() );
             $stringJs = 'if (confirm(\''.$confirmMessage.'\') == true) { __adianti_load_page(\'index.php?class='.$class.'\'); }';
@@ -266,6 +297,14 @@ class TFormDinButton {
         return $this->confirmMessage;
     }
 
-
+    public function getHint()
+	{
+		return $this->strHint;
+	}
+	private function setHint($strHint)
+	{
+		$this->strHint = $strHint;
+        $this->setPopover(null,'top',$strHint);
+	}
 }
 ?>

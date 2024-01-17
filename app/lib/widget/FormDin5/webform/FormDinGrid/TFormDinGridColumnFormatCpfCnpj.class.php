@@ -44,7 +44,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-class TFormDinGridColumnFormatDate extends TFormDinGridColumn
+class TFormDinGridColumnFormatCpfCnpj extends TFormDinGridColumn
 {
     protected $format;
     
@@ -52,63 +52,49 @@ class TFormDinGridColumnFormatDate extends TFormDinGridColumn
      * Coluna do Grid Padronizado em BoorStrap
      * Reconstruido FormDin 4 Sobre o Adianti 7.1
      *
-     * @param object $objForm- 1: FORMDIN5 Objeto do Adianti da classe do Form, é repassado pela classe TFormDinGrid
-     * @param string $name   - 2: Name of the column in the database
-     * @param string $label  - 3: Text label that will be shown in the header
-     * @param string $width  - 4: Column Width (pixels)
-     * @param string $align  - 5: Column align (left|right|center|justify)
-     * @param string $format - 6: Date Format. DEFAULT = d/m/Y (Brazil). Exemplo: United States = m/d/Y. Aceita o formato Adianti dd/mm/yyyy ou DateTime do PHP d/m/Y. 
-     * @param bool $boolReadOnly - 7: FORMDIN5: Somente leitura. DEFAULT = false
-	 * @param bool $boolSortable - 8: FORMDIN5: Coluna ordenavel. DEFAULT = true
-	 * @param bool $boolVisivle  - 9: FORMDIN5: Coluna visivel. DEFAULT = true
-     * @return BootstrapFormBuilder
+     * @param object $objForm- 01: FORMDIN5 Objeto do Adianti da classe do Form, é repassado pela classe TFormDinGrid
+     * @param string $name   - 02: Name of the column in the database
+     * @param string $label  - 03: Text label that will be shown in the header
+     * @param string $width  - 04: Column Width (pixels)
+     * @param string $align  - 05: Column align (left|right|center|justify)
+     * @param bool   $boolReadOnly - 06: Somente leitura. DEFAULT = false
+	 * @param bool   $boolSortable - 07: FORMDIN5: Coluna ordenavel. DEFAULT = true
+	 * @param bool   $boolVisivle  - 08: FORMDIN5: Coluna visivel. DEFAULT = true
+     * @param string $autoHide     - 09: FORMDIN5: Largura em pix que a coluna não ficará visivel, se a largura da tela ficar menor que o valor informado a coluna irá desaparer.
+     * @return TDataGridColumn
      */
     public function __construct(object $objForm
                               , string $name
                               , string $label
                               , string $width = NULL
                               , string $align ='left'
-                              , string $format='d/m/Y'
                               , bool $boolReadOnly = false
                               , bool $boolSortable = true
-                              , bool $boolVisivle  = true
+                              , bool $boolVisivle = true
                               , string $autoHide = null
                               )
     {
-        parent::__construct(  $objForm
+        parent::__construct( $objForm
                             , $name
                             , $label
                             , $width
                             , $align
-                            , $format
                             , $boolReadOnly
                             , $boolSortable
                             , $boolVisivle
                             , $autoHide
                         );
         $this->setName($name);
-        $this->setFormat($format);
-        $this->setTransformer(array($this, 'formatDate'));
-    }
-
-    public function setFormat($format){       
-        return $this->format=$format;
-    }
-    public function getFormat(){
-        return $this->format;
+        $this->setTransformer(array($this, 'format'));
+        return $this->getAdiantiObj();
     }
 
     /**
-     * Format the date according to the country
+     * Formata o valor conforme CPF e CNPJ 
      */
-    public function formatDate($fieldValue)
+    public function format($fieldValue)
     {
-        //$name = $this->getName();
-        //$date = new DateTime($object->$name);
-        $date = new DateTime($fieldValue);
-        $format = $this->getFormat();
-        $format = str_replace( ['dd','mm', 'yyyy', 'hh', 'ii', 'ss'], ['d','m','Y', 'H', 'i', 's'], $format);
-        $dateFormat = $date->format($format);
-        return $dateFormat;
+        $fieldValueFormatted = StringHelper::formatCnpjCpf($fieldValue);
+        return $fieldValueFormatted;
     }
 }

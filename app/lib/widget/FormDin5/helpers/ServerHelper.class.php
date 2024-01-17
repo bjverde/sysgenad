@@ -118,6 +118,21 @@ class ServerHelper
         return $ip;
     }
 
+    /**
+     * Return string with IP client
+     * https://pt.stackoverflow.com/questions/179389/como-pegar-ip-de-um-usuario-usando-php/179455
+     *
+     * @return string
+     */
+    public static function getClientIPStringAll()
+    {
+        $client = ArrayHelper::get($_SERVER,'HTTP_CLIENT_IP');
+        $forward= ArrayHelper::get($_SERVER,'HTTP_X_FORWARDED_FOR');
+        $remote = ArrayHelper::get($_SERVER,'REMOTE_ADDR');
+        $clientIPStringAll = 'cliente: '.$client.',remote: '.$remote.',forwarded: '.$forward;
+        return $clientIPStringAll;
+    }
+
     public static function getClientAgent(){
         $agent = ArrayHelper::get($_SERVER,'HTTP_USER_AGENT');
         return $agent; 

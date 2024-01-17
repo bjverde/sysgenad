@@ -96,6 +96,9 @@ class TFormDinGrid
     protected $exportExcel;
     protected $exportPdf;
     protected $exportXml;
+    protected $columns;
+    protected $qtdColumns;
+    protected $onDrawActionButton;
 
 
     /**
@@ -138,8 +141,8 @@ class TFormDinGrid
      * @param string $strName             - 2: ID da grid
      * @param string $strTitle            - 3: Titulo da grid
      * @param array $mixData              - 4: Array de dados. Pode ser form formato Adianti, FormDin ou PDO
-     * @param mixed $strHeight            - 5: Altura 
-     * @param mixed $strWidth             - 6: NOT_IMPLEMENTED Largura
+     * @param mixed $strHeight            - 5: Altura em pixels isso poder ligar o scroll vertical
+     * @param mixed $strWidth             - 6: Largura do grid em % porcentagem
      * @param mixed $strKeyField          - 7: NOT_IMPLEMENTED Chave primaria
      * @param array $mixUpdateFields      - 8: Campos do form origem que serão atualizados ao selecionar o item desejado. Separados por virgulas seguindo o padrão <campo_tabela> | <campo_formulario> , <campo_tabela> | <campo_formulario>
      * @param mixed $intMaxRows           - 9: NOT_IMPLEMENTED Qtd Max de linhas
@@ -526,13 +529,14 @@ class TFormDinGrid
      * Coluna do Grid Padronizado em BoorStrap
      * Reconstruido FormDin 4 Sobre o Adianti 7.1
      *
-     * @param string $name  - 1: Name of the column in the database
-     * @param string $label - 2: Text label that will be shown in the header
-     * @param string $width - 3: Column Width (pixels)
-     * @param string $align - 4: Column align (left|right|center|justify)
-     * @param bool $boolReadOnly - 5: FORMDIN5: NOT_IMPLEMENTED Somente leitura. DEFAULT = false
-	 * @param bool $boolSortable - 6: FORMDIN5: Coluna ordenavel. DEFAULT = true
-	 * @param bool $boolVisivle  - 7: FORMDIN5: NOT_IMPLEMENTED Coluna visivel. DEFAULT = true
+     * @param string $name  - 01: Name of the column in the database
+     * @param string $label - 02: Text label that will be shown in the header
+     * @param string $width - 03: Column Width (pixels)
+     * @param string $align - 04: Column align (left|right|center|justify)
+     * @param bool $boolReadOnly - 05: FORMDIN5: NOT_IMPLEMENTED Somente leitura. DEFAULT = false
+	 * @param bool $boolSortable - 06: FORMDIN5: Coluna ordenavel. DEFAULT = true
+	 * @param bool $boolVisivle  - 07: FORMDIN5: Coluna visivel ou não. DEFAULT = true
+     * @param string $autoHide   - 08: FORMDIN5: Largura em pix que a coluna não ficará visivel, se a largura da tela ficar menor que o valor informado a coluna irá desaparer.
      * @return TDataGridColumn
      */
     public function addColumn(string $name
@@ -542,6 +546,7 @@ class TFormDinGrid
                             , bool $boolReadOnly = false
                             , bool $boolSortable = true
                             , bool $boolVisivle = true
+                            , string $autoHide = null
                             )
     {
         $formDinGridColumn = new TFormDinGridColumn( $this->getObjForm()
@@ -552,6 +557,7 @@ class TFormDinGrid
                                                    , $boolReadOnly
                                                    , $boolSortable
                                                    , $boolVisivle
+                                                   , $autoHide
                                                 );
         $this->addListColumn($formDinGridColumn);
         return $formDinGridColumn;
@@ -566,6 +572,10 @@ class TFormDinGrid
      * @param  string $width  - 3: Column Width (pixels)
      * @param  string $align  - 4: Column align (left|right|center|justify)
      * @param  string $format - 5: Date Format. DEFAULT = d/m/Y (Brazil). Exemplo: United States = m/d/Y. Aceita o formato Adianti dd/mm/yyyy ou DateTime do PHP d/m/Y. 
+     * @param bool $boolReadOnly - 06: FORMDIN5: NOT_IMPLEMENTED Somente leitura. DEFAULT = false
+	 * @param bool $boolSortable - 07: FORMDIN5: Coluna ordenavel. DEFAULT = true
+	 * @param bool $boolVisivle  - 08: FORMDIN5: NOT_IMPLEMENTED Coluna visivel. DEFAULT = true
+     * @param string $autoHide   - 09: FORMDIN5: Largura em pix que a coluna não ficará visivel, se a largura da tela ficar menor que o valor informado a coluna irá desaparer.
      * @return TDataGridColumn
      */
     public function addColumnFormatDate(string $name
@@ -573,12 +583,64 @@ class TFormDinGrid
                                       , string $width = NULL
                                       , string $align ='left'
                                       , string $format='d/m/Y'
+                                      , bool $boolReadOnly = false
+                                      , bool $boolSortable = true
+                                      , bool $boolVisivle = true
+                                      , string $autoHide = null
                                       )
     {
-        $formDinGridColumn = new TFormDinGridColumnFormatDate( $name,$label,$width,$align,$format);
+        $formDinGridColumn = new TFormDinGridColumnFormatDate($this->getObjForm()
+                                                            ,$name
+                                                            ,$label
+                                                            ,$width
+                                                            ,$align
+                                                            ,$format
+                                                            ,$boolReadOnly
+                                                            ,$boolSortable
+                                                            ,$boolVisivle
+                                                            ,$autoHide
+                                                        );
         $this->addListColumn($formDinGridColumn);
         return $formDinGridColumn;
-    }    
+    }
+    //---------------------------------------------------------------
+    /**
+     * Coluna com campo CPF ou CNPJ formatado. Se valor informado não for uma
+     * string com tamanho 11 ou 14 vai retorna NULL
+     *
+     * @param string $name   - 01: Name of the column in the database
+     * @param string $label  - 02: Text label that will be shown in the header
+     * @param string $width  - 03: Column Width (pixels)
+     * @param string $align  - 04: Column align (left|right|center|justify)
+     * @param bool $boolReadOnly - 05: FORMDIN5: NOT_IMPLEMENTED Somente leitura. DEFAULT = false
+	 * @param bool $boolSortable - 06: FORMDIN5: Coluna ordenavel. DEFAULT = true
+	 * @param bool $boolVisivle  - 07: FORMDIN5: NOT_IMPLEMENTED Coluna visivel. DEFAULT = true
+     * @param string $autoHide   - 08: FORMDIN5: Largura em pix que a coluna não ficará visivel, se a largura da tela ficar menor que o valor informado a coluna irá desaparer.
+     * @return TDataGridColumn
+     */
+    public function addColumnFormatCpfCnpj( string $name
+                                          , string $label
+                                          , string $width = NULL
+                                          , string $align ='left'
+                                          , bool $boolReadOnly = false
+                                          , bool $boolSortable = true
+                                          , bool $boolVisivle = true
+                                          , string $autoHide = null
+                                          )
+    {
+        $formDinGridColumn = new TFormDinGridColumnFormatCpfCnpj($this->getObjForm()
+                                                                ,$name
+                                                                ,$label
+                                                                ,$width
+                                                                ,$align
+                                                                ,$boolReadOnly
+                                                                ,$boolSortable
+                                                                ,$boolVisivle
+                                                                ,$autoHide
+                                                            );
+        $this->addListColumn($formDinGridColumn);
+        return $formDinGridColumn;
+    }     
 
     //---------------------------------------------------------------------------------------
     /**

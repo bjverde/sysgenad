@@ -95,6 +95,7 @@ class TFormDinMessage {
     const ERROR_SQL_NULL_DBMA  = 'O Tipo do Database management system está em branco';
     const ERROR_VALEU_NOT_VALID= 'O Valor não é válido';
     const ERROR_FILE_NOT_FOUND = Self::ERROR_FD5.' O arquivo não existe:';
+    const ERROR_INPUT_PARAMETER_CONFLICT = 'Dois ou parametro em conflito foram informados:';
 
     const ERROR_FD5  = 'ERRO FormDin5: ';
     const ERROR_FD5_PARAM_MIGRA  = 'Falha na migração do FormDin 4 para 5.';

@@ -133,13 +133,34 @@ class TFormDinGridTransformer
         return  self::date($value);
     }
 
-    public static function gridImg($value, $object, $row)
+     /**
+      * Recebe o conteudo de um setTransformer do Grid e mostra imagem 
+      *
+      * @param mixed $value   - 01: Coluna com o nome da imagem
+      * @param object $object - 02: Objeto com todos os elmentos da linha
+      * @param mixed $row     - 03: informação da linha
+      * @param string $imgPath- 04: Default = app/images/. caminho relativo da imagem depois da pasta rais do sistema. Exemplo app/images/
+      * @param string $maxWidth 05: Default = 100px. largura maxima da imagem, altura será proporcional
+      * @param string $imgNotfound 06: imagem alternativa caso o arquivo da imagem não exista. informar o caminho relativo partindo da raiz do sistema. Exemplo app/images/semimg.png
+      * @return string
+      */
+    public static function gridImg($value, $object, $row,$imgPath,$maxWidth,$imgNotfound)
     {
-        if (file_exists($value)) 
-        {
+        $imgPath = empty($imgPath)?'app/images/':$imgPath;
+        $maxWidth = empty($maxWidth)?'100px':$maxWidth;
+        $value = $imgPath.$value;
+        if (is_file($value)==true){
             $image = new TImage($value);
-            $image->style = 'max-width: 100px';
+            $image->style = 'max-width: '.$maxWidth;
             return $image;
+        }else{
+            if( empty($imgNotfound) ){
+                return '';
+            }else{
+                $image = new TImage($imgNotfound);
+                $image->style = 'max-width: '.$maxWidth;
+                return $image;
+            }
         }
     }
 

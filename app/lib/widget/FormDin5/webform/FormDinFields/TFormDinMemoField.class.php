@@ -136,7 +136,7 @@ class TFormDinMemoField extends TFormDinGenericField
             $charsText->add('caracteres: 0 / '.$intMaxLength);
 
             $script = new TElement('script');
-            $script->setProperty('src', 'app/lib/include/FormDin5.js');
+            $script->setProperty('src', 'app/lib/include/FormDin5.js?appver='.FormDinHelper::version());
 
             $div = new TElement('div');
             $div->add($adiantiObjTText);
