@@ -62,7 +62,7 @@
 class FormDinHelper
 {
 
-    const FORMDIN_VERSION = '5.1.0';
+    const FORMDIN_VERSION = '5.1.1';
     const ADIANTI_MIN_FORMDIN = '7.5.1';
     const GRID_SIMPLE = 'GRID_SIMPLE';
     const GRID_SCREEN_PAGINATION = 'GRID_SCREEN_PAGINATION';
@@ -408,5 +408,4 @@ class FormDinHelper
         FormDinHelper::validateSizeWidthAndHeight($value);
         return $value;
     }
-
 }
