@@ -36,8 +36,8 @@ session_name('PHPSESSID_'.$ini['general']['application']);
 
 setlocale(LC_ALL, 'C');
 //--- FORMDIN 5 START ---------------------------------------------------------
-FormDinHelper::verifyFormDinMinimumVersion('5.1.0');
-FormDinHelper::verifyMinimumVersionAdiantiFrameWorkToSystem('7.5.1b2');
+FormDinHelper::verifyFormDinMinimumVersion($ini['system']['formdin_min_version']);
+FormDinHelper::verifyMinimumVersionAdiantiFrameWorkToSystem($ini['system']['adianti_min_version']);
 
 if(!defined('DS') )  { define('DS', DIRECTORY_SEPARATOR); }
 if(!defined('EOL') ) { define('EOL', "\n"); }
