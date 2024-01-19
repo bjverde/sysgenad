@@ -83,7 +83,7 @@ class TCreateConstantsTest extends TestCase
 
 		$expected = array();
 		$expected[0] = '[system]'.EOL;
-        $expected[1] = 'formdin_min_version='.FORMDIN_VERSION.EOL;
+        $expected[1] = 'formdin_min_version='.FormDinHelper::version().EOL;
         $expected[2] = 'version=1.2.3'.EOL;
         $expected[3] = 'system_name= "Mock Test"'.EOL;
 

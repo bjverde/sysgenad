@@ -51,7 +51,7 @@ class TCreateConstants extends TCreateFileContent
     public function addSystem($systemAcronym)
     {
         $this->addLine('[system]');
-        $this->addLine('formdin_min_version='.FORMDIN_VERSION);
+        $this->addLine('formdin_min_version='.FormDinHelper::version());
         $this->addLine('version='.TSysgenSession::getValue('GEN_SYSTEM_VERSION'));
         $this->addLine('system_name= "'.TSysgenSession::getValue('GEN_SYSTEM_NAME').'"' );
         $this->addLine('system_name_sub=\'Subtítulo do sistema\'');
