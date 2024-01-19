@@ -86,7 +86,7 @@ class TCreateFileContent
         $headerNote[] = ' * Download SysGenAd: https://github.com/bjverde/sysgenad'.EOL;
         $headerNote[] = ' * Download Formdin5 Framework: https://github.com/bjverde/formDin5'.EOL;
         $headerNote[] = ' * '.EOL;
-        $headerNote[] = ' * SysGen  Version: '.SYSTEM_VERSION.EOL;
+        $headerNote[] = ' * SysGen  Version: '.TSysgenSession::getValue('GEN_SYSTEM_VERSION').EOL;
         $headerNote[] = ' * FormDin Version: '.FormDinHelper::version().EOL;
         $headerNote[] = ' * '.EOL;
         $headerNote[] = ' * System '.TGeneratorHelper::getGenSystemAcronym().' created in: '.DateTimeHelper::getNow().EOL;
