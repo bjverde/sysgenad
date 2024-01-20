@@ -140,7 +140,31 @@ class TCreateFormList extends TCreateFormGeneric
             $this->addBlankLine();
             $this->addBlankLine();
         }
-    } 
+    }
+    //--------------------------------------------------------------------------------------
+    public function addMethod_onEdit($qtdTab)
+    {
+        $this->addBlankLine();
+        $this->addLine();
+        $this->addLine($qtdTab.'public function onEdit($param)');
+        $this->addLine($qtdTab.'{');
+        $this->addBlankLine();
+        $this->addLine($qtdTab.ESP.'try{');
+        $this->addLine($qtdTab.ESP.ESP.'if (isset($param[\'key\'])) {');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'$key = $param[\'key\'];  // get the parameter $key');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'TTransaction::open($this->database); // open a transaction');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'$object = new Contato($key); // instantiates the Active Record');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'$this->form->setData($object); // fill the form');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'TTransaction::close(); // close the transaction');
+        $this->addLine($qtdTab.ESP.ESP.'}else{');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'$this->form->clear();');
+        $this->addLine($qtdTab.ESP.ESP.'}');
+        $this->addLine($qtdTab.ESP.'}catch (Exception $e){');
+        $this->addLine($qtdTab.ESP.ESP.'new TMessage(TFormDinMessage::TYPE_ERROR, $e->getMessage()); // shows the exception error message');
+        $this->addLine($qtdTab.ESP.ESP.'TTransaction::rollback(); // undo all pending operations');
+        $this->addLine($qtdTab.ESP.'} //END TryCatch');
+        $this->addLine($qtdTab.'} //END onEdit');
+    }
     //--------------------------------------------------------------------------------------
     public function addMethod_onClose($qtdTab)
     {
