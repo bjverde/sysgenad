@@ -244,7 +244,8 @@ class TCreateFormGeneric extends TCreateFileContent
                     $result = self::FORMDIN_TYPE_DATETIME;
                 }else{
                     $result = self::FORMDIN_TYPE_DATE;
-                }                
+                }
+            break;
             case 'DATE':
             case 'TIMESTAMP':
                 if($DBMS_TYPE == TFormDinPdoConnection::DBMS_MYSQL){
