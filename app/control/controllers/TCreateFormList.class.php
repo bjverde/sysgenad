@@ -153,7 +153,7 @@ class TCreateFormList extends TCreateFormGeneric
         $this->addLine($qtdTab.ESP.ESP.'if (isset($param[\'key\'])) {');
         $this->addLine($qtdTab.ESP.ESP.ESP.'$key = $param[\'key\'];  // get the parameter $key');
         $this->addLine($qtdTab.ESP.ESP.ESP.'TTransaction::open($this->database); // open a transaction');
-        $this->addLine($qtdTab.ESP.ESP.ESP.'$object = new Contato($key); // instantiates the Active Record');
+        $this->addLine($qtdTab.ESP.ESP.ESP.'$object = new '.$this->getTableRefClass().'($key); // instantiates the Active Record');
         $this->addLine($qtdTab.ESP.ESP.ESP.'$this->form->setData($object); // fill the form');
         $this->addLine($qtdTab.ESP.ESP.ESP.'TTransaction::close(); // close the transaction');
         $this->addLine($qtdTab.ESP.ESP.'}else{');
