@@ -467,7 +467,7 @@ class TCreateFormGeneric extends TCreateFileContent
                 $fieldLabel = EasyLabel::convertLabel($fieldName, $formDinType);
                 $this->addLine($qtdTab.'$frm->addDateTimeField(\''.$fieldName.'\', \''.$fieldLabel.'\','.$REQUIRED.',null,null,null,null,\''.$this->getDtView().' hh:ii\',null,null,null,null,\''.$this->getDtDb().' hh:ii\');');
                 $this->addFieldTypeToolTip($qtdTab,$key, $fieldName);
-            break;            
+            break;
             case self::FORMDIN_TYPE_NUMBER:
                 $this->addFieldNumberOrForeignKey($qtdTab,$key, $fieldName, $REQUIRED);
             break;
