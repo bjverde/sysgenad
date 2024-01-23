@@ -5,3 +5,9 @@
     color: auto;
     border-radius: 0;
 }
+
+.tsourcecode pre
+{
+    background: unset;
+    border: unset;
+}

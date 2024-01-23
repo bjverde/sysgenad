@@ -218,3 +218,25 @@ table.dataTable.no-footer.table-striped
   line-height: 1.33;
   border-radius: 35px;
 }
+
+/** 
+ * New disabled styles for actions
+ */
+a[disabled="1"] {
+  color: silver;
+  pointer-events: none;
+}
+
+a[disabled="1"] i {
+   color: silver;
+}
+
+a.btn[disabled="1"] i {
+   color: gray;
+}
+
+.btn[disabled="1"] {
+  background-color: silver !important;
+  border-color: silver !important;
+  pointer-events: none;
+}
