@@ -4,11 +4,11 @@ namespace Adianti\Log;
 /**
  * Provides an abstract interface to register LOG files
  *
- * @version    7.5
+ * @version    7.6
  * @package    log
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 abstract class TLogger implements AdiantiLoggerInterface
 {
