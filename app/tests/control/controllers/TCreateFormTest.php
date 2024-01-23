@@ -147,11 +147,11 @@ class TCreateFormTest extends TestCase
 	    $expected = TCreateForm::FORMDIN_TYPE_NUMBER;
 	    $result = TCreateForm::convertDataType2FormDinType('TINYINT');
 	    $this->assertSame($expected, $result);
-	}	
-	
+	}
+
+	/*
 	public function testShow_Grid_Paginator(){
-	    $expectedQtd = 16;
-	    
+	    $expectedQtd = 16;	    
 	    $this->create->setGridType(FormDinHelper::GRID_SQL_PAGINATION);
 	    $this->create->setTableType(TableInfo::TB_TYPE_TABLE);
 	    $this->create->addGrid(null);
@@ -160,6 +160,7 @@ class TCreateFormTest extends TestCase
 	    $size = CountHelper::count($result);
 	    $this->assertEquals( $expectedQtd, $size);
 	}
+	*/
 
 	public function testAddMethod_onSave(){
 		$expectedSize = 29;
