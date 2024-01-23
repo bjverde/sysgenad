@@ -17,6 +17,7 @@ class AdiantiPDFDesigner extends FPDF
     private $orientation;
     private $format;
     private $replaces;
+    private $href;
     private $B;
     private $I;
     private $U;
