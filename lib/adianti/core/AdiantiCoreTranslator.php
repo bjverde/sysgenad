@@ -4,18 +4,19 @@ namespace Adianti\Core;
 /**
  * Framework translation class for internal messages
  *
- * @version    7.5
+ * @version    7.6
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  * @alias      TAdiantiCoreTranslator
  */
 class AdiantiCoreTranslator
 {
-    private $messages;
     private static $instance; // singleton instance
     private $lang;            // target language
+    private $messages;
+    private $sourceMessages;
     
     /**
      * Class Constructor
@@ -167,6 +168,7 @@ class AdiantiCoreTranslator
         $this->messages['en'][] = 'Medium';
         $this->messages['en'][] = 'Small';
         $this->messages['en'][] = 'Condensed';
+        $this->messages['en'][] = 'Extension not found: ^1';
         
         $this->messages['pt'][] = 'Carregando';
         $this->messages['pt'][] = 'Arquivo não encontrado';
@@ -312,6 +314,7 @@ class AdiantiCoreTranslator
         $this->messages['pt'][] = 'Médio';
         $this->messages['pt'][] = 'Pequeno';
         $this->messages['pt'][] = 'Condensado';
+        $this->messages['pt'][] = 'Extensão não encontrada: ^1';
         
         $this->messages['es'][] = 'Cargando';
         $this->messages['es'][] = 'Archivo no encontrado';
@@ -457,11 +460,18 @@ class AdiantiCoreTranslator
         $this->messages['es'][] = 'Medio';
         $this->messages['es'][] = 'Pequeño';
         $this->messages['es'][] = 'Condensado';
+        $this->messages['es'][] = 'Extensión no encontrada: ^1';
+        //fim
+	
+        foreach ($this->messages as $lang => $messages)
+        {
+            $this->sourceMessages[$lang] = array_flip( $this->messages[ $lang ] );
+        }
     }
     
     /**
      * Returns the singleton instance
-     * @return AdiantiCoreTranslator
+     * @return  Instance of self
      */
     public static function getInstance()
     {
@@ -469,7 +479,7 @@ class AdiantiCoreTranslator
         if (empty(self::$instance))
         {
             // creates a new object
-            self::$instance = new AdiantiCoreTranslator;
+            self::$instance = new self;
         }
         // returns the created instance
         return self::$instance;
@@ -491,6 +501,7 @@ class AdiantiCoreTranslator
     
     /**
      * Returns the target language
+     * @return Target language index
      */
     public static function getLanguage()
     {
@@ -501,19 +512,25 @@ class AdiantiCoreTranslator
     /**
      * Translate a word to the target language
      * @param $word     Word to be translated
+     * @return          Translated word
      */
     public static function translate($word, $param1 = NULL, $param2 = NULL, $param3 = NULL, $param4 = NULL)
     {
-        // get the AdiantiCoreTranslator unique instance
+        $source_language = 'en';
+
+        // get the self unique instance
         $instance = self::getInstance();
         // search by the numeric index of the word
-        $key = array_search($word, $instance->messages['en']);
-        if ($key !== FALSE)
+        
+        if (isset($instance->sourceMessages[$source_language][$word]) and !is_null($instance->sourceMessages[$source_language][$word]))
         {
+            $key = $instance->sourceMessages[$source_language][$word];
+            
             // get the target language
             $language = self::getLanguage();
             // returns the translated word
             $message = $instance->messages[$language][$key];
+            
             if (isset($param1))
             {
                 $message = str_replace('^1', $param1, $message);

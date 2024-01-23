@@ -15,17 +15,18 @@ use Adianti\Widget\Util\TExceptionView;
 /**
  * Basic structure to run a web application
  *
- * @version    7.5
+ * @version    7.6
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class AdiantiCoreApplication
 {
     private static $router;
     private static $request_id;
     private static $debug;
+    private static $action_verification;
     
     /**
      * Execute class/method based on request
@@ -46,13 +47,7 @@ class AdiantiCoreApplication
         $content = '';
         set_error_handler(array('AdiantiCoreApplication', 'errorHandler'));
         
-        if (!empty($ini['general']['request_log']) && $ini['general']['request_log'] == '1')
-        {
-            if (empty($ini['general']['request_log_types']) || strpos($ini['general']['request_log_types'], 'web') !== false)
-            {
-                self::$request_id = $service::register( 'web');
-            }
-        }
+        $time_start = microtime(true); 
         
         self::filterInput();
         
@@ -142,6 +137,16 @@ class AdiantiCoreApplication
         echo TPage::getLoadedJS();
         
         echo $content;
+        
+        $time_end = microtime(true);
+        
+        if (!empty($ini['general']['request_log']) && $ini['general']['request_log'] == '1')
+        {
+            if (empty($ini['general']['request_log_types']) || strpos($ini['general']['request_log_types'], 'web') !== false)
+            {
+                self::$request_id = $service::register( 'web', $time_end - $time_start);
+            }
+        }
     }
     
     /**
@@ -154,13 +159,7 @@ class AdiantiCoreApplication
         $ini = AdiantiApplicationConfig::get();
         $service = isset($ini['general']['request_log_service']) ? $ini['general']['request_log_service'] : '\SystemRequestLogService'; 
         
-        if (!empty($ini['general']['request_log']) && $ini['general']['request_log'] == '1')
-        {
-            if (empty($endpoint) || empty($ini['general']['request_log_types']) || strpos($ini['general']['request_log_types'], $endpoint) !== false)
-            {
-                self::$request_id = $service::register( $endpoint );
-            }
-        }
+        $time_start = microtime(true);
         
         if (class_exists($class))
         {
@@ -186,6 +185,17 @@ class AdiantiCoreApplication
                 {
                     $response = call_user_func(array(new $class($request), $method), $request);
                 }
+                
+                $time_end = microtime(true);
+                
+                if (!empty($ini['general']['request_log']) && $ini['general']['request_log'] == '1')
+                {
+                    if (empty($endpoint) || empty($ini['general']['request_log_types']) || strpos($ini['general']['request_log_types'], $endpoint) !== false)
+                    {
+                        self::$request_id = $service::register( $endpoint, $time_end - $time_start );
+                    }
+                }
+                
                 return $response;
             }
             else
@@ -250,6 +260,22 @@ class AdiantiCoreApplication
     public static function getRouter()
     {
         return self::$router;
+    }
+    
+    /**
+     * Set action_verification callback
+     */
+    public static function setActionVerification(Callable $callback)
+    {
+        self::$action_verification = $callback;
+    }
+    
+    /**
+     * Get action_verification callback
+     */
+    public static function getActionVerification()
+    {
+        return self::$action_verification;
     }
     
     /**

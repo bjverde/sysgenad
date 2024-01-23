@@ -4,11 +4,11 @@ namespace Adianti\Core;
 /**
  * Class map
  *
- * @version    7.5
+ * @version    7.6
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class AdiantiClassMap
 {
@@ -119,6 +119,7 @@ class AdiantiClassMap
         $classPath['TPassword']                       = 'lib/adianti/widget/form/TPassword.php';
         $classPath['TRadioButton']                    = 'lib/adianti/widget/form/TRadioButton.php';
         $classPath['TRadioGroup']                     = 'lib/adianti/widget/form/TRadioGroup.php';
+        $classPath['TLikertScale']                    = 'lib/adianti/widget/form/TLikertScale.php';
         $classPath['TSeekButton']                     = 'lib/adianti/widget/form/TSeekButton.php';
         $classPath['TSelect']                         = 'lib/adianti/widget/form/TSelect.php';
         $classPath['TSlider']                         = 'lib/adianti/widget/form/TSlider.php';
