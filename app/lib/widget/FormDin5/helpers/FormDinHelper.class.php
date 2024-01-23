@@ -62,7 +62,7 @@
 class FormDinHelper
 {
 
-    const FORMDIN_VERSION = '5.1.1';
+    const FORMDIN_VERSION = '5.1.2';
     const ADIANTI_MIN_FORMDIN = '7.5.1';
     const GRID_SIMPLE = 'GRID_SIMPLE';
     const GRID_SCREEN_PAGINATION = 'GRID_SCREEN_PAGINATION';
@@ -77,10 +77,10 @@ class FormDinHelper
         return self::FORMDIN_VERSION;
     }
     /***
-     * Returns if the current formDin version meets the minimum requirements
+     * Returns whether the reported version of formDin is greater than or equal to the reference version.
      * 
-     * Retorna se a versão atual do formDin atende aos requisitos mínimos 
-     * @param string $version    - versão de referencia
+     * Retorna true se a versão informada do formDin é maior ou igual a versão de referencia.
+     * @param string $version    - versão informada
      * @param string $versionRef - versão de referencia
      * @return boolean
      */
@@ -88,12 +88,18 @@ class FormDinHelper
     {
         if(empty($versionRef)){
             $formVersion = explode("-", self::version());
-            $formVersion = $formVersion[0];
-        }else{
-            $formVersion = $versionRef;
+            $versionRef = $formVersion[0];
         }
-        return version_compare($formVersion,$version,'>=');
+        return version_compare($versionRef,$version,'>=');
     }
+    public static function validateFormat($version)
+    {
+        $t = explode(".", $version);
+        $qtd = CountHelper::count($t);
+        if( ($qtd<3)&&($qtd>4) ){
+            throw new DomainException(TFormDinMessage::FORM_MIN_VERSION_INVALID_FORMAT);
+        }
+    }    
 	/***
      * Sets the minimum formDin version for the system to work
 	 * 
@@ -104,16 +110,14 @@ class FormDinHelper
 		if ( empty($minimumVersion) ) {
 		    throw new DomainException(TFormDinMessage::FORM_MIN_VERSION_BLANK);			
 		} else {
-		    $t = explode(".", $minimumVersion);
-		    if( CountHelper::count($t) != 3 ){
-		        throw new DomainException(TFormDinMessage::FORM_MIN_VERSION_INVALID_FORMAT);
-			}
+            self::validateFormat($minimumVersion);
 			$t = explode("-", $minimumVersion);
 			$minimumVersion = $t[0];
 			if( !FormDinHelper::versionMinimum($minimumVersion) ){
                 $msg = TFormDinMessage::FORM_MIN_YOU_VERSION.self::version().TFormDinMessage::FORM_MIN_VERSION_NOT.$minimumVersion;
 			    throw new DomainException($msg);
 			}
+            self::verifyMinimumVersionAdiantiFrameWorkToFormDin();
 		}
 	}
 	/***
@@ -122,15 +126,12 @@ class FormDinHelper
 	 * Verifica se a versão do AdiantiFrameWork atendene o requisito minimo para o FormDin funcionar
      * @param string $minimumVersion
      */
-	public static function verifyMinimumVersionAdiantiFrameWorkToFormDin($minimumVersion) {
-		if ( empty($minimumVersion) ) {
-		    throw new DomainException(TFormDinMessage::ADIANTI_VERSION_BLANK);			
-		} else {
-			if( !FormDinHelper::versionMinimum($minimumVersion,self::ADIANTI_MIN_FORMDIN) ){
-                $msg = TFormDinMessage::ADIANTI_MIN_YOU_VERSION.self::ADIANTI_MIN_FORMDIN.'.'.TFormDinMessage::FORM_MIN_VERSION_ADIANTI.$minimumVersion;
-			    throw new DomainException($msg);
-			}
-		}
+	public static function verifyMinimumVersionAdiantiFrameWorkToFormDin() {
+        $adiantiVersion = self::getAdiantiFrameWorkVersion();
+        if( !FormDinHelper::versionMinimum(self::ADIANTI_MIN_FORMDIN,$adiantiVersion) ){
+            $msg = TFormDinMessage::ADIANTI_MIN_YOU_VERSION.$adiantiVersion.'.'.TFormDinMessage::FORM_MIN_VERSION_ADIANTI.self::ADIANTI_MIN_FORMDIN;
+            throw new DomainException($msg);
+        }
 	}
 	/***
      *  Checks if the version of Adianti FrameWork meets the minimum requirement for System to work
@@ -142,10 +143,7 @@ class FormDinHelper
 		if ( empty($minimumVersion) ) {
 		    throw new DomainException(TFormDinMessage::ADIANTI_MIN_VERSION_BLANK);			
 		} else {
-		    $t = explode(".", $minimumVersion);
-		    if( CountHelper::count($t) != 3 ){
-		        throw new DomainException(TFormDinMessage::FORM_MIN_VERSION_INVALID_FORMAT);
-			}
+            self::validateFormat($minimumVersion);
 			$t = explode("-", $minimumVersion);
 			$minimumVersion = $t[0];
             $adiantiVersion = self::getAdiantiFrameWorkVersion();
