@@ -7,16 +7,17 @@ use Adianti\Control\TAction;
 /**
  * Action Link
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TActionLink extends TTextDisplay
 {
     private $action;
+    private $icon;
 
     /**
      * Class Constructor
@@ -28,6 +29,8 @@ class TActionLink extends TTextDisplay
      */
     public function __construct($value, TAction $action, $color = null, $size = null, $decoration = null, $icon = null)
     {
+        $this->icon = $icon;
+        
         if ($icon)
         {
             $value = new TImage($icon) . $value;
@@ -38,8 +41,13 @@ class TActionLink extends TTextDisplay
         
         $this->action = $action;
 
-        $this->{'href'} = $action->serialize();
+        $this->{'href'} = $action->serialize(TRUE, TRUE);
         $this->{'generator'} = 'adianti';
+        
+        if ($this->{'href'} == '#disabled')
+        {
+            $this->{'disabled'} = '1';
+        }
     }
 
     /**
@@ -62,7 +70,20 @@ class TActionLink extends TTextDisplay
             $this->{'onclick'} = $function.';';
         }
     }
-
+    
+    /**
+     * Replace current label
+     */
+    public function setLabel($label)
+    {
+        if ($this->icon)
+        {
+            $label = new TImage($this->icon) . $label;
+        }
+        
+        parent::setLabel($label);
+    }
+    
     /**
      * Add CSS class
      */

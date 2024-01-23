@@ -6,12 +6,12 @@ use Adianti\Widget\Base\TElement;
 /**
  * Image Widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TImage extends TElement
 {
@@ -21,7 +21,7 @@ class TImage extends TElement
      * Class Constructor
      * @param $source Image path, of bs:bs-glyphicon, fab:font-awesome
      */
-    public function __construct($source)
+    public function __construct($source = '')
     {
         if (substr($source,0,3) == 'fa:')
         {

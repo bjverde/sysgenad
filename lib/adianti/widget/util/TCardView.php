@@ -9,6 +9,7 @@ use Adianti\Util\AdiantiTemplateHandler;
 use Adianti\Widget\Form\TField;
 use Adianti\Widget\Template\THtmlRenderer;
 use Adianti\Widget\Form\TButton;
+use Adianti\Widget\Util\TDropDown;
 
 use stdClass;
 use ApplicationTranslator;
@@ -16,17 +17,18 @@ use ApplicationTranslator;
 /**
  * Card
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TCardView extends TElement
 {
     protected $items;
     protected $itemActions;
+    protected $itemActionGroups;
     protected $templatePath;
     protected $itemTemplate;
     protected $titleTemplate;
@@ -191,6 +193,17 @@ class TCardView extends TElement
     }
     
     /**
+     * Add action group
+     * @param  $title             Action group title
+     * @param  $actions           Array of actions
+     * @param  $icon              Action group icon
+     */
+    public function addActionGroup($title, $actions, $icon)
+    {
+        $this->itemActionGroups[] = [$title, $actions, $icon];
+    }
+    
+    /**
      * Render item
      */
     private function renderItem($item)
@@ -306,7 +319,7 @@ class TCardView extends TElement
             }
         }
         
-        if (!empty($this->itemActions))
+        if (!empty($this->itemActions) || !empty($this->itemActionGroups))
         {
             $item_wrapper->add($this->renderItemActions($item));
         }
@@ -378,9 +391,33 @@ class TCardView extends TElement
             }
         }
         
+        if (!empty($this->itemActionGroups))
+        {
+            foreach ($this->itemActionGroups as $itemActionGroup)
+            {
+                $title   = $itemActionGroup[0];
+                $actions = $itemActionGroup[1];
+                $icon    = $itemActionGroup[2];
+                
+                $drop = new TDropDown($title, $icon, FALSE);
+                
+                foreach ($actions as $action)
+                {
+                    $item_action = $action[1]->prepare($object);
+                    $condition = $action[3] ?? null;
+                    
+                    if (empty($condition) OR call_user_func($condition, $object))
+                    {
+                        $drop->addAction($action[0], $item_action, $action[2]);
+                    }
+                }
+                
+                $div->add($drop);
+            }
+        }
+        
         return $div;
     }
-    
     
     /**
      * Show cards

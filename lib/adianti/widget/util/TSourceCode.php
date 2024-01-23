@@ -7,12 +7,12 @@ use Adianti\Util\AdiantiStringConversion;
 /**
  * SourceCode View
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TSourceCode
 {
@@ -104,9 +104,17 @@ class TSourceCode
      */
     public function show()
     {
+        $copy = new TElement('div');
+        $copy->{'style'} = 'border: 1px solid silver;float: right;padding: 5px;border-radius: 5px;';
+        $copy->{'class'} = 'btn';
+        $copy->add(new TImage('far:copy white'));
+        $copy->{'onclick'} = "__adianti_copy_to_clipboard64('".base64_encode($this->content)."')";
+        
         $span = new TElement('span');
         $span->{'style'} = 'font-size:10pt';
         $span->{'class'} = 'tsourcecode';
+        
+        $span->add($copy);
         
         if ($this->row_numbers)
         {

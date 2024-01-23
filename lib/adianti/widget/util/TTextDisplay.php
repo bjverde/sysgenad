@@ -7,12 +7,12 @@ use Adianti\Widget\Base\TScript;
 /**
  * Text Display
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TTextDisplay extends TElement
 {
@@ -67,7 +67,16 @@ class TTextDisplay extends TElement
 
         $this->{'style'} = substr( str_replace(['"',','], ['',';'], json_encode($style) ), 1, -1);
     }
-
+    
+    /**
+     * Replace current label
+     */
+    public function setLabel($label)
+    {
+        parent::clearChildren();
+        parent::add($label);
+    }
+    
     /**
      * Define the Text's width
      * @param $width Field's width in pixels

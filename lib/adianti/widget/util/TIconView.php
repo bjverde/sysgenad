@@ -10,12 +10,12 @@ use stdClass;
 /**
  * TIconView Widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TIconView extends TElement
 {
@@ -167,7 +167,7 @@ class TIconView extends TElement
                 $first_action = null;
                 
                 $li = new TElement('li');
-                
+                $li->{'class'} = 'iconview-item';
                 // set info data in the root element for things like fuse search
                 if ($this->infoFields)
                 {
@@ -200,7 +200,7 @@ class TIconView extends TElement
                     $poptitle   = AdiantiTemplateHandler::replace($poptitle, $object);
                     $popcontent = AdiantiTemplateHandler::replace($popcontent, $object, null, true);
                     
-                    $li->{'popover'} = 'true';
+                    $li->{'data-popover'} = 'true';
                     $li->{'poptitle'} = $poptitle;
                     $li->{'popcontent'} = htmlspecialchars(str_replace("\n", '', nl2br($popcontent)));
                     
