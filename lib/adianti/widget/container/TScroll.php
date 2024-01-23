@@ -8,12 +8,12 @@ use Adianti\Widget\Util\TSourceCode;
 /**
  * Scrolled Window: Allows to add another containers inside, creating scrollbars when its content is bigger than its visual area
  * 
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TScroll extends TElement
 {
