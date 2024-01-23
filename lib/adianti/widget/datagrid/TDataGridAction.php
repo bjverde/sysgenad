@@ -8,12 +8,12 @@ use Exception;
 /**
  * Represents an action inside a datagrid
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TDataGridAction extends TAction
 {
@@ -222,7 +222,7 @@ class TDataGridAction extends TAction
      * Converts the action into an URL
      * @param  $format_action = format action with document or javascript (ajax=no)
      */
-    public function serialize($format_action = TRUE)
+    public function serialize($format_action = TRUE, $check_permission = FALSE)
     {
         if (is_array($this->action) AND is_object($this->action[0]))
         {
@@ -251,6 +251,6 @@ class TDataGridAction extends TAction
         {
             $this->setParameter('static',     '1' );
         }
-        return parent::serialize($format_action);
+        return parent::serialize($format_action, $check_permission);
     }
 }

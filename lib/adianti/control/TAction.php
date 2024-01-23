@@ -9,11 +9,11 @@ use ReflectionMethod;
 /**
  * Structure to encapsulate an action
  *
- * @version    7.5
+ * @version    7.6
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TAction
 {
@@ -252,8 +252,8 @@ class TAction
                 }
                 else
                 {
-                    $value   = isset($object->$property)? $object->$property : null;
-                    $content = isset($value)? str_replace($match, $value, $content): null;
+                    $value    = isset($object->$property)? $object->$property : null;
+                    $content  = str_replace($match, (string) $value, $content);
                 }
             }
         }
@@ -262,10 +262,27 @@ class TAction
     }
     
     /**
+     * Keep REQUEST parameters
+     */
+    public function preserveRequestParameters($request_parameters = [])
+    {
+        if ($request_parameters)
+        {
+            foreach ($request_parameters as $request_parameter)
+            {
+                if (isset($_REQUEST[$request_parameter]))
+                {
+                    $this->setParameter($request_parameter, $_REQUEST[$request_parameter]);
+                }
+            }
+        }
+    }
+    
+    /**
      * Converts the action into an URL
      * @param  $format_action = format action with document or javascript (ajax=no)
      */
-    public function serialize($format_action = TRUE)
+    public function serialize($format_action = TRUE, $check_permission = FALSE)
     {
         // check if the callback is a method of an object
         if (is_array($this->action))
@@ -301,6 +318,17 @@ class TAction
         if ($this->param)
         {
             $url = array_merge($url, $this->param);
+        }
+        
+        if ($check_permission)
+        {
+            if ($action_verification = AdiantiCoreApplication::getActionVerification())
+            {
+                if (!$action_verification($url['class'], $url['method']))
+                {
+                    return '#disabled';
+                }
+            }
         }
         
         if ($format_action)

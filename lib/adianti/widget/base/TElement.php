@@ -4,12 +4,12 @@ namespace Adianti\Widget\Base;
 /**
  * Base class for all HTML Elements
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TElement
 {
@@ -328,6 +328,8 @@ class TElement
      */
     public function find($element, $properties = null)
     {
+        $return_list = [];
+        
         if ($this->children)
         {
             foreach ($this->children as $child)
@@ -348,16 +350,22 @@ class TElement
                             }
                         }
                         
+                        if (empty($child->getProperties()))
+                        {
+                            $match = false;
+                        }
+                        
                         if ($match)
                         {
-                            return array_merge([$child], $child->find($element, $properties));
+                            return [$child];
                         }
                     }
-                    return $child->find($element, $properties);
+                    
+                    $return_list = array_merge($return_list, $child->find($element, $properties));
                 }
             }
         }
-        return [];
+        return $return_list;
     }
     
     /**

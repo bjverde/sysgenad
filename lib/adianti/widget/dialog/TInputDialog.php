@@ -16,12 +16,12 @@ use Exception;
 /**
  * Input Dialog
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TInputDialog
 {
@@ -40,7 +40,7 @@ class TInputDialog
         $this->id = 'tinputdialog_'.mt_rand(1000000000, 1999999999);
         
         $modal_wrapper = new TElement('div');
-        $modal_wrapper->{'class'} = 'modal';
+        $modal_wrapper->{'class'} = 'modal tinputdialog';
         $modal_wrapper->{'id'}    = $this->id;
         $modal_wrapper->{'style'} = 'padding-top: 10%; z-index:2000';
         $modal_wrapper->{'tabindex'} = '-1';

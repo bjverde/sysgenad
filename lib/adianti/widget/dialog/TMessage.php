@@ -8,13 +8,13 @@ use Adianti\Widget\Base\TScript;
 /**
  * Message Dialog
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
  * @author     Victor Feitoza <vfeitoza [at] gmail.com> (process action after OK)
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TMessage
 {

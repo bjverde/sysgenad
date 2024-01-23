@@ -18,12 +18,12 @@ use Exception;
 /**
  * DataGrid Widget: Allows to create datagrids with rows, columns and actions
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TDataGrid extends TTable
 {
@@ -65,6 +65,7 @@ class TDataGrid extends TTable
     protected $hasTotalFunction;
     protected $actionSide;
     protected $mutationAction;
+    protected $forPrinting;
     
     /**
      * Class Constructor
@@ -94,6 +95,7 @@ class TDataGrid extends TTable
         $this->hasInlineEditing = false;
         $this->hasTotalFunction = false;
         $this->actionSide = 'left';
+        $this->forPrinting = false;
         
         $this->rowcount = 0;
         $this->{'class'} = 'tdatagrid_table';
@@ -221,6 +223,11 @@ class TDataGrid extends TTable
         {
             $this->height = $height;
         }
+        
+        if (!empty($this->tbody) && ($this->scrollable))
+        {
+            $this->tbody->{'style'} = "height: {$this->height}; display: block; overflow-y:scroll; overflow-x:hidden;";
+        }
     }
     
     /**
@@ -315,6 +322,7 @@ class TDataGrid extends TTable
      */
     public function prepareForPrinting()
     {
+        $this->forPrinting = true;
         parent::clearChildren();
         $this->actions = [];
         $this->prependRows = 0;
@@ -659,19 +667,24 @@ class TDataGrid extends TTable
                 
                 if (empty($condition) OR call_user_func($condition, $object))
                 {
-                    $url       = $action->serialize();
+                    $url       = $action->serialize(TRUE, TRUE);
                     $first_url = isset($first_url) ? $first_url : $url;
                     
                     // creates a link
                     $link = new TElement('a');
                     $link->{'href'}      = htmlspecialchars($url);
                     $link->{'generator'} = 'adianti';
+                    $link->{'title'} = $label;
+                    
+                    if ($url == '#disabled')
+                    {
+                        $link->{'disabled'} = '1';
+                    }
                     
                     // verify if the link will have an icon or a label
                     if ($image)
                     {
                         $image_tag = is_object($image) ? clone $image : new TImage($image);
-                        $image_tag->{'title'} = $label;
                         
                         if ($action->getUseButton())
                         {
@@ -681,6 +694,8 @@ class TDataGrid extends TTable
                             $span->add($image_tag);
                             $span->add($label);
                             $link->add($span);
+                            
+                            $link->{'role'} = 'button';
                         }
                         else
                         {
@@ -746,9 +761,13 @@ class TDataGrid extends TTable
                         
                         if (empty($condition) OR call_user_func($condition, $object))
                         {
-                            $url       = $action->serialize();
+                            $url       = $action->serialize(TRUE, TRUE);
                             $first_url = isset($first_url) ? $first_url : $url;
-                            $dropdown->addAction($label, $action, $image);
+                            
+                            if ($url !== '#disabled')
+                            {
+                                $dropdown->addAction($label, $action, $image);
+                            }
                         }
                         $last_index = $index;
                     }
@@ -927,7 +946,7 @@ class TDataGrid extends TTable
                     {
                         $last_row = isset($this->objects[ $this->rowcount -1 ])? $this->objects[ $this->rowcount -1 ] : null;
                         // apply the transformer functions over the data
-                        $data = call_user_func($function, $raw_data, $object, $row, $cell, $last_row);
+                        $data = call_user_func($function, $raw_data, $object, $row, $cell, $last_row, $this->forPrinting);
                     }
                     
                     $output_row[] = is_scalar($data) ? strip_tags($data) : '';
@@ -968,7 +987,7 @@ class TDataGrid extends TTable
                         $cell->{'class'} = 'tdatagrid_cell';
                         $cell->{'align'} = $align;
                         
-                        if (isset($first_url) && $this->defaultClick && empty($cell->{'href'}))
+                        if (isset($first_url) && $this->defaultClick && empty($cell->{'href'}) && !empty($first_url) && ($first_url !== '#disabled'))
                         {
                             $cell->{'href'}      = $first_url;
                             $cell->{'generator'} = 'adianti';
@@ -1002,7 +1021,7 @@ class TDataGrid extends TTable
                 $poptitle   = AdiantiTemplateHandler::replace($poptitle, $object);
                 $popcontent = AdiantiTemplateHandler::replace($popcontent, $object, null, true);
                 
-                $row->{'popover'} = 'true';
+                $row->{'data-popover'} = 'true';
                 $row->{'poptitle'} = $poptitle;
                 $row->{'popcontent'} = htmlspecialchars(str_replace("\n", '', nl2br($popcontent)));
                 
@@ -1265,7 +1284,7 @@ class TDataGrid extends TTable
                         if ($transformer && $column->totalTransformed())
                         {
                             // apply the transformer functions over the data
-                            $content = call_user_func($transformer, $content, null, null, null, null);
+                            $content = call_user_func($transformer, $content, null, null, null, null, null);
                         }
                     }
                     

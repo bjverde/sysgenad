@@ -4,14 +4,66 @@ namespace Adianti\Util;
 /**
  * String manipulation
  *
- * @version    7.5
+ * @version    7.6
  * @package    util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class AdiantiStringConversion
 {
+    /**
+     * Polyfill for utf8_encode()
+     */
+    public static function utf8Encode($string)
+    {
+        if (version_compare(PHP_VERSION, '8.1.999', 'le'))
+        {
+            return utf8_encode((string) $string);
+        }
+        
+        if (function_exists('mb_convert_encoding'))
+        {
+            return mb_convert_encoding((string) $string, 'UTF-8', 'ISO-8859-1');
+        }
+        
+        if (class_exists('UConverter'))
+        {
+            return UConverter::transcode((string) $string, 'UTF8', 'ISO-8859-1');
+        }
+        
+        if (function_exists('iconv'))
+        {
+            return iconv('ISO-8859-1', 'UTF-8', (string) $string);
+        }
+    }
+    
+    /**
+     * Polyfill for utf8_decode()
+     */
+    public static function utf8Decode($string)
+    {
+        if (version_compare(PHP_VERSION, '8.1.999', 'le'))
+        {
+            return utf8_decode((string) $string);
+        }
+        
+        if (function_exists('mb_convert_encoding'))
+        {
+            return mb_convert_encoding((string) $string, 'ISO-8859-1', 'UTF-8');
+        }
+        
+        if (class_exists('UConverter'))
+        {
+            return UConverter::transcode((string) $string, 'ISO-8859-1', 'UTF8');
+        }
+        
+        if (function_exists('iconv'))
+        {
+            return iconv('UTF-8', 'ISO-8859-1', (string) $string);
+        }
+    }
+    
     /**
      * Returns camel case string from underscore string
      */
@@ -29,7 +81,7 @@ class AdiantiStringConversion
             }
         }
 
-        return $return;
+        return trim($return);
     }
 
     /**
@@ -61,30 +113,48 @@ class AdiantiStringConversion
      */
     public static function assureUnicode($content)
     {
-        if (extension_loaded('mbstring') && extension_loaded('iconv'))
+        if (is_scalar($content))
         {
-            $enc_in = mb_detect_encoding( (string) $content, ['UTF-8', 'ISO-8859-1', 'ASCII'], true);
-            if ($enc_in !== 'UTF-8')
+            if (extension_loaded('mbstring') && extension_loaded('iconv'))
             {
-                $converted = iconv($enc_in, "UTF-8", $content);
-                if ($converted === false)
+                $enc_in = mb_detect_encoding( (string) $content, ['UTF-8', 'ISO-8859-1', 'ASCII'], true);
+                if ($enc_in !== 'UTF-8')
                 {
-                    return $content;
-                }
+                    $converted = iconv($enc_in, "UTF-8", $content);
+                    if ($converted === false)
+                    {
+                        return $content;
+                    }
                 
-                return $converted;
+                    return $converted;
+                }
             }
-        }
-        else
-        {
-            if (utf8_encode(utf8_decode($content)) !== $content ) // NOT UTF
+            else
             {
-                return utf8_encode($content);
+                if (self::utf8Encode(self::utf8Decode($content)) !== $content ) // NOT UTF
+                {
+                    return self::utf8Encode($content);
+                }
             }
         }
         
         return $content;
     }
+    
+    
+    /**
+     * Assure ISO8859-1
+     */
+    public static function assureISO($content)
+    {
+        if (self::utf8Encode(self::utf8Decode($content)) == $content ) // UTF
+        {
+            return self::utf8Decode($content);
+        }
+        
+        return $content;
+    }
+    
     
     /**
      * Returns the slug from string

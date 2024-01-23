@@ -8,11 +8,11 @@ use Adianti\Core\AdiantiCoreTranslator;
 /**
  * Template manipulation
  *
- * @version    7.5
+ * @version    7.6
  * @package    util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class AdiantiTemplateHandler
 {
@@ -173,7 +173,8 @@ class AdiantiTemplateHandler
                 $decimals = $matches2[2][$key];
                 $dec_sep  = $matches2[3][$key];
                 $tho_sep  = $matches2[4][$key];
-                if (!empty(trim($number)))
+                
+                if (!empty(trim($number)) || $number == '0')
                 {
                     $content  = str_replace($raw, number_format($number, $decimals, $dec_sep, $tho_sep), $content);
                 }

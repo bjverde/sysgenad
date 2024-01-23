@@ -4,18 +4,19 @@ namespace Adianti\Widget\Dialog;
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
+use Adianti\Util\AdiantiStringConversion;
 
 use Exception;
 
 /**
  * Toast
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TToast
 {
@@ -27,7 +28,7 @@ class TToast
     {
         if (in_array($type, ['show', 'info', 'success', 'warning', 'error']))
         {
-            $message64 = base64_encode(utf8_decode($message));
+            $message64 = base64_encode(AdiantiStringConversion::utf8Decode($message));
             TScript::create("__adianti_show_toast64('{$type}', '{$message64}', '{$place}', '{$icon}')");
         }
         else

@@ -8,11 +8,11 @@ use Exception;
 /**
  * Basic HTTP Client request
  *
- * @version    7.5
+ * @version    7.6
  * @package    http
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class AdiantiHttpClient
 {
@@ -23,8 +23,13 @@ class AdiantiHttpClient
      * @param $method method type (GET,PUT,DELETE,POST)
      * @param $params request body
      */
-    public static function request($url, $method = 'POST', $params = [], $authorization = null)
+    public static function request($url, $method = 'POST', $params = [], $authorization = null, $headers = [])
     {
+        if (!in_array('curl', get_loaded_extensions()))
+        {
+            throw new Exception(AdiantiCoreTranslator::translate('Extension not found: ^1', 'curl'));
+        }
+        
         $ch = curl_init();
         
         if ($method == 'POST' || $method == 'PUT')
@@ -38,19 +43,23 @@ class AdiantiHttpClient
             $url .= '?'.http_build_query($params);
         }
        
-        $defaults = array(
-            CURLOPT_URL => $url,
-            CURLOPT_HEADER => false,
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_CONNECTTIMEOUT => 10
-        );
+        $defaults = [];
+        $defaults[CURLOPT_URL] = $url;
+        $defaults[CURLOPT_HEADER] = false;
+        $defaults[CURLOPT_CUSTOMREQUEST] = $method;
+        $defaults[CURLOPT_RETURNTRANSFER] = true;
+        $defaults[CURLOPT_SSL_VERIFYHOST] = false;
+        $defaults[CURLOPT_SSL_VERIFYPEER] = false;
+        $defaults[CURLOPT_CONNECTTIMEOUT] = 10;
         
         if (!empty($authorization))
         {
-            $defaults[CURLOPT_HTTPHEADER] = ['Authorization: '. $authorization];
+            $headers[] = 'Authorization: '. $authorization;
+        }
+        
+        if (!empty($headers))
+        {
+            $defaults[CURLOPT_HTTPHEADER] = $headers;
         }
         
         curl_setopt_array($ch, $defaults);
@@ -70,16 +79,33 @@ class AdiantiHttpClient
             throw new Exception(AdiantiCoreTranslator::translate('Return is not a valid JSON. Check the URL') . ' ' . ( AdiantiCoreApplication::getDebugMode() ? $output : '') );
         }
         
-        if (!empty($return['status']) && $return['status'] == 'error') {
+        if (!empty($return['status']) && $return['status'] == 'error')
+        {
             throw new Exception(!empty($return['data']) ? $return['data'] : $return['message']);
         }
         
-        if (!empty($return['error'])) {
-            throw new Exception($return['error']['message']);
+        if (!empty($return['error']))
+        {
+            if (is_scalar($return['error']))
+            {
+                throw new Exception($return['error']);
+            }
+            else if (!empty($return['error']['message']))
+            {
+                throw new Exception($return['error']['message']);
+            }
         }
         
-        if (!empty($return['errors'])) {
-            throw new Exception($return['errors']['message']);
+        if (!empty($return['errors']))
+        {
+            if (is_scalar($return['errors']))
+            {
+                throw new Exception($return['errors']);
+            }
+            else if (!empty($return['errors']['message']))
+            {
+                throw new Exception($return['errors']['message']);
+            }
         }
         
         if (!empty($return['data']))
