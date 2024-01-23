@@ -166,9 +166,18 @@ footer
 	margin-bottom: 20px;
 	min-height: unset;
 }
+
 .table-hover tbody tr:hover {
 	color: #000;
 	background-color: rgb(255, 249, 153);
+}
+.tfield[widget="ttext"] {
+	resize: revert;
+}
+.sidebar img {
+	max-width: 1.1em;
+	height: auto;
+	margin-right: 0.4em;
 }
 
 
