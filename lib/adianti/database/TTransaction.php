@@ -15,11 +15,11 @@ use Exception;
 /**
  * Manage Database transactions
  *
- * @version    7.5
+ * @version    7.6
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TTransaction
 {
@@ -84,10 +84,7 @@ class TTransaction
         if (!empty(self::$dbinfo[self::$counter]['slog']))
         {
             $logClass = self::$dbinfo[self::$counter]['slog'];
-            if (class_exists($logClass))
-            {
-                self::setLogger(new $logClass);
-            }
+            self::setLogger(new $logClass);
         }
         else
         {
@@ -212,7 +209,7 @@ class TTransaction
      * Assign a Logger strategy
      * @param $logger A TLogger child object
      */
-    public static function setLogger(AdiantiLoggerInterface $logger)
+    public static function setLogger(AdiantiLoggerInterface $logger = null)
     {
         if (isset(self::$conn[self::$counter]))
         {

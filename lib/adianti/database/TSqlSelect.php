@@ -9,11 +9,11 @@ use PDO;
 /**
  * Provides an Interface to create SELECT statements
  *
- * @version    7.5
+ * @version    7.6
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TSqlSelect extends TSqlStatement
 {
@@ -96,7 +96,7 @@ class TSqlSelect extends TSqlStatement
             
             if ($group)
             {
-                $this->sql .= ' GROUP BY ' . $group;
+                $this->sql .= ' GROUP BY ' . (is_array($group) ? implode(',', $group) : $group);
             }
             if ($order)
             {
@@ -161,7 +161,7 @@ class TSqlSelect extends TSqlStatement
             
             if ($group)
             {
-                $this->sql .= ' GROUP BY ' . $group;
+                $this->sql .= ' GROUP BY ' . (is_array($group) ? implode(',', $group) : $group);
             }
             
             if ($order)
@@ -239,7 +239,7 @@ class TSqlSelect extends TSqlStatement
             
             if (isset($group) AND !empty($group))
             {
-                $this->sql .= ' GROUP BY ' . $group;
+                $this->sql .= ' GROUP BY ' . (is_array($group) ? implode(',', $group) : $group);
             }
             if (isset($order) AND !empty($order))
             {
@@ -280,7 +280,7 @@ class TSqlSelect extends TSqlStatement
         
         if (isset($group) AND !empty($group))
         {
-            $basicsql .= ' GROUP BY ' . $group;
+            $basicsql .= ' GROUP BY ' . (is_array($group) ? implode(',', $group) : $group);
         }
         if (isset($order) AND !empty($order))
         {

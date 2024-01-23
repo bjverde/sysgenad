@@ -15,11 +15,11 @@ use ReflectionClass;
 /**
  * Implements the Repository Pattern to deal with collections of Active Records
  *
- * @version    7.5
+ * @version    7.6
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TRepository
 {
@@ -29,6 +29,7 @@ class TRepository
     protected $setValues;
     protected $columns;
     protected $aggregates;
+    protected $colTransformers;
     
     /**
      * Class Constructor
@@ -119,7 +120,16 @@ class TRepository
      */
     public function where($variable, $operator, $value, $logicOperator = TExpression::AND_OPERATOR)
     {
-        $this->criteria->add(new TFilter($variable, $operator, $value), $logicOperator);
+        $value2 = NULL;
+        
+        if (strtoupper($operator) === 'BETWEEN' && is_array($value) && count($value) == 2)
+        {
+            $value_array = $value;
+            $value  = $value_array[0];
+            $value2 = $value_array[1];
+        }
+        
+        $this->criteria->add(new TFilter($variable, $operator, $value, $value2), $logicOperator);
         
         return $this;
     }
@@ -292,6 +302,18 @@ class TRepository
                             TTransaction::log($record_key . ' stored in cache');
                         }
                     }
+                    
+                    if (!empty($this->colTransformers))
+                    {
+                        foreach ($this->colTransformers as $transf_alias => $transf_callback)
+                        {
+                            if (isset($object->$transf_alias))
+                            {
+                                $object->$transf_alias = $transf_callback($object->$transf_alias);
+                            }
+                        }
+                    }
+                    
                     // store the object in the $results array
                     $results[] = $object;
                 }
@@ -635,10 +657,10 @@ class TRepository
      * @param $column  Column to be aggregated
      * @return         An array of objects or the total value (if does not have group by)
      */
-    public function countDistinctBy($column, $alias = null)
+    public function countDistinctBy($column, $alias = null, Callable $transformation = null)
     {
         $alias = is_null($alias) ? $column : $alias;
-        return $this->aggregate('count', 'distinct ' . $column, $alias);
+        return $this->aggregate('count', 'distinct ' . $column, $alias, $transformation);
     }
     
     /**
@@ -647,9 +669,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         An array of objects or the total value (if does not have group by)
      */
-    public function countBy($column, $alias = null)
+    public function countBy($column, $alias = null, Callable $transformation = null)
     {
-        return $this->aggregate('count', $column, $alias);
+        return $this->aggregate('count', $column, $alias, $transformation);
     }
     
     /**
@@ -658,9 +680,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         self object
      */
-    public function countByAnd($column, $alias = null)
+    public function countByAnd($column, $alias = null, Callable $transformation = null)
     {
-        $this->aggregates[] = "count({$column}) as \"{$alias}\"";
+        $this->aggregates[] = ['count', $column, $alias, $transformation];
         return $this;
     }
     
@@ -670,9 +692,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         An array of objects or the total value (if does not have group by)
      */
-    public function sumBy($column, $alias = null)
+    public function sumBy($column, $alias = null, Callable $transformation = null)
     {
-        return $this->aggregate('sum', $column, $alias);
+        return $this->aggregate('sum', $column, $alias, $transformation);
     }
     
     /**
@@ -681,9 +703,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         self object
      */
-    public function sumByAnd($column, $alias = null)
+    public function sumByAnd($column, $alias = null, Callable $transformation = null)
     {
-        $this->aggregates[] = "sum({$column}) as \"{$alias}\"";
+        $this->aggregates[] = ['sum', $column, $alias, $transformation];
         return $this;
     }
     
@@ -693,9 +715,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         An array of objects or the total value (if does not have group by)
      */
-    public function avgBy($column, $alias = null)
+    public function avgBy($column, $alias = null, Callable $transformation = null)
     {
-        return $this->aggregate('avg', $column, $alias);
+        return $this->aggregate('avg', $column, $alias, $transformation);
     }
     
     /**
@@ -704,9 +726,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         self object
      */
-    public function avgByAnd($column, $alias = null)
+    public function avgByAnd($column, $alias = null, Callable $transformation = null)
     {
-        $this->aggregates[] = "avg({$column}) as \"{$alias}\"";
+        $this->aggregates[] = ['avg', $column, $alias, $transformation];
         return $this;
     }
     
@@ -716,9 +738,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         An array of objects or the total value (if does not have group by)
      */
-    public function minBy($column, $alias = null)
+    public function minBy($column, $alias = null, Callable $transformation = null)
     {
-        return $this->aggregate('min', $column, $alias);
+        return $this->aggregate('min', $column, $alias, $transformation);
     }
     
     /**
@@ -727,9 +749,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         self object
      */
-    public function minByAnd($column, $alias = null)
+    public function minByAnd($column, $alias = null, Callable $transformation = null)
     {
-        $this->aggregates[] = "min({$column}) as \"{$alias}\"";
+        $this->aggregates[] = ['min', $column, $alias, $transformation];
         return $this;
     }
     
@@ -739,9 +761,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         An array of objects or the total value (if does not have group by)
      */
-    public function maxBy($column, $alias = null)
+    public function maxBy($column, $alias = null, Callable $transformation = null)
     {
-        return $this->aggregate('max', $column, $alias);
+        return $this->aggregate('max', $column, $alias, $transformation);
     }
     
     /**
@@ -750,9 +772,9 @@ class TRepository
      * @param $alias   Column alias
      * @return         self object
      */
-    public function maxByAnd($column, $alias = null)
+    public function maxByAnd($column, $alias = null, Callable $transformation = null)
     {
-        $this->aggregates[] = "max({$column}) as \"{$alias}\"";
+        $this->aggregates[] = ['max', $column, $alias, $transformation];
         return $this;
     }
     
@@ -761,26 +783,58 @@ class TRepository
      * @param $function Aggregate function (count, sum, min, max, avg)
      * @return          An array of objects or the total value (if does not have group by)
      */
-    protected function aggregate($function, $column, $alias = null)
+    protected function aggregate($function, $column, $alias = null, Callable $transformation = null)
     {
         $criteria = isset($this->criteria) ? $this->criteria : new TCriteria;
+        
+        $class = $this->class;
+        $deletedat = $class::getDeletedAtColumn();
+        
+        if (!$this->trashed && $deletedat)
+        {
+            $criteria->add(new TFilter($deletedat, 'IS', NULL));
+        }
+        
         $alias = $alias ? $alias : $column;
         // creates a SELECT statement
         $sql = new TSqlSelect;
         if (!empty( $this->criteria->getProperty('group') ))
         {
-            $sql->addColumn( $this->criteria->getProperty('group') );
+            if (is_array($this->criteria->getProperty('group')))
+            {
+                foreach ($this->criteria->getProperty('group') as $group)
+                {
+                    $sql->addColumn( $group );
+                }
+            }
+            else
+            {
+                $sql->addColumn( $this->criteria->getProperty('group') );
+            }
         }
+        
+        $transformers = [];
         
         if ($this->aggregates)
         {
             foreach ($this->aggregates as $aggregate)
             {
-                $sql->addColumn($aggregate);
+                list($agg_function, $agg_column, $agg_alias, $agg_transform) = $aggregate;
+                
+                if (!empty($agg_transform))
+                {
+                    $this->transformColumn( $agg_alias, $agg_transform);
+                }
+                $sql->addColumn("$agg_function({$agg_column}) as \"{$agg_alias}\"");
             }
         }
         
         $sql->addColumn("$function({$column}) as \"{$alias}\"");
+        
+        if (!empty($transformation))
+        {
+            $this->transformColumn( $alias, $transformation);
+        }
         
         $sql->setEntity($this->getEntity());
         
@@ -812,6 +866,17 @@ class TRepository
                 // iterate the results as objects
                 while ($raw = $result-> fetchObject())
                 {
+                    if (!empty($this->colTransformers))
+                    {
+                        foreach ($this->colTransformers as $transf_alias => $transf_callback)
+                        {
+                            if (isset($raw->$transf_alias))
+                            {
+                                $raw->$transf_alias = $transf_callback($raw->$transf_alias);
+                            }
+                        }
+                    }
+                    
                     $results[] = $raw;
                 }
             }
@@ -888,6 +953,16 @@ class TRepository
         }
         
         return $collection;
+    }
+    
+    /**
+     * Set a transformation for a column
+     */
+    public function transformColumn( $alias, Callable $callback)
+    {
+        $this->colTransformers[$alias] = $callback;
+        
+        return $this;
     }
     
     /**

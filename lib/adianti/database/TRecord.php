@@ -10,6 +10,7 @@ use Adianti\Database\TSqlSelect;
 use Adianti\Database\TSqlInsert;
 use Adianti\Database\TSqlUpdate;
 use Adianti\Database\TSqlDelete;
+use Adianti\Registry\TSession;
 
 use Math\Parser;
 use PDO;
@@ -21,11 +22,11 @@ use Traversable;
 /**
  * Base class for Active Records
  *
- * @version    7.5
+ * @version    7.6
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 abstract class TRecord implements IteratorAggregate
 {
@@ -340,6 +341,74 @@ abstract class TRecord implements IteratorAggregate
     }
     
     /**
+     * Returns the the name of the created at column
+     * @return A String containing the created at column
+     */
+    public function getCreatedByColumn()
+    {
+        // get the Active Record class name
+        $class = get_class($this);
+        
+        if (defined("{$class}::CREATEDBY"))
+        {
+            // returns the CREATEDBY Active Record class constant
+            return constant("{$class}::CREATEDBY");
+        }
+    }
+    
+    /**
+     * Returns the the name of the updated at column
+     * @return A String containing the updated at column
+     */
+    public function getUpdatedByColumn()
+    {
+        // get the Active Record class name
+        $class = get_class($this);
+        
+        if (defined("{$class}::UPDATEDBY"))
+        {
+            // returns the UPDATEDBY Active Record class constant
+            return constant("{$class}::UPDATEDBY");
+        }
+    }
+    
+    /**
+     * Returns the the name of the deleted at column
+     * @return A String containing the deleted at column
+     */
+    public static function getDeletedByColumn()
+    {
+        // get the Active Record class name
+        $class = get_called_class();
+        if(defined("{$class}::DELETEDBY"))
+        {
+            // returns the DELETEDBY Active Record class constant
+            return constant("{$class}::DELETEDBY");
+        }
+
+        return NULL;
+    }
+    
+    /**
+     * Returns the information related to the logged user
+     * @return A String containing user login or id or custom code
+     */
+    public function getByUserSessionIdentificator()
+    {
+        // get the Active Record class name
+        $class = get_class($this);
+        
+        $session_var = 'userid';
+        
+        if (defined("{$class}::USERBYATT"))
+        {
+            $session_var = constant("{$class}::USERBYATT");
+        }
+        
+        return TSession::getValue($session_var);
+    }
+    
+    /**
      * Returns the the name of the sequence for primary key
      * @return A String containing the sequence name
      */
@@ -568,7 +637,9 @@ abstract class TRecord implements IteratorAggregate
         // check if the object has an ID or exists in the database
         $pk = $this->getPrimaryKey();
         $createdat = $this->getCreatedAtColumn();
+        $createdby = $this->getCreatedByColumn();
         $updatedat = $this->getUpdatedAtColumn();
+        $updatedby = $this->getUpdatedByColumn();
         
         if (method_exists($this, 'onBeforeStore'))
         {
@@ -633,6 +704,11 @@ abstract class TRecord implements IteratorAggregate
                 $date_mask = (in_array($info['type'], ['sqlsrv', 'dblib', 'mssql'])) ? 'Ymd H:i:s' : 'Y-m-d H:i:s';
                 $sql->setRowData($createdat, date($date_mask));
             }
+            
+            if (!empty($createdby))
+            {
+                $sql->setRowData($createdby, $this->getByUserSessionIdentificator() );
+            }
         }
         else
         {
@@ -679,6 +755,11 @@ abstract class TRecord implements IteratorAggregate
                 $info = TTransaction::getDatabaseInfo();
                 $date_mask = (in_array($info['type'], ['sqlsrv', 'dblib', 'mssql'])) ? 'Ymd H:i:s' : 'Y-m-d H:i:s';
                 $sql->setRowData($updatedat, date($date_mask));
+            }
+            
+            if (!empty($updatedby))
+            {
+                $sql->setRowData($updatedby, $this->getByUserSessionIdentificator() );
             }
         }
         
@@ -971,6 +1052,8 @@ abstract class TRecord implements IteratorAggregate
         $id = $id ? $id : $this->$pk;
 
         $deletedat = self::getDeletedAtColumn();
+        $deletedby = self::getDeletedByColumn();
+        
         if ($deletedat)
         {
             // creates a Update instruction
@@ -980,6 +1063,11 @@ abstract class TRecord implements IteratorAggregate
             $info = TTransaction::getDatabaseInfo();
             $date_mask = (in_array($info['type'], ['sqlsrv', 'dblib', 'mssql'])) ? 'Ymd H:i:s' : 'Y-m-d H:i:s';
             $sql->setRowData($deletedat, date($date_mask));
+            
+            if ($deletedby)
+            {
+                $sql->setRowData($deletedby, $this->getByUserSessionIdentificator() );
+            }
         }
         else
         {
