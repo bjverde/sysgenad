@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Base;
 
+use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Widget\Dialog\TMessage;
 use Adianti\Widget\Dialog\TQuestion;
@@ -16,15 +17,16 @@ use Exception;
 /**
  * Standard Form List Trait
  *
- * @version    7.5
+ * @version    7.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 trait AdiantiStandardFormListTrait
 {
     protected $afterSaveAction;
+    protected $useMessages;
     
     use AdiantiStandardControlTrait;
     
@@ -35,6 +37,14 @@ trait AdiantiStandardFormListTrait
     public function setAfterSaveAction($action)
     {
         $this->afterSaveAction = $action;
+    }
+    
+    /**
+     * Define if will use messages after operations
+     */
+    public function setUseMessages($bool)
+    {
+        $this->useMessages = $bool;
     }
     
     /**
@@ -169,7 +179,14 @@ trait AdiantiStandardFormListTrait
             TTransaction::close();
             
             // shows the success message
-            new TMessage('info', AdiantiCoreTranslator::translate('Record saved'), $this->afterSaveAction ?? null);
+            if (isset($this->useMessages) AND $this->useMessages === false)
+            {
+                AdiantiCoreApplication::loadPageURL( $this->afterSaveAction->serialize() );
+            }
+            else
+            {
+                new TMessage('info', AdiantiCoreTranslator::translate('Record saved'), $this->afterSaveAction);
+            }
             
             // reload the listing
             $this->onReload();

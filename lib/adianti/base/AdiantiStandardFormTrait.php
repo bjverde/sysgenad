@@ -11,15 +11,16 @@ use Exception;
 /**
  * Standard Form Trait
  *
- * @version    7.5
+ * @version    7.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 trait AdiantiStandardFormTrait
 {
     protected $afterSaveAction;
+    protected $afterSaveCallback;
     protected $useMessages;
     
     use AdiantiStandardControlTrait;
@@ -31,6 +32,15 @@ trait AdiantiStandardFormTrait
     public function setAfterSaveAction($action)
     {
         $this->afterSaveAction = $action;
+    }
+    
+    /**
+     * method setAfterSaveCallback()
+     * Define after save callback
+     */
+    public function setAfterSaveCallback($callback)
+    {
+        $this->afterSaveCallback = $callback;
     }
     
     /**
@@ -70,6 +80,12 @@ trait AdiantiStandardFormTrait
             
             // stores the object
             $object->store();
+            
+            if (!empty($this->afterSaveCallback))
+            {
+                $callback = $this->afterSaveCallback;
+                $callback($object, $this->form->getData() );
+            }
             
             // fill the form with the active record data
             $this->form->setData($object);

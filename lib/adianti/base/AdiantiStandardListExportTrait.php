@@ -13,11 +13,11 @@ use Exception;
 /**
  * List Export Trait
  *
- * @version    7.5
+ * @version    7.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 trait AdiantiStandardListExportTrait
 {
@@ -84,7 +84,7 @@ trait AdiantiStandardListExportTrait
             
             $window = TWindow::create('Export', 0.8, 0.8);
             $object = new TElement('object');
-            $object->{'data'}  = $output;
+            $object->{'data'}  = 'download.php?file='.$output;
             $object->{'type'}  = 'application/pdf';
             $object->{'style'} = "width: 100%; height:calc(100% - 10px)";
             $window->add($object);
@@ -303,7 +303,7 @@ trait AdiantiStandardListExportTrait
             // converts the HTML template into PDF
             $dompdf = new \Dompdf\Dompdf($options);
             $dompdf-> loadHtml ($contents);
-            $dompdf-> setPaper ('A4', 'portrait');
+            $dompdf-> setPaper ('A4', 'landscape');
             $dompdf-> render ();
             
             // write and open file

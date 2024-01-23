@@ -23,11 +23,11 @@ use DomDocument;
 /**
  * Standard Collection Trait
  *
- * @version    7.5
+ * @version    7.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 trait AdiantiStandardCollectionTrait
 {
@@ -168,6 +168,8 @@ trait AdiantiStandardCollectionTrait
         // get the search form data
         $data = $this->form->getData();
         
+        $count_filters = 0;
+        
         if ($this->formFilters)
         {
             foreach ($this->formFilters as $filterKey => $formFilter)
@@ -204,6 +206,8 @@ trait AdiantiStandardCollectionTrait
                     TSession::setValue($this->activeRecord.'_filter_'.$formFilter, $filter);
                     TSession::setValue($this->activeRecord.'_filter_'.$filterKey, $filter);
                     TSession::setValue($this->activeRecord.'_'.$formFilter, $data->{$formFilter});
+                    
+                    $count_filters ++;
                 }
                 else
                 {
@@ -217,6 +221,7 @@ trait AdiantiStandardCollectionTrait
         
         TSession::setValue($this->activeRecord.'_filter_data', $data);
         TSession::setValue(get_class($this).'_filter_data', $data);
+        TSession::setValue(get_class($this).'_filter_counter', $count_filters);
         
         // fill the form with data again
         $this->form->setData($data);
