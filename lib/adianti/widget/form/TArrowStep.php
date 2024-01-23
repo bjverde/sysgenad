@@ -9,18 +9,19 @@ use Adianti\Widget\Base\TStyle;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Form\TField;
 use Adianti\Widget\Form\TForm;
+use Exception;
 
 /**
  * Arrow Step
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage util
  * @author     Lucas Tomasi
  * @author     Matheus Agnes Dias
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006-2014 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TArrowStep extends TField implements AdiantiWidgetInterface
 {
@@ -370,6 +371,21 @@ class TArrowStep extends TField implements AdiantiWidgetInterface
             }
         }
     }
+
+    /**
+     * Add items
+     * @param $item  Items
+     */
+    public function addItems($items)
+    {
+        if ($items)
+        {
+            foreach($items as $key => $title)
+            {
+                $this->items[$key] = $title;
+            }
+        }
+    }
     
     /**
      * Get items
@@ -530,7 +546,7 @@ class TArrowStep extends TField implements AdiantiWidgetInterface
         $styleClassBorderHeight = new TStyle($this->className.' .step:after,.'.$this->className.' .step:before');
         $styleClassBorderHeight->{"border-top-width"} =  $size1;
         $styleClassBorderHeight->{"border-bottom-width"} = $size1;
-        $styleClassBorderHeight->{"right"} = "-{$size2}";
+        $styleClassBorderHeight->{"right"} = "calc( -{$size2} + 0.5px)";
         $styleClassBorderHeight->{"border-left-width"} = $size2;
         $styleClassBorderHeight->{"border-left-color"} = $this->disableColor;
         $styles->add($styleClassBorderHeight);

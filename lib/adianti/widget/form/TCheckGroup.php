@@ -16,12 +16,12 @@ use Exception;
 /**
  * A group of CheckButton's
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TCheckGroup extends TField implements AdiantiWidgetInterface
 {
@@ -359,7 +359,7 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
         if ($this->useButton)
         {
             echo "<div tcheckgroup=\"{$this->name}\" class=\"toggle-wrapper {$editable_class}\" ".$this->getPropertiesAsString('aria').' data-toggle="buttons">';
-            echo '<div class="btn-group" style="clear:both;float:left;display:table">';
+            echo '<div class="btn-group" style="clear:both;float:left;">';
         }
         else
         {
@@ -454,7 +454,7 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
                     if ($this->useButton)
                     {
                        echo '</div>';
-                       echo '<div class="btn-group" style="clear:both;float:left;display:table">';
+                       echo '<div class="btn-group" style="clear:both;float:left;">';
                     }
                     else
                     {

@@ -13,13 +13,13 @@ use Exception;
 /**
  * Multi Entry Widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Matheus Agnes Dias
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TMultiEntry extends TSelect implements AdiantiWidgetInterface
 {
@@ -29,6 +29,7 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
     protected $height;
     protected $maxSize;
     protected $editable;
+    protected $separator;
     protected $changeAction;
     protected $changeFunction;
     
@@ -125,6 +126,60 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
                 $option->{'selected'} = 1;
                 
                 $this->tag->add($option);
+            }
+        }
+    }
+    
+    /**
+     * Define the field's separator
+     * @param $sep A string containing the field's separator
+     */
+    public function setValueSeparator($sep)
+    {
+        $this->separator = $sep;
+    }
+    
+    /**
+     * Define the field's value
+     * @param $value A string containing the field's value
+     */
+    public function setValue($value)
+    {
+        if (empty($this->separator))
+        {
+            parent::setValue($value);
+        }
+        else
+        {
+            if ($value)
+            {
+                $this->value = explode($this->separator, $value);
+            }
+            else
+            {
+                $this->value = null;
+            }
+        }
+    }
+    
+    /**
+     * Return the post data
+     */
+    public function getPostData()
+    {
+        if (empty($this->separator))
+        {
+            return parent::getPostData();
+        }
+        else
+        {
+            if (isset($_POST[$this->name]))
+            {
+                return implode($this->separator, $_POST[$this->name]);
+            }
+            else
+            {
+                return [];
             }
         }
     }

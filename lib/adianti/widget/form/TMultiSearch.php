@@ -15,13 +15,13 @@ use Exception;
 /**
  * Multi Search Widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
- * @author     Matheus Agnes Dias
  * @author     Pablo Dall'Oglio
+ * @author     Matheus Agnes Dias
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TMultiSearch extends TSelect implements AdiantiWidgetInterface
 {
@@ -207,7 +207,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create( " tmultisearch_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create( " tmultisearch_enable_field('{$form_name}', '{$field}'); ", true, 1 );
     }
     
     /**
@@ -217,7 +217,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create( " tmultisearch_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create( " tmultisearch_disable_field('{$form_name}', '{$field}'); ", true, 1);
     }
 
     /**

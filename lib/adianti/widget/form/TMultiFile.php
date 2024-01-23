@@ -17,13 +17,13 @@ use Exception;
 /**
  * FileChooser widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Nataniel Rabaioli
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TMultiFile extends TField implements AdiantiWidgetInterface
 {
@@ -286,7 +286,7 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
 
         TScript::create(" tmultifile_start( '{$this->tag-> id}', '{$div-> id}', '{$action}', {$complete_action}, $fileHandling, '$imageGallery', '$popover', {$limitSize});");
 
-        if(!parent::getEditable())
+        if (!parent::getEditable())
         {
             TScript::create("tmultifile_disable_field('{$this->formName}', '{$this->name}');");
         }

@@ -15,12 +15,12 @@ use ReflectionClass;
 /**
  * Wrapper class to deal with forms
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TForm implements AdiantiFormInterface
 {
@@ -455,11 +455,16 @@ class TForm implements AdiantiFormInterface
      * Add a container to the form (usually a table or panel)
      * @param $object Any Object that implements the show() method
      */
-    public function add($object)
+    public function add($object, $is_field = false)
     {
         if (!in_array($object, $this->children))
         {
             $this->children[] = $object;
+            
+            if ($is_field)
+            {
+                $this->addField($object);
+            }
         }
     }
     

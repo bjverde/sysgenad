@@ -13,13 +13,13 @@ use Adianti\Widget\Util\TImage;
 /**
  * Image uploader with cropper
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Lucas Tomasi
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TImageCropper extends TField implements AdiantiWidgetInterface
 {
@@ -197,7 +197,7 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
     {
         if ($this->fileHandling)
         {
-            if (strpos($value, '%7B') === false)
+            if (strpos( (string) $value, '%7B') === false)
             {
                 if (!empty($value))
                 {

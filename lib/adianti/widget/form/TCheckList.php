@@ -14,12 +14,12 @@ use Adianti\Control\TAction;
 /**
  * Checklist
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TCheckList implements AdiantiWidgetInterface
 {
@@ -53,9 +53,10 @@ class TCheckList implements AdiantiWidgetInterface
         
         $check = new TCheckButton('check_all_'.$id);
         $check->setIndexValue('on');
-        $check->{'onclick'} = "tchecklist_select_all(this, '{$id}')";
+        $check->{'onclick'} = "tchecklist_toggle_select_all(this, '{$id}')";
         $check->{'style'} = 'cursor:pointer';
         $check->setProperty('class', 'filled-in');
+        $check->setProperty('role', 'check-all');
         $this->checkAllButton = $check;
         
         $label = new TLabel('');
@@ -127,9 +128,27 @@ class TCheckList implements AdiantiWidgetInterface
      */
     public function setId($id)
     {
-        $this->checkAllButton->{'onclick'} = "tchecklist_select_all(this, '{$id}')";
+        $this->checkAllButton->{'onclick'} = "tchecklist_toggle_select_all(this, '{$id}')";
         $this->checkColumn->setLabel( $this->checkAllButton->getContents() );
         $this->datagrid->setId($id);
+    }
+    
+    /**
+     *
+     */
+    public static function checkAll($name, $fire_events = true)
+    {
+        $fire_events = (int) $fire_events;
+        TScript::create("tchecklist_select_all_by_name('{$name}', {$fire_events})");
+    }
+    
+    /**
+     *
+     */
+    public static function checkNone($name, $fire_events = true)
+    {
+        $fire_events = (int) $fire_events;
+        TScript::create("tchecklist_select_none_by_name('{$name}', {$fire_events})");
     }
     
     /**
@@ -178,6 +197,7 @@ class TCheckList implements AdiantiWidgetInterface
             {
                 $item->{'check'}->setValue(null);
                 $position = $this->datagrid->getRowIndex( $id_column, $item->$id_column );
+                
                 if (is_int($position))
                 {
                     $row = $this->datagrid->getRow($position);

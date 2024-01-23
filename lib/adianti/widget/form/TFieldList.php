@@ -16,12 +16,12 @@ use stdClass;
 /**
  * Create a field list
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TFieldList extends TTable
 {
@@ -111,10 +111,13 @@ class TFieldList extends TTable
                 $field_name = str_replace($this->field_prefix . '_', '', $field_name);
             }
             
-            foreach ($values as $row => $value)
+            if ($values)
             {
-                $results[$row] = $results[$row] ?? new stdClass;
-                $results[$row]->$field_name = $value;
+                foreach ($values as $row => $value)
+                {
+                    $results[$row] = $results[$row] ?? new stdClass;
+                    $results[$row]->$field_name = $value;
+                }
             }
         }
         
@@ -586,6 +589,40 @@ class TFieldList extends TTable
             $row->addCell( '' );
         }
         
+        $this->addTotalFields($row);
+        
+        $all_actions = array_merge( (array) $this->row_functions, (array) $this->row_actions );
+        
+        if ($all_actions)
+        {
+            foreach ($all_actions as $row_action)
+            {
+                $cell = $row->addCell('');
+            }
+        }
+        
+        $add = new TElement('div');
+        $add->{'class'} = 'btn btn-default btn-sm';
+        $add->{'onclick'} = $this->clone_function;
+        $add->{'title'} = $title ? $title : AdiantiCoreTranslator::translate('Add');
+        
+        if ($clone_action)
+        {
+            $string_action = $clone_action->serialize(FALSE);
+            $add->{'onclick'} = "__adianti_post_exec('{$string_action}', tfieldlist_get_last_row_data(this), null, undefined, '1');".$add->{'onclick'};
+        }
+        
+        $add->add($icon ? new TImage($icon) : '<i class="fa fa-plus green"></i>');
+        
+        // add buttons in table
+        $row->addCell($add);
+    }
+    
+    /**
+     *
+     */
+    public function addTotalFields($row)
+    {
         if ($this->fields)
         {
             foreach ($this->fields as $field)
@@ -616,32 +653,6 @@ class TFieldList extends TTable
                 }
             }
         }
-        
-        $all_actions = array_merge( (array) $this->row_functions, (array) $this->row_actions );
-        
-        if ($all_actions)
-        {
-            foreach ($all_actions as $row_action)
-            {
-                $cell = $row->addCell('');
-            }
-        }
-        
-        $add = new TElement('div');
-        $add->{'class'} = 'btn btn-default btn-sm';
-        $add->{'onclick'} = $this->clone_function;
-        $add->{'title'} = $title ? $title : AdiantiCoreTranslator::translate('Add');
-        
-        if ($clone_action)
-        {
-            $string_action = $clone_action->serialize(FALSE);
-            $add->{'onclick'} = "__adianti_post_exec('{$string_action}', tfieldlist_get_last_row_data(this), null, undefined, '1');".$add->{'onclick'};
-        }
-        
-        $add->add($icon ? new TImage($icon) : '<i class="fa fa-plus green"></i>');
-        
-        // add buttons in table
-        $row->addCell($add);
     }
     
     /**
@@ -742,6 +753,30 @@ class TFieldList extends TTable
      */
     public function show()
     {
+        if ($this->summarize && empty($this->tfoot))
+        {
+            $this->tfoot = parent::addSection('tfoot');
+            
+            $row = parent::addRow();
+            
+            if ($this->sorting)
+            {
+                $row->addCell( '' );
+            }
+            
+            $this->addTotalFields($row);
+            
+            $all_actions = array_merge( (array) $this->row_functions, (array) $this->row_actions );
+            
+            if ($all_actions)
+            {
+                foreach ($all_actions as $row_action)
+                {
+                    $cell = $row->addCell('');
+                }
+            }
+        }
+        
         parent::show();
         $id = $this->{'id'};
         

@@ -11,12 +11,12 @@ use Adianti\Widget\Util\TImage;
 /**
  * Html Editor
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class THtmlEditor extends TField implements AdiantiWidgetInterface
 {
@@ -196,7 +196,7 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
         
         // show the tag
         $div = new TElement('div');
-        $div->style = 'display: none';
+        $div->{'style'} = 'display: none';
         $div->add($this->tag);
         $div->show();
         
@@ -212,8 +212,11 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
         
         $options_json = json_encode( $options );
         $buttons_json = json_encode( $this->customButtons );
-        TScript::create(" thtmleditor_start( '{$this->tag->{'id'}}', '{$this->size}', '{$this->height}', '{$locale}', '{$options_json}', '{$buttons_json}' ); ");
-        TScript::create(" $('#{$this->tag->id}').parent().show();");
+        
+        $id = $this->tag->{'id'};
+        
+        TScript::create(" thtmleditor_start( '{$id}', '{$this->size}', '{$this->height}', '{$locale}', '{$options_json}', '{$buttons_json}' ); ");
+        TScript::create(" $('#{$id}').parent().show();");
         
         // check if the field is not editable
         if (!parent::getEditable())

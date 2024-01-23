@@ -5,16 +5,17 @@ use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TStyle;
 use Adianti\Widget\Form\TField;
+use Adianti\Widget\Base\TScript;
 
 /**
  * Label Widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TLabel extends TField implements AdiantiWidgetInterface
 {

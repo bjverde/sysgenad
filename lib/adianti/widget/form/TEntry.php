@@ -13,12 +13,12 @@ use Exception;
 /**
  * Entry Widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TEntry extends TField implements AdiantiWidgetInterface
 {
@@ -191,8 +191,8 @@ class TEntry extends TField implements AdiantiWidgetInterface
                 
                 if ($this->numericMask)
                 {
-                    $value = isset($value)? (isset($this->thousandSeparator)?str_replace( $this->thousandSeparator,  '', $value):$value): null;
-                    $value = isset($value)? (isset($this->decimalsSeparator)?str_replace( $this->decimalsSeparator, '.', $value):$value): null;
+                    $value = str_replace( $this->thousandSeparator, '', $value);
+                    $value = str_replace( $this->decimalsSeparator, '.', $value);
                     return $value;
                 }
                 else if ($this->mask)
@@ -406,40 +406,29 @@ class TEntry extends TField implements AdiantiWidgetInterface
             $this->setProperty('exitaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback')");
         }
         
-        // verify if the widget is non-editable
-        if (parent::getEditable())
+        if (isset($this->exitAction))
         {
-            if (isset($this->exitAction))
+            // just aggregate onBlur, if the previous one does not have return clause
+            if (strstr((string) $this->getProperty('onBlur'), 'return') == FALSE)
             {
-                // just aggregate onBlur, if the previous one does not have return clause
-                if (strstr((string) $this->getProperty('onBlur'), 'return') == FALSE)
-                {
-                    $this->setProperty('onBlur', $this->getProperty('exitaction'), FALSE);
-                }
-                else
-                {
-                    $this->setProperty('onBlur', $this->getProperty('exitaction'), TRUE);
-                }
+                $this->setProperty('onBlur', $this->getProperty('exitaction'), FALSE);
             }
-            
-            if (isset($this->exitFunction))
+            else
             {
-                if (strstr((string) $this->getProperty('onBlur'), 'return') == FALSE)
-                {
-                    $this->setProperty('onBlur', $this->exitFunction, FALSE);
-                }
-                else
-                {
-                    $this->setProperty('onBlur', $this->exitFunction, TRUE);
-                }
+                $this->setProperty('onBlur', $this->getProperty('exitaction'), TRUE);
             }
         }
-        else
+        
+        if (isset($this->exitFunction))
         {
-            $this->tag->{'readonly'} = "1";
-            $this->tag->{'class'} .= ' tfield_disabled'; // CSS
-            $this->tag->{'tabindex'} = '-1';
-            $this->tag->{'onmouseover'} = "style.cursor='default'";
+            if (strstr((string) $this->getProperty('onBlur'), 'return') == FALSE)
+            {
+                $this->setProperty('onBlur', $this->exitFunction, FALSE);
+            }
+            else
+            {
+                $this->setProperty('onBlur', $this->exitFunction, TRUE);
+            }
         }
         
         if ($this->mask)
@@ -479,6 +468,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
             $list = json_encode($this->completion);
             TScript::create(" tentry_autocomplete( '{$this->id}', $list, '{$options_json}'); ");
         }
+        
         if ($this->numericMask)
         {
             $reverse = $this->reverse ? 'true' : 'false';
@@ -490,6 +480,12 @@ class TEntry extends TField implements AdiantiWidgetInterface
         if ($this->exitOnEnterOn)
         {
             TScript::create( "tentry_exit_on_enter( '{$this->id}' ); ");
+        }
+        
+        // verify if the widget is non-editable
+        if (!parent::getEditable())
+        {
+            parent::disableField($this->formName, $this->name);
         }
     }
 }

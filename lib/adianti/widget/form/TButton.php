@@ -15,12 +15,12 @@ use Exception;
 /**
  * Button Widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TButton extends TField implements AdiantiWidgetInterface
 {
@@ -181,7 +181,8 @@ class TButton extends TField implements AdiantiWidgetInterface
             }
             
             // get the action as URL
-            $url = $this->action->serialize(FALSE);
+            $original_url = $url = $this->action->serialize(FALSE, TRUE);
+            
             if ($this->action->isStatic())
             {
                 $url .= '&static=1';
@@ -200,6 +201,11 @@ class TButton extends TField implements AdiantiWidgetInterface
             $button->{'class'}   = 'btn btn-default btn-sm';
             $button->{'onclick'} = $action;
             $action = '';
+            
+            if ($original_url == '#disabled')
+            {
+                $button->{'disabled'} = '1';
+            }
         }
         else
         {

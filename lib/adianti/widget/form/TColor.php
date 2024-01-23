@@ -12,12 +12,12 @@ use Exception;
 /**
  * Color Widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TColor extends TEntry implements AdiantiWidgetInterface
 {
@@ -45,7 +45,7 @@ class TColor extends TEntry implements AdiantiWidgetInterface
         $this->tag->{'widget'} = 'tcolor';
         $this->tag->{'autocomplete'} = 'off';
         $this->setSize('100%');
-
+        
         $this->theme = self::THEME_CLASSIC;
         $this->options = [
             'swatches' => [
