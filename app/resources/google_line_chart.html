@@ -19,6 +19,12 @@ $(function() {
     
     var render_line_chart = function() {
         var data = google.visualization.arrayToDataTable( {$data|raw} );
+        
+        if (data.getNumberOfRows() === 1) {
+          data.insertRows(0, [[' ', null]])
+          data.addRow([' ', null]);
+        }
+        
         var options = {
           title : '{$title}',
           vAxis: {title: '{$ytitle}'},
