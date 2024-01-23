@@ -16,13 +16,13 @@ use Exception;
 /**
  * Database Multisearch Widget
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
  * @author     Matheus Agnes Dias
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TDBMultiSearch extends TMultiSearch
 {

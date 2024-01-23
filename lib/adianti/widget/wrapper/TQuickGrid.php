@@ -9,12 +9,12 @@ use Adianti\Widget\Datagrid\TDataGridAction;
 /**
  * Create quick datagrids through its simple interface
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TQuickGrid extends TDataGrid
 {
@@ -32,7 +32,10 @@ class TQuickGrid extends TDataGrid
         if ($action instanceof TAction)
         {
             // create ordering
-            $action->setParameter($param[0], $param[1]);
+            if (!empty($param))
+            {
+                $action->setParameter($param[0], $param[1]);
+            }
             $object->setAction($action);
         }
         // add the column to the datagrid

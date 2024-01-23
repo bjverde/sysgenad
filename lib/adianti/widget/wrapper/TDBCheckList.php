@@ -12,12 +12,12 @@ use Exception;
 /**
  * Database Checklist
  *
- * @version    7.5
+ * @version    7.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class TDBCheckList extends TCheckList
 {
@@ -69,8 +69,19 @@ class TDBCheckList extends TCheckList
         }
         
         parent::addItems($collection);
-        
+    }
+    
+    /**
+     * show
+     */
+    public function show()
+    {
         $head = parent::getHead();
-        $head->{'style'} = 'display:none';
+        if ($head)
+        {
+            $head->{'style'} = 'display:none';
+        }
+
+        parent::show();
     }
 }

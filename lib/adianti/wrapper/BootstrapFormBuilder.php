@@ -33,11 +33,11 @@ use Exception;
 /**
  * Bootstrap form builder for Adianti Framework
  *
- * @version    7.5
+ * @version    7.6
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license
  */
 class BootstrapFormBuilder implements AdiantiFormInterface
 {
@@ -104,6 +104,14 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     public function setClientValidation($bool)
     {
         $this->client_validation = $bool;
+    }
+    
+    /**
+     * Enable client validation
+     */
+    public function enableClientValidation()
+    {
+        $this->client_validation = true;
     }
     
     /**
@@ -178,6 +186,14 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     public function setFormTitle($title)
     {
         $this->title = $title;
+    }
+    
+    /**
+     * Return the form title
+     */
+    public function getFormTitle()
+    {
+        return $this->title;
     }
     
     /**
