@@ -9,12 +9,12 @@ use BaconQrCode\Writer;
 /**
  * Barcode generator
  *
- * @version    7.0
+ * @version    7.6
  * @package    app
  * @subpackage lib
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
- * @license    http://www.adianti.com.br/framework-license
+ * @license    https://adiantiframework.com.br/license-template
  */
 class AdiantiBarcodeDocumentGenerator extends AdiantiPDFDesigner
 {
@@ -182,7 +182,7 @@ class AdiantiBarcodeDocumentGenerator extends AdiantiPDFDesigner
                         }
                         else
                         {
-                            parent::writeHTML(parent::GetX(), parent::GetY(), utf8_decode($label_line));
+                            parent::writeHTML(parent::GetX(), parent::GetY(), AdiantiStringConversion::assureISO($label_line));
                             parent::Ln( $lineBreak );
                         }
                     }
