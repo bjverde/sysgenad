@@ -191,7 +191,7 @@ class TCreateFormTest extends TestCase
 	public function testAddButtons_VIEW(){
 		$qtdTab = ESP.ESP.ESP;
 	    $expected = array();
-	    $expected[] = $qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
+	    $expected[] = $qtdTab.'//O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
 	    $expected[] = $qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo'.EOL;
 		$expected[] = $qtdTab.'//primeiro em ingles e depois traduzindo'.EOL;
 		$expected[] = $qtdTab.'$frm->setActionLink( _t(\'Clear\'), \'onClear\', null, \'fa:eraser\', \'red\');'.EOL;
@@ -209,7 +209,7 @@ class TCreateFormTest extends TestCase
 	public function testAddButtons_TABLE(){
 		$qtdTab = ESP.ESP.ESP;
 	    $expected = array();
-	    $expected[] = $qtdTab.'// O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
+	    $expected[] = $qtdTab.'//O Adianti permite a Internacionalização - A função _t(\'string\') serve'.EOL;
 	    $expected[] = $qtdTab.'//para traduzir termos no sistema. Veja ApplicationTranslator escrevendo'.EOL;
 		$expected[] = $qtdTab.'//primeiro em ingles e depois traduzindo'.EOL;
 		$expected[] = $qtdTab.'$frm->setAction( _t(\'Save\'), \'onSave\', null, \'fa:save\', \'green\' );'.EOL;
@@ -227,7 +227,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_VIEW(){
-		$expectedQtd = 101;
+		$expectedQtd = 85;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
@@ -251,7 +251,7 @@ class TCreateFormTest extends TestCase
 	}
 	
 	public function testShow_TABLE(){
-		$expectedQtd = 122;
+		$expectedQtd = 117;
 
 	    $expected = array();
 		$expected[12] = 'class testForm extends TPage'.EOL;
