@@ -12,7 +12,7 @@ use Throwable;
 /**
  * Exception visualizer
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -26,10 +26,10 @@ class TExceptionView
      */
     function __construct(Throwable $e)
     {
-        $error_array = $e->getTrace();
+        $error_array = $e-> getTrace ();
         $table = new TTable;
         $row=$table->addRow();
-        $row->addCell('<b>' . $e->getMessage() . '</b><br>' . $e->getFile() . ':' . $e->getLine() . '<br>');
+        $row->addCell('<b>' . $e-> getMessage () . '</b><br>' . $e-> getFile () . ':' . $e-> getLine () . '<br>');
         $row=$table->addRow();
         $row->addCell('&nbsp;');
         

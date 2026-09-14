@@ -23,13 +23,13 @@ use DomDocument;
 /**
  * Standard Collection Trait
  *
- * @version    7.6
+ * @version    8.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
-trait AdiantiStandardCollectionTrait
+trait AdiantiStandardCollectionTrait #depends:AdiantiStandardControlTrait
 {
     protected $filterFields;
     protected $formFilters;
@@ -45,6 +45,7 @@ trait AdiantiStandardCollectionTrait
     protected $afterLoadCallback;
     protected $afterSearchCallback;
     protected $orderCommands;
+    protected $debugMode;
     
     use AdiantiStandardControlTrait;
     
@@ -52,7 +53,7 @@ trait AdiantiStandardCollectionTrait
      * method setLimit()
      * Define the record limit
      */
-    public function setLimit($limit)
+    protected function setLimit($limit)
     {
         $this->limit = $limit;
     }
@@ -60,15 +61,23 @@ trait AdiantiStandardCollectionTrait
     /**
      * Set list widget
      */
-    public function setCollectionObject($object)
+    protected function setCollectionObject($object)
     {
         $this->datagrid = $object;
     }
     
     /**
+     * Enable Debug
+     */
+    protected function enableTransactionDebug()
+    {
+        $this->debugMode = true;
+    }
+    
+    /**
      * Set order command
      */
-    public function setOrderCommand($order_column, $order_command)
+    protected function setOrderCommand($order_column, $order_command)
     {
         if (empty($this->orderCommands))
         {
@@ -83,7 +92,7 @@ trait AdiantiStandardCollectionTrait
      * @param $order The order field
      * @param $directiont the order direction (asc, desc)
      */
-    public function setDefaultOrder($order, $direction = 'asc')
+    protected function setDefaultOrder($order, $direction = 'asc')
     {
         $this->order = $order;
         $this->direction = $direction;
@@ -94,7 +103,7 @@ trait AdiantiStandardCollectionTrait
      * Define wich field will be used for filtering
      * PS: Just for Backwards compatibility
      */
-    public function setFilterField($filterField)
+    protected function setFilterField($filterField)
     {
         $this->addFilterField($filterField);
     }
@@ -104,7 +113,7 @@ trait AdiantiStandardCollectionTrait
      * Define the filtering operator
      * PS: Just for Backwards compatibility
      */
-    public function setOperator($operator)
+    protected function setOperator($operator)
     {
         $this->operators[] = $operator;
     }
@@ -115,7 +124,7 @@ trait AdiantiStandardCollectionTrait
      * @param $filterField Field name
      * @param $operator Comparison operator
      */
-    public function addFilterField($filterField, $operator = 'like', $formFilter = NULL, $filterTransformer = NULL, $logic_operator = TExpression::AND_OPERATOR)
+    protected function addFilterField($filterField, $operator = 'like', $formFilter = NULL, $filterTransformer = NULL, $logic_operator = TExpression::AND_OPERATOR)
     {
         $this->filterFields[] = $filterField;
         $this->operators[] = $operator;
@@ -128,7 +137,7 @@ trait AdiantiStandardCollectionTrait
      * method setCriteria()
      * Define the criteria
      */
-    public function setCriteria($criteria)
+    protected function setCriteria($criteria)
     {
         $this->criteria = $criteria;
     }
@@ -137,7 +146,7 @@ trait AdiantiStandardCollectionTrait
      * Define a callback method to transform objects
      * before load them into datagrid
      */
-    public function setTransformer($callback)
+    protected function setTransformer($callback)
     {
         $this->transformCallback = $callback;
     }
@@ -146,7 +155,7 @@ trait AdiantiStandardCollectionTrait
      * Define a callback method to transform objects
      * before load them into datagrid
      */
-    public function setAfterLoadCallback($callback)
+    protected function setAfterLoadCallback($callback)
     {
         $this->afterLoadCallback = $callback;
     }
@@ -155,7 +164,7 @@ trait AdiantiStandardCollectionTrait
      * Define a callback method to transform objects
      * after search action
      */
-    public function setAfterSearchCallback($callback)
+    protected function setAfterSearchCallback($callback)
     {
         $this->afterSearchCallback = $callback;
     }
@@ -194,6 +203,7 @@ trait AdiantiStandardCollectionTrait
                     // creates a filter using what the user has typed
                     if (stristr($operator, 'like'))
                     {
+                        $fieldData = str_replace(' ', '%', $fieldData);
                         $filter = new TFilter($filterField, $operator, "%{$fieldData}%");
                     }
                     else
@@ -234,7 +244,15 @@ trait AdiantiStandardCollectionTrait
         if (isset($param['static']) && ($param['static'] == '1') )
         {
             $class = get_class($this);
-            AdiantiCoreApplication::loadPage($class, 'onReload', ['offset'=>0, 'first_page'=>1] );
+            $new_params = ['offset'=>0, 'first_page'=>1];
+            
+            if (!empty($param['page_fragment']))
+            {
+                $new_params['page_fragment'] = $param['page_fragment'];
+                $new_params['target_container'] = $param['page_fragment'];
+            }
+            
+            AdiantiCoreApplication::loadPage($class, 'onReload', $new_params);
         }
         else
         {
@@ -245,7 +263,7 @@ trait AdiantiStandardCollectionTrait
     /**
      * clear Filters
      */
-    public function clearFilters()
+    protected function clearFilters()
     {
         TSession::setValue($this->activeRecord.'_filter_data', null);
         TSession::setValue(get_class($this).'_filter_data', null);
@@ -289,6 +307,11 @@ trait AdiantiStandardCollectionTrait
             
             // open a transaction with database
             TTransaction::open($this->database);
+            
+            if ($this->debugMode)
+            {
+                TTransaction::dump();
+            }
             
             // instancia um repositório
             $repository = new TRepository($this->activeRecord);
@@ -372,56 +395,6 @@ trait AdiantiStandardCollectionTrait
             $this->loaded = true;
             
             return $objects;
-        }
-        catch (Exception $e) // in case of exception
-        {
-            // shows the exception error message
-            new TMessage('error', $e->getMessage());
-            // undo all pending operations
-            TTransaction::rollback();
-        }
-    }
-    
-    /**
-     * Ask before deletion
-     */
-    public function onDelete($param)
-    {
-        // define the delete action
-        $action = new TAction(array($this, 'Delete'));
-        $action->setParameters($param); // pass the key parameter ahead
-        
-        // shows a dialog to the user
-        new TQuestion(AdiantiCoreTranslator::translate('Do you really want to delete ?'), $action);
-    }
-    
-    /**
-     * Delete a record
-     */
-    public function Delete($param)
-    {
-        try
-        {
-            // get the parameter $key
-            $key=$param['key'];
-            // open a transaction with database
-            TTransaction::open($this->database);
-            
-            $class = $this->activeRecord;
-            
-            // instantiates object
-            $object = new $class($key, FALSE);
-            
-            // deletes the object from the database
-            $object->delete();
-            
-            // close the transaction
-            TTransaction::close();
-            
-            // reload the listing
-            $this->onReload( $param );
-            // shows the success message
-            new TMessage('info', AdiantiCoreTranslator::translate('Record deleted'));
         }
         catch (Exception $e) // in case of exception
         {

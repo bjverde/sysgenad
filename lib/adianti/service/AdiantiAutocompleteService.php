@@ -5,7 +5,9 @@ use Adianti\Database\TTransaction;
 use Adianti\Database\TRepository;
 use Adianti\Database\TCriteria;
 use Adianti\Database\TFilter;
+use Adianti\Database\TExpression;
 use Adianti\Util\AdiantiStringConversion;
+use Adianti\Control\AdiantiController;
 
 use StdClass;
 use Exception;
@@ -13,13 +15,13 @@ use Exception;
 /**
  * Autocomplete backend
  *
- * @version    7.6
+ * @version    8.6
  * @package    service
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
-class AdiantiAutocompleteService
+class AdiantiAutocompleteService implements AdiantiController
 {
     /**
      * Search by the given word inside a model
@@ -43,7 +45,7 @@ class AdiantiAutocompleteService
                 $criteria = new TCriteria;
                 if ($param['criteria'])
                 {
-                    $criteria = unserialize(base64_decode($param['criteria']));
+                    $criteria = unserialize(base64_decode($param['criteria']), ['allowed_classes' => [TCriteria::class, TExpression::class, TFilter::class]] );
                 }
     
                 $column = $param['column'];

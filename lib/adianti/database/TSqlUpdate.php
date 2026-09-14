@@ -7,7 +7,7 @@ use Adianti\Database\TTransaction;
 /**
  * Provides an Interface to create UPDATE statements
  *
- * @version    7.6
+ * @version    8.6
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -59,13 +59,17 @@ class TSqlUpdate extends TSqlStatement
             if (substr(strtoupper($value),0,7) == '(SELECT')
             {
                 $value  = str_replace(['#', '--', '/*'], ['', '', ''], $value);
-                $result = $value;
+                $result = $this->replacePseudoPreparedVars($value);
             }
             // if the value must not be escaped (NOESC in front)
             else if (substr($value,0,6) == 'NOESC:')
             {
                 $value  = str_replace(['#', '--', '/*'], ['', '', ''], $value);
                 $result = substr($value,6);
+            }
+            else if ( (strpos((string) $value, ':[') !== false) && (strpos((string) $value, ']:') !== false) )
+            {
+                $result = $this->replacePseudoPreparedVars($value);
             }
             // if is a string
             else if (is_string($value) and (!empty($value)))
@@ -122,6 +126,27 @@ class TSqlUpdate extends TSqlStatement
     }
     
     /**
+     * Replace pseudo prepared vars
+     */
+    private function replacePseudoPreparedVars($value)
+    {
+        $result = $value;
+        preg_match_all('#:\[(.*?)\]:#', $value, $matches);
+        
+        if (!empty($matches[1]))
+        {
+            foreach ($matches[1] as $match)
+            {
+                $preparedVar   = ':par_'.$this->getRandomParameter();
+                $result = str_replace(":[{$match}]:", $preparedVar, $result);
+                $this->preparedVars[ $preparedVar ] = $match;
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Return the prepared vars
      */
     public function getPreparedVars()
@@ -129,7 +154,7 @@ class TSqlUpdate extends TSqlStatement
         if ($this->criteria)
         {
             // "column values" prepared vars + "where" prepared vars
-            return array_merge($this->preparedVars, $this->criteria->getPreparedVars());
+            return array_merge($this->preparedVars, (array) $this->criteria->getPreparedVars());
         }
         else
         {
@@ -156,6 +181,12 @@ class TSqlUpdate extends TSqlStatement
                 $set[] = "{$column} = {$value}";
             }
         }
+        
+        if (empty($set))
+        {
+            return;
+        }
+        
         $this->sql .= ' SET ' . implode(', ', $set);
         
         // concatenates the criteria (WHERE)
@@ -167,7 +198,11 @@ class TSqlUpdate extends TSqlStatement
                 $this->criteria->setCaseInsensitive(TRUE);
             }
 
-            $this->sql .= ' WHERE ' . $this->criteria->dump( $prepared );
+            $where = $this->criteria->dump( $prepared );
+            if (!empty($where))
+            {
+                $this->sql .= ' WHERE ' . $where;
+            }
         }
         
         // returns the SQL statement

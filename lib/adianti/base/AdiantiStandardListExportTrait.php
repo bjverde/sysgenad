@@ -13,7 +13,7 @@ use Exception;
 /**
  * List Export Trait
  *
- * @version    7.6
+ * @version    8.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -100,10 +100,10 @@ trait AdiantiStandardListExportTrait
      * Export to CSV
      * @param $output Output file
      */
-    public function exportToCSV($output)
+    protected function exportToCSV($output)
     {
         $this->limit = 0;
-        $objects = $this->onReload();
+        $objects = $this->onReload([]);
         
         if ( (!file_exists($output) && is_writable(dirname($output))) OR is_writable($output))
         {
@@ -113,9 +113,12 @@ trait AdiantiStandardListExportTrait
             $row = [];
             foreach ($this->datagrid->getColumns() as $column)
             {
-                $row[] = $column->getLabel();
+                if ($column->isPrintable())
+                {
+                    $row[] = $column->getLabel();
+                }
             }
-            fputcsv($handler, $row);
+            fputcsv($handler, $row, ',', "\"", '', "\n");
             
             if ($objects)
             {
@@ -124,20 +127,23 @@ trait AdiantiStandardListExportTrait
                     $row = [];
                     foreach ($this->datagrid->getColumns() as $column)
                     {
-                        $column_name = $column->getName();
-                        
-                        if (isset($object->$column_name))
+                        if ($column->isPrintable())
                         {
-                            $row[] = is_scalar($object->$column_name) ? $object->$column_name : '';
-                        }
-                        else if (method_exists($object, 'render'))
-                        {
-                            $column_name = (strpos($column_name, '{') === FALSE) ? ( '{' . $column_name . '}') : $column_name;
-                            $row[] = $object->render($column_name);
+                            $column_name = $column->getName();
+                            
+                            if (isset($object->$column_name))
+                            {
+                                $row[] = is_scalar($object->$column_name) ? $object->$column_name : '';
+                            }
+                            else if (method_exists($object, 'render'))
+                            {
+                                $column_name = (strpos($column_name, '{') === FALSE) ? ( '{' . $column_name . '}') : $column_name;
+                                $row[] = $object->render($column_name);
+                            }
                         }
                     }
                     
-                    fputcsv($handler, $row);
+                    fputcsv($handler, $row, ',', "\"", '', "\n");
                 }
             }
             fclose($handler);
@@ -153,30 +159,33 @@ trait AdiantiStandardListExportTrait
      * Export to CSV
      * @param $output Output file
      */
-    public function exportToXLS($output)
+    protected function exportToXLS($output)
     {
         $widths = [];
         $titles = [];
         
         foreach ($this->datagrid->getColumns() as $column)
         {
-            $titles[] = $column->getLabel();
-            $width    = 100;
-            
-            if (is_null($column->getWidth()))
+            if ($column->isPrintable())
             {
-                $width = 100;
+                $titles[] = $column->getLabel();
+                $width    = 100;
+                
+                if (is_null($column->getWidth()))
+                {
+                    $width = 100;
+                }
+                else if (strpos($column->getWidth(), '%') !== false)
+                {
+                    $width = ((int) $column->getWidth()) * 5;
+                }
+                else if (is_numeric($column->getWidth()))
+                {
+                    $width = $column->getWidth();
+                }
+                
+                $widths[] = $width;
             }
-            else if (strpos($column->getWidth(), '%') !== false)
-            {
-                $width = ((int) $column->getWidth()) * 5;
-            }
-            else if (is_numeric($column->getWidth()))
-            {
-                $width = $column->getWidth();
-            }
-            
-            $widths[] = $width;
         }
         
         $table = new \TTableWriterXLS($widths);
@@ -191,7 +200,7 @@ trait AdiantiStandardListExportTrait
         }
         
         $this->limit = 0;
-        $objects = $this->onReload();
+        $objects = $this->onReload([]);
         
         if ( (!file_exists($output) && is_writable(dirname($output))) OR is_writable($output))
         {
@@ -203,19 +212,22 @@ trait AdiantiStandardListExportTrait
                     $table->addRow();
                     foreach ($this->datagrid->getColumns() as $column)
                     {
-                        $column_name = $column->getName();
-                        $value = '';
-                        if (isset($object->$column_name))
+                        if ($column->isPrintable())
                         {
-                            $value = is_scalar($object->$column_name) ? $object->$column_name : '';
+                            $column_name = $column->getName();
+                            $value = '';
+                            if (isset($object->$column_name))
+                            {
+                                $value = is_scalar($object->$column_name) ? $object->$column_name : '';
+                            }
+                            else if (method_exists($object, 'render'))
+                            {
+                                $column_name = (strpos($column_name, '{') === FALSE) ? ( '{' . $column_name . '}') : $column_name;
+                                $value = $object->render($column_name);
+                            }
+                            
+                            $table->addCell($value, 'center', 'data');
                         }
-                        else if (method_exists($object, 'render'))
-                        {
-                            $column_name = (strpos($column_name, '{') === FALSE) ? ( '{' . $column_name . '}') : $column_name;
-                            $value = $object->render($column_name);
-                        }
-                        
-                        $table->addCell($value, 'center', 'data');
                     }
                 }
             }
@@ -232,10 +244,10 @@ trait AdiantiStandardListExportTrait
      * Export to XML
      * @param $output Output file
      */
-    public function exportToXML($output)
+    protected function exportToXML($output)
     {
         $this->limit = 0;
-        $objects = $this->onReload();
+        $objects = $this->onReload([]);
         
         if ( (!file_exists($output) && is_writable(dirname($output))) OR is_writable($output))
         {
@@ -253,19 +265,22 @@ trait AdiantiStandardListExportTrait
                     
                     foreach ($this->datagrid->getColumns() as $column)
                     {
-                        $column_name = $column->getName();
-                        $column_name_raw = str_replace(['(','{','->', '-','>','}',')', ' '], ['','','_','','','','','_'], $column_name);
-                        
-                        if (isset($object->$column_name))
+                        if ($column->isPrintable())
                         {
-                            $value = is_scalar($object->$column_name) ? $object->$column_name : '';
-                            $row->appendChild($dom->createElement($column_name_raw, $value)); 
-                        }
-                        else if (method_exists($object, 'render'))
-                        {
-                            $column_name = (strpos($column_name, '{') === FALSE) ? ( '{' . $column_name . '}') : $column_name;
-                            $value = $object->render($column_name);
-                            $row->appendChild($dom->createElement($column_name_raw, $value));
+                            $column_name = $column->getName();
+                            $column_name_raw = str_replace(['(','{','->', '-','>','}',')', ' '], ['','','_','','','','','_'], $column_name);
+                            
+                            if (isset($object->$column_name))
+                            {
+                                $value = is_scalar($object->$column_name) ? $object->$column_name : '';
+                                $row->appendChild($dom->createElement($column_name_raw, $value)); 
+                            }
+                            else if (method_exists($object, 'render'))
+                            {
+                                $column_name = (strpos($column_name, '{') === FALSE) ? ( '{' . $column_name . '}') : $column_name;
+                                $value = $object->render($column_name);
+                                $row->appendChild($dom->createElement($column_name_raw, $value));
+                            }
                         }
                     }
                 }
@@ -285,17 +300,19 @@ trait AdiantiStandardListExportTrait
      * Export to PDF
      * @param $output Output file
      */
-    public function exportToPDF($output)
+    protected function exportToPDF($output)
     {
         if ( (!file_exists($output) && is_writable(dirname($output))) OR is_writable($output))
         {
             $this->limit = 0;
             $this->datagrid->prepareForPrinting();
-            $this->onReload();
+            $this->onReload([]);
             
             // string with HTML contents
             $html = clone $this->datagrid;
-            $contents = file_get_contents('app/resources/styles-print.html') . $html->getContents();
+            $contents = '<meta charset="UTF-8">';
+            $contents .= '<style>' . file_get_contents('app/resources/styles-print-bundle.css') . '</style>';
+            $contents .= $html->getContents();
             
             $options = new \Dompdf\Options();
             $options-> setChroot (getcwd());
@@ -303,7 +320,7 @@ trait AdiantiStandardListExportTrait
             // converts the HTML template into PDF
             $dompdf = new \Dompdf\Dompdf($options);
             $dompdf-> loadHtml ($contents);
-            $dompdf-> setPaper ('A4', 'landscape');
+            $dompdf-> setPaper ($this->datagrid->getPageSize() ?? 'A4', $this->datagrid->getPageOrientation() ?? 'portrait');
             $dompdf-> render ();
             
             // write and open file

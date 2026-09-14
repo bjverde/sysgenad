@@ -7,7 +7,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * Expander Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -36,6 +36,7 @@ class TExpander extends TElement
         $this->button->{'type'} = 'button';
         $this->button->{'id'}   = 'button_'.mt_rand(1000000000, 1999999999);
         $this->button->{'data-toggle'} = 'dropdown';
+        $this->button->{'data-bs-toggle'} = 'dropdown';
         $this->label = $label;
         
         $this->container = new TElement('ul');

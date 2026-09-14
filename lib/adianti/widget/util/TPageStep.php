@@ -7,11 +7,11 @@ use Adianti\Control\TAction;
 /**
  * Page Step
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
- * @author     Matheus Agnes Dias
  * @author     Pablo Dall'Oglio
+ * @author     Matheus Agnes Dias (up to version 7.5)
  * @copyright  Copyright (c) 2006-2014 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */

@@ -9,7 +9,7 @@ use Exception;
 /**
  * Database CheckBox Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -32,7 +32,7 @@ class TDBCheckGroup extends TCheckGroup
      * @param  $ordercolumn column to order the fields (optional)
      * @param  $criteria criteria (TCriteria object) to filter the model (optional)
      */
-    public function __construct($name, $database, $model, $key, $value, $ordercolumn = NULL, TCriteria $criteria = NULL)
+    public function __construct($name, $database, $model, $key, $value, $ordercolumn = NULL, ?TCriteria $criteria = NULL)
     {
         // executes the parent class constructor
         parent::__construct($name);

@@ -14,7 +14,7 @@ use Exception;
 /**
  * DateTimePicker Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -122,11 +122,18 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
         else if ($value)
         {
             $value = substr($value,0,strlen($fromMask));
-
+            
+            if (strlen($value) < strlen($fromMask))
+            {
+                $fromMask = substr($fromMask,0,strlen($value));
+                $toMask   = substr($toMask,0,strlen($value));
+            }
+            
             $phpFromMask = str_replace( ['dd','mm', 'yyyy', 'hh', 'ii', 'ss'], ['d','m','Y', 'H', 'i', 's'], $fromMask);
             $phpToMask   = str_replace( ['dd','mm', 'yyyy', 'hh', 'ii', 'ss'], ['d','m','Y', 'H', 'i', 's'], $toMask);
-
+            
             $date = DateTime::createFromFormat($phpFromMask, $value);
+            
             if ($date)
             {
                 return $date->format($phpToMask);

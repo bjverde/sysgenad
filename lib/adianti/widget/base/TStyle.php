@@ -7,7 +7,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * StyleSheet Manager
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage base
  * @author     Pablo Dall'Oglio
@@ -142,6 +142,10 @@ class TStyle
         return $style;
     }
     
+    public function getContents()
+    {
+        return "    <style type='text/css' media='screen'>\n" . $this->getContent() .  "    </style>\n";
+    }
     /**
      * Show the style
      */

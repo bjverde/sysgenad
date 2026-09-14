@@ -6,7 +6,7 @@ use Adianti\Database\TExpression;
 /**
  * Provides an interface for filtering criteria definition
  *
- * @version    7.6
+ * @version    8.6
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -84,7 +84,7 @@ class TCriteria extends TExpression
      * @param   $operator    Logic Operator Constant
      * @author               Pablo Dall'Oglio
      */
-    public function add(TExpression $expression, $operator = self::AND_OPERATOR)
+    public function add(TExpression $expression, $operator = TExpression::AND_OPERATOR)
     {
         // the first time, we don't need a logic operator to concatenate
         if (empty($this->expressions))
@@ -95,6 +95,39 @@ class TCriteria extends TExpression
         // aggregates the expression to the list of expressions
         $this->expressions[] = $expression;
         $this->operators[]   = $operator;
+    }
+    
+    /**
+     * Return the criteria expressions
+     */
+    private function getExpressions()
+    {
+        return $this->expressions;
+    }
+    
+    /**
+     * Return the criteria operators
+     */
+    private function getOperators()
+    {
+        return $this->operators;
+    }
+    
+    /**
+     * Merge a second criteria
+     */
+    public function mergeCriteria(TCriteria $criteria)
+    {
+        $expressions = $criteria->getExpressions();
+        $operators   = $criteria->getOperators();
+        
+        if ($expressions)
+        {
+            foreach ($expressions as $key => $expression)
+            {
+                $this->add($expression, $operators[$key] ?? TExpression::AND_OPERATOR);
+            }
+        }
     }
     
     /**

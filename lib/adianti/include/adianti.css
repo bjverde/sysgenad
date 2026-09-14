@@ -1,3 +1,19 @@
+#adianti_right_panel .panel[widget="bootstrapformbuilder"]
+{
+    border:0;
+    box-shadow:none;
+}
+
+#adianti_right_panel > div > div.panel
+{
+    border:0;
+}
+
+#adianti_right_panel > div > div.panel > div.panel-heading
+{
+    border-top: 0;
+}
+
 table
 {
     display: table;
@@ -11,29 +27,10 @@ table tr td
     padding: 1px;
 }
 
-.btn
-{
-    padding: 4px 8px;
-}
-
-.btn-group-sm > .btn
-{
-    padding: 2px 10px;
-}
-
-.navbar
-{
-    min-height: 42px;
-}
 
 .popover
 {
     z-index: 2060;
-}
-
-.btn-group > .btn, .btn-group > .dropdown-menu, .btn-group > .popover
-{
-    font-size: 12px;
 }
 
 .ui-widget
@@ -165,6 +162,7 @@ table tr td
 .form-group
 {
     margin-bottom: 7px;
+    position: relative;
 }
 
 /* latin */
@@ -179,44 +177,6 @@ table tr td
 table.dataTable.no-footer.table-striped
 {
     border-bottom: 0px;
-}
-
-/* btn circle */
-
-.btn-circle-sm {
-  width: 24px;
-  height: 24px;
-  text-align: center;
-  padding: 3px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 12px;
-}
-
-.btn-circle {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px;
-}
-.btn-circle.btn-lg {
-  width: 50px;
-  height: 50px;
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 25px;
-}
-.btn-circle.btn-xl {
-  width: 70px;
-  height: 70px;
-  padding: 10px 16px;
-  font-size: 24px;
-  line-height: 1.33;
-  border-radius: 35px;
 }
 
 /** 

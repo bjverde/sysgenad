@@ -9,7 +9,7 @@ use Adianti\Widget\Container\TFrame;
 /**
  * Notebook
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -190,8 +190,10 @@ class TNotebook extends TElement
                     $link->{'aria-controls'} = "home";
                     $link->{'role'} = "tab";
                     $link->{'data-toggle'} = "tab";
+                    $link->{'data-bs-toggle'} = 'tab';
                     $link->{'href'} = "#"."panel_{$id}_{$i}";
                     $link->{'class'} = $classe . " nav-link";
+                    $link->{'data-bs-target'} = $link->{'href'};
                     
                     if (!$this->tabsSensibility)
                     {

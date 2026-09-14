@@ -10,7 +10,7 @@ use Exception;
 /**
  * XMLBreadCrumb
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -33,8 +33,6 @@ class TXMLBreadCrumb extends TBreadCrumb
         $paths = $this->parser->getPath($controller);
         if (!empty($paths))
         {
-            parent::addHome();
-            
             $count = 1;
             foreach ($paths as $path)
             {

@@ -10,7 +10,7 @@ use Exception;
 /**
  * JQuery dialog container
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -32,6 +32,7 @@ class TJQueryDialog extends TElement
     private $closeAction;
     private $closeEscape;
     private $dialogClass;
+    private $mobileFullScreen;
     
     /**
      * Class Constructor
@@ -49,6 +50,7 @@ class TJQueryDialog extends TElement
         $this->stackOrder = 2000;
         $this->closeEscape = true;
         $this->dialogClass = '';
+        $this->mobileFullScreen = false;
         
         $this->{'id'} = 'jquery_dialog_'.mt_rand(1000000000, 1999999999);
         $this->{'style'} = "overflow:auto";
@@ -68,6 +70,22 @@ class TJQueryDialog extends TElement
     public function disableScrolling()
     {
         $this->{'style'} = "overflow: hidden";
+    }
+    
+    /**
+     * Enable scrolling
+     */
+    public function enableScrolling()
+    {
+        $this->{'style'} = "overflow: auto";
+    }
+    
+    /**
+     * Enable full screen in mobile
+     */
+    public function enableMobileFullScreen()
+    {
+        $this->mobileFullScreen = true;
     }
     
     /**
@@ -155,8 +173,33 @@ class TJQueryDialog extends TElement
      */
     public function setSize($width, $height)
     {
-        $this->width  = $width  < 1 ? "\$(window).width() * $width" : $width;
+        $this->width  = $width;
         
+        if (is_null($height))
+        {
+            $this->height = "'auto'";
+        }
+        else
+        {
+            $this->height = $height;
+        }
+    }
+    
+    /**
+     * Define the window's width
+     * @param  $width
+     */
+    public function setWidth($width)
+    {
+        $this->width  = $width;
+    }
+    
+    /**
+     * Define the window's height
+     * @param  $height
+     */
+    public function setHeight($height)
+    {
         if (is_null($height))
         {
             $this->height = "'auto'";
@@ -175,6 +218,26 @@ class TJQueryDialog extends TElement
     public function setMinWidth($percent, $absolute)
     {
         $this->width  = "Math.min(\$(window).width() * $percent, $absolute)";
+    }
+    
+    /**
+     * Define the window's max width between percent and absolute
+     * @param  $percent width
+     * @param  $absolute width
+     */
+    public function setMaxWidth($percent, $absolute)
+    {
+        $this->width  = "Math.max(\$(window).width() * $percent, $absolute)";
+    }
+    
+    /**
+     * Define the window's max height between percent and absolute
+     * @param  $percent width
+     * @param  $absolute width
+     */
+    public function setMaxHeight($percent, $absolute)
+    {
+        $this->height  = "Math.max(\$(window).height() * $percent, $absolute)";
     }
     
     /**
@@ -244,7 +307,9 @@ class TJQueryDialog extends TElement
         }
         
         $close_on_escape = $this->closeEscape ? 'true' : 'false';
-        parent::add(TScript::create("tjquerydialog_start( '#{$id}', {$this->modal}, {$this->draggable}, {$this->resizable}, {$this->width}, {$this->height}, {$top}, {$left}, {$this->stackOrder}, { {$action_code} {$ok_button} }, $close_action, $close_on_escape, '{$this->dialogClass}' ); ", FALSE));
+        $mobile_full     = $this->mobileFullScreen ? 'true' : 'false';
+        
+        parent::add(TScript::create("tjquerydialog_start( '#{$id}', {$this->modal}, {$this->draggable}, {$this->resizable}, {$this->width}, {$this->height}, {$top}, {$left}, {$this->stackOrder}, { {$action_code} {$ok_button} }, $close_action, $close_on_escape, '{$this->dialogClass}', $mobile_full ); ", FALSE));
         parent::show();
     }
     

@@ -9,7 +9,7 @@ use Adianti\Util\AdiantiStringConversion;
 /**
  * Provides an interface to define filters to be used inside a criteria
  *
- * @version    7.6
+ * @version    8.6
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -105,13 +105,13 @@ class TFilter extends TExpression
         else if (substr(strtoupper( (string) $value),0,7) == '(SELECT')
         {
             $value  = str_replace(['#', '--', '/*'], ['', '', ''], $value);
-            $result = $value;
+            $result = $this->replacePseudoPreparedVars($value);
         }
         // if the value is a session variable
         else if (strpos((string) $value, '{session.') !== false)
         {
             $session_var = AdiantiStringConversion::getBetween($value, '{session.', '}');
-            $result = str_replace("{session.{$session_var}}", TSession::getValue($session_var), $value);
+            $result = str_replace("{session.{$session_var}}", (string) TSession::getValue($session_var), $value);
         }
         // if the value must not be escaped (NOESC in front)
         else if (substr( (string) $value,0,6) == 'NOESC:')
@@ -167,6 +167,27 @@ class TFilter extends TExpression
         }
         
         // returns the result
+        return $result;
+    }
+    
+    /**
+     * Replace pseudo prepared vars
+     */
+    private function replacePseudoPreparedVars($value)
+    {
+        $result = $value;
+        preg_match_all('#:\[(.*?)\]:#', $value, $matches);
+        
+        if (!empty($matches[1]))
+        {
+            foreach ($matches[1] as $match)
+            {
+                $preparedVar   = ':par_'.$this->getRandomParameter();
+                $result = str_replace(":[{$match}]:", $preparedVar, $result);
+                $this->preparedVars[ $preparedVar ] = $match;
+            }
+        }
+        
         return $result;
     }
     

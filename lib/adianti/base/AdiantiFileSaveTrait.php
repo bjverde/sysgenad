@@ -3,13 +3,14 @@ namespace Adianti\Base;
 
 use Exception;
 use PDO;
+use stdClass;
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Database\TTransaction;
 
 /**
  * File Save Trait
  *
- * @version    7.6
+ * @version    8.6
  * @package    base
  * @author     Nataniel Rabaioli
  * @author     Pablo Dall'Oglio
@@ -41,9 +42,10 @@ trait AdiantiFileSaveTrait
             $target_file = str_replace('tmp/', '', $target_file);
             
             $class = get_class($object);
-            $obj_store = new $class;
+            $obj_store = new stdClass;
             $obj_store->$pk = $object->$pk;
             $obj_store->$input_name = $target_file;
+            
             $object->$input_name = $target_file;
             
             $delFile = null;
@@ -94,7 +96,7 @@ trait AdiantiFileSaveTrait
                 $obj_store->$input_name = $dados_file->fileName;
             }
             
-            $obj_store->store();
+            $class::where($pk, '=', $obj_store->$pk)->set($input_name, $obj_store->$input_name)->update();
             
             if ($obj_store->$input_name)
             {
@@ -303,10 +305,12 @@ trait AdiantiFileSaveTrait
             }
             
             $class = get_class($object);
-            $obj_store = new $class;
+            $obj_store = new stdClass;
             $obj_store->$pk = $object->$pk;
             $obj_store->$input_name = implode(',', $save_files);
-            $obj_store->store();
+            //$obj_store->store();
+            
+            $class::where($pk, '=', $obj_store->$pk)->set($input_name, $obj_store->$input_name)->update();
 
             $object->$input_name = $obj_store->$input_name;
             $data->$input_name = $files_form;

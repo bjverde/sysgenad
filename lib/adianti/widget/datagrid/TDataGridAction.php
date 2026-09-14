@@ -8,7 +8,7 @@ use Exception;
 /**
  * Represents an action inside a datagrid
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -21,6 +21,7 @@ class TDataGridAction extends TAction
     private $fields;
     private $image;
     private $label;
+    private $title;
     private $buttonClass;
     private $useButton;
     private $displayCondition;
@@ -38,6 +39,14 @@ class TDataGridAction extends TAction
         {
             $this->setFields( parent::getFieldParameters() );
         }
+    }
+    
+    /**
+     * Change the request method
+     */
+    public function enablePost()
+    {
+        self::setParameter('adianti_request_method', 'post');
     }
     
     /**
@@ -127,11 +136,28 @@ class TDataGridAction extends TAction
     }
     
     /**
+     * define the title for the action
+     * @param $label A string containing a text label
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+    
+    /**
      * Returns the text label for the action
      */
     public function getLabel()
     {
         return $this->label;
+    }
+    
+    /**
+     * Returns the tooltip title for the action
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
     
     /**

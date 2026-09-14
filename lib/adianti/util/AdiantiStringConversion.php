@@ -4,7 +4,7 @@ namespace Adianti\Util;
 /**
  * String manipulation
  *
- * @version    7.6
+ * @version    8.6
  * @package    util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -159,7 +159,7 @@ class AdiantiStringConversion
     /**
      * Returns the slug from string
      */
-    public static function slug($content, $separator = '-')
+    public static function slug($content, $separator = '-', $tolower = true)
     {
         $content = self::assureUnicode($content);
         
@@ -175,10 +175,18 @@ class AdiantiStringConversion
         );
 
         $content = strtr($content, $table);
-
-        $content = mb_strtolower($content);
-        //Strip any unwanted characters
-        $content = preg_replace("/[^a-z0-9_\s-]/", "", $content);
+        
+        if ($tolower)
+        {
+            $content = mb_strtolower($content);
+            //Strip any unwanted characters
+            $content = preg_replace("/[^a-z0-9_\s-]/", "", $content);
+        }
+        else
+        {
+            $content = preg_replace("/[^a-zA-Z0-9_\s-]/", "", $content);
+        }
+        
         //Clean multiple dashes or whitespaces
         $content = preg_replace("/[\s-]+/", " ", $content);
         //Convert whitespaces and underscore to dash

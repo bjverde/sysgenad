@@ -11,7 +11,7 @@ use Exception;
 /**
  * Application loader
  *
- * @version    7.6
+ * @version    8.6
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -45,11 +45,11 @@ class AdiantiApplicationLoader
         // echo "&nbsp;&nbsp;App loader $class<br>";
         $folders = array();
         $folders[] = 'app/model';
+        $folders[] = 'app/service';
         $folders[] = 'app/control';
+        $folders[] = 'app/helpers';
         $folders[] = 'app/view';
         $folders[] = 'app/lib';
-        $folders[] = 'app/helpers';
-        $folders[] = 'app/service';
         
         // search in app root
         if (file_exists("{$class}.class.php"))
@@ -69,15 +69,15 @@ class AdiantiApplicationLoader
         
         foreach ($folders as $folder)
         {
-            if (file_exists("{$folder}/{$class}.class.php"))
-            {
-                require_once "{$folder}/{$class}.class.php";
-                self::$loadedClasses[$class] = true;
-                return TRUE;
-            }
             if (file_exists("{$folder}/{$class}.php"))
             {
                 require_once "{$folder}/{$class}.php";
+                self::$loadedClasses[$class] = true;
+                return TRUE;
+            }
+            else if (file_exists("{$folder}/{$class}.class.php"))
+            {
+                require_once "{$folder}/{$class}.class.php";
                 self::$loadedClasses[$class] = true;
                 return TRUE;
             }
@@ -98,15 +98,15 @@ class AdiantiApplicationLoader
                         {
                             if (is_dir($entry))
                             {
-                                if (file_exists("{$entry}/{$class}.class.php"))
+                                if (file_exists("{$entry}/{$class}.php"))
                                 {
-                                    require_once "{$entry}/{$class}.class.php";
+                                    require_once "{$entry}/{$class}.php";
                                     self::$loadedClasses[$class] = true;
                                     return TRUE;
                                 }
-                                else if (file_exists("{$entry}/{$class}.php"))
+                                else if (file_exists("{$entry}/{$class}.class.php"))
                                 {
-                                    require_once "{$entry}/{$class}.php";
+                                    require_once "{$entry}/{$class}.class.php";
                                     self::$loadedClasses[$class] = true;
                                     return TRUE;
                                 }

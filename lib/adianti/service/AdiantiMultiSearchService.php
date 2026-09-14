@@ -8,6 +8,7 @@ use Adianti\Database\TRepository;
 use Adianti\Database\TCriteria;
 use Adianti\Database\TFilter;
 use Adianti\Database\TExpression;
+use Adianti\Control\AdiantiController;
 
 use StdClass;
 use Exception;
@@ -15,14 +16,14 @@ use Exception;
 /**
  * MultiSearch backend
  *
- * @version    7.6
+ * @version    8.6
  * @package    service
  * @author     Pablo Dall'Oglio
- * @author     Matheus Agnes Dias
+ * @author     Matheus Agnes Dias (up to version 7.5)
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
-class AdiantiMultiSearchService
+class AdiantiMultiSearchService implements AdiantiController
 {
     /**
      * Search by the given word inside a model
@@ -49,7 +50,7 @@ class AdiantiMultiSearchService
                 $criteria = new TCriteria;
                 if ($param['criteria'])
                 {
-                    $criteria = unserialize( base64_decode(str_replace(array('-', '_'), array('+', '/'), $param['criteria'])) );
+                    $criteria = unserialize( base64_decode(str_replace(array('-', '_'), array('+', '/'), $param['criteria'])), ['allowed_classes' => [TCriteria::class, TExpression::class, TFilter::class]] );
                 }
     
                 $columns = explode(',', $param['column']);
@@ -99,7 +100,7 @@ class AdiantiMultiSearchService
                         }
                     }
                     
-                    $id_search_value = ((!empty($param['idtextsearch']) && $param['idtextsearch'] == '1') || ((defined("{$param['model']}::IDPOLICY")) AND (constant("{$param['model']}::IDPOLICY") == 'uuid')) || is_array($param['value']) ) ? $param['value'] : (int) $param['value'];
+                    $id_search_value = ((!empty($param['idtextsearch']) && $param['idtextsearch'] == '1') || ((defined("{$param['model']}::IDPOLICY")) AND (substr(constant("{$param['model']}::IDPOLICY"),0,4) == 'uuid')) || is_array($param['value']) ) ? $param['value'] : (int) $param['value'];
                     
                     if ($param['idsearch'] == '1' and !empty( $id_search_value ))
                     {

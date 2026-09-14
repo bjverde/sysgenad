@@ -7,7 +7,7 @@ use Adianti\Registry\AdiantiRegistryInterface;
 /**
  * Session Data Handler
  *
- * @version    7.6
+ * @version    8.6
  * @package    registry
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -18,7 +18,7 @@ class TSession implements AdiantiRegistryInterface
     /**
      * Class Constructor
      */
-    public function __construct(SessionHandlerInterface $handler = NULL, $path = NULL)
+    public function __construct(?SessionHandlerInterface $handler = NULL, $path = NULL)
     {
         if ($path)
         {

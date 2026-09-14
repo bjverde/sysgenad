@@ -11,10 +11,13 @@ use Adianti\Widget\Wrapper\AdiantiDatabaseWidgetTrait;
 use Adianti\Validator\TFieldValidator;
 use Adianti\Control\TAction;
 
+use Exception;
+use Adianti\Core\AdiantiCoreTranslator;
+
 /**
  * Checklist
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -287,6 +290,7 @@ class TCheckList implements AdiantiWidgetInterface
         $this->fields[] = $object->{'check'};
         
         $form = TForm::getFormByName($this->formName);
+        
         if ($form)
         {
             $form->addField($object->{'check'});
@@ -310,7 +314,7 @@ class TCheckList implements AdiantiWidgetInterface
     /**
      * Fill with model objects
      */
-    public function fillWith($database, $model, $key, $ordercolumn = NULL, TCriteria $criteria = NULL)
+    public function fillWith($database, $model, $key, $ordercolumn = NULL, ?TCriteria $criteria = NULL)
     {
         TTransaction::open($database);
         $this->addItems( $this->getObjectsFromModel($database, $model, $key, $ordercolumn, $criteria) );

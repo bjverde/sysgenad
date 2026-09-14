@@ -10,7 +10,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * Label Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -88,7 +88,7 @@ class TLabel extends TField implements AdiantiWidgetInterface
      */
     public function setFontSize($size)
     {
-        $this->embedStyle->{'font_size'}    = (strpos($size, 'px') or strpos($size, 'pt')) ? $size : $size.'pt';
+        $this->embedStyle->{'font_size'} = (is_numeric($size) ? $size.'pt' : $size);
     }
     
     /**
@@ -129,6 +129,25 @@ class TLabel extends TField implements AdiantiWidgetInterface
     public function setFontColor($color)
     {
         $this->embedStyle->{'color'} = $color;
+    }
+    
+    /**
+     * Define the text align
+     * @param $align Text Align
+     */
+    public function setTextAlign($align)
+    {
+        $this->embedStyle->{'text-align'} = $align;
+    }
+    
+    /**
+     * Define the style property
+     * @param $property Style property
+     * @param $value Style value
+     */
+    public function setStyleProperty($property, $value)
+    {
+        $this->embedStyle->$property = $value;
     }
     
     /**
@@ -173,7 +192,8 @@ class TLabel extends TField implements AdiantiWidgetInterface
         // if the embed style has any content
         if ($this->embedStyle->hasContent())
         {
-            $this->setProperty('style', $this->embedStyle->getInline() . $this->getProperty('style'), TRUE);
+            $style = $this->getProperty('style');
+            $this->setProperty('style', $this->embedStyle->getInline() . $style, TRUE);
         }
         
         $this->tag->{'id'} = $this->id;

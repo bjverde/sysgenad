@@ -10,7 +10,7 @@ use stdClass;
 /**
  * TIconView Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -25,11 +25,6 @@ class TIconView extends TElement
     protected $labelField;
     protected $iconField;
     protected $infoFields;
-    protected $popover;
-    protected $poptitle;
-    protected $popcontent;
-    protected $popside;
-    protected $popcondition;
     protected $enableMoving;
     protected $moveAction;
     protected $dragSelector;
@@ -37,6 +32,7 @@ class TIconView extends TElement
     protected $itemTemplate;
     protected $templateAttribute;
     protected $doubleClickEnabled;
+    protected $popovers;
     
     /**
      * Constructor Method
@@ -47,10 +43,10 @@ class TIconView extends TElement
         
         $this->{'id'}    = 'ticonview_' . mt_rand(1000000000, 1999999999);
         $this->{'class'} = 'ticonview';
-        $this->items   = [];
-        $this->options = [];
-        $this->popover = FALSE;
-        $this->popside = null;
+        $this->items    = [];
+        $this->options  = [];
+        $this->popovers = [];
+        
         $this->enableMoving = FALSE;
         $this->doubleClickEnabled = FALSE;
     }
@@ -88,11 +84,12 @@ class TIconView extends TElement
      */
     public function enablePopover($title, $content, $popside = null, $popcondition = null)
     {
-        $this->popover = TRUE;
-        $this->poptitle = $title;
-        $this->popcontent = $content;
-        $this->popside = $popside;
-        $this->popcondition = $popcondition;
+        $this->popovers[] = [
+            'title' => $title,
+            'content' => $content,
+            'side' => $popside,
+            'condition' => $popcondition
+        ];
     }
     
     /**
@@ -153,6 +150,32 @@ class TIconView extends TElement
     }
     
     /**
+     * Run popover according to their conditions
+     */
+    private function processPopovers($li, $object)
+    {
+        foreach ($this->popovers as $popover)
+        {
+            if (empty($popover['condition']) || call_user_func($popover['condition'], $object))
+            {
+                $poptitle   = $popover['title'];
+                $popcontent = $popover['content'];
+                $poptitle   = AdiantiTemplateHandler::replace($poptitle, $object);
+                $popcontent = AdiantiTemplateHandler::replace($popcontent, $object, null, true);
+                
+                $li->{'data-popover'} = 'true';
+                $li->{'poptitle'} = $popover['side'];
+                $li->{'popcontent'} = htmlspecialchars(str_replace("\n", '', nl2br($popcontent)));
+                
+                if ($popover['side'])
+                {
+                    $li->{'popside'} = $popover['side'];
+                }
+            }
+        }
+    }
+    
+    /**
      * Show iconview items
      */
     public function show()
@@ -193,21 +216,9 @@ class TIconView extends TElement
                 
                 $id = $li->{'id'};
                 
-                if ($this->popover && (empty($this->popcondition) OR call_user_func($this->popcondition, $object)))
+                if ($this->popovers)
                 {
-                    $poptitle   = $this->poptitle;
-                    $popcontent = $this->popcontent;
-                    $poptitle   = AdiantiTemplateHandler::replace($poptitle, $object);
-                    $popcontent = AdiantiTemplateHandler::replace($popcontent, $object, null, true);
-                    
-                    $li->{'data-popover'} = 'true';
-                    $li->{'poptitle'} = $poptitle;
-                    $li->{'popcontent'} = htmlspecialchars(str_replace("\n", '', nl2br($popcontent)));
-                    
-                    if ($this->popside)
-                    {
-                        $li->{'popside'} = $this->popside;
-                    }
+                    $this->processPopovers($li, $object);
                 }
                 
                 if (!empty($object->{$this->templateAttribute}))
@@ -266,6 +277,7 @@ class TIconView extends TElement
                                 $option_link = new TElement('a');
                                 $option_link->{'onclick'} = "__adianti_load_page('{$action->serialize()}');";
                                 $option_link->{'style'} = 'cursor: pointer';
+                                $option_link->{'class'} = 'dropdown-item';
                                 
                                 if ($action_icon)
                                 {

@@ -12,7 +12,7 @@ use Exception;
 /**
  * Database Widget trait
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -24,7 +24,7 @@ trait AdiantiDatabaseWidgetTrait
     /**
      * Get items (key/value) from database to populate widget
      */
-    public static function getItemsFromModel($database, $model, $key, $value, $ordercolumn = NULL, TCriteria $criteria = NULL)
+    public static function getItemsFromModel($database, $model, $key, $value, $ordercolumn = NULL, ?TCriteria $criteria = NULL)
     {
         $items = [];
         $key   = trim($key);
@@ -103,7 +103,7 @@ trait AdiantiDatabaseWidgetTrait
     /**
      * Get objects from database to populate widget
      */
-    public static function getObjectsFromModel($database, $model, $key, $ordercolumn = NULL, TCriteria $criteria = NULL)
+    public static function getObjectsFromModel($database, $model, $key, $ordercolumn = NULL, ?TCriteria $criteria = NULL)
     {
         $items = [];
         $key   = trim($key);

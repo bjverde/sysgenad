@@ -13,7 +13,7 @@ use Exception;
 /**
  * Entry Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -42,6 +42,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
     protected $delimiter;
     protected $exitOnEnterOn;
     protected $innerIcon;
+    protected $speechRecognition;
     
     /**
      * Class Constructor
@@ -56,6 +57,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->replaceOnPost = FALSE;
         $this->minLength = 1;
         $this->exitOnEnterOn = FALSE;
+        $this->speechRecognition = FALSE;
         $this->tag->{'type'}   = 'text';
         $this->tag->{'widget'} = 'tentry';
     }
@@ -72,7 +74,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
             $this->innerIcon->{'class'} .= ' tentry-toggle-visibility input-inner-icon right' ;
         }
     }
-
+    
     /**
      * Define input type
      */
@@ -143,8 +145,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $dec_pattern = $decimalsSeparator == '.' ? '\\.' : $decimalsSeparator;
         $tho_pattern = $thousandSeparator == '.' ? '\\.' : $thousandSeparator;
         
-        //$this->tag->{'pattern'}   = '^\\$?(([1-9](\\d*|\\d{0,2}('.$tho_pattern.'\\d{3})*))|0)('.$dec_pattern.'\\d{1,2})?$';
-        $this->tag->{'pattern'}   = '^\\$?(([1-9](\\d*|\\d{0,'.$decimals.'}('.$tho_pattern.'\\d{3})*))|0)('.$dec_pattern.'\\d{1,'.$decimals.'})?$';
+        $this->tag->{'pattern'}   = '^([\-\+,\-0-9.]+)\\$?(([1-9](\\d*|\\d{0,'.$decimals.'}('.$tho_pattern.'\\d{3})*))|0)('.$dec_pattern.'\\d{1,'.$decimals.'})?$';
         $this->tag->{'inputmode'} = 'numeric';
         $this->tag->{'data-nmask'}  = $decimals.$decimalsSeparator.$thousandSeparator;
     }
@@ -371,6 +372,14 @@ class TEntry extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Enable Speech recognition
+     */
+    public function enableSpeechRecognition()
+    {
+        $this->speechRecognition = TRUE;
+    }
+    
+    /**
      * Shows the widget at the screen
      */
     public function show()
@@ -441,8 +450,14 @@ class TEntry extends TField implements AdiantiWidgetInterface
             $this->{'type'} = 'password';
             TScript::create(" tentry_toggle_visibility( '{$this->id}' ); ");
         }
-
-        if (!empty($this->innerIcon))
+        
+        if ($this->speechRecognition)
+        {
+            TScript::create(" tentry_enable_speech_recognition_button( '{$this->id}' ); ");
+        }
+        
+        // wrapper
+        if (!empty($this->innerIcon) || $this->speechRecognition)
         {
             $icon_wrapper = new TElement('div');
             $icon_wrapper->{'class'} = 'inner-icon-container';
@@ -455,6 +470,12 @@ class TEntry extends TField implements AdiantiWidgetInterface
         {
             // shows the tag
             $this->tag->show();
+        }
+        
+        // verify if the widget is non-editable
+        if (!parent::getEditable())
+        {
+            parent::disableField($this->formName, $this->id);
         }
         
         if (isset($this->completion))
@@ -480,12 +501,6 @@ class TEntry extends TField implements AdiantiWidgetInterface
         if ($this->exitOnEnterOn)
         {
             TScript::create( "tentry_exit_on_enter( '{$this->id}' ); ");
-        }
-        
-        // verify if the widget is non-editable
-        if (!parent::getEditable())
-        {
-            parent::disableField($this->formName, $this->name);
         }
     }
 }

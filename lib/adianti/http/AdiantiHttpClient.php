@@ -8,7 +8,7 @@ use Exception;
 /**
  * Basic HTTP Client request
  *
- * @version    7.6
+ * @version    8.6
  * @package    http
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -23,7 +23,7 @@ class AdiantiHttpClient
      * @param $method method type (GET,PUT,DELETE,POST)
      * @param $params request body
      */
-    public static function request($url, $method = 'POST', $params = [], $authorization = null, $headers = [])
+    public static function request($url, $method = 'POST', $params = [], $authorization = null, $headers = [], $assoc = false)
     {
         if (!in_array('curl', get_loaded_extensions()))
         {
@@ -62,21 +62,26 @@ class AdiantiHttpClient
             $defaults[CURLOPT_HTTPHEADER] = $headers;
         }
         
-        curl_setopt_array($ch, $defaults);
-        $output = curl_exec ($ch);
-        
-        if ($output === false)
+        try
         {
-            throw new Exception( curl_error($ch) );
+            curl_setopt_array($ch, $defaults);
+            $output = curl_exec($ch);
+
+            if ($output === false)
+            {
+                throw new Exception(curl_error($ch));
+            }
+        }
+        finally
+        {
+            curl_close($ch);
         }
         
-        curl_close ($ch);
-        
-        $return = (array) json_decode($output);
+        $return = (array) json_decode($output, $assoc);
         
         if (json_last_error() !== JSON_ERROR_NONE)
         {
-            throw new Exception(AdiantiCoreTranslator::translate('Return is not a valid JSON. Check the URL') . ' ' . ( AdiantiCoreApplication::getDebugMode() ? $output : '') );
+            throw new Exception(AdiantiCoreTranslator::translate('Return is not a valid JSON. Check the URL') . ' ' . ( AdiantiCoreApplication::getDebugMode() ? $output : ''), 1 );
         }
         
         if (!empty($return['status']) && $return['status'] == 'error')
@@ -108,7 +113,7 @@ class AdiantiHttpClient
             }
         }
         
-        if (!empty($return['data']))
+        if (isset($return['data']))
         {
             return $return['data'];
         }

@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * Image Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -31,9 +31,9 @@ class TImage extends TElement
             if (strstr($source, '#') !== FALSE)
             {
                 $parts = explode('#', $fa_class);
-                $fa_color   = substr($parts[1],0,7);
+                $fa_color   = trim(substr($parts[1],0,7));
                 $fa_bgcolor = !empty($parts[2]) ? substr($parts[2],0,7) : null;
-                $fa_class   = str_replace( ['#'.$fa_color, '#'.$fa_bgcolor], ['', ''], $fa_class);
+                $fa_class   = trim(str_replace( ['#'.$fa_color, '#'.$fa_bgcolor], ['', ''], $fa_class));
             }
             
             $this->{'class'} = 'fa fa-'.$fa_class;
@@ -56,9 +56,9 @@ class TImage extends TElement
             if (strstr($source, '#') !== FALSE)
             {
                 $parts = explode('#', $fa_class);
-                $fa_color   = substr($parts[1],0,7);
+                $fa_color   = trim(substr($parts[1],0,7));
                 $fa_bgcolor = !empty($parts[2]) ? substr($parts[2],0,7) : null;
-                $fa_class   = str_replace( ['#'.$fa_color, '#'.$fa_bgcolor], ['', ''], $fa_class);
+                $fa_class   = trim(str_replace( ['#'.$fa_color, '#'.$fa_bgcolor], ['', ''], $fa_class));
             }
             
             $this->{'class'} = substr($source,0,3) . ' fa-'.$fa_class;

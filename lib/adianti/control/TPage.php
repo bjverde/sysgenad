@@ -4,6 +4,7 @@ namespace Adianti\Control;
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
+use Adianti\Widget\Base\TStyle;
 
 use Exception;
 use ReflectionClass;
@@ -11,20 +12,22 @@ use ReflectionClass;
 /**
  * Page Controller Pattern: used as container for all elements inside a page and also as a page controller
  *
- * @version    7.6
+ * @version    8.6
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
 #[\AllowDynamicProperties]
-class TPage extends TElement
+class TPage extends TElement implements AdiantiController
 {
     private $body;
     private $constructed;
     private static $loadedjs;
     private static $loadedcss;
     private static $registeredcss;
+    
+    use AdiantiPageControlTrait;
     
     /**
      * Class Constructor
@@ -39,21 +42,13 @@ class TPage extends TElement
     }
     
     /**
-     * Set page name
+     * Static creation
      */
-    public function setPageName($name)
+    public static function create()
     {
-        $this->setProperty('page-name', $name);
-        $this->setProperty('page_name', $name);
-    }
-    
-    /**
-     * Return the Page name
-     */
-    public function getClassName()
-    {
-        $rc = new ReflectionClass( $this );
-        return $rc-> getShortName ();
+        $page = new static;
+        $page->setIsWrapped(true);
+        return $page;
     }
     
     /**
@@ -87,31 +82,6 @@ class TPage extends TElement
     public function getTargetContainer()
     {
         return $this->{'adianti_target_container'};
-    }
-    
-    /**
-     * Interprets an action based at the URL parameters
-     */
-    public function run()
-    {
-        if ($_GET)
-        {
-            $class  = isset($_GET['class'])  ? $_GET['class']  : NULL;
-            $method = isset($_GET['method']) ? $_GET['method'] : NULL;
-            
-            if ($class)
-            {
-                $object = ($class == get_class($this)) ? $this : new $class;
-                if (is_callable(array($object, $method) ) )
-                {
-                    call_user_func(array($object, $method), $_REQUEST);
-                }
-            }
-            else if (function_exists($method))
-            {
-                call_user_func($method, $_REQUEST);
-            }
-        }
     }
     
     /**
@@ -248,14 +218,17 @@ class TPage extends TElement
     }
     
     /**
-     * Intercepts whenever someones assign a new property's value
-     * @param $name     Property Name
-     * @param $value    Property Value
+     * Set last curtain width
      */
-    public function __set($name, $value)
+    public function setCurtainWidth($width)
     {
-        parent::__set($name, $value);
-        $this->$name = $value;
+        $style = new TStyle('right-panel');
+        $style->{'width'} = "{$width} !important";
+        parent::add($style->getContents());
+        
+        $style = new TStyle('container-part:last-child');
+        $style->{'width'} = '100%';
+        parent::add($style->getContents());
     }
     
     /**

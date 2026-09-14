@@ -16,7 +16,7 @@ use stdClass;
 /**
  * Create a field list
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -49,7 +49,12 @@ class TFieldList extends TTable
     private $tfoot;
     private $tbody;
     private $allow_post_empty;
+    private $empty_rows;
+    private $clone_action;
     protected $totalUpdateAction;
+    protected $clone_button_enabled;
+    protected $clone_action_added;
+    protected $metadata;
     
     /**
      * Class Constructor
@@ -75,6 +80,10 @@ class TFieldList extends TTable
         $this->total_functions = null;
         $this->remove_enabled = true;
         $this->allow_post_empty = true;
+        $this->clone_button_enabled = false;
+        $this->clone_action_added = false;
+        $this->empty_rows = 0;
+        $this->metadata = [];
     }
     
     /**
@@ -111,7 +120,7 @@ class TFieldList extends TTable
                 $field_name = str_replace($this->field_prefix . '_', '', $field_name);
             }
             
-            if ($values)
+            if (is_array($values))
             {
                 foreach ($values as $row => $value)
                 {
@@ -222,7 +231,7 @@ class TFieldList extends TTable
     /**
      * Set the remove action
      */
-    public function setRemoveAction(TAction $action = null, $icon = null, $title = null)
+    public function setRemoveAction(?TAction $action = null, $icon = null, $title = null)
     {
         if ($action)
         {
@@ -404,13 +413,42 @@ class TFieldList extends TTable
     }
     
     /**
+     * Enable empty rows at widget show
+     */
+    public function enableEmptyRows($rows)
+    {
+        $this->empty_rows = $rows;
+    }
+    
+    /**
+     * Enable clone button at widget show
+     */
+    public function enableCloneButton()
+    {
+        $this->clone_button_enabled = true;
+    }
+    
+    /**
      * Add detail row
      * @param $item Data object
      */
-    public function addDetail( $item )
+    public function addDetail( $item, ?Callable $callback = null )
     {
         $uniqid = mt_rand(1000000, 9999999);
         $field_list_name = $this->{'name'};
+        
+        // when the detail object doesn't have the field_prefix
+        if (!empty($this->field_prefix))
+        {
+            foreach ($item as $prop => $prop_value)
+            {
+                if (strpos($prop, $this->field_prefix) === false)
+                {
+                    $new_prop = $this->field_prefix . '_' . $prop;
+                    $item->$new_prop = $prop_value;
+                }
+            }
+        }
         
         if (!$this->body_created)
         {
@@ -517,6 +555,11 @@ class TFieldList extends TTable
                         $clone->setValue( null );
                     }
                 }
+                
+                if ($callback)
+                {
+                    $callback($clone);
+                }
             }
             
             if ($this->row_actions)
@@ -571,9 +614,18 @@ class TFieldList extends TTable
     }
     
     /**
+     * Set clone action.
+     * To be used along with enableCloneButton()
+     */
+    public function setCloneAction(?TAction $clone_action)
+    {
+        $this->clone_action = $clone_action;
+    }
+    
+    /**
      * Add clone action
      */
-    public function addCloneAction(TAction $clone_action = null, $icon = null, $title = null)
+    public function addCloneAction(?TAction $clone_action = null, $icon = null, $title = null)
     {
         if (!$this->body_created)
         {
@@ -613,6 +665,8 @@ class TFieldList extends TTable
         }
         
         $add->add($icon ? new TImage($icon) : '<i class="fa fa-plus green"></i>');
+        
+        $this->clone_action_added = true;
         
         // add buttons in table
         $row->addCell($add);
@@ -749,10 +803,58 @@ class TFieldList extends TTable
     }
     
     /**
+     * Set metadata
+     */
+    public function setMetadata($metadata, $value)
+    {
+        $this->metadata[$metadata] = $value;
+    }
+    
+    /**
+     * Get metadata
+     */
+    public function getMetadata($metadata)
+    {
+        return $this->metadata[$metadata] ?? null;
+    }
+    
+    /**
+     * Send data to a fieldlist
+     */
+    public static function sendData($form, $field, $data, $fire_events = true, $timeout = 200)
+    {
+        $output = new stdClass;
+        
+        if ($data)
+        {
+            foreach ($data as $key => $value)
+            {
+                $new_prop = $field . '_' . $key;
+                $output->$new_prop = $value;
+            }
+        }
+        
+        TForm::sendData($form, $output, false, $fire_events, $timeout);
+    }
+    
+    /**
      * Show component
      */
     public function show()
     {
+        if ($this->empty_rows > 0 && !$this->body_created)
+        {
+            for ($n=0; $n < $this->empty_rows; $n++)
+            {
+                $this->addDetail( new stdClass );
+            }
+        }
+        
+        if ($this->clone_button_enabled && !$this->clone_action_added)
+        {
+            $this->addCloneAction( $this->clone_action );
+        }
+        
         if ($this->summarize && empty($this->tfoot))
         {
             $this->tfoot = parent::addSection('tfoot');

@@ -7,7 +7,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * TreeView
  * 
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -27,7 +27,7 @@ class TTreeView extends TElement
      */
     public function __construct()
     {
-        parent::__construct('ul');
+        parent::__construct('div');
         $this->{'id'} = 'ttreeview_'.mt_rand(1000000000, 1999999999);
         $this->collapsed = FALSE;
         $this->resort = false;
@@ -85,71 +85,22 @@ class TTreeView extends TElement
     }
     
     /**
-     * Expand to Tree Node
-     * @param $key Node key
-     */
-    public function expandTo($key)
-    {
-        $objectId = $this->{'id'};
-        $id = md5($key);
-        $script = new TElement('script');
-        $script->{'type'} = 'text/javascript';
-        $script->add("setTimeout(function(){ \$('#{$objectId}_{$id}').parents('ul').show()  },1);");
-        $script->show();
-    }
-    
-    /**
      * Fill treeview from an multi-dimensional array
      * @param multi-dimensional array
      */
-    public function fromArray($array)
+    public function fromArray($tree)
     {
-        if (is_array($array))
+        $ul = new TElement('ul');
+        $ul->{'class'} = 'ttreeview';
+        
+        if ($tree)
         {
-            foreach ($array as $key => $option)
+            foreach ($tree as $key => $item)
             {
-                if (is_scalar($option))
-                {
-                    $element = new TElement('li');
-                    $span = new TElement('span');
-                    $span->{'class'} = 'file';
-                    $span->add($option);
-                    if ($this->itemIcon)
-                    {
-                        $element->{'style'} = "background-image:url(app/images/{$this->itemIcon})";
-                    }
-                    
-                    if ($this->itemAction)
-                    {
-                        $this->itemAction->setParameter('key', $key);
-                        $this->itemAction->setParameter('value', $option);
-                        $string_action = $this->itemAction->serialize(FALSE);
-                        $element->{'onClick'} = "__adianti_ajax_exec('{$string_action}')";
-                        $element->{'id'} = $this->{'id'} . '_' . md5($key);
-                    }
-                    $span->{'key'} = $key;
-                    
-                    if (is_callable($this->callback))
-                    {
-                        $span = call_user_func($this->callback, $span);
-                    }
-
-                    $element->add($span);
-                    
-                    parent::add($element);
-                }
-                else if (is_array($option))
-                {
-                    $element = new TElement('li');
-                    $span = new TElement('span');
-                    $span->{'class'} = 'folder';
-                    $span->add($key);
-                    $element->add($span);
-                    $element->add($this->fromOptions($option, $key));
-                    parent::add($element);
-                }
+                $ul->add( $this->buildOptions($key, $item) );
             }
         }
+        parent::add($ul);
     }
     
     /**
@@ -157,108 +108,59 @@ class TTreeView extends TElement
      * @param $options array of options
      * @ignore-autocomplete on
      */
-    private function fromOptions($options, $parent = null)
+    private function buildOptions($key, $option)
     {
-        if (is_array($options))
-        {
-            $ul = new TElement('ul');
-            
-            $files = [];
-            $folders = [];
-            
-            foreach ($options as $key => $option)
-            {
-                if (is_scalar($option))
-                {
-                    $element = new TElement('li');
-                    $span = new TElement('span');
-                    $span->{'class'} = 'file';
-                    $span->add($option);
-                    if ($this->itemIcon)
-                    {
-                        $element->{'style'} = "background-image:url(app/images/{$this->itemIcon})";
-                    }
-                    
-                    if ($this->itemAction)
-                    {
-                        $this->itemAction->setParameter('key', $key);
-                        $this->itemAction->setParameter('value', $option);
-                        $string_action = $this->itemAction->serialize(FALSE);
-                        $element->{'onClick'} = "__adianti_ajax_exec('{$string_action}')";
-                        $element->{'id'} = $this->{'id'} . '_' . md5($key);
-                    }
-                    $span->{'key'} = $key;
-                    
-                    if (is_callable($this->callback))
-                    {
-                        $span = call_user_func($this->callback, $span);
-                    }
-
-                    $element->add($span);
-                    
-                    $files[ implode('',$span->getChildren()) . ' ' . $key ] = $element;
-                }
-                else if (is_array($option))
-                {
-                    //echo "$parent - $key<br>";
-                   
-                    $element = new TElement('li');
-                    $span = new TElement('span');
-                    $span->{'class'} = 'folder';
-                    $span->add($key);
-                    
-                    $span->{'key'} = $key;
-                    $span->{'parent'} = $parent;
-                    
-                    if (is_callable($this->folderCallback))
-                    {
-                        $span = call_user_func($this->folderCallback, $span);
-                    }
-                    
-                    $element->add($span);
-                    $element->add($this->fromOptions($option, $key));
-                    
-                    $folders[ implode('',$span->getChildren()) . ' ' . $key ] = $element;
-                }
-                else if (is_object($option))
-                {
-                    $element = new TElement('li');
-                    $element->add($option);
-                }
-            }
-            
-            array_multisort(array_keys($folders), SORT_NATURAL | SORT_FLAG_CASE, $folders);
-            array_multisort(array_keys($files), SORT_NATURAL | SORT_FLAG_CASE, $files);
-            
-            if ($folders)
-            {
-                foreach ($folders as $element)
-                {
-                    $ul->add($element);
-                }
-            }
-            
-            if ($files)
-            {
-                foreach ($files as $element)
-                {
-                    $ul->add($element);
-                }
-            }
-            
-            return $ul;
-        }
-    }
-    
-    /**
-     * Shows the tag
-     */
-    public function show()
-    {
-        $objectId = $this->{'id'};
-        $collapsed = $this->collapsed ? 'true' : 'false';
+        $li = new TElement('li');
+        $li->{'class'} = 'menu-item';
         
-        parent::add(TScript::create(" ttreeview_start( '#{$objectId}', {$collapsed} ); ", FALSE));
-        parent::show();
+        if (is_scalar($option))
+        {
+            $span = new TElement('span');
+            $span->{'class'} = 'item-spam';
+            $span->add($option);
+            $li->add($span);
+            
+            if ($this->itemAction)
+            {
+                $this->itemAction->setParameter('key', $key);
+                $this->itemAction->setParameter('value', $option);
+                $string_action = $this->itemAction->serialize(FALSE);
+                $span->{'onclick'} = "__adianti_ajax_exec('{$string_action}')";
+            }
+            $span->{'key'} = $key;
+            
+            if (is_callable($this->callback))
+            {
+                $span = call_user_func($this->callback, $span);
+            }
+        }
+        else if (is_array($option))
+        {
+            $details = new TElement('details');
+            $summary = new TElement('summary');
+            $summary->add( $key );
+            $details->add( $summary );
+            if (!$this->collapsed)
+            {
+                $details->{'open'} = '1';
+            }
+            $li->add($details);
+            
+            $sub_ul = new TElement('ul');
+            $sub_ul->{'class'} = 'submenu';
+            $details->add($sub_ul);
+            
+            foreach ($option as $subkey => $suboption)
+            {
+                $sub_ul->add( $this->buildOptions($subkey, $suboption) );
+            }
+        }
+        else if (is_object($option))
+        {
+            $li = new TElement('li');
+            $li->add($option);
+        }
+        
+        return $li;
     }
 }

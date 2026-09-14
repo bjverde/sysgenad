@@ -8,7 +8,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * Message Dialog
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
@@ -25,7 +25,7 @@ class TMessage
      * @param $action  Action to be processed when closing the dialog
      * @param $title_msg  Dialog Title
      */
-    public function __construct($type, $message, TAction $action = NULL, $title_msg = '')
+    public function __construct($type, $message, ?TAction $action = NULL, $title_msg = '')
     {
         if (!empty($title_msg))
         {

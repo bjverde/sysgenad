@@ -2,6 +2,7 @@
 namespace Adianti\Widget\Menu;
 
 use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Core\AdiantiApplicationConfig;
 use Adianti\Util\AdiantiStringConversion;
 use SimpleXMLElement;
 use Exception;
@@ -11,7 +12,7 @@ use DomElement;
 /**
  * Menu Parser
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage menu
  * @author     Pablo Dall'Oglio
@@ -51,7 +52,12 @@ class TMenuParser
                 
                 if (substr($label, 0, 3) == '_t{')
                 {
-                    $label = _t(substr($label,3,-1), 3, -1);
+                    $label = _t(substr($label,3,-1));
+                }
+                else if (substr($label, 0, 4) == '_tf{')
+                {
+                    $ini = AdiantiApplicationConfig::get();
+                    $label = _tf(substr($label,4,-1), $ini['general']['source_language'] );
                 }
                 
                 $this->parse($xmlElement-> menu-> menuitem, array($label));
@@ -80,7 +86,12 @@ class TMenuParser
                 
                 if (substr($label, 0, 3) == '_t{')
                 {
-                    $label = _t(substr($label,3,-1), 3, -1);
+                    $label = _t(substr($label,3,-1));
+                }
+                else if (substr($label, 0, 4) == '_tf{')
+                {
+                    $ini = AdiantiApplicationConfig::get();
+                    $label = _tf(substr($label,4,-1), $ini['general']['source_language'] );
                 }
                 
                 if (strpos($action, '#') !== FALSE)
@@ -111,7 +122,7 @@ class TMenuParser
         $programs = [];
         foreach ($this->paths as $action => $path)
         {
-            $programs[$action] = array_pop($path);
+            $programs[$action] = implode(' > ', array_slice($path, -2));
         }
         return $programs;
     }

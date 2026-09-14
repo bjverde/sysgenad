@@ -15,11 +15,11 @@ use Exception;
 /**
  * Multi Search Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
- * @author     Matheus Agnes Dias
+ * @author     Matheus Agnes Dias (up to version 7.5)
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
@@ -38,6 +38,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
     protected $allowSearch;
     protected $separator;
     protected $value;
+    protected $options;
     
     /**
      * Class Constructor
@@ -54,6 +55,8 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
         $this->maxSize = 0;
         $this->allowClear = TRUE;
         $this->allowSearch = TRUE;
+        $this->withTitles = TRUE;
+        $this->options = [];
         
         parent::setDefaultOption(FALSE);
         $this->tag->{'component'} = 'multisearch';
@@ -231,6 +234,14 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
     }
     
     /**
+     * Set extra options
+     */
+    public function setOption($option, $value)
+    {
+        $this->options[$option] = $value;
+    }
+    
+    /**
      * Shows the widget
      */
     public function show()
@@ -254,12 +265,12 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
             $size  = "{$this->size}px";
         }
         
-        $multiple = $this->maxSize == 1 ? 'false' : 'true';
+        $multiple = $this->maxSize == 1 ? false : true;
         $search_word = !empty($this->getProperty('placeholder'))? $this->getProperty('placeholder') : AdiantiCoreTranslator::translate('Search');
         $change_action = 'function() {}';
-        $allowclear  = $this->allowClear  ? 'true' : 'false';
+        $allowclear  = $this->allowClear;
         $allowsearch = $this->allowSearch ? '1' : 'Infinity';
-        $with_titles = $this->withTitles ? 'true' : 'false';
+        $with_titles = $this->withTitles;
 
         if (isset($this->changeAction))
         {
@@ -278,11 +289,24 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
             $this->setProperty('changeaction', $this->changeFunction, FALSE);
         }
         
+        $options = $this->options;
+        $options['minlen'] = $this->minLength;
+        $options['maxsize'] = $this->maxSize;
+        $options['placeholder'] = $search_word;
+        $options['multiple'] = $multiple;
+        $options['width'] = $size;
+        $options['height'] = "{$this->height}px";
+        $options['allowclear'] = $allowclear;
+        $options['allowsearch'] = $allowsearch;
+        $options['with_titles'] = $with_titles;
+        
+        $options_json = json_encode( $options );
+        
         // shows the component
         parent::renderItems( false );
         $this->tag->show();
         
-        TScript::create(" tmultisearch_start( '{$this->id}', '{$this->minLength}', '{$this->maxSize}', '{$search_word}', $multiple, '{$size}', '{$this->height}px', {$allowclear}, {$allowsearch}, $change_action, {$with_titles} ); ");
+        TScript::create(" tmultisearch_start( '{$this->id}', '{$options_json}', $change_action ); ");
         
         if (!$this->editable)
         {

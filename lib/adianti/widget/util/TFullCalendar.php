@@ -12,7 +12,7 @@ use stdClass;
 /**
  * FullCalendar Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -38,8 +38,10 @@ class TFullCalendar extends TElement
     protected $movable;
     protected $options;
     protected $full_height;
-
-
+    protected $searchForm;
+    protected $editForm;
+    protected $metadata;
+    
     /**
      * Class Constructor
      * @param $current_date Current date of calendar
@@ -60,6 +62,7 @@ class TFullCalendar extends TElement
         $this->movable = TRUE;
         $this->full_height = FALSE;
         $this->options = [];
+        $this->metadata = [];
     }
     
     /**
@@ -226,6 +229,58 @@ class TFullCalendar extends TElement
         $event->{'color'} = $color;
         
         $this->events[] = $event;
+    }
+    
+    /**
+     * Assign a TForm object
+     * @param $searchForm object
+     */
+    public function setSearchForm($searchForm)
+    {
+        $this->searchForm = $searchForm;
+    }
+    
+    /**
+     * Assign a TForm object
+     * @param $editForm object
+     */
+    public function setEditForm($editForm)
+    {
+        $this->editForm = $editForm;
+    }
+    
+    /**
+     * Return the assigned Search form object
+     * @return TForm object
+     */
+    public function getSearchForm()
+    {
+        return $this->searchForm;
+    }
+    
+    /**
+     * Return the assigned Edit form object
+     * @return TForm object
+     */
+    public function getEditForm()
+    {
+        return $this->editForm;
+    }
+    
+    /**
+     * Set metadata
+     */
+    public function setMetadata($metadata, $value)
+    {
+        $this->metadata[$metadata] = $value;
+    }
+    
+    /**
+     * Get metadata
+     */
+    public function getMetadata($metadata)
+    {
+        return $this->metadata[$metadata] ?? null;
     }
     
     /**

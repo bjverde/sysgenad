@@ -2,6 +2,7 @@
 namespace Adianti\Widget\Util;
 
 use Adianti\Database\TTransaction;
+use Adianti\Database\TRecord;
 use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Base\TElement;
 use Adianti\Control\TAction;
@@ -17,7 +18,7 @@ use ApplicationTranslator;
 /**
  * Card
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -31,6 +32,7 @@ class TCardView extends TElement
     protected $itemActionGroups;
     protected $templatePath;
     protected $itemTemplate;
+    protected $itemTemplateCallback;
     protected $titleTemplate;
     protected $useButton;
     protected $titleField;
@@ -41,6 +43,15 @@ class TCardView extends TElement
     protected $contentHeight;
     protected $itemDatabase;
     protected $itemClass;
+    protected $useDefaultClickBody;
+    protected $useDefaultClickHead;
+    protected $itemWidth;
+    protected $pageNavigation;
+    protected $searchForm;
+    protected $forPrinting;
+    protected $pageSize;
+    protected $pageOrientation;
+    protected $metadata;
     
     /**
      * Class Constructor
@@ -48,14 +59,29 @@ class TCardView extends TElement
 	public function __construct()
     {
         parent::__construct('div');
-        $this->items          = [];
-        $this->itemActions    = [];
-        $this->useButton      = FALSE;
+        $this->items           = [];
+        $this->itemActions     = [];
+        $this->useButton       = FALSE;
         $this->searchAttributes = [];
-        $this->itemHeight     = NULL;
-        $this->contentHeight  = NULL;
-        $this->{'id'}         = 'tcard_' . mt_rand(1000000000, 1999999999);
-        $this->{'class'}      = 'card-wrapper';
+        $this->itemHeight      = NULL;
+        $this->itemWidth       = NULL;
+        $this->contentHeight   = NULL;
+        $this->useDefaultClickHead = FALSE;
+        $this->useDefaultClickBody = FALSE;
+        $this->forPrinting     = false;
+        $this->metadata        = [];
+        
+        $this->{'id'}          = 'tcard_' . mt_rand(1000000000, 1999999999);
+        $this->{'class'}       = 'card-wrapper';
+    }
+    
+    /**
+     * Enable default click in title and body
+     */
+    public function enableDefaultClick($head = TRUE, $body = TRUE)
+    {
+        $this->useDefaultClickHead = $head;
+        $this->useDefaultClickBody = $body;
     }
     
     /**
@@ -65,6 +91,15 @@ class TCardView extends TElement
     public function setItemHeight($height)
     {
         $this->itemHeight = $height;
+    }
+    
+    /**
+     * Set item min width
+     * @param $width min width
+     */
+    public function setItemWidth($width)
+    {
+        $this->itemWidth = $width;
     }
     
     /**
@@ -165,6 +200,15 @@ class TCardView extends TElement
     }
     
     /**
+     * Set card item callback for rendering
+     * @param  $callback Callback
+     */
+    public function setItemTemplateCallback(Callable $callback)
+    {
+        $this->itemTemplateCallback = $callback;
+    }
+    
+    /**
      * Set card title template for rendering
      * @param  $template   Template content
      */
@@ -190,6 +234,8 @@ class TCardView extends TElement
         $itemAction->title     = $title;
         
         $this->itemActions[]   = $itemAction;
+        
+        return $itemAction;
     }
     
     /**
@@ -247,7 +293,9 @@ class TCardView extends TElement
         {
             $item_title = new TElement('div');
             $item_title->{'class'} = 'panel-heading card-header card-item-title';
-            $item_title->add(AdiantiTemplateHandler::replace($this->titleTemplate, $item));
+            $title_template = ApplicationTranslator::translateTemplate($this->titleTemplate);
+            $title_template = AdiantiTemplateHandler::replace($title_template, $item);
+            $item_title->add($title_template);
         }
         
         if ($contentField)
@@ -263,6 +311,15 @@ class TCardView extends TElement
             $item_content = new TElement('div');
             $item_content->{'class'} = 'panel-body card-body card-item-content';
             $item_template = ApplicationTranslator::translateTemplate($this->itemTemplate);
+            $item_template = AdiantiTemplateHandler::replace($item_template, $item);
+            $item_content->add($item_template);
+        }
+        
+        if (!empty($this->itemTemplateCallback))
+        {
+            $item_content = new TElement('div');
+            $item_content->{'class'} = 'panel-body card-body card-item-content';
+            $item_template = ApplicationTranslator::translateTemplate(call_user_func($this->itemTemplateCallback, $item));
             $item_template = AdiantiTemplateHandler::replace($item_template, $item);
             $item_content->add($item_template);
         }
@@ -305,6 +362,11 @@ class TCardView extends TElement
             }
         }
         
+        if (!empty($this->itemWidth))
+        {
+            $item_wrapper->{'style'} .= ';width:'.$this->itemWidth;
+        }
+        
         if (count($this->searchAttributes) > 0)
         {
             $item_wrapper->{'id'} = 'row_' . mt_rand(1000000000, 1999999999);
@@ -319,12 +381,36 @@ class TCardView extends TElement
             }
         }
         
-        if (!empty($this->itemActions) || !empty($this->itemActionGroups))
+        if ( (!empty($this->itemActions) || !empty($this->itemActionGroups)) && !$this->forPrinting)
         {
-            $item_wrapper->add($this->renderItemActions($item));
+            $item_actions = $this->renderItemActions($item);
+            $first_action = $item_actions[1];
+            $item_wrapper->add( $item_actions[0] );
+            
+            if ( ($this->useDefaultClickHead || $this->useDefaultClickBody) && (!empty($first_action)))
+            {
+                if ($this->useDefaultClickHead)
+                {
+                    $item_title->{'style'} .= ';cursor:pointer';
+                    $item_title->{'onclick'} = "__adianti_load_page('{$first_action}')";
+                }
+                if ($this->useDefaultClickBody)
+                {
+                    $item_content->{'style'} .= ';cursor:pointer';
+                    $item_content->{'onclick'} = "__adianti_load_page('{$first_action}')";
+                }
+            }
         }
         
         return $item_wrapper;
+    }
+    
+    /**
+     * Add a search attribute
+     */
+    public function addSearchAttribute($attribute)
+    {
+        $this->searchAttributes[] = $attribute;
     }
     
     /**
@@ -348,10 +434,26 @@ class TCardView extends TElement
         $div            = new TElement('div');
         $div->{'class'} = 'panel-footer card-footer card-item-actions';
         
+        $has_action = false;
+        $first_action = null;
+        
         foreach ($this->itemActions as $key => $action)
         {
+            $action_label = $action->label;
+            $action_title = $action->title;
+            $action_icon  = $action->icon;
+            
+            if ($object instanceof TRecord)
+            {
+                $action_label = $object->render($action_label ?? '');
+                $action_title = $object->render($action_title ?? '');
+                $action_icon  = $object->render($action_icon  ?? '');
+            }
+            
             if (empty($action->condition) OR call_user_func($action->condition, $object))
             {
+                $has_action = true;
+                
                 $item_action = clone $action->action;
                 if ($item_action->getFieldParameters())
                 {
@@ -361,30 +463,55 @@ class TCardView extends TElement
                 
                 $url = $item_action->prepare($object)->serialize();
                 
+                if (empty($first_action))
+                {
+                    $first_action = $url;
+                }
+                
                 if ($this->useButton)
                 {
                     $button = new TElement('a');
-                    $button->{'class'} = 'btn btn-default';
+                    $button->{'class'} = !empty($action->{'buttonClass'}) ? $action->{'buttonClass'} : 'btn btn-default';
                     $button->{'href'} = $url;
                     $button->{'generator'} = 'adianti';
-                    $button->add(new TImage($action->icon));
-                    $button->add($action->label); 
+                    $button->add(new TImage($action_icon));
+                    $button->add($action_label);
                     
-                    if (!empty($action->title))
+                    if (!empty($action_title))
                     {
-                        $button->{'title'} = $action->title;
+                        $button->{'title'} = $action_title;
                         $button->{'titside'} = 'bottom';
+                    }
+                    
+                    if ($item_action->isPopover())
+                    {
+                        unset($button->{'href'});
+                        unset($button->{'generator'});
+                        
+                        $button->{'popaction'} = $item_action->prepare($object)->serialize(false);
+                        $button->{'poptrigger'} = 'click';
+                        $button->{'data-popover'} = 'true';
                     }
                     
                     $div->add($button);
                 }
                 else
                 {
-                    $icon                = new TImage($action->icon);
+                    $icon                = new TImage($action_icon);
                     $icon->{'style'}    .= ';cursor:pointer;margin-right:4px;';
-                    $icon->{'title'}     = $action->label;
+                    $icon->{'title'}     = $action_label;
                     $icon->{'generator'} = 'adianti';
                     $icon->{'href'}      = $url;
+                    
+                    if ($item_action->isPopover())
+                    {
+                        unset($icon->{'href'});
+                        unset($icon->{'generator'});
+                        
+                        $icon->{'popaction'} = $item_action->prepare($object)->serialize(false);
+                        $icon->{'poptrigger'} = 'click';
+                        $icon->{'data-popover'} = 'true';
+                    }
                     
                     $div->add($icon);
                 }
@@ -406,8 +533,14 @@ class TCardView extends TElement
                     $item_action = $action[1]->prepare($object);
                     $condition = $action[3] ?? null;
                     
+                    if (empty($first_action))
+                    {
+                        $first_action = $item_action->serialize();
+                    }
+                    
                     if (empty($condition) OR call_user_func($condition, $object))
                     {
+                        $has_action = true;
                         $drop->addAction($action[0], $item_action, $action[2]);
                     }
                 }
@@ -416,7 +549,115 @@ class TCardView extends TElement
             }
         }
         
-        return $div;
+        if (!$has_action)
+        {
+            $div->hide();
+            
+        }
+
+        return [$div, $first_action];
+    }
+    
+    /**
+     * Assign a PageNavigation object
+     * @param $pageNavigation object
+     */
+    public function setPageNavigation($pageNavigation)
+    {
+        $this->pageNavigation = $pageNavigation;
+    }
+    
+    /**
+     * Return the assigned PageNavigation object
+     * @return $pageNavigation object
+     */
+    public function getPageNavigation()
+    {
+        return $this->pageNavigation;
+    }
+    
+    /**
+     * Assign a TForm object
+     * @param $searchForm object
+     */
+    public function setSearchForm($searchForm)
+    {
+        $this->searchForm = $searchForm;
+    }
+    
+    /**
+     * Return the assigned Search form object
+     * @return TForm object
+     */
+    public function getSearchForm()
+    {
+        return $this->searchForm;
+    }
+    
+    /**
+     * Prepare for printing
+     */
+    public function prepareForPrinting()
+    {
+        $this->forPrinting = true;
+    }
+    
+    /**
+     * Return if the object is being printed
+     */
+    public function isPrinting()
+    {
+        return $this->forPrinting;
+    }
+    
+    /**
+     * Set page Size
+     * @param $page_size (a3,a4,a5,letter,legal)
+     */
+    public function setPageSize($page_size)
+    {
+        $this->pageSize = $page_size;
+    }
+    
+    /**
+     * Return the page size
+     */
+    public function getPageSize()
+    {
+        return $this->pageSize;
+    }
+    
+    /**
+     * Set page orientation
+     * @param $page_orientation (portrait, landscape)
+     */
+    public function setPageOrientation($page_orientation)
+    {
+        $this->pageOrientation = $page_orientation;
+    }
+    
+    /**
+     * Return the page orientation
+     */
+    public function getPageOrientation()
+    {
+        return $this->pageOrientation;
+    }
+    
+    /**
+     * Set metadata
+     */
+    public function setMetadata($metadata, $value)
+    {
+        $this->metadata[$metadata] = $value;
+    }
+    
+    /**
+     * Get metadata
+     */
+    public function getMetadata($metadata)
+    {
+        return $this->metadata[$metadata] ?? null;
     }
     
     /**

@@ -8,7 +8,7 @@ use Adianti\Widget\Base\TScript;
 /**
  * Question Dialog
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
@@ -24,7 +24,7 @@ class TQuestion
      * @param  $action_no  Action taken for NO  response
      * @param  $title_msg  Dialog Title
      */
-    public function __construct($message, TAction $action_yes = NULL, TAction $action_no = NULL, $title_msg = '', $label_yes = '', $label_no = '')
+    public function __construct($message, ?TAction $action_yes = NULL, ?TAction $action_no = NULL, $title_msg = '', $label_yes = '', $label_no = '')
     {
         $title        = ( $title_msg ? $title_msg : AdiantiCoreTranslator::translate('Question') );
         $callback_yes = "function () {}";

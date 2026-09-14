@@ -7,7 +7,7 @@ use Adianti\Util\AdiantiStringConversion;
 /**
  * SourceCode View
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -18,6 +18,7 @@ class TSourceCode
 {
     private $content;
     private $row_numbers;
+    private $strip_tags;
     
     /**
      * Load a PHP file
@@ -41,6 +42,14 @@ class TSourceCode
     public function loadString($content)
     {
         $this->content = AdiantiStringConversion::assureUnicode($content);
+    }
+    
+    /**
+     *
+     */
+    public function stripTags()
+    {
+        $this->strip_tags = true;
     }
     
     /**
@@ -104,11 +113,17 @@ class TSourceCode
      */
     public function show()
     {
+        $raw_content = (string) $this->content;
+        if (isset($this->strip_tags) && $this->strip_tags)
+        {
+            $raw_content = str_replace("<?php\n", '', $raw_content);
+        }
+        
         $copy = new TElement('div');
         $copy->{'style'} = 'border: 1px solid silver;float: right;padding: 5px;border-radius: 5px;';
         $copy->{'class'} = 'btn';
         $copy->add(new TImage('far:copy white'));
-        $copy->{'onclick'} = "__adianti_copy_to_clipboard64('".base64_encode($this->content)."')";
+        $copy->{'onclick'} = "__adianti_copy_to_clipboard64('".base64_encode($raw_content)."')";
         
         $span = new TElement('span');
         $span->{'style'} = 'font-size:10pt';
@@ -116,14 +131,33 @@ class TSourceCode
         
         $span->add($copy);
         
+        $content = highlight_string($this->content, TRUE);
+        
+        if (isset($this->strip_tags) && $this->strip_tags)
+        {
+            $content = str_replace('&lt;?php<br />', '', $content);
+        }
+        
         if ($this->row_numbers)
         {
-            $span->add($this->insertRowNumbers(highlight_string($this->content, TRUE)));
+            $span->add($this->insertRowNumbers($content));
         }
         else
         {
-            $span->add(highlight_string($this->content, TRUE));
+            $span->add($content);
         }
         $span->show();
+    }
+    
+    /**
+     * Returns the element content as a string
+     */
+    public function getContents()
+    {
+        ob_start();
+        $this->show();
+        $content = ob_get_contents();
+        ob_end_clean();
+        return $content;
     }
 }

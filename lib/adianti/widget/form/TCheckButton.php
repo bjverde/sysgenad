@@ -9,7 +9,7 @@ use Adianti\Widget\Form\TLabel;
 /**
  * CheckButton widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -21,6 +21,7 @@ class TCheckButton extends TField implements AdiantiWidgetInterface
     private $indexValue;
     private $useSwitch;
     private $labelClass;
+    private $afterElement;
     
     /**
      * Class Constructor
@@ -31,6 +32,7 @@ class TCheckButton extends TField implements AdiantiWidgetInterface
         parent::__construct($name);
         $this->id = 'tcheckbutton_' . mt_rand(1000000000, 1999999999);
         $this->tag->{'class'} = '';
+        $this->tag->{'widget'} = 'tcheckbutton';
         $this->useSwitch  = FALSE;
     }
     
@@ -50,6 +52,14 @@ class TCheckButton extends TField implements AdiantiWidgetInterface
     public function setIndexValue($index)
     {        
         $this->indexValue = $index;
+    }
+    
+    /**
+     * Insert element after
+     */
+    public function after($element)
+    {
+        $this->afterElement = $element;
     }
     
     /**
@@ -95,13 +105,23 @@ class TCheckButton extends TField implements AdiantiWidgetInterface
             $wrapper->{'style'} = 'display:inline-flex;align-items:center;';
             $wrapper->add($this->tag);
             $wrapper->add($obj);
+            
+            if (!empty($this->afterElement))
+            {
+                $wrapper->add($this->afterElement);
+            }
+            
             $wrapper->show();
         }
         else
         {
             // shows the tag
             $this->tag->show();
+            
+            if (!empty($this->afterElement))
+            {
+                $this->afterElement->show();
+            }
         }
-
     }
 }

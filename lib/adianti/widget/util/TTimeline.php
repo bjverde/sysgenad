@@ -14,11 +14,11 @@ use ApplicationTranslator;
 /**
  * Timeline
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
- * @author     Artur Comunello
  * @author     Pablo Dall'Oglio
+ * @author     Artur Comunello (up to version 7.0)
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */

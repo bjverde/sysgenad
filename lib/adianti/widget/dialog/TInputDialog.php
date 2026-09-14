@@ -16,7 +16,7 @@ use Exception;
 /**
  * Input Dialog
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
@@ -35,15 +35,16 @@ class TInputDialog
      * @param $action  Action to be processed when closing the dialog
      * @param $caption Button caption
      */
-    public function __construct($title_msg, AdiantiFormInterface $form, TAction $action = NULL, $caption = '')
+    public function __construct($title_msg, AdiantiFormInterface $form, ?TAction $action = NULL, $caption = '')
     {
         $this->id = 'tinputdialog_'.mt_rand(1000000000, 1999999999);
         
         $modal_wrapper = new TElement('div');
         $modal_wrapper->{'class'} = 'modal tinputdialog';
         $modal_wrapper->{'id'}    = $this->id;
-        $modal_wrapper->{'style'} = 'padding-top: 10%; z-index:2000';
+        $modal_wrapper->{'style'} = 'padding-top: 5%; z-index:2000';
         $modal_wrapper->{'tabindex'} = '-1';
+        $modal_wrapper->{'data-bs-backdrop'} = 'true';
         
         $modal_dialog = new TElement('div');
         $modal_dialog->{'class'} = 'modal-dialog';
@@ -56,14 +57,13 @@ class TInputDialog
         
         $close = new TElement('button');
         $close->{'type'} = 'button';
-        $close->{'class'} = 'close';
+        $close->{'class'} = 'btn-close';
         $close->{'data-dismiss'} = 'modal';
-        $close->{'aria-hidden'} = 'true';
-        $close->add('×');
+        $close->{'data-bs-dismiss'} = 'modal';
+        //$close->{'aria-hidden'} = 'true';
         
-        $title = new TElement('h4');
+        $title = new TElement('h5');
         $title->{'class'} = 'modal-title';
-        $title->{'style'} = 'display:inline';
         $title->add( $title_msg ? $title_msg : AdiantiCoreTranslator::translate('Input') );
         
         $form_name = $form->getName();
@@ -81,8 +81,6 @@ class TInputDialog
                     if ($button->getAction()->getParameter('stay-open') !== 1)
                     {
                         $button->addFunction( "tdialog_close('{$this->id}')" );
-                        $button->{'data-toggle'} = "modal";
-                        $button->{'data-dismiss'} = 'modal';
                     }
                     $button->getAction()->setParameter('modalId', $this->id);
                     $buttons[] = $button;
@@ -94,10 +92,7 @@ class TInputDialog
             $button = new TButton(strtolower(str_replace(' ', '_', $caption)));
             if ($action->getParameter('stay-open') !== 1)
             {
-                $button->{'data-toggle'} = "modal";
-                $button->{'data-dismiss'} = 'modal';
                 $button->addFunction( "tdialog_close('{$this->id}')" );
-                
             }
             $action->setParameter('modalId', $this->id);
             $button->setAction( $action );
@@ -112,8 +107,9 @@ class TInputDialog
         $modal_wrapper->add($modal_dialog);
         $modal_dialog->add($modal_content);
         $modal_content->add($modal_header);
-        $modal_header->add($close);
         $modal_header->add($title);
+        $modal_header->add($close);
+        
         
         $modal_content->add($form);
         $modal_content->add($footer);

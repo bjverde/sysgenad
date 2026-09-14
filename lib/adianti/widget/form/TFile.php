@@ -17,7 +17,7 @@ use Exception;
 /**
  * FileChooser widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Nataniel Rabaioli

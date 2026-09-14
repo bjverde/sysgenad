@@ -9,7 +9,7 @@ use ReflectionMethod;
 /**
  * Structure to encapsulate an action
  *
- * @version    7.6
+ * @version    8.6
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -20,6 +20,7 @@ class TAction
     protected $action;
     protected $param;
     protected $properties;
+    protected $usePopover;
     
     /**
      * Class Constructor
@@ -50,6 +51,16 @@ class TAction
             
             $this->param = $parameters;
         }
+        
+        $this->usePopover = false;
+    }
+    
+    /**
+     * Disable URL history state register
+     */
+    public function disableState()
+    {
+        self::setParameter('register_state', 'false');
     }
     
     /**
@@ -297,7 +308,7 @@ class TAction
                 $url['register_state'] = 'false';
             }
             
-            if (isset($_GET['target_container']) AND !empty($_GET['target_container']) AND empty($this->param['target_container']) AND ($_GET['target_container'] !== 'adianti_div_content'))
+            if (!empty($_GET['target_container']) AND empty($this->param['target_container']) AND ($_GET['target_container'] !== 'adianti_div_content') && empty($_GET['page_fragment']))
             {
                 $url['target_container'] = $_GET['target_container'];
             }
@@ -305,6 +316,11 @@ class TAction
             if ($this->isStatic())
             {
                 $url['static'] = '1';
+            }
+            
+            if ($this->isPopover())
+            {
+                $url['inside_popover'] = '1';
             }
         }
         // otherwise the callback is a function
@@ -381,6 +397,11 @@ class TAction
      */
     public function isStatic()
     {
+        if (!empty($this->param['static']) && $this->param['static'] == '1')
+        {
+            return TRUE;
+        }
+        
         if (is_array($this->action))
         {
             $class = is_string($this->action[0])? $this->action[0]: get_class($this->action[0]);
@@ -397,5 +418,21 @@ class TAction
             }
         }
         return FALSE;
+    }
+    
+    /**
+     * Enable popover
+     */
+    public function usePopover()
+    {
+        $this->usePopover = true;
+    }
+    
+    /**
+     * Return if is using popover
+     */
+    public function isPopover()
+    {
+        return $this->usePopover;
     }
 }

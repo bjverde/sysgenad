@@ -4,6 +4,7 @@ namespace Adianti\Widget\Form;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Control\TAction;
 use Adianti\Widget\Base\TElement;
+use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Form\TForm;
 use Adianti\Widget\Form\TField;
 
@@ -13,7 +14,7 @@ use Exception;
 /**
  * Text Widget (also known as Memo)
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -28,6 +29,7 @@ class TText extends TField implements AdiantiWidgetInterface
     protected $formName;
     protected $size;
     protected $height;
+    protected $speechRecognition;
     
     /**
      * Class Constructor
@@ -37,6 +39,8 @@ class TText extends TField implements AdiantiWidgetInterface
     {
         parent::__construct($name);
         $this->id   = 'ttext_' . mt_rand(1000000000, 1999999999);
+        
+        $this->speechRecognition = FALSE;
         
         // creates a <textarea> tag
         $this->tag = new TElement('textarea');
@@ -147,6 +151,14 @@ class TText extends TField implements AdiantiWidgetInterface
     }
     
     /**
+     * Enable Speech recognition
+     */
+    public function enableSpeechRecognition()
+    {
+        $this->speechRecognition = TRUE;
+    }
+        
+    /**
      * Show the widget
      */
     public function show()
@@ -197,7 +209,25 @@ class TText extends TField implements AdiantiWidgetInterface
         
         // add the content to the textarea
         $this->tag->add(htmlspecialchars( (string) $this->value));
-        // show the tag
-        $this->tag->show();
+        
+        // wrapper
+        if ($this->speechRecognition)
+        {
+            $wrapper = new TElement('div');
+            $wrapper->{'style'} = 'position:relative';
+            $wrapper->add($this->tag);
+            $wrapper->add($this->innerIcon);
+            $wrapper->show();
+        }
+        else
+        {
+            // shows the tag
+            $this->tag->show();
+        }
+        
+        if ($this->speechRecognition)
+        {
+            TScript::create(" tentry_enable_speech_recognition_button( '{$this->id}' ); ");
+        }
     }
 }

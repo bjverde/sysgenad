@@ -14,7 +14,7 @@ use Exception;
 /**
  * Select Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -50,7 +50,7 @@ class TSelect extends TField implements AdiantiWidgetInterface
         
         // creates a <select> tag
         $this->tag = new TElement('select');
-        $this->tag->{'class'} = 'tselect'; // CSS
+        $this->tag->{'class'} = 'tselect form-select'; // CSS
         $this->tag->{'multiple'} = '1';
         $this->tag->{'widget'} = 'tselect';
     }
@@ -95,6 +95,18 @@ class TSelect extends TField implements AdiantiWidgetInterface
         if (is_array($items))
         {
             $this->items = $items;
+        }
+    }
+    
+    /**
+     * Reverse items
+     */
+    public function reverse()
+    {
+        if (is_array($this->items))
+        {
+            // reverse order, keeping keys
+            $this->items = array_reverse($this->items, true);
         }
     }
     
@@ -266,7 +278,7 @@ class TSelect extends TField implements AdiantiWidgetInterface
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create( " tselect_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create( " tselect_clear('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -372,8 +384,8 @@ class TSelect extends TField implements AdiantiWidgetInterface
         {
             // make the widget read-only
             $this->tag->{'onclick'} = "return false;";
-            $this->tag->{'style'}  .= ';pointer-events:none';
-            $this->tag->{'class'}   = 'tselect_disabled'; // CSS
+            $this->tag->{'style'}  .= ';pointer-events:none;user-select:none';
+            $this->tag->{'class'}   = 'form-select tselect_disabled'; // CSS
         }
 
         if ($this->searchable)

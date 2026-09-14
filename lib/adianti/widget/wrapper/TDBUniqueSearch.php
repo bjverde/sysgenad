@@ -14,7 +14,7 @@ use Exception;
 /**
  * DBUnique Search Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -35,7 +35,7 @@ class TDBUniqueSearch extends TDBMultiSearch implements AdiantiWidgetInterface
      * Class Constructor
      * @param  $name Widget's name
      */
-    public function __construct($name, $database, $model, $key, $value, $orderColumn = NULL, TCriteria $criteria = NULL)
+    public function __construct($name, $database, $model, $key, $value, $orderColumn = NULL, ?TCriteria $criteria = NULL)
     {
         // executes the parent class constructor
         parent::__construct($name, $database, $model, $key, $value, $orderColumn, $criteria);

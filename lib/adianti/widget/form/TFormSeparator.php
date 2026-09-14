@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * Form separator
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -25,7 +25,7 @@ class TFormSeparator extends TElement
      * Class Constructor
      * @param $text Separator title
      */
-    public function __construct($text, $fontColor = '#333333', $fontSize = '16', $separatorColor = '#eeeeee')
+    public function __construct($text, $fontColor = 'var(--bs-body-color)', $fontSize = '16', $separatorColor = '#eeeeee')
     {
         parent::__construct('div');
         

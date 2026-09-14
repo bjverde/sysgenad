@@ -10,7 +10,7 @@ use ApplicationTranslator;
 /**
  * Html Renderer
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage template
  * @author     Pablo Dall'Oglio
@@ -28,6 +28,7 @@ class THtmlRenderer
     private $repeatSection;
     private $enabledTranslation;
     private $HTMLOutputConversion;
+    private static $fileCache;
     
     /**
      * Constructor method
@@ -45,9 +46,14 @@ class THtmlRenderer
         $this->buffer = array();
         $this->HTMLOutputConversion = true;
         
-        if (file_exists($path))
+        if (!empty(self::$fileCache[$path]))
+        {
+            $this->template = self::$fileCache[$path];
+        }
+        else if (file_exists($path))
         {
             $this->template = file_get_contents($path);
+            self::$fileCache[$path] = $this->template;
         }
     }
     
@@ -223,7 +229,7 @@ class THtmlRenderer
             }
             
             $array_content = preg_split('/\n|\r\n?/', $content);
-            $sectionName = null;
+            $sectionName = '';
             
             // iterate line by line
             foreach ($array_content as $line)
@@ -316,7 +322,7 @@ class THtmlRenderer
                 
                 if (!$delimiter)
                 {
-                    if (!isset($sectionName))
+                    if (empty($sectionName))
                     {
                         $sectionName = 'main';
                         if (empty($this->buffer[$sectionName]))

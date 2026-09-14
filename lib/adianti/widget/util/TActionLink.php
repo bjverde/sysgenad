@@ -7,7 +7,7 @@ use Adianti\Control\TAction;
 /**
  * Action Link
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -27,7 +27,7 @@ class TActionLink extends TTextDisplay
      * @param  $size   text size
      * @param  $decoration text decorations (b=bold, i=italic, u=underline)
      */
-    public function __construct($value, TAction $action, $color = null, $size = null, $decoration = null, $icon = null)
+    public function __construct($value, ?TAction $action = null, $color = null, $size = null, $decoration = null, $icon = null)
     {
         $this->icon = $icon;
         
@@ -39,6 +39,17 @@ class TActionLink extends TTextDisplay
         parent::__construct($value, $color, $size, $decoration);
         parent::setName('a');
         
+        if ($action)
+        {
+            $this->setAction($action);
+        }
+    }
+    
+    /**
+     * Set the action
+     */
+    public function setAction(TAction $action)
+    {
         $this->action = $action;
 
         $this->{'href'} = $action->serialize(TRUE, TRUE);
@@ -48,8 +59,18 @@ class TActionLink extends TTextDisplay
         {
             $this->{'disabled'} = '1';
         }
-    }
 
+        if ($action->isPopover())
+        {
+            unset($this->{'href'});
+            unset($this->{'generator'});
+            
+            $this->{'popaction'} = $action->serialize(false);
+            $this->{'poptrigger'} = 'click';
+            $this->{'data-popover'} = 'true';
+        }
+    }
+    
     /**
      * Returns the current calback
      */
@@ -69,6 +90,14 @@ class TActionLink extends TTextDisplay
         {
             $this->{'onclick'} = $function.';';
         }
+    }
+    
+    /**
+     *
+     */
+    public function setImage($icon)
+    {
+        $this->icon = $icon;
     }
     
     /**

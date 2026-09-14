@@ -1,12 +1,14 @@
 <?php
 namespace Adianti\Widget\Util;
 
+use Adianti\Database\TRecord;
 use Adianti\Control\TAction;
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
 use Adianti\Widget\Container\TTable;
 use Adianti\Widget\Util\TImage;
+use Adianti\Util\AdiantiTemplateHandler;
 
 use DateInterval;
 use DatePeriod;
@@ -20,8 +22,8 @@ use stdClass;
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
- * @author     Artur Comunello
- * @author     Lucas Tomasi
+ * @author     Artur Comunello (up to version 7.0)
+ * @author     Lucas Tomasi  (up to version 7.5)
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
@@ -50,19 +52,22 @@ class TGantt extends TElement
     private $size_mode_button = FALSE;
     private $view_mode_options;
     private $size_mode_options;
-    
     private $stripedMonths = FALSE;
     private $stripedRows = FALSE;
     private $transformTimeTitle = NULL;
     private $transformEventLabel = NULL;
-
+    protected $searchForm;
+    protected $editForm;
+    protected $metadata;
+    protected $dragScroll;
+    
     const MODE_DAYS            = 'MODE_DAYS';
     const MODE_MONTHS          = 'MODE_MONTHS';
     const MODE_DAYS_WITH_HOUR  = 'MODE_DAYS_WITH_HOUR';
     const MODE_MONTHS_WITH_DAY = 'MODE_MONTHS_WITH_DAY';
 
-    const HOURS    = ['00', '01', '12', '18'];
-    const HOURS_24 = ['00', '01','02','03', '04','05','06', '07', '08','09','10','11', '12', '13', '14', '15', '16', '17', '18', '19','20','21','22','23'];
+    const HOURS    = ['00', '06', '12', '18'];
+    const HOURS_24 = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
 
     const SIZES         = ['xs', 'sm', 'md', 'lg'];
     const SIZESPX       = [30, 60, 120, 240];
@@ -83,7 +88,10 @@ class TGantt extends TElement
         $this->start_date  = date('Y-m-d');
         $this->hours       = self::HOURS;
         $this->count_hours = count(self::HOURS);
-
+        $this->dragEvent   = false;
+        $this->metadata    = [];
+        $this->dragScroll  = false;
+        
         if (in_array($view_mode, [self::MODE_DAYS, self::MODE_DAYS_WITH_HOUR]))
         {
             $this->setInterval('15 days');
@@ -283,7 +291,7 @@ class TGantt extends TElement
      * @param $label String Button label
      * @param $icon TImage Button icon
      */
-    public function addHeaderAction(TAction $action, $label = '', TImage $icon = null)
+    public function addHeaderAction(TAction $action, $label = '', ?TImage $icon = null)
     {
         $button = new TElement('button');
 
@@ -363,7 +371,38 @@ class TGantt extends TElement
 
         $this->events[$rowId][] = $event;
     }
-
+    
+    /**
+     *
+     */
+    public function addObject(TRecord $object)
+    {
+        $fixDbAttribute = function ($attribute) {
+            $attribute = (string) $attribute;
+            if (substr($attribute,0,1) == '[') {
+                $parts = explode('->', $attribute,2);
+                return substr($parts[1],0,-1);
+            }
+            return $attribute;
+        };
+        
+        $group_field   = $fixDbAttribute($this->getMetadata('group_field'));
+        $title_field   = $fixDbAttribute($this->getMetadata('title_field'));
+        $start_field   = $fixDbAttribute($this->getMetadata('start_field'));
+        $end_field     = $fixDbAttribute($this->getMetadata('end_field'));
+        $color_field   = $fixDbAttribute($this->getMetadata('color_field'));
+        $percent_field = $fixDbAttribute($this->getMetadata('percent_field'));
+        $popover       = $this->getMetadata('attributes')['popover'];
+        
+        if (!empty($popover))
+        {
+            $popover_content = AdiantiTemplateHandler::replace($popover, $object);
+            $object->$title_field = TGantt::renderPopover($object->$title_field, '', $popover_content);
+        }
+        
+        $this->addEvent($object->getPrimaryKeyValue(), $object->$group_field, $object->$title_field, $object->$start_field, $object->$end_field, $object->$color_field, $object->$percent_field);
+    }
+    
     /**
      * Define click event action
      * 
@@ -464,7 +503,62 @@ class TGantt extends TElement
 
         return implode(' - ', $months);
     }
-
+    
+    /**
+     * Assign a TForm object
+     * @param $searchForm object
+     */
+    public function setSearchForm($searchForm)
+    {
+        $this->searchForm = $searchForm;
+    }
+    
+    /**
+     * Assign a TForm object
+     * @param $editForm object
+     */
+    public function setEditForm($editForm)
+    {
+        $this->editForm = $editForm;
+    }
+    
+    /**
+     * Return the assigned Search form object
+     * @return TForm object
+     */
+    public function getSearchForm()
+    {
+        return $this->searchForm;
+    }
+    
+    /**
+     * Return the assigned Edit form object
+     * @return TForm object
+     */
+    public function getEditForm()
+    {
+        return $this->editForm;
+    }
+    
+    /**
+     * Set metadata
+     */
+    public function setMetadata($metadata, $value)
+    {
+        $this->metadata[$metadata] = $value;
+    }
+    
+    /**
+     * Get metadata
+     */
+    public function getMetadata($metadata)
+    {
+        return $this->metadata[$metadata] ?? null;
+    }
+    
+    /**
+     *
+     */
     private function renderHeader()
     {
         $title = new TElement( 'div' );
@@ -588,7 +682,8 @@ class TGantt extends TElement
             {
                 $tableRow = $tableAside->addRow();
                 $cell = $tableRow->addCell( $row->{'title'} );
-    
+                $cell->{'title'} = $row->{'title'};
+                
                 if (strip_tags($row->{'title'}) == $row->{'title'})
                 {
                     $cell->{'style'} = 'padding: 15px';
@@ -915,6 +1010,11 @@ class TGantt extends TElement
         
         $divFixedContent = new TElement( 'div' );
         $divFixedContent->{'class'} = 'fixedTable-body';
+        $divFixedContent->{'id'} = 'content_'.$this->id;
+        if ($this->dragScroll)
+        {
+            $divFixedContent->{'style'} .= '; user-select:none';
+        }
         $divFixedContent->add( $time_table);
 
         return $divFixedContent;
@@ -1023,6 +1123,14 @@ class TGantt extends TElement
     }
     
     /**
+     * Enable Drag Scroll
+     */
+    public function enableDragScroll()
+    {
+        $this->dragScroll = true;
+    }
+    
+    /**
      *
      */
     public function show()
@@ -1067,7 +1175,7 @@ class TGantt extends TElement
         
         $panel = new TElement( 'div' );
         $panel->{'id'} = $this->id;
-        $panel->{'class'} = 'panel panel-default tgantt';
+        $panel->{'class'} = 'card panel panel-default tgantt';
         $panel->add( $this->renderHeader() );
         $panel->add( $this->renderGantt() );
         $panel->show();
@@ -1091,6 +1199,11 @@ class TGantt extends TElement
             $this->dayClickAction->setParameter('view_mode', $this->view_mode);
             $this->dayClickAction->setParameter('size_mode', $this->size);
             $day_click_action_string = $this->dayClickAction->serialize(TRUE);
+        }
+        
+        if ($this->dragScroll)
+        {
+            TScript::create("tgantt_drag_scroll('content_{$this->id}')");
         }
         
         TScript::create("tgantt_start( '#{$this->id}', '{$day_click_action_string}', '{$minutesStep}','{$pixelValue}', '{$update_action_string}');");

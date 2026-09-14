@@ -6,11 +6,12 @@ use Adianti\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Widget\Base\TElement;
 use Adianti\Control\TAction;
 use Adianti\Widget\Util\TActionLink;
+use Adianti\Widget\Util\TImage;
 
 /**
  * Bootstrap native panel for Adianti Framework
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -87,6 +88,29 @@ class TPanelGroup extends TElement
         
         $this->footer = new TElement('div');
         $this->footer->{'class'} = 'card-footer panel-footer';
+    }
+    
+    /**
+     * Collapse panel group by default
+     */
+    public function collapse()
+    {
+        $collapse = new TElement('div');
+        $collapse->{'class'} = 'card-tools';
+        $collapse->{'style'} = 'float:right';
+        
+        $button = new TElement('button');
+        $button->{'type'} = 'button';
+        $button->{'onclick'} = 'card_toggle_collapse(this)';
+        $button->{'class'} = 'btn btn-sm btn-default';
+        $button->add(new TImage('fa:chevron-down'));
+        $collapse->add($button);
+        
+        $this->title->add($collapse);
+        $this->body->{'style'} = 'display:none';
+        $this->{'class'} .= ' expand-title';
+        
+        return $collapse;
     }
     
     /**

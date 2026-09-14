@@ -2,6 +2,7 @@
 namespace Adianti\Widget\Menu;
 
 use Adianti\Core\AdiantiCoreApplication;
+use Adianti\Core\AdiantiApplicationConfig;
 use Adianti\Widget\Menu\TMenu;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Util\TImage;
@@ -9,7 +10,7 @@ use Adianti\Widget\Util\TImage;
 /**
  * MenuItem Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage menu
  * @author     Pablo Dall'Oglio
@@ -25,10 +26,11 @@ class TMenuItem extends TElement
     private $level;
     private $link;
     private $linkClass;
-    private $classLink;
+    private $itemClass;
     private $menu_transformer;
     private $tagLabel;
     private $classIcon;
+    private $rightWidget;
     
     /**
      * Class constructor
@@ -146,9 +148,9 @@ class TMenuItem extends TElement
     /**
      * Set link class Item
      */
-    public function setClassLink($class)
+    public function setItemClass($class)
     {
-        $this->classLink = $class;
+        $this->itemClass = $class;
     }
 
     /**
@@ -165,6 +167,14 @@ class TMenuItem extends TElement
     public function setTagLabel($tag)
     {
         $this->tagLabel = $tag;
+    }
+    
+    /**
+     * Define a widget to be inserted at action's right
+     */
+    public function setRightWidget($widget)
+    {
+        $this->rightWidget = $widget;
     }
     
     /**
@@ -222,6 +232,11 @@ class TMenuItem extends TElement
         {
             $label->add(_t(substr($this->label,3,-1)));
         }
+        else if (substr($this->label, 0, 4) == '_tf{')
+        {
+            $ini = AdiantiApplicationConfig::get();
+            $label->add(_tf(substr($this->label,4,-1), $ini['general']['source_language']));
+        }
         else
         {
             $label->add($this->label);
@@ -233,9 +248,14 @@ class TMenuItem extends TElement
             $this->add($this->link);
         }
         
-        if ($this->classLink)
+        if (!empty($this->rightWidget))
         {
-            $this->link->{'class'} = $this->classLink;
+            $this->link->add($this->rightWidget);
+        }
+        
+        if ($this->itemClass)
+        {
+            $this->link->{'class'} = $this->itemClass;
         }
 
         if ($this->menu instanceof TMenu)

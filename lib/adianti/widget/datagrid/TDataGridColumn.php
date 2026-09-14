@@ -8,7 +8,7 @@ use Adianti\Widget\Form\TEntry;
 /**
  * Representes a DataGrid column
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -27,12 +27,15 @@ class TDataGridColumn
     private $properties;
     private $dataProperties;
     private $totalFunction;
+    private $totalFunctionLabel;
     private $totalMask;
     private $totalCallback;
     private $totalTransformed;
     private $searchable;
     private $inputSearch;
     private $htmlConversion;
+    private $printable;
+    private $visible;
     
     /**
      * Class Constructor
@@ -51,6 +54,8 @@ class TDataGridColumn
         $this->properties = array();
         $this->dataProperties = array();
         $this->htmlConversion = true;
+        $this->printable = true;
+        $this->visible = true;
     }
     
     /**
@@ -58,6 +63,8 @@ class TDataGridColumn
      */
     public function setVisibility($bool)
     {
+        $this->visible = $bool;
+        
         if ($bool)
         {
             $this->setProperty('style', '');
@@ -80,6 +87,14 @@ class TDataGridColumn
     }
     
     /**
+     * Disable in exporting formats
+     */
+    public function disablePrinting()
+    {
+        $this->printable = false;
+    }
+    
+    /**
      * Enable column search
      */
     public function enableSearch()
@@ -91,6 +106,7 @@ class TDataGridColumn
         $this->inputSearch = new TEntry($name);
         $this->inputSearch->setId($name);
         $this->inputSearch->{'placeholder'} = AdiantiCoreTranslator::translate('Search');
+        $this->inputSearch->{'style'} .= ';display:inline;margin-left:5px';
         $this->inputSearch->setSize('50%');
     }
     
@@ -132,6 +148,22 @@ class TDataGridColumn
     public function isSearchable()
     {
         return $this->searchable;
+    }
+    
+    /**
+     * Returns if column is printable
+     */
+    public function isPrintable()
+    {
+        return $this->printable;
+    }
+    
+    /**
+     * Returns if column is visible
+     */
+    public function isVisible()
+    {
+        return $this->visible;
     }
     
     /**
@@ -207,6 +239,14 @@ class TDataGridColumn
             // store the property's value
             $this->setProperty($name, $value);
         }
+    }
+    
+    /**
+     * Change database column's name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
     
     /**
@@ -332,18 +372,42 @@ class TDataGridColumn
     /**
      * Enable total
      */
-    public function enableTotal($function, $prefix = null, $decimals = 2, $decimal_separator = ',', $thousand_separator = '.')
+    public function enableTotal($function, $prefix = null, $decimals = 2, $decimal_separator = ',', $thousand_separator = '.', $total_function_label = false)
     {
         $this->totalFunction = $function;
         $this->totalMask     = "{$prefix}:{$decimals}{$decimal_separator}{$thousand_separator}";
+        $this->totalFunctionLabel = $total_function_label;
         
         if ($function == 'sum')
         {
-            $totalCallback = function($values) {
-                return array_sum($values);
-            };
-            
-            $this->setTotalFunction( $totalCallback );
+            $this->setTotalFunction( function($values) {
+                return array_sum(array_filter($values, 'is_numeric'));
+            });
+            $this->totalFunctionLabel = AdiantiCoreTranslator::translate('Sum') . ': ';
+        }
+        else if ($function == 'min') {
+            $this->setTotalFunction(function($values) {
+                return min($values);
+            });
+            $this->totalFunctionLabel = AdiantiCoreTranslator::translate('Min') . ': ';
+        }
+        else if ($function == 'max') {
+            $this->setTotalFunction(function($values) {
+                return max($values);
+            });
+            $this->totalFunctionLabel = AdiantiCoreTranslator::translate('Max') . ': ';
+        }
+        else if ($function == 'avg') {
+            $this->setTotalFunction(function($values) {
+                return count($values) ? array_sum(array_filter($values, 'is_numeric')) / count($values) : 0;
+            });
+            $this->totalFunctionLabel = AdiantiCoreTranslator::translate('Average') . ': ';
+        }
+        else if ($function == 'count') {
+            $this->setTotalFunction(function($values) {
+                return count($values);
+            });
+            $this->totalFunctionLabel = AdiantiCoreTranslator::translate('Count') . ': ';
         }
     }
     
@@ -380,6 +444,14 @@ class TDataGridColumn
     public function getTotalMask()
     {
         return $this->totalMask;
+    }
+    
+    /**
+     * Returns total label
+     */
+    public function getTotalFunctionLabel()
+    {
+        return $this->totalFunctionLabel;
     }
     
     /**

@@ -7,58 +7,103 @@ use Exception;
 /**
  * CNPJ validation (Valid only in Brazil)
  *
- * @version    7.6
+ * @version    8.6
  * @package    validator
  * @author     Pablo Dall'Oglio
- * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd.
  * @license    https://adiantiframework.com.br/license
  */
 class TCNPJValidator extends TFieldValidator
 {
     /**
-     * Validate a given value
-     * @param $label Identifies the value to be validated in case of exception
-     * @param $value Value to be validated
-     * @param $parameters aditional parameters for validation
+     * Validation weights
      */
-    public function validate($label, $value, $parameters = NULL)
+    private const WEIGHTS = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    
+    /**
+     * Validate a given value
+     *
+     * @param $label      Identifies the value to be validated in case of exception
+     * @param $value      Value to be validated
+     * @param $parameters Additional parameters for validation
+     */
+    public function validate($label, $value, $parameters = null)
     {
-        $cnpj = preg_replace( "@[./-]@", "", $value );
-        if( strlen( $cnpj ) <> 14 or !is_numeric( $cnpj ) )
+        $cnpj = strtoupper(preg_replace('/[^A-Z0-9]/', '', (string) $value));
+
+        if (!$this->isValidFormat($cnpj) || !$this->checkDigits($cnpj))
         {
-            throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CNPJ', $label));
+            throw new Exception(AdiantiCoreTranslator::translate( 'The field ^1 has not a valid CNPJ', $label ));
         }
-        $k = 6;
-        $soma1 = 0;
-        $soma2 = 0;
-        for( $i = 0; $i < 13; $i++ )
+    }
+
+    /**
+     * Verify basic format rules
+     */
+    private function isValidFormat(string $cnpj): bool
+    {
+        if (strlen($cnpj) !== 14)
         {
-            $k = $k == 1 ? 9 : $k;
-            $soma2 += ( substr($cnpj, $i, 1) * $k );
-            $k--;
-            if($i < 12)
-            {
-                if($k == 1)
-                {
-                    $k = 9;
-                    $soma1 += ( substr($cnpj, $i, 1) * $k );
-                    $k = 1;
-                }
-                else
-                {
-                    $soma1 += ( substr($cnpj, $i, 1) * $k );
-                }
-            }
+            return false;
         }
-        
-        $digito1 = $soma1 % 11 < 2 ? 0 : 11 - $soma1 % 11;
-        $digito2 = $soma2 % 11 < 2 ? 0 : 11 - $soma2 % 11;
-        
-        $valid = ( substr($cnpj, 12, 1) == $digito1 and substr($cnpj, 13, 1) == $digito2 );
-        
-        if (!$valid)
+
+        /*
+         * First 12 positions: letters and digits
+         * Last 2 positions: verification digits
+         */
+        if (!preg_match('/^[A-Z0-9]{12}[0-9]{2}$/', $cnpj))
         {
-            throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CNPJ', $label));
+            return false;
         }
+
+        /*
+         * Reject sequences composed of a single repeated character
+         */
+        if (count(array_unique(str_split($cnpj))) === 1)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Verify check digits
+     */
+    private function checkDigits(string $cnpj): bool
+    {
+        $base = substr($cnpj, 0, 12);
+
+        $digit1 = $this->calculateDigit($base, 1);
+        $digit2 = $this->calculateDigit($base . $digit1, 0);
+
+        return $cnpj[12] == $digit1 && $cnpj[13] == $digit2;
+    }
+
+    /**
+     * Calculate a verification digit
+     */
+    private function calculateDigit(string $value, int $offset): int
+    {
+        $sum = 0;
+        $length = strlen($value);
+
+        for ($i = 0; $i < $length; $i++)
+        {
+            $sum += $this->charValue($value[$i]) * self::WEIGHTS[$i + $offset];
+        }
+
+        $remainder = $sum % 11;
+
+        return ($remainder < 2) ? 0 : (11 - $remainder);
+    }
+
+    /**
+     * Convert a character to its numeric value
+     * according to the official CNPJ alphanumeric rule
+     */
+    private function charValue(string $char): int
+    {
+        return ord($char) - ord('0');
     }
 }

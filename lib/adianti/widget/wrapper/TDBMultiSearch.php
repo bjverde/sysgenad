@@ -16,11 +16,11 @@ use Exception;
 /**
  * Database Multisearch Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
- * @author     Matheus Agnes Dias
+ * @author     Matheus Agnes Dias (up to version 7.5)
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
@@ -47,6 +47,7 @@ class TDBMultiSearch extends TMultiSearch
     protected $changeFunction;
     protected $idSearch;
     protected $idTextSearch;
+    protected $options;
     
     /**
      * Class Constructor
@@ -58,7 +59,7 @@ class TDBMultiSearch extends TMultiSearch
      * @param  $ordercolumn column to order the fields (optional)
      * @param  $criteria criteria (TCriteria object) to filter the model (optional)
      */
-    public function __construct($name, $database, $model, $key, $value, $orderColumn = NULL, TCriteria $criteria = NULL)
+    public function __construct($name, $database, $model, $key, $value, $orderColumn = NULL, ?TCriteria $criteria = NULL)
     {
         // executes the parent class constructor
         parent::__construct($name);
@@ -96,6 +97,7 @@ class TDBMultiSearch extends TMultiSearch
         $this->operator = null;
         $this->orderColumn = isset($orderColumn) ? $orderColumn : NULL;
         $this->criteria = $criteria;
+        $this->options = [];
         
         if (strpos($value,',') !== false)
         {
@@ -112,8 +114,9 @@ class TDBMultiSearch extends TMultiSearch
         $this->tag->{'widget'} = 'tdbmultisearch';
         $this->idSearch = true;
         $this->idTextSearch = false;
+        $this->withTitles = TRUE;
         
-        if ((defined("{$model}::IDPOLICY")) AND (constant("{$model}::IDPOLICY") == 'uuid'))
+        if ((defined("{$model}::IDPOLICY")) AND (substr(constant("{$model}::IDPOLICY"),0,4) == 'uuid'))
         {
             $this->idTextSearch = true;
         }
@@ -301,6 +304,14 @@ class TDBMultiSearch extends TMultiSearch
     }
     
     /**
+     * Set extra options
+     */
+    public function setOption($option, $value)
+    {
+        $this->options[$option] = $value;
+    }
+    
+    /**
      * Shows the widget
      */
     public function show()
@@ -324,7 +335,7 @@ class TDBMultiSearch extends TMultiSearch
             $size  = "{$this->size}px";
         }
         
-        $multiple = $this->maxSize == 1 ? 'false' : 'true';
+        $multiple = $this->maxSize == 1 ? false : true;
         $orderColumn = isset($this->orderColumn) ? $this->orderColumn : $this->column;
         $criteria = '';
         if ($this->criteria)
@@ -340,10 +351,10 @@ class TDBMultiSearch extends TMultiSearch
         $method = $callback[1];
         $id_search_string = $this->idSearch ? '1' : '0';
         $id_text_search = $this->idTextSearch ? '1' : '0';
-        $with_titles = $this->withTitles ? 'true' : 'false';
-
+        $with_titles = $this->withTitles;
+        $mask = urlencode($this->mask);
         $search_word = !empty($this->getProperty('placeholder'))? $this->getProperty('placeholder') : AdiantiCoreTranslator::translate('Search');
-        $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&key={$this->key}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&mask={$this->mask}&idsearch={$id_search_string}&idtextsearch={$id_text_search}&minlength={$length}";
+        $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&key={$this->key}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&mask={$mask}&idsearch={$id_search_string}&idtextsearch={$id_text_search}&minlength={$length}";
         
         if ($router = AdiantiCoreApplication::getRouter())
         {
@@ -372,8 +383,21 @@ class TDBMultiSearch extends TMultiSearch
         // shows the component
         parent::renderItems( false );
         $this->tag->show();
-
-        TScript::create(" tdbmultisearch_start( '{$this->id}', '{$length}', '{$this->maxSize}', '{$search_word}', $multiple, '{$url}', '{$size}', '{$this->height}px', '{$hash}', {$change_action}, {$with_titles} ); ");
+        
+        $options = $this->options;
+        $options['url'] = $url;
+        $options['hash'] = $hash;
+        $options['minlen'] = $this->minLength;
+        $options['maxsize'] = $this->maxSize;
+        $options['placeholder'] = $search_word;
+        $options['multiple'] = $multiple;
+        $options['height'] = "{$this->height}px";
+        $options['allowclear'] = $this->allowClear;
+        $options['with_titles'] = $with_titles;
+        
+        $options_json = json_encode( $options );
+        
+        TScript::create(" tdbmultisearch_start( '{$this->id}', '{$options_json}', {$change_action} ); ");
         
         if (!$this->editable)
         {

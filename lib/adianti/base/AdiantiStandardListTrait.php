@@ -13,13 +13,13 @@ use Exception;
 /**
  * Standard List Trait
  *
- * @version    7.6
+ * @version    8.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
-trait AdiantiStandardListTrait
+trait AdiantiStandardListTrait #depends:AdiantiStandardCollectionTrait
 {
     protected $totalRow;
     
@@ -84,6 +84,56 @@ trait AdiantiStandardListTrait
             $this->onReload($param);
             // shows the success message
             new TMessage('info', AdiantiCoreTranslator::translate('Record updated'));
+        }
+        catch (Exception $e) // in case of exception
+        {
+            // shows the exception error message
+            new TMessage('error', $e->getMessage());
+            // undo all pending operations
+            TTransaction::rollback();
+        }
+    }
+    
+    /**
+     * Ask before deletion
+     */
+    public function onDelete($param)
+    {
+        // define the delete action
+        $action = new TAction(array($this, 'Delete'));
+        $action->setParameters($param); // pass the key parameter ahead
+        
+        // shows a dialog to the user
+        new TQuestion(AdiantiCoreTranslator::translate('Do you really want to delete ?'), $action);
+    }
+    
+    /**
+     * Delete a record
+     */
+    public function Delete($param)
+    {
+        try
+        {
+            // get the parameter $key
+            $key=$param['key'];
+            // open a transaction with database
+            TTransaction::open($this->database);
+            
+            $class = $this->activeRecord;
+            
+            // instantiates object
+            $object = new $class($key, FALSE);
+            
+            // deletes the object from the database
+            $object->delete();
+            
+            // close the transaction
+            TTransaction::close();
+            
+            // reload the listing
+            $this->onReload( $param );
+            // shows the success message
+            new TMessage('info', AdiantiCoreTranslator::translate('Record deleted'));
         }
         catch (Exception $e) // in case of exception
         {

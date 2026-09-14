@@ -9,7 +9,7 @@ use Adianti\Widget\Datagrid\TDataGridAction;
 /**
  * Create quick datagrids through its simple interface
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -24,7 +24,7 @@ class TQuickGrid extends TDataGrid
      * @param $object Field Object
      * @param $size   Field Size
      */
-    public function addQuickColumn($label, $name, $align = 'left', $size = 200, TAction $action = NULL, $param = NULL)
+    public function addQuickColumn($label, $name, $align = 'left', $size = 200, ?TAction $action = NULL, $param = NULL)
     {
         // creates a new column
         $object = new TDataGridColumn($name, $label, $align, $size);

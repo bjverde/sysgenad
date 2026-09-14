@@ -15,7 +15,7 @@ use Exception;
 /**
  * Password Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -42,11 +42,22 @@ class TPassword extends TField implements AdiantiWidgetInterface
         $this->toggleVisibility = TRUE;
     }
     
+    /**
+     *
+     */
     public function enableToggleVisibility($toggleVisibility = TRUE)
     {
         $this->toggleVisibility = $toggleVisibility;
     }
-
+    
+    /**
+     *
+     */
+    public function disableToggleVisibility()
+    {
+        $this->toggleVisibility = FALSE;
+    }
+    
     /**
      * Define the action to be executed when the user leaves the form field
      * @param $action TAction object
@@ -157,16 +168,22 @@ class TPassword extends TField implements AdiantiWidgetInterface
             $this->tag->{'tabindex'} = '-1';
         }
         
+        if ($this->id and empty($this->tag->{'id'}))
+        {
+            $this->tag->{'id'} = $this->id;
+        }
+        
         if ($this->toggleVisibility)
         {
             $div    = new TElement('div');
             $button = new TElement('button');
             $icon   = new TElement('i');
-
-            $div->{'id'} = $this->id;
-
+            
+            $div->{'id'} = $this->id . '_wrapper';
+            
             $icon->{'class'} = 'fa fa-eye-slash';
             $div->{'class'} = 'tpassword';
+            $div->{'style'} = 'position:relative';
 
             $button->{'type'} = 'button';
 
@@ -177,7 +194,7 @@ class TPassword extends TField implements AdiantiWidgetInterface
 
             $div->show();
 
-            TScript::create("tpassword_start('{$this->id}');");
+            TScript::create("tpassword_start('{$this->id}_wrapper');");
         }
         else if (!empty($this->innerIcon))
         {

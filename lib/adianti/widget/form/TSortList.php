@@ -14,7 +14,7 @@ use Exception;
 /**
  * A Sortable list
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio

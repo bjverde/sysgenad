@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * BreadCrumb
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -16,7 +16,6 @@ use Adianti\Widget\Base\TElement;
  */
 class TBreadCrumb extends TElement
 {
-    protected static $homeController;
     protected $container;
     protected $items;
     
@@ -37,43 +36,14 @@ class TBreadCrumb extends TElement
     /**
      * Static constructor
      */
-    public static function create( $options, $home = true)
+    public static function create( $options)
     {
         $breadcrumb = new TBreadCrumb;
-        if ($home)
-        {
-            $breadcrumb->addHome();
-        }
         foreach ($options as $option)
         {
             $breadcrumb->addItem( $option );
         }
         return $breadcrumb;
-    }
-    
-    /**
-     * Add the home icon
-     */
-    public function addHome()
-    {
-        $li = new TElement('li');
-        $li->{'class'} = 'home';
-        $a = new TElement('a');
-        $a->generator = 'adianti';
-        
-        if (self::$homeController)
-        {
-            $a->{'href'} = 'engine.php?class='.self::$homeController;
-        }
-        else
-        {
-            $a->{'href'} = 'engine.php';
-        }
-        
-        $a->{'title'} = 'Home';
-        
-        $li->add( $a );
-        $this->container->add( $li );
     }
     
     /**
@@ -120,14 +90,5 @@ class TBreadCrumb extends TElement
                 $span->{'class'} = '';
             }
         }
-    }
-    
-    /**
-     * Define the home controller
-     * @param $class Home controller class
-     */
-    public static function setHomeController($className)
-    {
-        self::$homeController = $className;
     }
 }

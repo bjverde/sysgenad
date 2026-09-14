@@ -11,6 +11,7 @@ use Adianti\Widget\Form\TField;
 use Adianti\Widget\Form\THidden;
 use Adianti\Widget\Util\TImage;
 use Adianti\Util\AdiantiTemplateHandler;
+use Adianti\Util\AdiantiStringConversion;
 
 use Math\Parser;
 use Exception;
@@ -18,7 +19,7 @@ use Exception;
 /**
  * DataGrid Widget: Allows to create datagrids with rows, columns and actions
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -39,23 +40,11 @@ class TDataGrid extends TTable
     protected $modelCreated;
     protected $pageNavigation;
     protected $defaultClick;
-    protected $groupColumn;
-    protected $groupTransformer;
-    protected $groupTotal;
-    protected $groupContent;
-    protected $groupMask;
-    protected $popover;
-    protected $poptitle;
-    protected $popside;
-    protected $popcontent;
-    protected $popcondition;
     protected $objects;
-    protected $objectsGroup;
     protected $actionWidth;
     protected $groupCount;
     protected $groupRowCount;
     protected $columnValues;
-    protected $columnValuesGroup;
     protected $HTMLOutputConversion;
     protected $searchAttributes;
     protected $outputData;
@@ -66,6 +55,13 @@ class TDataGrid extends TTable
     protected $actionSide;
     protected $mutationAction;
     protected $forPrinting;
+    protected $popovers;
+    protected $pageSize;
+    protected $pageOrientation;
+    protected $searchForm;
+    protected $editForm;
+    protected $metadata;
+    protected $groups;
     
     /**
      * Class Constructor
@@ -75,18 +71,13 @@ class TDataGrid extends TTable
         parent::__construct();
         $this->modelCreated = FALSE;
         $this->defaultClick = TRUE;
-        $this->popover = FALSE;
-        $this->groupColumn = NULL;
-        $this->groupContent = NULL;
-        $this->groupMask = NULL;
         $this->groupCount = 0;
-        $this->actions = array();
-        $this->action_groups = array();
+        $this->actions = [];
+        $this->groups = [];
+        $this->action_groups = [];
         $this->actionWidth = '28px';
-        $this->objects = array();
-        $this->objectsGroup = array();
-        $this->columnValues = array();
-        $this->columnValuesGroup = array();
+        $this->objects = [];
+        $this->columnValues = [];
         $this->HTMLOutputConversion = true;
         $this->searchAttributes = [];
         $this->outputData = [];
@@ -96,10 +87,42 @@ class TDataGrid extends TTable
         $this->hasTotalFunction = false;
         $this->actionSide = 'left';
         $this->forPrinting = false;
-        
+        $this->popovers = [];
         $this->rowcount = 0;
+        $this->metadata = [];
         $this->{'class'} = 'tdatagrid_table';
         $this->{'id'}    = 'tdatagrid_' . mt_rand(1000000000, 1999999999);
+    }
+    
+    /**
+     * Deep clone for datagrid
+     */
+    public function __clone()
+    {
+        parent::__clone();
+
+        $this->thead = null;
+        $this->tbody = null;
+        $this->tfoot = null;
+
+        foreach ($this->children as $child)
+        {
+            if ($child instanceof TElement)
+            {
+                switch ($child->getName())
+                {
+                    case 'thead':
+                        $this->thead = $child;
+                        break;
+                    case 'tbody':
+                        $this->tbody = $child;
+                        break;
+                    case 'tfoot':
+                        $this->tfoot = $child;
+                        break;
+                }
+            }
+        }
     }
     
     /**
@@ -151,17 +174,38 @@ class TDataGrid extends TTable
     }
     
     /**
+     * Count visible columns
+     */
+    private function countVisibleColumns()
+    {
+        $count = 0;
+        if ($this->columns)
+        {
+            foreach ($this->columns as $column)
+            {
+                if ($column->isVisible())
+                {
+                    $count ++;
+                }
+            }
+        }
+        
+        return $count;
+    }
+    
+    /**
      * Enable popover
      * @param $title Title
      * @param $content Content
      */
     public function enablePopover($title, $content, $popside = null, $popcondition = null)
     {
-        $this->popover = TRUE;
-        $this->poptitle = $title;
-        $this->popcontent = $content;
-        $this->popside = $popside;
-        $this->popcondition = $popcondition;
+        $this->popovers[] = [
+            'title' => $title,
+            'content' => $content,
+            'side' => $popside,
+            'condition' => $popcondition
+        ];
     }
     
     /**
@@ -242,7 +286,7 @@ class TDataGrid extends TTable
      * Add a Column to the DataGrid
      * @param $object A TDataGridColumn object
      */
-    public function addColumn(TDataGridColumn $object, TAction $action = null)
+    public function addColumn(TDataGridColumn $object, ?TAction $action = null)
     {
         if ($this->modelCreated)
         {
@@ -329,13 +373,60 @@ class TDataGrid extends TTable
         
         if ($this->columns)
         {
-            foreach ($this->columns as $column)
+            foreach ($this->columns as $key => $column)
             {
                 $column->removeAction();
+                
+                if (!$column->isPrintable())
+                {
+                    unset($this->columns[$key]);
+                }
             }
         }
         
         $this->createModel();
+    }
+    
+    /**
+     * Return if the object is being printed
+     */
+    public function isPrinting()
+    {
+        return $this->forPrinting;
+    }
+    
+    /**
+     * Set page Size
+     * @param $page_size (a3,a4,a5,letter,legal)
+     */
+    public function setPageSize($page_size)
+    {
+        $this->pageSize = $page_size;
+    }
+    
+    /**
+     * Return the page size
+     */
+    public function getPageSize()
+    {
+        return $this->pageSize;
+    }
+    
+    /**
+     * Set page orientation
+     * @param $page_orientation (portrait, landscape)
+     */
+    public function setPageOrientation($page_orientation)
+    {
+        $this->pageOrientation = $page_orientation;
+    }
+    
+    /**
+     * Return the page orientation
+     */
+    public function getPageOrientation()
+    {
+        return $this->pageOrientation;
     }
     
     /**
@@ -363,13 +454,45 @@ class TDataGrid extends TTable
     }
     
     /**
+     * Add a data group
+     */
+    public function addGroup($column, $prefix, $subtotals =true, $indent = true, $totlabels = true, $transformer = null, $totFunctionLabel = true)
+    {
+        $this->groups[] = ['column' => $column,
+                           'prefix' => $prefix,
+                           'subtotals'=> $subtotals,
+                           'indent'=> $indent,
+                           'totlabels'=> $totlabels,
+                           'transformer' => $transformer,
+                           'totfunclabel' => $totFunctionLabel,
+                           'current' => null,
+                           'objects' => null,
+                           'values' => null ];
+    }
+    
+    /**
+     * Return the data groups
+     */
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+    
+    /**
      * Set the group column for break
      */
     public function setGroupColumn($column, $mask, $transformer = null)
     {
-        $this->groupColumn      = $column;
-        $this->groupMask        = $mask;
-        $this->groupTransformer = $transformer;
+        $this->groups = [];
+        $this->groups[] = ['column' => $column,
+                           'mask' => $mask,
+                           'transformer' => $transformer,
+                           'subtotals'=> false,
+                           'totlabels'=> false,
+                           'indent'=> true,
+                           'current' => null,
+                           'objects' => null,
+                           'values' => null ];
     }
 
     /**
@@ -377,7 +500,28 @@ class TDataGrid extends TTable
      */
     public function useGroupTotal($groupTotal = null)
     {
-        $this->groupTotal = $groupTotal;
+        if (empty($this->groups))
+        {
+            throw new Exception(AdiantiCoreTranslator::translate('You must call ^1 before ^2', 'setGroupColumn()', 'useGroupTotal()'));
+        }
+        $this->groups[0]['subtotals'] = true;
+    }
+    
+    /**
+     *
+     */
+    public function remapGroupColumn($oldname, $newname)
+    {
+        if (!empty($this->groups))
+        {
+            foreach ($this->groups as $level => $group)
+            {
+                if ($group['column'] == $oldname)
+                {
+                    $this->groups[$level]['column'] = $newname;
+                }
+            }
+        }
     }
     
     /**
@@ -390,11 +534,24 @@ class TDataGrid extends TTable
             $rows += $this->prependRows;
         }
         
+        if (is_null($this->thead))
+        {
+            $preserveHeader = false;
+        }
+        
         if ($this->modelCreated)
         {
-            // copy the headers
-            $current_header = $this->children[0];
-            $current_body   = $this->children[1];
+            // has header
+            if (!empty($this->thead))
+            {
+                // copy the headers
+                $current_header = $this->children[0];
+                $current_body   = $this->children[1];
+            }
+            else
+            {
+                $current_body   = $this->children[0];
+            }
             
             if ($preserveHeader)
             {
@@ -429,10 +586,17 @@ class TDataGrid extends TTable
             // restart the row count
             $this->rowcount = 0;
             $this->objects = array();
-            $this->objectsGroup = array();
             $this->columnValues = array();
-            $this->columnValuesGroup = array();
-            $this->groupContent = NULL;
+            
+            if ($this->groups)
+            {
+                foreach ($this->groups as $level => $group)
+                {
+                    $this->groups[$level]['current'] = null;
+                    $this->groups[$level]['values']  = null;
+                    $this->groups[$level]['objects'] = null;
+                }
+            }
         }
     }
     
@@ -592,6 +756,8 @@ class TDataGrid extends TTable
         parent::add($this->tbody);
         
         $this->modelCreated = TRUE;
+        
+        return $this->modelCreated;
     }
     
     /**
@@ -632,13 +798,24 @@ class TDataGrid extends TTable
      * Add objects to the DataGrid
      * @param $objects An array of Objects
      */
-    public function addItems($objects)
+    public function addItems($objects, $with_data_key = false)
     {
         if ($objects)
         {
             foreach ($objects as $object)
             {
-                $this->addItem($object);
+                $row = $this->addItem($object);
+                
+                if ($with_data_key)
+                {
+                    $columns = $this->getColumns();
+                    $first_column = reset($columns);
+                    $attribute_name = $first_column->getName();
+                    if (isset($object->$attribute_name))
+                    {
+                        $row->{'data-key'} = $object->$attribute_name;
+                    }
+                }
             }
         }
     }
@@ -650,7 +827,7 @@ class TDataGrid extends TTable
      */
     private function createItemActions($row, $object)
     {
-        $first_url = null;
+        $first_action = null;
         
         if ($this->actions)
         {
@@ -662,23 +839,33 @@ class TDataGrid extends TTable
                 
                 // get the action properties
                 $label     = $action->getLabel();
+                $title     = $action->getTitle();
                 $image     = $action->getImage();
                 $condition = $action->getDisplayCondition();
                 
                 if (empty($condition) OR call_user_func($condition, $object))
                 {
-                    $url       = $action->serialize(TRUE, TRUE);
-                    $first_url = isset($first_url) ? $first_url : $url;
+                    $url          = $action->serialize(TRUE, TRUE);
+                    $first_action = isset($first_action) ? $first_action : $action;
                     
                     // creates a link
                     $link = new TElement('a');
                     $link->{'href'}      = htmlspecialchars($url);
                     $link->{'generator'} = 'adianti';
-                    $link->{'title'} = $label;
+                    $link->{'title'} = $title ?? $label;
                     
                     if ($url == '#disabled')
                     {
                         $link->{'disabled'} = '1';
+                    }
+                    else if ($action->isPopover())
+                    {
+                        unset($link->{'href'});
+                        unset($link->{'generator'});
+                        
+                        $link->{'popaction'} = $action->serialize(false);
+                        $link->{'poptrigger'} = 'click';
+                        $link->{'data-popover'} = 'true';
                     }
                     
                     // verify if the link will have an icon or a label
@@ -762,7 +949,7 @@ class TDataGrid extends TTable
                         if (empty($condition) OR call_user_func($condition, $object))
                         {
                             $url       = $action->serialize(TRUE, TRUE);
-                            $first_url = isset($first_url) ? $first_url : $url;
+                            $first_action = isset($first_action) ? $first_action : $action;
                             
                             if ($url !== '#disabled')
                             {
@@ -780,7 +967,7 @@ class TDataGrid extends TTable
             }
         }
         
-        return $first_url;
+        return $first_action;
     }
     
     /**
@@ -791,47 +978,7 @@ class TDataGrid extends TTable
     {
         if ($this->modelCreated)
         {
-            $valueGroup = null;
-
-            if ($this->groupColumn AND
-                (is_null($this->groupContent) OR $this->groupContent !== $object->{$this->groupColumn} ) )
-            {
-
-                if ($this->groupMask)
-                {
-                    $valueGroup = AdiantiTemplateHandler::replace($this->groupMask, $object);
-                }
-                else if ($this->groupTransformer)
-                {
-                    $valueGroup = call_user_func($this->groupTransformer, $object->{$this->groupColumn}, $object, $this);
-                }
-                else
-                {
-                    $valueGroup = $object->{$this->groupColumn};
-                }
-
-                if (! is_null($this->groupContent) && $this->groupTotal)
-                {
-                    $this->processGroupTotals($this->groupContent);
-                }
-
-                $row = new TElement('tr');
-                $row->{'class'} = 'tdatagrid_group';
-                $row->{'level'} = ++ $this->groupCount;
-                $this->groupRowCount = 0;
-                if ($this->isScrollable() AND $this->hasCustomWidth())
-                {
-                    $row->{'style'} = 'display: inline-table; width: 100%';
-                }
-                $this->tbody->add($row);
-                $cell = new TElement('td');
-                $cell->colspan = count($this->actions)+count($this->action_groups)+count($this->columns);
-                $row->add($cell);
-
-                $cell->add($valueGroup);
-                
-                $this->groupContent = $object->{$this->groupColumn};
-            }
+            $this->processGroups($object);
             
             // define the background color for that line
             $classname = ($this->rowcount % 2) == 0 ? 'tdatagrid_row_even' : 'tdatagrid_row_odd';
@@ -845,15 +992,8 @@ class TDataGrid extends TTable
                 $row->{'style'} = 'display: inline-table; width: 100%';
             }
             
-            if ($this->groupColumn)
+            if (!empty($this->groups))
             {
-                if (empty($this->objectsGroup[$this->groupContent]))
-                {
-                    $this->objectsGroup[$this->groupContent] = array();
-                }
-
-                $this->objectsGroup[$this->groupContent][] = $object;
-
                 $this->groupRowCount ++;
                 $row->{'childof'} = $this->groupCount;
                 $row->{'level'}   = $this->groupCount . '.'. $this->groupRowCount;
@@ -861,7 +1001,7 @@ class TDataGrid extends TTable
             
             if ($this->actionSide == 'left')
             {
-                $first_url = $this->createItemActions( $row, $object );
+                $first_action = $this->createItemActions( $row, $object );
             }
             
             $output_row = [];
@@ -879,57 +1019,9 @@ class TDataGrid extends TTable
                     $function = $column->getTransformer();
                     $props    = $column->getDataProperties();
                     
-                    // calculated column
-                    if (substr($name,0,1) == '=')
-                    {
-                        $content = AdiantiTemplateHandler::replace($name, $object, 'float');
-                        $content = AdiantiTemplateHandler::evaluateExpression(substr($content,1));
-                        $object->$name = $content;
-                    }
-                    else
-                    {
-                        try
-                        {
-                            @$content  = $object->$name; // fire magic methods
-                            
-                            if (is_null($content))
-                            {
-                                $content = AdiantiTemplateHandler::replace($name, $object);
-                                
-                                if ($content === $name)
-                                {
-                                    $content = '';
-                                }
-                            }
-                        }
-                        catch (Exception $e)
-                        {
-                            $content = AdiantiTemplateHandler::replace($name, $object);
-                            
-                            if (empty(trim($content)) OR $content === $name)
-                            {
-                                $content = $e->getMessage();
-                            }
-                        }
-                    }
-                    
-                    if (isset($this->columnValues[$name]))
-                    {
-                        $this->columnValues[$name][] = $content;
-                    }
-                    else
-                    {
-                        $this->columnValues[$name] = [$content];
-                    }
-
-                    if (isset($this->columnValuesGroup[$this->groupContent][$name]))
-                    {
-                        $this->columnValuesGroup[$this->groupContent][$name][] = $content;
-                    }
-                    else
-                    {
-                        $this->columnValuesGroup[$this->groupContent][$name] = [$content];
-                    }
+                    $content = self::getColumnContent($object, $name);
+                    $name = self::normalizeColumnName($name);
+                    $this->storeColumnValues($name, $content);
                     
                     $data = is_null($content) ? '' : $content;
                     $raw_data = $data;
@@ -967,7 +1059,7 @@ class TDataGrid extends TTable
                         
                         $row->add($cell);
                         $cell->add($div);
-                        $cell->{'class'} = 'tdatagrid_cell';
+                        $cell->{'class'} .= ' tdatagrid_cell';
                     }
                     else
                     {
@@ -977,21 +1069,33 @@ class TDataGrid extends TTable
                         
                         if ($this->hiddenFields AND !isset($used_hidden[$name]))
                         {
-                            $hidden = new THidden($this->id . '_' . $name.'[]');
+                            $hidden = new THidden($this->id . '_' . AdiantiStringConversion::slug($name, '_').'[]');
                             $hidden->{'data-hidden-field'} = 'true';
                             $hidden->setValue($raw_data);
                             $cell->add($hidden);
                             $used_hidden[$name] = true;
                         }
                         
-                        $cell->{'class'} = 'tdatagrid_cell';
+                        $cell->{'class'} .= ' tdatagrid_cell';
                         $cell->{'align'} = $align;
                         
-                        if (isset($first_url) && $this->defaultClick && empty($cell->{'href'}) && !empty($first_url) && ($first_url !== '#disabled'))
+                        if (isset($first_action) && $this->defaultClick && empty($cell->{'href'}) && !empty($first_action) && ($first_action->serialize(TRUE, TRUE) !== '#disabled'))
                         {
-                            $cell->{'href'}      = $first_url;
-                            $cell->{'generator'} = 'adianti';
-                            $cell->{'class'}     = 'tdatagrid_cell';
+                            if ($first_action->isPopover())
+                            {
+                                unset($link->{'href'});
+                                unset($link->{'generator'});
+                                
+                                $cell->{'popaction'} = $first_action->serialize(false);
+                                $cell->{'poptrigger'} = 'click';
+                                $cell->{'data-popover'} = 'true';
+                            }
+                            else
+                            {
+                                $cell->{'href'}      = $first_action->serialize(TRUE, TRUE);
+                                $cell->{'generator'} = 'adianti';
+                                $cell->{'class'}    .= ' tdatagrid_cell';
+                            }
                         }
                     }
                     
@@ -1014,21 +1118,9 @@ class TDataGrid extends TTable
                 $this->createItemActions( $row, $object );
             }
             
-            if ($this->popover && (empty($this->popcondition) OR call_user_func($this->popcondition, $object)))
+            if ($this->popovers)
             {
-                $poptitle   = $this->poptitle;
-                $popcontent = $this->popcontent;
-                $poptitle   = AdiantiTemplateHandler::replace($poptitle, $object);
-                $popcontent = AdiantiTemplateHandler::replace($popcontent, $object, null, true);
-                
-                $row->{'data-popover'} = 'true';
-                $row->{'poptitle'} = $poptitle;
-                $row->{'popcontent'} = htmlspecialchars(str_replace("\n", '', nl2br($popcontent)));
-                
-                if ($this->popside)
-                {
-                    $row->{'popside'} = $this->popside;
-                }
+                $this->processPopovers($row, $object);
             }
             
             if (count($this->searchAttributes) > 0)
@@ -1056,6 +1148,120 @@ class TDataGrid extends TTable
         else
         {
             throw new Exception(AdiantiCoreTranslator::translate('You must call ^1 before ^2', 'createModel', __METHOD__ ) );
+        }
+    }
+    
+    /**
+     * Process the column content
+     * @param $object Object
+     * @param $name Attribute name
+     */
+    public static function getColumnContent($object, $name)
+    {
+        // calculated column
+        if (substr($name,0,1) == '=' || (preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*=[.]*/', $name, $matches)))
+        {
+            $content = AdiantiTemplateHandler::replace($name, $object, 'float');
+            $name    = self::normalizeColumnName($name);
+            
+            $pieces = explode('=', $content);
+            if ( (count($pieces) == 2) && !empty($pieces[0]) )
+            {
+                $formula = $pieces[1];
+            }
+            else
+            {
+                $formula = substr($content,1);
+            }
+            
+            $content = AdiantiTemplateHandler::evaluateExpression($formula);
+            $object->$name = $content;
+        }
+        else
+        {
+            try
+            {
+                @$content  = $object->$name; // fire magic methods
+                
+                if (is_null($content))
+                {
+                    $content = AdiantiTemplateHandler::replace($name, $object);
+                    
+                    if ($content === $name)
+                    {
+                        $content = '';
+                    }
+                }
+            }
+            catch (Exception $e)
+            {
+                $content = AdiantiTemplateHandler::replace($name, $object);
+                
+                if ( (empty(trim($content)) || $content === $name) && strpos($name, '?') === false)
+                {
+                    $content = $e->getMessage();
+                }
+            }
+        }
+        
+        return $content;
+    }
+    
+    /**
+     * store column values for total functions
+     */
+    private function storeColumnValues($name, $content)
+    {
+        if (isset($this->columnValues[$name]))
+        {
+            $this->columnValues[$name][] = $content;
+        }
+        else
+        {
+            $this->columnValues[$name] = [$content];
+        }
+        
+        if (!empty($this->groups))
+        {
+            foreach ($this->groups as $level => $group)
+            {
+                $current = $group['current'] ?? null;
+                
+                if (isset($this->groups[$level]['values'][$current][$name]))
+                {
+                    $this->groups[$level]['values'][$current][$name][] = $content;
+                }
+                else
+                {
+                    $this->groups[$level]['values'][$current][$name] = [$content];
+                }
+            }
+        }
+    }
+    
+    /**
+     * Run popover according to their conditions
+     */
+    private function processPopovers($row, $object)
+    {
+        foreach ($this->popovers as $popover)
+        {
+            if (empty($popover['condition']) || call_user_func($popover['condition'], $object))
+            {
+                $poptitle   = $popover['title'];
+                $popcontent = $popover['content'];
+                $poptitle   = AdiantiTemplateHandler::replace($poptitle, $object);
+                $popcontent = AdiantiTemplateHandler::replace($popcontent, $object, null, true);
+                
+                $row->{'data-popover'} = 'true';
+                $row->{'poptitle'} = $popover['side'];
+                $row->{'popcontent'} = htmlspecialchars(str_replace("\n", '', nl2br($popcontent)));
+                
+                if ($popover['side'])
+                {
+                    $row->{'popside'} = $popover['side'];
+                }
+            }
         }
     }
     
@@ -1093,8 +1299,117 @@ class TDataGrid extends TTable
         return $this->objects;
     }
     
-    private function processGroupTotals($valueGroup)
-    {  
+    /**
+     * rebuild
+     */
+    public function rebuild()
+    {
+        $items = $this->getItems();
+        $this->clear();
+        
+        if ($items)
+        {
+            $this->addItems($items, true);
+        }
+    }
+    
+    /**
+     * Process datagrid data groups
+     */
+    private function processGroups($object)
+    {
+        $group_label = null;
+        
+        if (!empty($this->groups))
+        {
+            foreach ($this->groups as $level => &$group)
+            {
+                $column      = $group['column'];
+                $mask        = $group['mask'] ?? '';
+                $prefix      = $group['prefix'] ?? '';
+                $transformer = $group['transformer'];
+                $subtotals   = $group['subtotals'];
+                $indent      = $group['indent'] ?? false;
+                $current     = $group['current'] ?? null;
+                
+                if (is_null($current) || $current !== self::getColumnContent($object, $column))
+                {
+                    if (!empty($this->groups[$level+1]) && $this->groups[$level+1]['subtotals'] && !is_null($this->groups[$level+1]['current']))
+                    {
+                        $this->processGroupTotals($level+1);
+                    }
+                    if (!is_null($current) && $subtotals)
+                    {
+                        $this->processGroupTotals($level);
+                    }
+                    
+                    if (isset($this->groups[$level+1]))
+                    {
+                        $this->groups[$level+1]['current'] = null;
+                        $this->groups[$level+1]['values'] = null;
+                        $this->groups[$level+1]['objects'] = null;
+                    }
+                    
+                    $row = new TElement('tr');
+                    $row->{'className'} = 'tdatagrid_group';
+                    $row->{'class'} = 'tdatagrid_group';
+                    $row->{'style'} = 'font-weight:bold';
+                    $row->{'level'} = ++ $this->groupCount;
+                    $this->groupRowCount = 0;
+                    
+                    if ($this->isScrollable() AND $this->hasCustomWidth())
+                    {
+                        $row->{'style'} = 'display: inline-table; width: 100%';
+                    }
+                    
+                    $this->tbody->add($row);
+                    $cell = new TElement('td');
+                    $cell->colspan = count($this->actions) + count($this->action_groups) + $this->countVisibleColumns();
+                    $row->add($cell);
+                    
+                    if (!empty($mask))
+                    {
+                        $group_label = AdiantiTemplateHandler::replace($mask, $object);
+                    }
+                    else
+                    {
+                        $group_label = self::getColumnContent($object, $column);
+                    }
+                    
+                    if (!empty($transformer))
+                    {
+                        $group_label = call_user_func($transformer, $group_label, $object, $this);
+                    }
+                    
+                    $group_label = $prefix . $group_label;
+                    
+                    if ($indent)
+                    {
+                        $group_label = str_repeat('&nbsp;', $level*8) . $group_label;
+                    }
+                    $cell->add($group_label);
+                    
+                    $this->groups[$level]['current'] = self::getColumnContent($object, $column);
+                    $this->groups[$level]['group_label'] = $group_label;
+                }
+                
+                $group_content = $this->groups[$level]['current'];
+                
+                if (empty($this->groups[$level]['objects'][$group_content]))
+                {
+                    $this->groups[$level]['objects'][$group_content] = [];
+                }
+                $this->groups[$level]['objects'][$group_content][] = $object;
+            }
+            unset($group); // avoid keep the reference alive
+        }
+    }
+    
+    /**
+     * Process datagrid data group totals
+     */
+    private function processGroupTotals($level)
+    {
         $row = new TElement('tr');
         
         if ($this->isScrollable() AND $this->hasCustomWidth())
@@ -1109,8 +1424,7 @@ class TDataGrid extends TTable
                 // iterate the actions
                 foreach ($this->actions as $action)
                 {
-                    $cell = new TElement('td');
-                    $row->add($cell);
+                    $row->add(new TElement('td'));
                 }
             }
             
@@ -1118,19 +1432,22 @@ class TDataGrid extends TTable
             {
                 foreach ($this->action_groups as $action_group)
                 {
-                    $cell = new TElement('td');
-                    $row->add($cell);
+                    $row->add(new TElement('td'));
                 }
             }
         }
         
         if ($this->columns)
         {
+            $group_label_added = false;
+            
             // iterate the DataGrid columns
             foreach ($this->columns as $column)
             {
-                $cell = new TElement('td');
-                $row->add($cell);
+                if (!$column->isVisible())
+                {
+                    continue;
+                }
                 
                 // get the column total function
                 $totalFunction = $column->getTotalFunction();
@@ -1139,13 +1456,19 @@ class TDataGrid extends TTable
                 $transformer   = $column->getTransformer();
                 $name          = $column->getName();
                 $align         = $column->getAlign();
-                $width         = $column->getWidth();
                 $props         = $column->getDataProperties();
-                $cell->{'style'} = "text-align:$align";
+                $name          = self::normalizeColumnName($name);
+                $totalFunctionLabel = '';
                 
-                if ($width)
+                if (empty($cell))
                 {
-                    $cell->{'width'} = (strpos($width, '%') !== false || strpos($width, 'px') !== false) ? $width : ($width + 8).'px';
+                    $cell = new TElement('td');
+                    $cell->{'colspan'} = 0;
+                }
+                
+                if (!empty($this->groups[$level]['totfunclabel']))
+                {
+                    $totalFunctionLabel = $column->getTotalFunctionLabel();
                 }
                 
                 if ($props)
@@ -1153,20 +1476,44 @@ class TDataGrid extends TTable
                     $cell->setProperties($props);
                 }
                 
-                if ($totalCallback)
+                if (empty($totalCallback))
                 {
+                    $cell->{'colspan'} ++;
+                    $cell->add('&nbsp;');
+                    $cell->{'style'} = "text-align:right";
+                }
+                else
+                {
+                    if ($this->groups[$level]['totlabels'] && !$group_label_added && count($this->objects) > 0)
+                    {
+                        $cell->add($this->groups[$level]['group_label']);
+                        $cell->{'style'} .= ';font-style:italic;vertical-align:middle';
+                        $group_label_added = true;
+                    }
+                    
+                    if ($cell->{'colspan'} !== 0)
+                    {
+                        $row->add($cell);
+                    }
+                    $cell = new TElement('td');
+                    $cell->{'colspan'} = 1;
+                    $cell->{'style'} = "text-align:$align;font-weight:bold";
+                    $row->add($cell);
+                    
                     $raw_content = 0;
                     $content     = 0;
                     
-                    if (count($this->objectsGroup[$valueGroup]) > 0)
+                    $group_content = $this->groups[$level]['current'];
+                    
+                    if (is_array($this->groups[$level]['objects']) && count($this->groups[$level]['objects'][$group_content]) > 0)
                     {
-                        $raw_content = $totalCallback($this->columnValuesGroup[$valueGroup][$name], $this->objectsGroup[$valueGroup]);
+                        $raw_content = $totalCallback($this->groups[$level]['values'][$group_content][$name], $this->groups[$level]['objects'][$group_content]);
                         $content     = $raw_content;
                         
                         if ($transformer && $column->totalTransformed())
                         {
                             // apply the transformer functions over the data
-                            // $content = call_user_func($transformer, $content, null, null, null, null);
+                            $content = call_user_func($transformer, $content, null, null, null, null);
                         }
                     }
                     
@@ -1179,12 +1526,14 @@ class TDataGrid extends TTable
                         $cell->{'data-value'}          = $raw_content;
                     }
                     
-                    $cell->add($content);
+                    $cell->add($totalFunctionLabel . $content);
+                    $cell = null; // prepare next initialization (if empty)
                 }
-                else
-                {
-                    $cell->add('&nbsp;');
-                }
+            }
+            
+            if (!empty($cell) && $cell->{'colspan'} !== 0)
+            {
+                $row->add($cell);
             }
         }
 
@@ -1196,11 +1545,17 @@ class TDataGrid extends TTable
      */
     private function processTotals()
     {
-        if ($this->groupColumn && $this->groupTotal)
+        if (!empty($this->groups))
         {
-            $this->processGroupTotals($this->groupContent);
+            foreach (array_reverse($this->groups, true) as $level => $group)
+            {
+                if ($group['subtotals'])
+                {
+                    $this->processGroupTotals($level);
+                }
+            }
         }
-
+        
         $has_total = false;
         
         $this->tfoot = new TElement('tfoot');
@@ -1227,8 +1582,7 @@ class TDataGrid extends TTable
                 // iterate the actions
                 foreach ($this->actions as $action)
                 {
-                    $cell = new TElement('td');
-                    $row->add($cell);
+                    $row->add(new TElement('td'));
                 }
             }
             
@@ -1236,19 +1590,22 @@ class TDataGrid extends TTable
             {
                 foreach ($this->action_groups as $action_group)
                 {
-                    $cell = new TElement('td');
-                    $row->add($cell);
+                    $row->add(new TElement('td'));
                 }
             }
         }
+        
+        $group_label_added = false;
         
         if ($this->columns)
         {
             // iterate the DataGrid columns
             foreach ($this->columns as $column)
             {
-                $cell = new TElement('td');
-                $row->add($cell);
+                if (!$column->isVisible())
+                {
+                    continue;
+                }
                 
                 // get the column total function
                 $totalFunction = $column->getTotalFunction();
@@ -1259,11 +1616,12 @@ class TDataGrid extends TTable
                 $align         = $column->getAlign();
                 $width         = $column->getWidth();
                 $props         = $column->getDataProperties();
-                $cell->{'style'} = "text-align:$align";
+                $name          = self::normalizeColumnName($name);
                 
-                if ($width)
+                if (empty($cell))
                 {
-                    $cell->{'width'} = (strpos($width, '%') !== false || strpos($width, 'px') !== false) ? $width : ($width + 8).'px';
+                    $cell = new TElement('td');
+                    $cell->{'colspan'} = 0;
                 }
                 
                 if ($props)
@@ -1271,8 +1629,30 @@ class TDataGrid extends TTable
                     $cell->setProperties($props);
                 }
                 
-                if ($totalCallback)
+                if (empty($totalCallback))
                 {
+                    $cell->{'colspan'} ++;
+                    $cell->add('&nbsp;');
+                    $cell->{'style'} = "text-align:right";
+                }
+                else
+                {
+                    if (!$group_label_added)
+                    {
+                        $cell->add(AdiantiCoreTranslator::translate('Total'));
+                        $cell->{'style'} .= ';font-style:italic;vertical-align:middle';
+                        $group_label_added = true;
+                    }
+                    
+                    if ($cell->{'colspan'} !== 0)
+                    {
+                        $row->add($cell);
+                    }
+                    $cell = new TElement('td');
+                    $cell->{'colspan'} = 1;
+                    $cell->{'style'} = "text-align:$align;font-weight:bold";
+                    $row->add($cell);
+                    
                     $raw_content = 0;
                     $content     = 0;
                     
@@ -1296,12 +1676,22 @@ class TDataGrid extends TTable
                         $cell->{'data-total-mask'}     = $totalMask;
                         $cell->{'data-value'}          = $raw_content;
                     }
-                    $cell->add($content);
+                    $totalFunctionLabel = '';
+                    if (!empty($this->groups))
+                    {
+                        if (!empty($this->groups[0]['totfunclabel']))
+                        {
+                            $totalFunctionLabel = $column->getTotalFunctionLabel();
+                        }
+                    }
+                    $cell->add($totalFunctionLabel . $content);
+                    $cell = null; // prepare next initialization (if empty)
                 }
-                else
-                {
-                    $cell->add('&nbsp;');
-                }
+            }
+            
+            if (!empty($cell) && $cell->{'colspan'} !== 0)
+            {
+                $row->add($cell);
             }
         }
         
@@ -1386,6 +1776,58 @@ class TDataGrid extends TTable
     }
     
     /**
+     * Assign a TForm object
+     * @param $searchForm object
+     */
+    public function setSearchForm($searchForm)
+    {
+        $this->searchForm = $searchForm;
+    }
+    
+    /**
+     * Assign a TForm object
+     * @param $editForm object
+     */
+    public function setEditForm($editForm)
+    {
+        $this->editForm = $editForm;
+    }
+    
+    /**
+     * Return the assigned Search form object
+     * @return TForm object
+     */
+    public function getSearchForm()
+    {
+        return $this->searchForm;
+    }
+    
+    /**
+     * Return the assigned Edit form object
+     * @return TForm object
+     */
+    public function getEditForm()
+    {
+        return $this->editForm;
+    }
+    
+    /**
+     * Set metadata
+     */
+    public function setMetadata($metadata, $value)
+    {
+        $this->metadata[$metadata] = $value;
+    }
+    
+    /**
+     * Get metadata
+     */
+    public function getMetadata($metadata)
+    {
+        return $this->metadata[$metadata] ?? null;
+    }
+    
+    /**
      * Set serach attributes
      */
     public function setSearchAttributes($attributes)
@@ -1425,11 +1867,33 @@ class TDataGrid extends TTable
     }
     
     /**
+     * Normalize column name when using formulas 
+     */
+    private static function normalizeColumnName($name)
+    {
+        $pieces = explode('=', $name);
+        
+        if ( (count($pieces) == 2) && !empty($pieces[0]) )
+        {
+            $name = $pieces[0];
+        }
+        else
+        {
+            $name = AdiantiStringConversion::slug($name, '_');
+        }
+        
+        return $name;
+    }
+    
+    /**
      * Shows the DataGrid
      */
     public function show()
     {
-        $this->processTotals();
+        if (count($this->objects) > 0)
+        {
+            $this->processTotals();
+        }
         
         if (!$this->hasCustomWidth())
         {
@@ -1451,7 +1915,7 @@ class TDataGrid extends TTable
             TScript::create(" tdatagrid_inlineedit( '{$urlparams}' );");
         }
         
-        if ($this->groupColumn)
+        if (!empty($this->groups))
         {
             TScript::create(" tdatagrid_enable_groups();");
         }

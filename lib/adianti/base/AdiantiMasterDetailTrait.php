@@ -7,7 +7,7 @@ use Exception;
 /**
  * Master Detail Trait
  *
- * @version    7.6
+ * @version    8.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -23,7 +23,7 @@ trait AdiantiMasterDetailTrait
      * @param $detail_id Detail key in session
      * @param $transformer Function to be applied over the objects
      */
-    public function storeItems($model, $foreign_key, $master_object, $detail_id, Callable $transformer = null)
+    public function storeItems($model, $foreign_key, $master_object, $detail_id, ?Callable $transformer = null)
     {
         $master_pkey    = $master_object->getPrimaryKey();
         $master_id      = $master_object->$master_pkey;
@@ -86,7 +86,7 @@ trait AdiantiMasterDetailTrait
      * @param $detail_id Detail key in session
      * @param $transformer Function to be applied over the objects
      */
-    public function loadItems($model, $foreign_key, $master_object, $detail_id, Callable $transformer = null)
+    public function loadItems($model, $foreign_key, $master_object, $detail_id, ?Callable $transformer = null)
     {
         $master_pkey  = $master_object->getPrimaryKey();
         $master_id    = $master_object->$master_pkey;

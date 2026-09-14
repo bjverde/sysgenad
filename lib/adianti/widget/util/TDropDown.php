@@ -10,7 +10,7 @@ use Adianti\Widget\Util\TImage;
 /**
  * TDropDown Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -36,11 +36,19 @@ class TDropDown extends TElement
         $button = new TElement('button');
         $button->{'data-toggle'} = 'dropdown';
         $button->{'class'}       = 'btn btn-default btn-sm dropdown-toggle';
+        $button->{'data-bs-toggle'} = 'dropdown';
         $this->button = $button;
         
         if ($icon)
         {
-            $button->add(new TImage($icon));
+            if ($icon instanceof TImage)
+            {
+                $button->add($icon);
+            }
+            else
+            {
+                $button->add(new TImage($icon));
+            }
         }
         
         if ($title)
@@ -116,8 +124,9 @@ class TDropDown extends TElement
     public function addAction($title, $action, $icon = NULL, $popover = '', $add = true)
     {
         $li = new TElement('li');
-        // $li->{'class'} = "dropdown-item";
+        
         $link = new TElement('a');
+        $link->{'class'} = "dropdown-item";
         
         if ($action instanceof TAction)
         { 
@@ -165,6 +174,7 @@ class TDropDown extends TElement
         $li = new TElement('li');
         
         $link = new TElement('a');
+        $link->{'class'} = "dropdown-item";
         
         if ($action instanceof TAction)
         { 
@@ -221,8 +231,8 @@ class TDropDown extends TElement
     public function addActionGroup($title, $actions, $icon)
     {
         $li = new TElement('li');
-        $li->{'class'} = "dropdown-submenu";
         $link = new TElement('a');
+        $link->{'class'} = "dropdown-item";
         $span = new TElement('span');
         
         if ($icon)
@@ -237,7 +247,7 @@ class TDropDown extends TElement
         $li->add($link);
         
         $ul = new TElement('ul');
-        $ul->{'class'} = "dropdown-menu";
+        $ul->{'class'} = "dropdown-menu dropdown-submenu";
         $li->add($ul);
         if ($actions)
         {
@@ -247,6 +257,10 @@ class TDropDown extends TElement
             }
         }
         
+        $chevron = new TElement('i');
+        $chevron->{'class'} = 'fa-solid fa-angle-right';
+        $chevron->{'style'} = 'position: absolute;right: 0;padding: var(--bs-dropdown-item-padding-y) var(--bs-dropdown-item-padding-x);'; 
+        $link->add($chevron);
         $this->elements->add($li);
     }
     
@@ -273,10 +287,26 @@ class TDropDown extends TElement
     }
     
     /**
+     * Add a generic item
+     */
+    public function addItem($item)
+    {
+        $this->elements->add($item);
+    }
+    
+    /**
      * Clear child elements
      */
     public function clearItems()
     {
         $this->elements->clearChildren();
+    }
+    
+    /**
+     * Get dropdown items
+     */
+    public function getItems()
+    {
+        return $this->elements->getChildren() ?? [];
     }
 }

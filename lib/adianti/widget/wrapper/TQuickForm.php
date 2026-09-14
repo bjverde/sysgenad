@@ -21,7 +21,7 @@ use Exception;
 /**
  * Create quick forms for input data with a standard container for elements
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -183,7 +183,7 @@ class TQuickForm extends TForm
      * @param $size      Field Size
      * @param $validator Field Validator
      */
-    public function addQuickField($label, AdiantiWidgetInterface $object, $size = 200, TFieldValidator $validator = NULL, $label_size = NULL)
+    public function addQuickField($label, AdiantiWidgetInterface $object, $size = 200, ?TFieldValidator $validator = NULL, $label_size = NULL)
     {
         if ($size && !$object instanceof TRadioGroup && !$object instanceof TCheckGroup)
         {

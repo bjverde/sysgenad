@@ -12,7 +12,7 @@ use Exception;
 /**
  * Color Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -198,7 +198,16 @@ class TColor extends TEntry implements AdiantiWidgetInterface
         $i->{'class'} = 'tcolor-icon';
         $span->add($i);
         ob_start();
-        parent::show();
+        if (!parent::getEditable())
+        {
+            parent::setEditable(true);
+            parent::show();
+            parent::setEditable(false);
+        }
+        else
+        {
+            parent::show();
+        }
         $child = ob_get_contents();
         ob_end_clean();
         $wrapper->add($child);

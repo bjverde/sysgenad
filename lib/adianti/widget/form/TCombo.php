@@ -12,7 +12,7 @@ use Exception;
 /**
  * ComboBox Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -44,7 +44,7 @@ class TCombo extends TField implements AdiantiWidgetInterface
 
         // creates a <select> tag
         $this->tag = new TElement('select');
-        $this->tag->{'class'}  = 'tcombo'; // CSS
+        $this->tag->{'class'}  = 'tcombo form-select'; // CSS
         $this->tag->{'widget'} = 'tcombo';
         $this->is_boolean = FALSE;
     }
@@ -117,6 +117,18 @@ class TCombo extends TField implements AdiantiWidgetInterface
         if (is_array($items))
         {
             $this->items = $items;
+        }
+    }
+    
+    /**
+     * Reverse items
+     */
+    public function reverse()
+    {
+        if (is_array($this->items))
+        {
+            // reverse order, keeping keys
+            $this->items = array_reverse($this->items, true);
         }
     }
     
@@ -393,7 +405,7 @@ class TCombo extends TField implements AdiantiWidgetInterface
             $this->tag->{'onclick'}  = "return false;";
             $this->tag->{'style'}   .= ';pointer-events:none';
             $this->tag->{'tabindex'} = '-1';
-            $this->tag->{'class'}    = 'tcombo tcombo_disabled'; // CSS
+            $this->tag->{'class'}    = 'tcombo form-select tcombo_disabled'; // CSS
         }
         
         if ($this->searchable)

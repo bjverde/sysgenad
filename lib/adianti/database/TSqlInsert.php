@@ -10,7 +10,7 @@ use PDO;
 /**
  * Provides an Interface to create an INSERT statement
  *
- * @version    7.6
+ * @version    8.6
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)

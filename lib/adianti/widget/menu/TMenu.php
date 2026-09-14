@@ -9,7 +9,7 @@ use SimpleXMLElement;
 /**
  * Menu Widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage menu
  * @author     Pablo Dall'Oglio
@@ -82,28 +82,44 @@ class TMenu extends TElement
         {
             $atts     = $xmlElement-> attributes ();
             $label    = (string) $atts['label'];
-            $action   = (string) $xmlElement-> action;
-            $icon     = (string) $xmlElement-> icon;
+            $action   = (string) $xmlElement->{'action'};
+            $icon     = (string) $xmlElement->{'icon'};
+            $mobile   = (string) $xmlElement->{'mobile'};
             $menu     = NULL;
+            
             $menuItem = new TMenuItem($label, $action, $icon, $this->menu_level, $this->menu_transformer);
             $menuItem->setLinkClass($this->link_class);
+            $menuItem->setItemClass($this->link_class);
+            $menuItem->getLink()->{'data-bs-target'} = '#mi_' . mt_rand(1000000000, 1999999999);
             
-            if ($xmlElement-> menu)
+            if ($xmlElement->{'menu'})
             {
+                if (strpos($this->menu_class, 'collapse') !== false)
+                {
+                    $menuItem->getLink()->{'data-bs-toggle'} = 'collapse';
+                }
                 $menu_atts = $xmlElement-> menu-> attributes ();
                 $menu_class = !empty( $menu_atts['class'] ) ? $menu_atts['class']: $this->menu_class;
+                
                 $menu = new TMenu($xmlElement-> menu-> menuitem, $permission_callback, $this->menu_level +1, $menu_class, $this->item_class, $this->link_class, $this->item_transformer, $this->menu_transformer);
-
+                $menu->{'id'} = substr($menuItem->getLink()->{'data-bs-target'},1);
+                
                 foreach (parent::getProperties() as $property => $value)
                 {
                     $menu->setProperty($property, $value);
                 }
 
                 $menuItem->setMenu($menu);
-                if ($this->item_class)
-                {
-                    $menuItem->{'class'} = $this->item_class;
-                }
+            }
+            
+            if ($this->item_class)
+            {
+                $menuItem->{'class'} = $this->item_class;
+            }
+            
+            if (!empty($mobile) && ($mobile == 'N'))
+            {
+                $menuItem->{'class'} .= ' hide-mobile';
             }
             
             // just child nodes have actions

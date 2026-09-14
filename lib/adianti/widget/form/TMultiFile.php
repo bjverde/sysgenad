@@ -17,7 +17,7 @@ use Exception;
 /**
  * FileChooser widget
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Nataniel Rabaioli
@@ -68,6 +68,15 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         $this->imageGallery  = true;
         $this->galleryWidth  = is_null($width) ? 'unset' : $width;
         $this->galleryHeight = is_null($height) ? 'unset' : $height;
+    }
+    
+    /**
+     * Enable image capture
+     */
+    public function enableImageCapture()
+    {
+        $this->tag->{'capture'}   = '';
+        $this->tag->{'accept'} = 'image/*;capture=camera';
     }
     
     /**

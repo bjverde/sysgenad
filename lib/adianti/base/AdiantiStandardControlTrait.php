@@ -8,7 +8,7 @@ use ReflectionClass;
 /**
  * Standard Control Trait
  *
- * @version    7.6
+ * @version    8.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -23,7 +23,7 @@ trait AdiantiStandardControlTrait
      * method setDatabase()
      * Define the database
      */
-    public function setDatabase($database)
+    protected function setDatabase($database)
     {
         $this->database = $database;
     }
@@ -32,7 +32,7 @@ trait AdiantiStandardControlTrait
      * method setActiveRecord()
      * Define wich Active Record class will be used
      */
-    public function setActiveRecord($activeRecord)
+    protected function setActiveRecord($activeRecord)
     {
         if (class_exists($activeRecord))
         {

@@ -13,11 +13,11 @@ use Adianti\Widget\Util\TImage;
 /**
  * Image uploader with cropper
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
- * @author     Lucas Tomasi
  * @author     Pablo Dall'Oglio
+ * @author     Lucas Tomasi (up to version 7.5)
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
@@ -51,16 +51,21 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
     const CROPPER_RATIO_1_1 = 1/1;
     const CROPPER_RATIO_2_3 = 2/3;
     
+    /**
+     * Constructor method
+     * @param $name input name
+     */
     public function __construct($name)
     {
         parent::__construct($name);
         $this->id   = 'timagecropper_' . mt_rand(1000000000, 1999999999);
         $this->tag->{'type'}   = 'hidden';
         $this->tag->{'widget'} = 'timagecropper';
+        $this->tag->{'id'} = $this->id;
         $this->tag->{'name'} = $name;
 
-        $this->buttonText = 'Ajustar';
-        $this->title = 'Ajustar imagem';
+        $this->buttonText = AdiantiCoreTranslator::translate('Send');
+        $this->title = AdiantiCoreTranslator::translate('Adjust image');
 
         $this->uploaderClass = 'AdiantiUploaderService';
         $ini = AdiantiApplicationConfig::get();
@@ -81,7 +86,7 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
         $this->webcam = false;
         $this->setSize('100%', 100);
 
-        $this->imagePlaceholder = new TImage('fa:image placeholder');
+        $this->imagePlaceholder = new TImage('fa:image image-placeholder');
     }
 
     /**
@@ -91,7 +96,7 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
      */
     public function setImagePlaceholder(TImage $image)
     {
-        $image->{'class'} .= ' placeholder';
+        $image->{'class'} .= ' image-placeholder';
 
         $this->imagePlaceholder = $image;
     }
@@ -135,13 +140,16 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
         $this->base64 = true;
     }
     
+    /**
+     * Enable web cam use
+     */
     public function enableWebCam()
     {
         $this->webcam = true;
     }
 
     /**
-     * Define to file handling
+     * Enable json file handling
      */
     public function enableFileHandling()
     {
@@ -253,6 +261,7 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
      */
     public function setSize($width, $height = NULL)
     {
+        $height = empty($height) ? 100 : $height;
         $width = (strstr($width, '%') !== FALSE) ? $width : "{$width}px";
         $height = (strstr($height, '%') !== FALSE) ? $height : "{$height}px";
 
@@ -289,9 +298,9 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
     /**
      * Return component specific options
      */
-    public function getOptions()
+    private function getOptions()
     {
-        return json_encode([
+        return [
             'cropWidth' => $this->cropWidth,
             'cropHeight' => $this->cropHeight,
             'aspectRatio' => $this->aspectRatio,
@@ -311,7 +320,7 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
                 'rotateright' => AdiantiCoreTranslator::translate('Rotate right'),
                 'rotateleft'  => AdiantiCoreTranslator::translate('Rotate left'),
             ]
-        ]);
+        ];
     }
     
     /**
@@ -337,18 +346,37 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
             $actions->{'style'} = 'display: none';
         }            
         
-        $actions->add($editar)->{'action'} = 'edit';
-        $actions->add($remover)->{'action'} = 'remove';
-        
         $img = new TElement('img');
-        $img->{'id'}    = 'timagecropper_' . $this->name;
+        $img->{'id'}    = 'timagecropper_' . $this->id;
         $img->{'class'} = 'img_imagecropper rounded timagecropper';
         $img->{'style'} = "max-width: {$this->width}; max-height: {$this->height};margin: auto;";
-
+        
+        $file = new TEntry('tfile_timagecropper_' . $this->id);
+        $file->{'accept'} =  '.' . implode(',.', $this->extensions);
+        if ($this->webcam)
+        {   
+            $file->{'capture'}   = '';
+            $file->{'accept'} = 'image/*;capture=camera';
+        }
+        $file->{'type'}   = 'file';
+        $file->{'class' } = "sr-only";
+        $file->{'id' }    = $file->getName();
+        
+        if (parent::getEditable())
+        {
+            $actions->add($editar)->{'action'} = 'edit';
+            $actions->add($remover)->{'action'} = 'remove';
+            $label->add($file);
+        }
+        else
+        {
+            $img->{'data-editable'} = 'false';
+        }
+        
         $src = '';
         $fileName = '';
         $fileExtension = '';
-
+        
         if ($this->fileHandling && $this->value)
         {
             $dados_file = json_decode(urldecode($this->value));
@@ -363,7 +391,7 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
                 $src = 'download.php?file=' . $dados_file->fileName . '&v=' . uniqid();
             }
         }
-        else if ($this->base64 && $this->value)
+        else if ($this->base64 && !empty($this->value) && substr($this->value,0,11) == 'data:image/')
         {
             $encodedImgString = explode(',', $this->value, 2)[1];
             $decodedImgString = base64_decode($encodedImgString);
@@ -391,23 +419,12 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
         {
             $img->{'src'} = $src;
             $this->imagePlaceholder->{'style'} = 'display: none;';
-        }            
+        }
 
         $this->tag->{'value'} = $this->value;
-
-        $file = new TEntry('tfile_timagecropper_' . $this->name);
-        $file->{'accept'} =  '.' . implode(',.', $this->extensions);
-        $file->{'type'}   = 'file';
-        $file->{'class' } = "sr-only";
-        $file->{'id' }    = $file->getName();
         
         $hash = md5("{$this->seed}{$this->name}".base64_encode(serialize($this->extensions)));
         $action = "engine.php?class={$this->uploaderClass}&name={$this->name}&hash={$hash}&extensions=".base64_encode(serialize($this->extensions));
-
-        if(parent::getEditable())
-        {
-            $label->add($file);
-        }
         
         $label->add($img);
         $label->add($actions);
@@ -418,10 +435,26 @@ class TImageCropper extends TField implements AdiantiWidgetInterface
 
         $options = $this->getOptions();
 
-        $fileHandling = $this->fileHandling ? '1' : '0';
-        $base64 = $this->base64 ? '1' : '0';
-        $webcam = $this->webcam ? '1' : '0';
-
-        TScript::create("timagecropper_start('{$this->name}', '{$this->title}', '{$this->buttonText}', '{$action}', {$fileHandling}, {$base64}, {$webcam}, {$options}, '{$fileName}', '{$fileExtension}');");
+        $fileHandling = $this->fileHandling ? 1 : 0;
+        $base64 = $this->base64 ? 1 : 0;
+        $webcam = $this->webcam ? 1 : 0;
+        
+        // js parameters
+        $opts = [
+            'field'        => $this->id,
+            'title'        => $this->title,
+            'buttonLabel'  => $this->buttonText,
+            'serviceAction'=> $action,
+            'fileHandling' => $fileHandling,
+            'base64'       => $base64,
+            'webcam'       => $webcam,
+            'config'       => $options,
+            'name'         => $fileName,
+            'extension'    => $fileExtension
+        ];
+    
+        $json = json_encode($opts);
+    
+        TScript::create("timagecropper_start({$json});");
     }
 }

@@ -4,6 +4,7 @@ namespace Adianti\Base;
 use Adianti\Core\AdiantiCoreApplication;
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Widget\Dialog\TMessage;
+use Adianti\Widget\Dialog\TToast;
 use Adianti\Database\TTransaction;
 use Adianti\Database\TRecord;
 use Exception;
@@ -11,17 +12,18 @@ use Exception;
 /**
  * Standard Form Trait
  *
- * @version    7.6
+ * @version    8.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
-trait AdiantiStandardFormTrait
+trait AdiantiStandardFormTrait #depends:AdiantiStandardControlTrait
 {
     protected $afterSaveAction;
     protected $afterSaveCallback;
     protected $useMessages;
+    protected $useToast;
     
     use AdiantiStandardControlTrait;
     
@@ -49,6 +51,14 @@ trait AdiantiStandardFormTrait
     public function setUseMessages($bool)
     {
         $this->useMessages = $bool;
+    }
+    
+    /**
+     * Define if will use toast message after operations
+     */
+    public function setUseToast($bool)
+    {
+        $this->useToast = $bool;
     }
     
     /**
@@ -94,13 +104,21 @@ trait AdiantiStandardFormTrait
             TTransaction::close();
             
             // shows the success message
-            if (isset($this->useMessages) AND $this->useMessages === false)
+            if (isset($this->useMessages) && $this->useMessages === false)
             {
                 AdiantiCoreApplication::loadPageURL( $this->afterSaveAction->serialize() );
             }
             else
             {
-                new TMessage('info', AdiantiCoreTranslator::translate('Record saved'), $this->afterSaveAction);
+                if (!empty($this->useToast))
+                {
+                    TToast::show('info', AdiantiCoreTranslator::translate('Record saved'));
+                    AdiantiCoreApplication::loadPageURL( $this->afterSaveAction->serialize() );
+                }
+                else
+                {
+                    new TMessage('info', AdiantiCoreTranslator::translate('Record saved'), $this->afterSaveAction);
+                }
             }
             
             return $object;

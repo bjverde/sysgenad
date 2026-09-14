@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Control;
 
+use Adianti\Widget\Base\TElement;
 use Adianti\Control\TAction;
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Widget\Container\TJQueryDialog;
@@ -12,19 +13,27 @@ use Exception;
 /**
  * Window Container (JQueryDialog wrapper)
  *
- * @version    7.6
+ * @version    8.6
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
-class TWindow extends TPage
+#[\AllowDynamicProperties]
+class TWindow extends TElement implements AdiantiController
 {
     private $wrapper;
     
+    use AdiantiPageControlTrait;
+    
+    /**
+     * Constructor method
+     */
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct('div');
+        $this->{'page-name'} = $this->getClassName();
+        $this->{'page_name'} = $this->getClassName();
         
         $this->wrapper = new TJQueryDialog;
         $this->wrapper->setUseOKButton(FALSE);
@@ -48,6 +57,13 @@ class TWindow extends TPage
         throw new Exception( AdiantiCoreTranslator::translate('Use of target containers along with windows is not allowed') );
     }
     
+    /**
+     * Enable full screen in mobile
+     */
+    public function enableMobileFullScreen()
+    {
+        $this->wrapper->enableMobileFullScreen();
+    }
     
     /**
      * Returns ID
@@ -139,6 +155,14 @@ class TWindow extends TPage
     }
     
     /**
+     * Enable scrolling
+     */
+    public function enableScrolling()
+    {
+        $this->wrapper->enableScrolling();
+    }
+    
+    /**
      * Define the window's size
      * @param  $width  Window's width
      * @param  $height Window's height
@@ -149,6 +173,24 @@ class TWindow extends TPage
     }
     
     /**
+     * Define the window's width
+     * @param  $width  Window's width
+     */
+    public function setWidth($width)
+    {
+        $this->wrapper->setWidth($width);
+    }
+    
+    /**
+     * Define the window's height
+     * @param  $width  Window's height
+     */
+    public function setHeight($height)
+    {
+        $this->wrapper->setHeight($height);
+    }
+    
+    /**
      * Define the window's min width between percent and absolute
      * @param  $percent width
      * @param  $absolute width
@@ -156,6 +198,26 @@ class TWindow extends TPage
     public function setMinWidth($percent, $absolute)
     {
         $this->wrapper->setMinWidth($percent, $absolute);
+    }
+    
+    /**
+     * Define the window's max width between percent and absolute
+     * @param  $percent width
+     * @param  $absolute width
+     */
+    public function setMaxWidth($percent, $absolute)
+    {
+        $this->wrapper->setMaxWidth($percent, $absolute);
+    }
+    
+    /**
+     * Define the window's max height between percent and absolute
+     * @param  $percent width
+     * @param  $absolute width
+     */
+    public function setMaxHeight($percent, $absolute)
+    {
+        $this->wrapper->setMaxHeight($percent, $absolute);
     }
     
     /**
@@ -241,5 +303,17 @@ class TWindow extends TPage
     public static function closeWindowByName($name)
     {
         TScript::create( ' $(\'[window_name="'.$name.'"]\').remove(); ' );
+    }
+    
+    /**
+     * Decide wich action to take and show the page
+     */
+    public function show()
+    {
+        if (!$this->getIsWrapped())
+        {
+            $this->run();
+        }
+        parent::show();
     }
 }

@@ -14,7 +14,7 @@ use Exception;
 /**
  * Spinner Widget (also known as spin button)
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -65,6 +65,23 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         if (is_int($step) AND $this->getValue() % $step !== 0)
         {
             parent::setValue($min);
+        }
+    }
+    
+    /**
+     * Return the post data
+     */
+    public function getPostData()
+    {
+        $name = str_replace(['[',']'], ['',''], $this->name);
+        
+        if (isset($_POST[$name]))
+        {
+            return $_POST[$name];
+        }
+        else
+        {
+            return '';
         }
     }
     

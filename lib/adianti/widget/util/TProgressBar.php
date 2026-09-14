@@ -6,7 +6,7 @@ use Adianti\Widget\Base\TElement;
 /**
  * TProgressBar
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
  * @author     Ademilson Nunes
@@ -37,6 +37,7 @@ class TProgressBar extends TElement
     {
         $span = new TElement("span");
         $span->add($mask);
+        $span->{'style'} = 'position:absolute;padding:5px';
         $this->mask = $span;
     }
     
@@ -71,8 +72,9 @@ class TProgressBar extends TElement
          
         $value = str_replace('{value}', $this->value, $this->mask);
          
-        $progressBar->add($value);
+        //$progressBar->add($value);
         parent::add($progressBar);
+        parent::add($value);
        
         parent::show();
     }

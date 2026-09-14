@@ -17,7 +17,7 @@ use Closure;
 /**
  * Database Task manager
  *
- * @version    7.6
+ * @version    8.6
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2018 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -246,7 +246,7 @@ class TDatabase
      * @param $mapping         Mapping between fields
      * @param $prepared_values Parameters for SQL Query
      */
-    public static function getData($conn, $query, $mapping = null, $prepared_values = null, Closure $action = null)
+    public static function getData($conn, $query, $mapping = null, $prepared_values = null, ?Closure $action = null)
     {
         $data = [];
         
@@ -648,7 +648,7 @@ class TDatabase
         
         $file = new SplFileObject($filename, 'w');
         $file->setCsvControl(',');
-        $file->fputcsv($target_columns);
+        $file->fputcsv($target_columns, ',', "\"", '', "\n");
         
         foreach ($result as $row)
         {
@@ -659,7 +659,7 @@ class TDatabase
                 $values[$newcolumn] = self::transform($row, $map);
             }
             
-            $file->fputcsv(array_values($values));
+            $file->fputcsv(array_values($values), ',', "\"", '', "\n");
         }
         $file = null; // close
     }

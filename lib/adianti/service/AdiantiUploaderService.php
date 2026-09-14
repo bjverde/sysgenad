@@ -3,18 +3,19 @@ namespace Adianti\Service;
 
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Core\AdiantiApplicationConfig;
+use Adianti\Control\AdiantiController;
 
 /**
  * File uploader listener
  *
- * @version    7.6
+ * @version    8.6
  * @package    service
  * @author     Nataniel Rabaioli
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
-class AdiantiUploaderService
+class AdiantiUploaderService implements AdiantiController
 {
     function show($param)
     {
@@ -48,7 +49,7 @@ class AdiantiUploaderService
                 if (!empty($param['extensions']))
                 {
                     $name = $param['name'];
-                    $extensions = unserialize(base64_decode( $param['extensions'] ));
+                    $extensions = unserialize(base64_decode( $param['extensions']), ['allowed_classes' => false]);
                     $hash = md5("{$seed}{$name}".base64_encode(serialize($extensions)));
                     
                     if ($hash !== $param['hash'])

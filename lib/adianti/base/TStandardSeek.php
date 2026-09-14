@@ -21,6 +21,7 @@ use Adianti\Database\TRepository;
 use Adianti\Database\TRecord;
 use Adianti\Database\TFilter;
 use Adianti\Database\TCriteria;
+use Adianti\Database\TExpression;
 use Adianti\Registry\TSession;
 use Adianti\Widget\Container\TPanelGroup;
 use Adianti\Wrapper\BootstrapDatagridWrapper;
@@ -30,7 +31,7 @@ use StdClass;
 /**
  * Standard Page controller for Seek buttons
  *
- * @version    7.6
+ * @version    8.6
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -313,7 +314,7 @@ class TStandardSeek extends TWindow
             
             if (isset($param['criteria']) AND $param['criteria'])
             {
-                TSession::setValue('standard_seek_criteria',  unserialize(base64_decode($param['criteria'])));
+                TSession::setValue('standard_seek_criteria',  unserialize(base64_decode($param['criteria']), ['allowed_classes' => [TCriteria::class, TExpression::class, TFilter::class]] ));
             }
             $this->onReload();
         }

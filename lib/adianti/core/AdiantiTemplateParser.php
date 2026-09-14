@@ -4,12 +4,13 @@ namespace Adianti\Core;
 use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Control\TPage;
 use Adianti\Registry\TSession;
+use Adianti\Util\AdiantiStringConversion;
 use Exception;
 
 /**
  * Template parser
  *
- * @version    7.6
+ * @version    8.6
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -34,29 +35,12 @@ class AdiantiTemplateParser
             $content = str_replace('<!--[/IFADMIN]-->', '-->',   $content);
         }
         
-        if (!isset($ini['permission']['user_register']) OR $ini['permission']['user_register'] !== '1')
+        if (!empty($ini['template']['navbar']['only_top_menu']))
         {
-            $content = str_replace(['<!--[CREATE-ACCOUNT]-->', '<!--[CREATE-ACCOUNT]-->'], ['<!--', '-->'], $content);
+            $content = str_replace('<!--[SIDEBAR]-->',  '<!--',  $content);
+            $content = str_replace('<!--[/SIDEBAR]-->', '-->',   $content);
         }
         
-        if (!isset($ini['permission']['reset_password']) OR $ini['permission']['reset_password'] !== '1')
-        {
-            $content = str_replace(['<!--[RESET-PASSWORD]-->', '<!--[RESET-PASSWORD]-->'], ['<!--', '-->'], $content);
-        }
-        
-        $use_tabs = $ini['general']['use_tabs'] ?? 0;
-        $store_tabs = $ini['general']['store_tabs'] ?? 0;
-        $use_mdi_windows = $ini['general']['use_mdi_windows'] ?? 0;
-        $store_mdi_windows = $ini['general']['store_mdi_windows'] ?? 0;
-
-        if ($use_mdi_windows) {
-            $use_tabs = 1;
-        }
-
-        if ($store_mdi_windows) {
-            $store_tabs = 1;
-        }
-
         $content   = str_replace('{LIBRARIES}', $libraries, $content);
         $content   = str_replace('{class}',     $class, $content);
         $content   = str_replace('{template}',  $theme, $content);
@@ -70,10 +54,35 @@ class AdiantiTemplateParser
         $content   = str_replace('{userunitid}', (string) TSession::getValue('userunitid'), $content);
         $content   = str_replace('{userunitname}', (string) TSession::getValue('userunitname'), $content);
         $content   = str_replace('{query_string}', $_SERVER["QUERY_STRING"] ?? '', $content);
-        $content   = str_replace('{use_tabs}', $use_tabs, $content);
-        $content   = str_replace('{store_tabs}', $store_tabs, $content);
-        $content   = str_replace('{use_mdi_windows}', $use_mdi_windows, $content);
         $content   = str_replace('{application}', $ini['general']['application'], $content);
+        $content   = str_replace('{template_options}',  json_encode($ini['template'] ?? []), $content);
+        $content   = str_replace('{login_background}', (!empty($ini['login']['background']) ? "background: url('{$ini['login']['background']}')" : ''), $content );
+        
+        if (file_exists('buildid'))
+        {
+            $content   = str_replace('{buildid}', AdiantiStringConversion::slug(file_get_contents('buildid')), $content);
+        }
+        
+        if (empty($ini['general']['creator_url']))
+        {
+            $content = str_replace('<!--[ISCREATOR]-->',  '<!--',  $content);
+            $content = str_replace('<!--[/ISCREATOR]-->', '-->',   $content);
+        }
+        
+        if (empty($ini['general']['creator_url']) || (TSession::getValue('login') !== 'admin'))
+        {
+            $content = str_replace('<!--[ISCREATORADMIN]-->',  '<!--',  $content);
+            $content = str_replace('<!--[/ISCREATORADMIN]-->', '-->',   $content);
+        }
+        
+        $core_options = [ 'timezone'    => $ini['general']['timezone'],
+                          'language'    => \ApplicationTranslator::getLanguage(),
+                          'application' => $ini['general']['application'],
+                          'title'       => $ini['general']['title'],
+                          'theme'       => $ini['general']['theme'],
+                          'debug'       => $ini['general']['debug'] ];
+        
+        $content   = str_replace('{adianti_options}',  json_encode($core_options), $content);
         
         $css       = TPage::getLoadedCSS();
         $js        = TPage::getLoadedJS();

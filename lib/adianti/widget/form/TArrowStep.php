@@ -14,12 +14,12 @@ use Exception;
 /**
  * Arrow Step
  *
- * @version    7.6
+ * @version    8.6
  * @package    widget
  * @subpackage util
- * @author     Lucas Tomasi
- * @author     Matheus Agnes Dias
  * @author     Pablo Dall'Oglio
+ * @author     Lucas Tomasi (up to version 7.5)
+ * @author     Matheus Agnes Dias (up to version 7.5)
  * @copyright  Copyright (c) 2006-2014 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    https://adiantiframework.com.br/license
  */
@@ -515,33 +515,33 @@ class TArrowStep extends TField implements AdiantiWidgetInterface
      */
     private function makeStyle()
     {
-        $size1 = $this->height/2 . 'px';
-        $size2 = $this->height/3 . 'px';
+        $size1 = ceil($this->height/2) . 'px';
+        $size2 = ceil($this->height/3) . 'px';
 
-        $styles = new TElement('style');
-        $styles->type = 'text/css';
-        $styles->media = 'screen';
-
+        $styles = new TElement('div');
+        $styles->display = 'none';
+        $styles->{'data-role'} = 'styles';
+        
         $styleClassHeight = new TStyle($this->className.' .arrow_steps');
         $styleClassHeight->height = $this->height .'px';
-        $styles->add($styleClassHeight);
+        $styles->add($styleClassHeight->getContents());
 
         $styleClassBackground = new TStyle($this->className.'::-webkit-scrollbar-thumb,.'.$this->className.' .step.current,.'.$this->className.' .step.preview-current');
         $styleClassBackground->{"background-color"} = $this->color;
         $styleClassBackground->{"color"} = $this->fontColor;
-        $styles->add($styleClassBackground);
+        $styles->add($styleClassBackground->getContents());
 
         $styleClassBackgroundDisable = new TStyle($this->className.' .step');
         $styleClassBackgroundDisable->{"background-color"} = $this->disableColor;
         $styleClassBackgroundDisable->{"color"} = $this->disableFontColor;
         $styleClassBackgroundDisable->{"font-size"} = $this->fontSize;
         $styleClassBackgroundDisable->{"padding-left"} = "{$size2}";
-        $styles->add($styleClassBackgroundDisable);
+        $styles->add($styleClassBackgroundDisable->getContents());
         
         $styleClassBorder = new TStyle($this->className.' .step.current:after,.'.$this->className.' .step.preview-current:after');
         $styleClassBorder->{"border-left-color"} = $this->color;
         $styleClassBorder->{"border-left-width"} = $size2;
-        $styles->add($styleClassBorder);
+        $styles->add($styleClassBorder->getContents());
 
         $styleClassBorderHeight = new TStyle($this->className.' .step:after,.'.$this->className.' .step:before');
         $styleClassBorderHeight->{"border-top-width"} =  $size1;
@@ -549,16 +549,16 @@ class TArrowStep extends TField implements AdiantiWidgetInterface
         $styleClassBorderHeight->{"right"} = "calc( -{$size2} + 0.5px)";
         $styleClassBorderHeight->{"border-left-width"} = $size2;
         $styleClassBorderHeight->{"border-left-color"} = $this->disableColor;
-        $styles->add($styleClassBorderHeight);
+        $styles->add($styleClassBorderHeight->getContents());
         
         $styleClassBorderStepBefore = new TStyle($this->className.' .step:before');
         $styleClassBorderStepBefore->{'border-left-width'} = $size2;
-        $styleClassBorderStepBefore->{"border-left-color"} = 'white';
-        $styles->add($styleClassBorderStepBefore);
+        $styleClassBorderStepBefore->{"border-left-color"} = 'var(--bs-body-bg)';
+        $styles->add($styleClassBorderStepBefore->getContents());
 
         $styleClassBorderSpanBefore = new TStyle($this->className.' span:before');
         $styleClassBorderSpanBefore->{'left'} = "-{$size2}";
-        $styles->add($styleClassBorderSpanBefore);
+        $styles->add($styleClassBorderSpanBefore->getContents());
 
         if (! empty($this->colorItems))
         {
@@ -566,11 +566,11 @@ class TArrowStep extends TField implements AdiantiWidgetInterface
             {
                 $styleClassBackgroundStep = new TStyle("{$this->className} .step.current[data-key=\"{$key}\"],.{$this->className} .step.preview-current[data-key=\"{$key}\"]");
                 $styleClassBackgroundStep->{"background-color"} = $color;
-                $styles->add($styleClassBackgroundStep);
+                $styles->add($styleClassBackgroundStep->getContents());
                 
                 $styleClassBackgroundStepArrow = new TStyle("{$this->className} .step.current[data-key=\"{$key}\"]:after,.{$this->className} .step.preview-current[data-key=\"{$key}\"]:after");
                 $styleClassBackgroundStepArrow->{"border-left-color"} = $color;
-                $styles->add($styleClassBackgroundStepArrow);
+                $styles->add($styleClassBackgroundStepArrow->getContents());
             }
         }
 
