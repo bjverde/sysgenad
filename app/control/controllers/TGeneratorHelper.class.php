@@ -289,7 +289,7 @@ class TGeneratorHelper
                 $SCHEMA = true;
                 $TPGRID = self::getConfigGridPostgresql($DBMS_TYPE);
             break;
-            case TFormDinPdoConnection::DBMS_SQLITE;
+            case TFormDinPdoConnection::DBMS_SQLITE:
                 $SCHEMA = false;
                 $TPGRID = FormDinHelper::GRID_SQL_PAGINATION;
             break;             
